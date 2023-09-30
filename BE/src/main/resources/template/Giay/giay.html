@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layouts/layout}">
+<head>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
+
+    <!----css3---->
+    <link rel="stylesheet" href="/css/custom.css">
+
+</head>
+<body>
+<section>
+    <div layout:fragment="content" class="col-md-12">
+        <div>
+
+            <table class="table  table-hover table-bordered">
+                <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Mã</th>
+                    <th>Tên</th>
+                    <th>Email</th>
+                    <th>Địa chỉ</th>
+                    <th>Ngày Sinh</th>
+                    <th>Số điện thoại</th>
+                    <th>Chức vụ</th>
+                    <th>Trạng thái</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+
+
+                <tr th:each="nv : ${listNV.content}">
+                    <td th:text="${nvStat.index +1}"></td>
+                    <td th:text="${nv.maNhanVien}"></td>
+                    <td th:text="${nv.tenNhanVien}"></td>
+                    <td th:text="${nv.email}"></td>
+                    <td th:text="${nv.diaChi}"></td>
+                    <td th:text="${nv.NgaySinh}"></td>
+                    <td th:text="${nv.soDienThoai}"></td>
+                    <td th:text="${nv.chucVu.tenChucVu}">Chức vụ 1</td>
+                    <td th:if="${nv.trangThai==0}" style="width: 150px;">
+                        <button class="btn btn-primary" style="border-radius: 30px; font-size: 14px;">Hoạt động
+                        </button>
+                    </td>
+                    <td th:unless="${nv.trangThai==0}" style="width: 160px;">
+                        <button class="btn btn-danger" style="border-radius: 30px; font-size: 13px;">Ngưng hoạt
+                            động
+                        </button>
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+
+
+        </div>
+    </div>
+    </div>
+
+</section>
+
+</body>
+</html>
