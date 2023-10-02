@@ -6,87 +6,88 @@ import jakarta.persistence.*;
 @Table(name = "HoaDon")
 public class HoaDon {
     @Id
-    @Column(name = "Id")@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "Id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String id;
 
     @Column(name = "IdVoucher")
-    private Long idVoucher;
+    private String idVoucher;
 
-    @Column(name = "IdNguoiDung")
-    private Long idNguoiDung;
+    @Column(name = "IdTaiKhoan")
+    private String idTaiKhoan;
 
-    @Column(name = "CodeHoaDon")
-    private String codeHoaDon;
+    @Column(name = "maHoaDOn")
+    private String maHoaDOn;
 
-    @Column(name = "LoaiHoaDon")
+    @Column(name = "loaiHoaDon")
     private Integer loaiHoaDon;
 
-    @Column(name = "TenKhachHang")
+    @Column(name = "tenKhachHang")
     private String tenKhachHang;
 
-    @Column(name = "SoDienThoai")
+    @Column(name = "soDienThoai")
     private String soDienThoai;
 
-    @Column(name = "DiaChi")
+    @Column(name = "diaChi")
     private String diaChi;
 
-    @Column(name = "PhiShip")
-    private Long phiShip;
+    @Column(name = "phiShip")
+    private String phiShip;
 
-    @Column(name = "TienThua")
-    private Long tienThua;
+    @Column(name = "tienThua")
+    private String tienThua;
 
-    @Column(name = "TongTien")
-    private Long tongTien;
+    @Column(name = "tongTien")
+    private String tongTien;
 
-    @Column(name = "NgayTao")
-    private Long ngayTao;
+    @Column(name = "ngayTao")
+    private String ngayTao;
 
-    @Column(name = "NgayChuyenKhoan")
-    private Long ngayChuyenKhoan;
+    @Column(name = "ngayChuyenKhoan")
+    private String ngayChuyenKhoan;
 
-    @Column(name = "NgayShip")
-    private Long ngayShip;
+    @Column(name = "ngayShip")
+    private String ngayShip;
 
-    @Column(name = "NgayMongMuonNhan")
-    private Long ngayMongMuonNhan;
+    @Column(name = "ngayMongMuonNhan")
+    private String ngayMongMuonNhan;
 
     @Column(name = "NgayNhan")
-    private Long ngayNhan;
+    private String ngayNhan;
 
-    @Column(name = "TrangThai")
+    @Column(name = "trangThai")
     private Integer trangThai;
 
-    public Long getId() {
+    public String getId() {
         return this.id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Long getIdVoucher() {
+    public String getIdVoucher() {
         return this.idVoucher;
     }
 
-    public void setIdVoucher(Long idVoucher) {
+    public void setIdVoucher(String idVoucher) {
         this.idVoucher = idVoucher;
     }
 
-    public Long getIdNguoiDung() {
-        return this.idNguoiDung;
+    public String getIdTaiKhoan() {
+        return this.idTaiKhoan;
     }
 
-    public void setIdNguoiDung(Long idNguoiDung) {
-        this.idNguoiDung = idNguoiDung;
+    public void setIdTaiKhoan(String idTaiKhoan) {
+        this.idTaiKhoan = idTaiKhoan;
     }
 
-    public String getCodeHoaDon() {
-        return this.codeHoaDon;
+    public String getMaHoaDOn() {
+        return this.maHoaDOn;
     }
 
-    public void setCodeHoaDon(String codeHoaDon) {
-        this.codeHoaDon = codeHoaDon;
+    public void setMaHoaDOn(String maHoaDOn) {
+        this.maHoaDOn = maHoaDOn;
     }
 
     public Integer getLoaiHoaDon() {
@@ -121,67 +122,67 @@ public class HoaDon {
         this.diaChi = diaChi;
     }
 
-    public Long getPhiShip() {
+    public String getPhiShip() {
         return this.phiShip;
     }
 
-    public void setPhiShip(Long phiShip) {
+    public void setPhiShip(String phiShip) {
         this.phiShip = phiShip;
     }
 
-    public Long getTienThua() {
+    public String getTienThua() {
         return this.tienThua;
     }
 
-    public void setTienThua(Long tienThua) {
+    public void setTienThua(String tienThua) {
         this.tienThua = tienThua;
     }
 
-    public Long getTongTien() {
+    public String getTongTien() {
         return this.tongTien;
     }
 
-    public void setTongTien(Long tongTien) {
+    public void setTongTien(String tongTien) {
         this.tongTien = tongTien;
     }
 
-    public Long getNgayTao() {
+    public String getNgayTao() {
         return this.ngayTao;
     }
 
-    public void setNgayTao(Long ngayTao) {
+    public void setNgayTao(String ngayTao) {
         this.ngayTao = ngayTao;
     }
 
-    public Long getNgayChuyenKhoan() {
+    public String getNgayChuyenKhoan() {
         return this.ngayChuyenKhoan;
     }
 
-    public void setNgayChuyenKhoan(Long ngayChuyenKhoan) {
+    public void setNgayChuyenKhoan(String ngayChuyenKhoan) {
         this.ngayChuyenKhoan = ngayChuyenKhoan;
     }
 
-    public Long getNgayShip() {
+    public String getNgayShip() {
         return this.ngayShip;
     }
 
-    public void setNgayShip(Long ngayShip) {
+    public void setNgayShip(String ngayShip) {
         this.ngayShip = ngayShip;
     }
 
-    public Long getNgayMongMuonNhan() {
+    public String getNgayMongMuonNhan() {
         return this.ngayMongMuonNhan;
     }
 
-    public void setNgayMongMuonNhan(Long ngayMongMuonNhan) {
+    public void setNgayMongMuonNhan(String ngayMongMuonNhan) {
         this.ngayMongMuonNhan = ngayMongMuonNhan;
     }
 
-    public Long getNgayNhan() {
+    public String getNgayNhan() {
         return this.ngayNhan;
     }
 
-    public void setNgayNhan(Long ngayNhan) {
+    public void setNgayNhan(String ngayNhan) {
         this.ngayNhan = ngayNhan;
     }
 

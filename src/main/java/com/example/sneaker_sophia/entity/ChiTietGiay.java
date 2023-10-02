@@ -8,108 +8,108 @@ public class ChiTietGiay {
     @Id
     @Column(name = "Id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     @Column(name = "IdGiay")
-    private Long idGiay;
+    private String idGiay;
 
     @Column(name = "IdKichCo")
-    private Long idKichCo;
-
-    @Column(name = "IdLoaiGiay")
-    private Long idLoaiGiay;
-
-    @Column(name = "IdHang")
-    private Long idHang;
+    private String idKichCo;
 
     @Column(name = "IdDeGiay")
-    private Long idDeGiay;
+    private String idDeGiay;
+
+    @Column(name = "IdHang")
+    private String idHang;
+
+    @Column(name = "IdLoaiGiay")
+    private String idLoaiGiay;
 
     @Column(name = "IdMauSac")
-    private Long idMauSac;
+    private String idMauSac;
 
-    @Column(name = "Code")
-    private String code;
+    @Column(name = "ma")
+    private String ma;
 
-    @Column(name = "DonGia")
-    private Long donGia;
+    @Column(name = "gia")
+    private String gia;
 
-    @Column(name = "SoLuong")
+    @Column(name = "soLuong")
     private Integer soLuong;
 
-    @Column(name = "TrangThai")
+    @Column(name = "trangThai")
     private Integer trangThai;
 
-    public Long getId() {
+    public String getId() {
         return this.id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Long getIdGiay() {
+    public String getIdGiay() {
         return this.idGiay;
     }
 
-    public void setIdGiay(Long idGiay) {
+    public void setIdGiay(String idGiay) {
         this.idGiay = idGiay;
     }
 
-    public Long getIdKichCo() {
+    public String getIdKichCo() {
         return this.idKichCo;
     }
 
-    public void setIdKichCo(Long idKichCo) {
+    public void setIdKichCo(String idKichCo) {
         this.idKichCo = idKichCo;
     }
 
-    public Long getIdLoaiGiay() {
-        return this.idLoaiGiay;
-    }
-
-    public void setIdLoaiGiay(Long idLoaiGiay) {
-        this.idLoaiGiay = idLoaiGiay;
-    }
-
-    public Long getIdHang() {
-        return this.idHang;
-    }
-
-    public void setIdHang(Long idHang) {
-        this.idHang = idHang;
-    }
-
-    public Long getIdDeGiay() {
+    public String getIdDeGiay() {
         return this.idDeGiay;
     }
 
-    public void setIdDeGiay(Long idDeGiay) {
+    public void setIdDeGiay(String idDeGiay) {
         this.idDeGiay = idDeGiay;
     }
 
-    public Long getIdMauSac() {
+    public String getIdHang() {
+        return this.idHang;
+    }
+
+    public void setIdHang(String idHang) {
+        this.idHang = idHang;
+    }
+
+    public String getIdLoaiGiay() {
+        return this.idLoaiGiay;
+    }
+
+    public void setIdLoaiGiay(String idLoaiGiay) {
+        this.idLoaiGiay = idLoaiGiay;
+    }
+
+    public String getIdMauSac() {
         return this.idMauSac;
     }
 
-    public void setIdMauSac(Long idMauSac) {
+    public void setIdMauSac(String idMauSac) {
         this.idMauSac = idMauSac;
     }
 
-    public String getCode() {
-        return this.code;
+    public String getMa() {
+        return this.ma;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setMa(String ma) {
+        this.ma = ma;
     }
 
-    public Long getDonGia() {
-        return this.donGia;
+    public String getGia() {
+        return this.gia;
     }
 
-    public void setDonGia(Long donGia) {
-        this.donGia = donGia;
+    public void setGia(String gia) {
+        this.gia = gia;
     }
 
     public Integer getSoLuong() {

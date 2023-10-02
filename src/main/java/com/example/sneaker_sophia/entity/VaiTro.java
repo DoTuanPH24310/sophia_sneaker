@@ -6,29 +6,30 @@ import jakarta.persistence.*;
 @Table(name = "VaiTro")
 public class VaiTro {
     @Id
-    @Column(name = "Id")@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "Id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String id;
 
-    @Column(name = "TenVaiTro")
-    private String tenVaiTro;
+    @Column(name = "ten")
+    private String ten;
 
-    @Column(name = "TrangThai")
+    @Column(name = "trangThai")
     private Integer trangThai;
 
-    public Long getId() {
+    public String getId() {
         return this.id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getTenVaiTro() {
-        return this.tenVaiTro;
+    public String getTen() {
+        return this.ten;
     }
 
-    public void setTenVaiTro(String tenVaiTro) {
-        this.tenVaiTro = tenVaiTro;
+    public void setTen(String ten) {
+        this.ten = ten;
     }
 
     public Integer getTrangThai() {

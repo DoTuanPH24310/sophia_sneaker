@@ -1,55 +1,31 @@
 package com.example.sneaker_sophia.entity;
 
 import jakarta.persistence.*;
-import jakarta.persistence.Table;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "Giay")
 public class Giay {
     @Id
-    @Column(name = "Id")@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "Id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String id;
 
-    @Column(name = "TenGiay")
-    private String tenGiay;
+    @Column(name = "ten")
+    private String ten;
 
-    @Column(name = "CreateAt")
-    private LocalDateTime createAt;
-
-    @Column(name = "UpdateAt")
-    private LocalDateTime updateAt;
-
-    public Long getId() {
+    public String getId() {
         return this.id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getTenGiay() {
-        return this.tenGiay;
+    public String getTen() {
+        return this.ten;
     }
 
-    public void setTenGiay(String tenGiay) {
-        this.tenGiay = tenGiay;
-    }
-
-    public LocalDateTime getCreateAt() {
-        return this.createAt;
-    }
-
-    public void setCreateAt(LocalDateTime createAt) {
-        this.createAt = createAt;
-    }
-
-    public LocalDateTime getUpdateAt() {
-        return this.updateAt;
-    }
-
-    public void setUpdateAt(LocalDateTime updateAt) {
-        this.updateAt = updateAt;
+    public void setTen(String ten) {
+        this.ten = ten;
     }
 }

@@ -6,25 +6,26 @@ import jakarta.persistence.*;
 @Table(name = "MauSac")
 public class MauSac {
     @Id
-    @Column(name = "Id")@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "Id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String id;
 
-    @Column(name = "TenMau")
-    private String tenMau;
+    @Column(name = "ten")
+    private String ten;
 
-    public Long getId() {
+    public String getId() {
         return this.id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getTenMau() {
-        return this.tenMau;
+    public String getTen() {
+        return this.ten;
     }
 
-    public void setTenMau(String tenMau) {
-        this.tenMau = tenMau;
+    public void setTen(String ten) {
+        this.ten = ten;
     }
 }

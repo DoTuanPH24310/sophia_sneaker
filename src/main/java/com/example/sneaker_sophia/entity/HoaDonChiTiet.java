@@ -1,50 +1,54 @@
 package com.example.sneaker_sophia.entity;
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "HoaDonChiTiet")
 public class HoaDonChiTiet {
     @Id
-    @Column(name = "Id")@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "Id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String id;
 
     @Column(name = "IdChiTietGiay")
-    private Long idChiTietGiay;
+    private String idChiTietGiay;
 
     @Column(name = "IdHoaDon")
-    private Long idHoaDon;
+    private String idHoaDon;
 
-    @Column(name = "SoLuong")
+    @Column(name = "soLuong")
     private Integer soLuong;
 
-    @Column(name = "DonGia")
-    private Long donGia;
+    @Column(name = "donGia")
+    private String donGia;
 
-    @Column(name = "TrangThai")
+    @Column(name = "trangThai")
     private Integer trangThai;
 
-    public Long getId() {
+    public String getId() {
         return this.id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Long getIdChiTietGiay() {
+    public String getIdChiTietGiay() {
         return this.idChiTietGiay;
     }
 
-    public void setIdChiTietGiay(Long idChiTietGiay) {
+    public void setIdChiTietGiay(String idChiTietGiay) {
         this.idChiTietGiay = idChiTietGiay;
     }
 
-    public Long getIdHoaDon() {
+    public String getIdHoaDon() {
         return this.idHoaDon;
     }
 
-    public void setIdHoaDon(Long idHoaDon) {
+    public void setIdHoaDon(String idHoaDon) {
         this.idHoaDon = idHoaDon;
     }
 
@@ -56,11 +60,11 @@ public class HoaDonChiTiet {
         this.soLuong = soLuong;
     }
 
-    public Long getDonGia() {
+    public String getDonGia() {
         return this.donGia;
     }
 
-    public void setDonGia(Long donGia) {
+    public void setDonGia(String donGia) {
         this.donGia = donGia;
     }
 

@@ -6,48 +6,48 @@ import jakarta.persistence.*;
 @Table(name = "Anh")
 public class Anh {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id")
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String id;
 
-    @Column(name = "IdChiTietGiay")
-    private Long idChiTietGiay;
+    @Column(name = "ChiTietGiay")
+    private String chiTietGiay;
 
-    @Column(name = "TenAnh")
-    private String tenAnh;
+    @Column(name = "ten")
+    private String ten;
 
-    @Column(name = "AnhChinh")
-    private Boolean anhChinh;
+    @Column(name = "anhChinh")
+    private String anhChinh;
 
-    public Long getId() {
+    public String getId() {
         return this.id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Long getIdChiTietGiay() {
-        return this.idChiTietGiay;
+    public String getChiTietGiay() {
+        return this.chiTietGiay;
     }
 
-    public void setIdChiTietGiay(Long idChiTietGiay) {
-        this.idChiTietGiay = idChiTietGiay;
+    public void setChiTietGiay(String chiTietGiay) {
+        this.chiTietGiay = chiTietGiay;
     }
 
-    public String getTenAnh() {
-        return this.tenAnh;
+    public String getTen() {
+        return this.ten;
     }
 
-    public void setTenAnh(String tenAnh) {
-        this.tenAnh = tenAnh;
+    public void setTen(String ten) {
+        this.ten = ten;
     }
 
-    public Boolean getAnhChinh() {
+    public String getAnhChinh() {
         return this.anhChinh;
     }
 
-    public void setAnhChinh(Boolean anhChinh) {
+    public void setAnhChinh(String anhChinh) {
         this.anhChinh = anhChinh;
     }
 }

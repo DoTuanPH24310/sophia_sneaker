@@ -8,62 +8,62 @@ public class DiaChi {
     @Id
     @Column(name = "Id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(name = "IdNguoiDung")
-    private Long idNguoiDung;
+    @Column(name = "IdTaiKhoan")
+    private String idTaiKhoan;
 
-    @Column(name = "TenDiaChi")
-    private String tenDiaChi;
+    @Column(name = "ten")
+    private String ten;
 
-    @Column(name = "SoDienThoai")
-    private String soDienThoai;
+    @Column(name = "sdt")
+    private String sdt;
 
-    @Column(name = "DiaChiCuThe")
+    @Column(name = "diaChiCuThe")
     private String diaChiCuThe;
 
-    @Column(name = "PhuongXa")
+    @Column(name = "phuongXa")
     private String phuongXa;
 
-    @Column(name = "QuanHuyen")
+    @Column(name = "quanHuyen")
     private String quanHuyen;
 
-    @Column(name = "Tinh")
+    @Column(name = "tinh")
     private String tinh;
 
-    @Column(name = "DiaChiMacDinh")
-    private Boolean diaChiMacDinh;
+    @Column(name = "diaChiMacDinh")
+    private String diaChiMacDinh;
 
-    public Long getId() {
+    public String getId() {
         return this.id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Long getIdNguoiDung() {
-        return this.idNguoiDung;
+    public String getIdTaiKhoan() {
+        return this.idTaiKhoan;
     }
 
-    public void setIdNguoiDung(Long idNguoiDung) {
-        this.idNguoiDung = idNguoiDung;
+    public void setIdTaiKhoan(String idTaiKhoan) {
+        this.idTaiKhoan = idTaiKhoan;
     }
 
-    public String getTenDiaChi() {
-        return this.tenDiaChi;
+    public String getTen() {
+        return this.ten;
     }
 
-    public void setTenDiaChi(String tenDiaChi) {
-        this.tenDiaChi = tenDiaChi;
+    public void setTen(String ten) {
+        this.ten = ten;
     }
 
-    public String getSoDienThoai() {
-        return this.soDienThoai;
+    public String getSdt() {
+        return this.sdt;
     }
 
-    public void setSoDienThoai(String soDienThoai) {
-        this.soDienThoai = soDienThoai;
+    public void setSdt(String sdt) {
+        this.sdt = sdt;
     }
 
     public String getDiaChiCuThe() {
@@ -98,11 +98,11 @@ public class DiaChi {
         this.tinh = tinh;
     }
 
-    public Boolean getDiaChiMacDinh() {
+    public String getDiaChiMacDinh() {
         return this.diaChiMacDinh;
     }
 
-    public void setDiaChiMacDinh(Boolean diaChiMacDinh) {
+    public void setDiaChiMacDinh(String diaChiMacDinh) {
         this.diaChiMacDinh = diaChiMacDinh;
     }
 }

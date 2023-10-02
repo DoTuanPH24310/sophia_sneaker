@@ -6,46 +6,39 @@ import jakarta.persistence.*;
 @Table(name = "ThongBao")
 public class ThongBao {
     @Id
-    @Column(name = "Id")@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "Id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String id;
 
-    @Column(name = "IdNguoiDung")
-    private Long idNguoiDung;
+    @Column(name = "IdTaiKhoan")
+    private String idTaiKhoan;
 
-    @Column(name = "Kieu")
-    private String kieu;
-
-    @Column(name = "TieuDe")
+    @Column(name = "tieuDe")
     private String tieuDe;
 
-    @Column(name = "NoiDung")
+    @Column(name = "kieu")
+    private String kieu;
+
+    @Column(name = "noiDung")
     private String noiDung;
 
-    @Column(name = "HanhDong")
-    private Integer hanhDong;
+    @Column(name = "hanhDong")
+    private String hanhDong;
 
-    public Long getId() {
+    public String getId() {
         return this.id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Long getIdNguoiDung() {
-        return this.idNguoiDung;
+    public String getIdTaiKhoan() {
+        return this.idTaiKhoan;
     }
 
-    public void setIdNguoiDung(Long idNguoiDung) {
-        this.idNguoiDung = idNguoiDung;
-    }
-
-    public String getKieu() {
-        return this.kieu;
-    }
-
-    public void setKieu(String kieu) {
-        this.kieu = kieu;
+    public void setIdTaiKhoan(String idTaiKhoan) {
+        this.idTaiKhoan = idTaiKhoan;
     }
 
     public String getTieuDe() {
@@ -56,6 +49,14 @@ public class ThongBao {
         this.tieuDe = tieuDe;
     }
 
+    public String getKieu() {
+        return this.kieu;
+    }
+
+    public void setKieu(String kieu) {
+        this.kieu = kieu;
+    }
+
     public String getNoiDung() {
         return this.noiDung;
     }
@@ -64,11 +65,11 @@ public class ThongBao {
         this.noiDung = noiDung;
     }
 
-    public Integer getHanhDong() {
+    public String getHanhDong() {
         return this.hanhDong;
     }
 
-    public void setHanhDong(Integer hanhDong) {
+    public void setHanhDong(String hanhDong) {
         this.hanhDong = hanhDong;
     }
 }

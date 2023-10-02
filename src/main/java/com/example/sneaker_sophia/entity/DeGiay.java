@@ -8,24 +8,24 @@ public class DeGiay {
     @Id
     @Column(name = "Id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    @Column(name = "TenDeGiay")
-    private String tenDeGiay;
+    @Column(name = "ten")
+    private String ten;
 
-    public Long getId() {
+    public String getId() {
         return this.id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getTenDeGiay() {
-        return this.tenDeGiay;
+    public String getTen() {
+        return this.ten;
     }
 
-    public void setTenDeGiay(String tenDeGiay) {
-        this.tenDeGiay = tenDeGiay;
+    public void setTen(String ten) {
+        this.ten = ten;
     }
 }

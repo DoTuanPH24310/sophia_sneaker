@@ -6,52 +6,56 @@ import jakarta.persistence.*;
 @Table(name = "Voucher")
 public class Voucher {
     @Id
-    @Column(name = "Id")@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "Id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String id;
 
-    @Column(name = "Code")
-    private String code;
+    @Column(name = "ma")
+    private String ma;
 
-    @Column(name = "TenVoucher")
-    private String tenVoucher;
+    @Column(name = "ten")
+    private String ten;
 
-    @Column(name = "SoLuong")
+    @Column(name = "soLuong")
     private Integer soLuong;
 
-    @Column(name = "PhanTramGiam")
-    private Long phanTramGiam;
+    @Column(name = "phanTramGiam")
+    private String phanTramGiam;
 
-    @Column(name = "GiaTriHoaDonToiThieu")
-    private Long giaTriHoaDonToiThieu;
+    @Column(name = "soTienGiam")
+    private String soTienGiam;
 
-    @Column(name = "NgayBatDau")
-    private Long ngayBatDau;
+    @Column(name = "giaTriToiThieu")
+    private String giaTriToiThieu;
 
-    @Column(name = "NgayKetThuc")
-    private Long ngayKetThuc;
+    @Column(name = "ngayBatDau")
+    private String ngayBatDau;
 
-    public Long getId() {
+    @Column(name = "ngayKetThuc")
+    private String ngayKetThuc;
+
+    public String getId() {
         return this.id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getCode() {
-        return this.code;
+    public String getMa() {
+        return this.ma;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setMa(String ma) {
+        this.ma = ma;
     }
 
-    public String getTenVoucher() {
-        return this.tenVoucher;
+    public String getTen() {
+        return this.ten;
     }
 
-    public void setTenVoucher(String tenVoucher) {
-        this.tenVoucher = tenVoucher;
+    public void setTen(String ten) {
+        this.ten = ten;
     }
 
     public Integer getSoLuong() {
@@ -62,35 +66,43 @@ public class Voucher {
         this.soLuong = soLuong;
     }
 
-    public Long getPhanTramGiam() {
+    public String getPhanTramGiam() {
         return this.phanTramGiam;
     }
 
-    public void setPhanTramGiam(Long phanTramGiam) {
+    public void setPhanTramGiam(String phanTramGiam) {
         this.phanTramGiam = phanTramGiam;
     }
 
-    public Long getGiaTriHoaDonToiThieu() {
-        return this.giaTriHoaDonToiThieu;
+    public String getSoTienGiam() {
+        return this.soTienGiam;
     }
 
-    public void setGiaTriHoaDonToiThieu(Long giaTriHoaDonToiThieu) {
-        this.giaTriHoaDonToiThieu = giaTriHoaDonToiThieu;
+    public void setSoTienGiam(String soTienGiam) {
+        this.soTienGiam = soTienGiam;
     }
 
-    public Long getNgayBatDau() {
+    public String getGiaTriToiThieu() {
+        return this.giaTriToiThieu;
+    }
+
+    public void setGiaTriToiThieu(String giaTriToiThieu) {
+        this.giaTriToiThieu = giaTriToiThieu;
+    }
+
+    public String getNgayBatDau() {
         return this.ngayBatDau;
     }
 
-    public void setNgayBatDau(Long ngayBatDau) {
+    public void setNgayBatDau(String ngayBatDau) {
         this.ngayBatDau = ngayBatDau;
     }
 
-    public Long getNgayKetThuc() {
+    public String getNgayKetThuc() {
         return this.ngayKetThuc;
     }
 
-    public void setNgayKetThuc(Long ngayKetThuc) {
+    public void setNgayKetThuc(String ngayKetThuc) {
         this.ngayKetThuc = ngayKetThuc;
     }
 }

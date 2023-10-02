@@ -6,61 +6,62 @@ import jakarta.persistence.*;
 @Table(name = "HinhThucThanhToan")
 public class HinhThucThanhToan {
     @Id
-    @Column(name = "Id")@GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "Id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String id;
 
     @Column(name = "IdHoaDon")
-    private Long idHoaDon;
+    private String idHoaDon;
 
-    @Column(name = "MaHinhThuc")
-    private Long maHinhThuc;
+    @Column(name = "ma")
+    private String ma;
 
-    @Column(name = "TenHinhThuc")
-    private String tenHinhThuc;
+    @Column(name = "ten")
+    private String ten;
 
-    @Column(name = "SoTien")
-    private Long soTien;
+    @Column(name = "soTien")
+    private String soTien;
 
-    @Column(name = "TrangThai")
+    @Column(name = "trangThai")
     private Integer trangThai;
 
-    public Long getId() {
+    public String getId() {
         return this.id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Long getIdHoaDon() {
+    public String getIdHoaDon() {
         return this.idHoaDon;
     }
 
-    public void setIdHoaDon(Long idHoaDon) {
+    public void setIdHoaDon(String idHoaDon) {
         this.idHoaDon = idHoaDon;
     }
 
-    public Long getMaHinhThuc() {
-        return this.maHinhThuc;
+    public String getMa() {
+        return this.ma;
     }
 
-    public void setMaHinhThuc(Long maHinhThuc) {
-        this.maHinhThuc = maHinhThuc;
+    public void setMa(String ma) {
+        this.ma = ma;
     }
 
-    public String getTenHinhThuc() {
-        return this.tenHinhThuc;
+    public String getTen() {
+        return this.ten;
     }
 
-    public void setTenHinhThuc(String tenHinhThuc) {
-        this.tenHinhThuc = tenHinhThuc;
+    public void setTen(String ten) {
+        this.ten = ten;
     }
 
-    public Long getSoTien() {
+    public String getSoTien() {
         return this.soTien;
     }
 
-    public void setSoTien(Long soTien) {
+    public void setSoTien(String soTien) {
         this.soTien = soTien;
     }
 

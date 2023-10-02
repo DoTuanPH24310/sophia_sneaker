@@ -1,41 +1,41 @@
 package com.example.sneaker_sophia.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "GioHangChiTiet")
 public class GioHangChiTiet {
     @Id
     @Column(name = "IdGioHang")
-    private Long idGioHang;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String idGioHang;
 
     @Id
     @Column(name = "IdChiTietGiay")
-    private Long idChiTietGiay;
+    private String idChiTietGiay;
 
-    @Column(name = "SoLuong")
+    @Column(name = "soLuong")
     private Integer soLuong;
 
-    @Column(name = "CreateAt")
-    private LocalDateTime createAt;
+    @Column(name = "ngayTao")
+    private String ngayTao;
 
-    @Column(name = "UpdateAt")
-    private LocalDateTime updateAt;
+    @Column(name = "ngaySua")
+    private String ngaySua;
 
-    public Long getIdGioHang() {
+    public String getIdGioHang() {
         return this.idGioHang;
     }
 
-    public void setIdGioHang(Long idGioHang) {
+    public void setIdGioHang(String idGioHang) {
         this.idGioHang = idGioHang;
     }
 
-    public Long getIdChiTietGiay() {
+    public String getIdChiTietGiay() {
         return this.idChiTietGiay;
     }
 
-    public void setIdChiTietGiay(Long idChiTietGiay) {
+    public void setIdChiTietGiay(String idChiTietGiay) {
         this.idChiTietGiay = idChiTietGiay;
     }
 
@@ -47,19 +47,19 @@ public class GioHangChiTiet {
         this.soLuong = soLuong;
     }
 
-    public LocalDateTime getCreateAt() {
-        return this.createAt;
+    public String getNgayTao() {
+        return this.ngayTao;
     }
 
-    public void setCreateAt(LocalDateTime createAt) {
-        this.createAt = createAt;
+    public void setNgayTao(String ngayTao) {
+        this.ngayTao = ngayTao;
     }
 
-    public LocalDateTime getUpdateAt() {
-        return this.updateAt;
+    public String getNgaySua() {
+        return this.ngaySua;
     }
 
-    public void setUpdateAt(LocalDateTime updateAt) {
-        this.updateAt = updateAt;
+    public void setNgaySua(String ngaySua) {
+        this.ngaySua = ngaySua;
     }
 }
