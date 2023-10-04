@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/manage/")
+@RequestMapping("/admin/")
 public class chiTietGiayController {
 
     @Autowired
@@ -34,6 +34,11 @@ public class chiTietGiayController {
         return "admin/chiTietGiay/chiTietGiay";
     }
 
+    @GetMapping("chi-tiet-giay/add")
+    public String add(Model model) {
+
+        return "admin/chiTietGiay/formChiTietGiay";
+    }
 //    @GetMapping("chi-tiet-giay/page/{pageNum}")
 //    private String listByPage(@PathVariable(name = "pageNum") int pageNum, Model model,
 //                              @Param("sortField") String sortField, @Param("sortDir") String sortDir,
