@@ -2,6 +2,8 @@ package com.example.sneaker_sophia.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "ChiTietGiay")
 public class ChiTietGiay {
@@ -9,24 +11,40 @@ public class ChiTietGiay {
     @Column(name = "Id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "IdGiay", referencedColumnName = "Id", insertable = false, updatable = false)
+    private Giay giay;
 
-    @Column(name = "IdGiay")
-    private String idGiay;
+    public ChiTietGiay() {
+    }
 
-    @Column(name = "IdKichCo")
-    private String idKichCo;
+    public Giay getGiay() {
+        return giay;
+    }
 
-    @Column(name = "IdDeGiay")
-    private String idDeGiay;
+    public void setGiay(Giay giay) {
+        this.giay = giay;
+    }
 
-    @Column(name = "IdHang")
-    private String idHang;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "IdKichCo", referencedColumnName = "Id", insertable = false, updatable = false)
+    private KichCo kichCo;
 
-    @Column(name = "IdLoaiGiay")
-    private String idLoaiGiay;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "IdDeGiay", referencedColumnName = "Id", insertable = false, updatable = false)
+    private DeGiay deGiay;
 
-    @Column(name = "IdMauSac")
-    private String idMauSac;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "IdHang", referencedColumnName = "Id", insertable = false, updatable = false)
+    private Hang hang;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "IdLoaiGiay", referencedColumnName = "Id", insertable = false, updatable = false)
+    private LoaiGiay loaiGiay;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "IdMauSac", referencedColumnName = "Id", insertable = false, updatable = false)
+    private MauSac mauSac;
 
     @Column(name = "ma")
     private String ma;
@@ -40,60 +58,66 @@ public class ChiTietGiay {
     @Column(name = "trangThai")
     private Integer trangThai;
 
+    public ChiTietGiay(String id, Giay giay, KichCo kichCo, DeGiay deGiay, Hang hang, LoaiGiay loaiGiay, MauSac mauSac, String ma, String gia, Integer soLuong, Integer trangThai) {
+        this.id = id;
+        this.giay = giay;
+        this.kichCo = kichCo;
+        this.deGiay = deGiay;
+        this.hang = hang;
+        this.loaiGiay = loaiGiay;
+        this.mauSac = mauSac;
+        this.ma = ma;
+        this.gia = gia;
+        this.soLuong = soLuong;
+        this.trangThai = trangThai;
+    }
+
+    public KichCo getKichCo() {
+        return kichCo;
+    }
+
+    public void setKichCo(KichCo kichCo) {
+        this.kichCo = kichCo;
+    }
+
+    public DeGiay getDeGiay() {
+        return deGiay;
+    }
+
+    public void setDeGiay(DeGiay deGiay) {
+        this.deGiay = deGiay;
+    }
+
+    public Hang getHang() {
+        return hang;
+    }
+
+    public void setHang(Hang hang) {
+        this.hang = hang;
+    }
+
+    public LoaiGiay getLoaiGiay() {
+        return loaiGiay;
+    }
+
+    public void setLoaiGiay(LoaiGiay loaiGiay) {
+        this.loaiGiay = loaiGiay;
+    }
+
+    public MauSac getMauSac() {
+        return mauSac;
+    }
+
+    public void setMauSac(MauSac mauSac) {
+        this.mauSac = mauSac;
+    }
+
     public String getId() {
         return this.id;
     }
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getIdGiay() {
-        return this.idGiay;
-    }
-
-    public void setIdGiay(String idGiay) {
-        this.idGiay = idGiay;
-    }
-
-    public String getIdKichCo() {
-        return this.idKichCo;
-    }
-
-    public void setIdKichCo(String idKichCo) {
-        this.idKichCo = idKichCo;
-    }
-
-    public String getIdDeGiay() {
-        return this.idDeGiay;
-    }
-
-    public void setIdDeGiay(String idDeGiay) {
-        this.idDeGiay = idDeGiay;
-    }
-
-    public String getIdHang() {
-        return this.idHang;
-    }
-
-    public void setIdHang(String idHang) {
-        this.idHang = idHang;
-    }
-
-    public String getIdLoaiGiay() {
-        return this.idLoaiGiay;
-    }
-
-    public void setIdLoaiGiay(String idLoaiGiay) {
-        this.idLoaiGiay = idLoaiGiay;
-    }
-
-    public String getIdMauSac() {
-        return this.idMauSac;
-    }
-
-    public void setIdMauSac(String idMauSac) {
-        this.idMauSac = idMauSac;
     }
 
     public String getMa() {

@@ -2,6 +2,8 @@ package com.example.sneaker_sophia.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "DeGiay")
 public class DeGiay {
@@ -12,6 +14,9 @@ public class DeGiay {
 
     @Column(name = "ten")
     private String ten;
+
+    @OneToMany(mappedBy = "deGiay")
+    private List<ChiTietGiay> chiTietGiayList;
 
     public String getId() {
         return this.id;
