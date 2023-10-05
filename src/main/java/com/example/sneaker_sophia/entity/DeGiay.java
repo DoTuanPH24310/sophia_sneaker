@@ -3,14 +3,15 @@ package com.example.sneaker_sophia.entity;
 import jakarta.persistence.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "DeGiay")
 public class DeGiay {
     @Id
     @Column(name = "Id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column(name = "ten")
     private String ten;
@@ -18,11 +19,11 @@ public class DeGiay {
     @OneToMany(mappedBy = "deGiay")
     private List<ChiTietGiay> chiTietGiayList;
 
-    public String getId() {
+    public UUID getId() {
         return this.id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

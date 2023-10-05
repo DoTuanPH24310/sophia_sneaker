@@ -21,16 +21,9 @@ public class ChiTietGiayIplm implements ChiTietGiayService {
         return chiTietGiayRepository.findAll();
     }
 
-//    @Override
-//    public Page<ChiTietGiay> listByPageAndProductName(int pageNum, String sortField, String sortDir, String keyword, String productName) {
-//        Sort sort = Sort.by(sortField);
-//        sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
-//        Pageable pageable = PageRequest.of(pageNum - 1, PRODUCT_DETAIL_PER_PAGE, sort);
-//
-//        if (StringUtils.isEmpty(productName) && StringUtils.isEmpty(keyword)) {
-//            return chiTietGiayRepository.findAll(pageable);
-//        } else  {
-//            return chiTietGiayRepository.findByKeyword(keyword, pageable);
-//        }
-//    }
+    @Override
+    public void add(ChiTietGiay chiTietGiay) {
+        chiTietGiayRepository.save(chiTietGiay);
+    }
+
 }
