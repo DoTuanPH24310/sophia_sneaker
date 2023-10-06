@@ -38,4 +38,26 @@ public class ChiTietGiayIplm implements ChiTietGiayService {
         chiTietGiayRepository.deleteById(id);
     }
 
+    @Override
+    public Page<ChiTietGiay> findAll(Pageable pageable) {
+        return chiTietGiayRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<ChiTietGiay> listByPageAndProductName(int pageNum, String sortField, String sortDir, String keyword, String productName) {
+        Sort sort = Sort.by(sortField);
+        sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
+        Pageable pageable = PageRequest.of(pageNum - 1, PRODUCT_DETAIL_PER_PAGE, sort);
+
+        if (StringUtils.isEmpty(productName) && StringUtils.isEmpty(keyword)) {
+            return chiTietGiayRepository.findAll(pageable);
+        } else if (StringUtils.isEmpty(productName)) {
+            return chiTietGiayRepository.findByKeyword(keyword, pageable);
+        } else if (StringUtils.isEmpty(keyword)) {
+            return chiTietGiayRepository.findByGiay_TenContainingIgnoreCase(productName, pageable);
+        } else {
+            return chiTietGiayRepository.findByMaAndKeyWord(keyword, productName, pageable);
+        }
+    }
+
 }

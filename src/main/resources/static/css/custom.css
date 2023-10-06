@@ -803,11 +803,16 @@ table.table td i {
         background-color: rgba(0, 0, 0, 0.5);
     }
 }
+/*thanh search*/
 
-
-
-
-
+.search{
+    width: 350px !important;
+    margin-right: 10px !important;
+    border-radius: 50px 50px !important;
+    background-color: #FFF !important;
+    border: #495057 solid 1px !important;
+    color: #1b1e21 !important;
+}
 
 
 
