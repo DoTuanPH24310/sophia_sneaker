@@ -103,11 +103,11 @@
                                 <button class="btn btn-danger" style="border-radius: 30px; font-size: 9px;">Ngưng hoạt động</button>
                             </td>
                             <td>
-                                <a class="edit">
-                                    <i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i>
+                                <a class="edit" style="text-decoration: none" th:href="@{'/admin/chi-tiet-giay/edit/' + ${ctg.id}}" title="Thay đổi thông tin">
+                                    <i style="color: #FFC107" class="fas fa-edit"></i>
                                 </a>
-                                <a onclick="return confirm('Bạn có muốn xóa không')" class="delete">
-                                    <i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i>
+                                <a class="delete" style="text-decoration: none" th:href="@{'/admin/chi-tiet-giay/delete/' + ${ctg.id}}" title="Xóa" onclick="return confirm('Bạn có muốn xóa không')" >
+                                    <i class="fa fa-trash"></i>
                                 </a>
                             </td>
                         </tr>

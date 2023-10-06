@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.util.StringUtils;
 
 import java.util.List;
+import java.util.UUID;
+
 @Service
 public class ChiTietGiayIplm implements ChiTietGiayService {
     @Autowired
@@ -22,8 +24,18 @@ public class ChiTietGiayIplm implements ChiTietGiayService {
     }
 
     @Override
-    public void add(ChiTietGiay chiTietGiay) {
+    public void save(ChiTietGiay chiTietGiay) {
         chiTietGiayRepository.save(chiTietGiay);
+    }
+
+    @Override
+    public ChiTietGiay getOne(UUID id) {
+        return chiTietGiayRepository.findById(id).get();
+    }
+
+    @Override
+    public void delete(UUID id) {
+        chiTietGiayRepository.deleteById(id);
     }
 
 }

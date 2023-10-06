@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/admin/")
@@ -58,10 +59,34 @@ public class chiTietGiayController {
         return "admin/chiTietGiay/formChiTietGiay";
     }
 
+    @GetMapping("chi-tiet-giay/edit/{id}")
+    public String edit(Model model, @PathVariable("id")UUID id) {
+        ChiTietGiay chiTietGiay = chiTietGiayService.getOne(id);
+        model.addAttribute("chiTietGiay", chiTietGiay);
+        model.addAttribute("giay", giayService.getAll());
+        model.addAttribute("hang", hangService.getAll());
+        model.addAttribute("deGiay", deGiayService.getAll());
+        model.addAttribute("mauSac", mauSacService.getAll());
+        model.addAttribute("loaiGiay", loaiGiayService.getAll());
+        model.addAttribute("kichCo", kichCoService.getAll());
+
+        return "admin/chiTietGiay/formEditChiTietGiay";
+    }
+
     @PostMapping("chi-tiet-giay/save")
     public String add(ChiTietGiay chiTietGiay) {
-        chiTietGiayService.add(chiTietGiay);
+        chiTietGiayService.save(chiTietGiay);
+        return "redirect:/admin/chi-tiet-giay";
+    }
+    @PostMapping("chi-tiet-giay/update")
+    public String update(ChiTietGiay chiTietGiay) {
+        chiTietGiayService.save(chiTietGiay);
         return "redirect:/admin/chi-tiet-giay";
     }
 
+    @GetMapping("chi-tiet-giay/delete/{id}")
+    public String delete(@PathVariable("id") UUID id) {
+        chiTietGiayService.delete(id);
+        return "redirect:/admin/chi-tiet-giay";
+    }
 }

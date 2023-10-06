@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layouts/layout}">
+<head>
+    <link rel="stylesheet" href="/css/custom.css">
+    <style>
+        .custom-width {
+            height: 60px;
+            border-radius:20px;
+        }
+         .custom-radio{
+             width: 50px;
+             margin-left: 50px;
+             margin-top: 20px;
+         }
+    </style>
+</head>
+<body>
+<section>
+    <div layout:fragment="content" class="col-md-9" style="margin: auto">
+        <form method="post" th:action="@{/admin/chi-tiet-giay/update}" th:object="${chiTietGiay}">
+                <input  th:field="*{id}" class="form-control custom-width" id="id" name="id" style="display: none;">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col">
+                        <label for="maChiTietGiay">Mã chi tiết giày:</label>
+                        <input  th:field="*{ma}" class="form-control custom-width" id="maChiTietGiay" name="maChiTietGiay">
+                    </div>
+                    <div class="col">
+                        <label for="tenGiay">Tên giày:</label>
+                        <select th:field="*{giay}" class="form-control custom-width" id="tenGiay" required="" name="tenGiay">
+                            <th:block th:each="giay : ${giay}">
+                                <option th:value="${giay.id}">[[${giay.ten}]]</option>
+                            </th:block>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col">
+                        <label for="kichCo">Kích cỡ:</label>
+                        <select th:field="*{kichCo}" class="form-control custom-width" id="kichCo" required="" name="dayDeo">
+                            <th:block th:each="kichCo : ${kichCo}">
+                                    <option th:value="${kichCo.id}" th:label="${kichCo.ten}">
+<!--                                        [[${kichCo.ten}]]-->
+                                    </option>
+                            </th:block>
+                        </select>
+
+                    </div>
+                    <div class="col">
+                        <label for="loaiDe">Loại đế:</label>
+                        <select th:field="*{deGiay}" class="form-control custom-width" id="loaiDe" required="" name="loaiDe">
+                            <th:block th:each="deGiay : ${deGiay}">
+                                <option th:value="${deGiay.id}">[[${deGiay.ten}]]</option>
+                            </th:block>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col">
+                        <label for="hang">Hãng:</label>
+                        <select th:field="*{hang}" class="form-control custom-width" id="hang" required="" name="hang">
+                            <th:block th:each="hang : ${hang}">
+                                <option th:value="${hang.id}">[[${hang.ten}]]</option>
+                            </th:block>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label for="loaiGiay">Loại giày:</label>
+                        <select th:field="*{loaiGiay}" class="form-control custom-width" id="loaiGiay" required="" name="loaiGiay">
+                            <th:block th:each="loaiGiay : ${loaiGiay}">
+                                <option th:value="${loaiGiay.id}">[[${loaiGiay.ten}]]</option>
+                            </th:block>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col">
+                        <label for="mauSac">Màu sắc:</label>
+                        <select th:field="*{mauSac}" class="form-control custom-width" id="mauSac" required="" name="mauSac">
+                            <th:block th:each="mauSac : ${mauSac}">
+                                <option th:value="${mauSac.id}">[[${mauSac.ten}]]</option>
+                            </th:block>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label for="gia">Giá:</label>
+                        <input  th:field="*{gia}" class="form-control custom-width" id="gia" name="gia">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col">
+                        <label for="soLuong">Số lượng:</label>
+                        <input th:field="*{soLuong}" class="form-control custom-width" id="soluong" name="soluong">
+                    </div>
+                    <div class="col">
+                        <label>Trạng thái:</label>
+                        <div>
+                            <input class="custom-radio" type="radio" id="active" name="trangThai" value="1" checked>
+                            <label for="active">Active</label>
+
+                            <input class="custom-radio" type="radio" id="inactive" name="trangThai" value="0">
+                            <label for="inactive">Inactive</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" style="text-align: center">
+                <input type="submit" class="btn btn-primary" style="height: 50px; margin-top: 50px" value="Submit">
+            </div>
+        </form>
+
+    </div>
+</section>
+</body>
+</html>
