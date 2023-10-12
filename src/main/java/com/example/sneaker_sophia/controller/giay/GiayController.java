@@ -31,7 +31,7 @@ public class GiayController {
     @GetMapping("hien-thi")
     public String hienthi(Model model,
                           @RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo,
-                          @RequestParam(name = "txtSearch", required = false) String txtSearch,
+                          @RequestParam(name = "textSearch", required = false) String txtSearch,
                           @RequestParam(name = "trangThai", required = false) String trangThai) {
         Pageable pageable = PageRequest.of(pageNo, 5);
         Page<Giay> page = this.giayService.fillter(txtSearch, trangThai, pageable);

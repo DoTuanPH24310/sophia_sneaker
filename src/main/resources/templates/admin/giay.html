@@ -4,6 +4,7 @@
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
     <!----css3---->
+
     <link rel="stylesheet" href="/css/custom.css">
     <style>
 
@@ -59,27 +60,27 @@
                     <div class="row">
                         <div class="col-6">
                             <label> Tìm kiếm </label>
-                            <input style="border-radius: 10px;" type="text" th:value="${textSearch}"
-                                   class="form-control" name="textSearch"
-                                   placeholder="Nhập mã, tên của giày...">
+                            <input th:value="${textSearch}" class="form-control" name="textSearch" placeholder="Nhập mã, tên của giày..."
+                                    onchange="this.form.submit()"
+                                   style="border-radius: 10px;" id="txtSearchInput">
+
                             <p class="text-danger"></p>
                         </div>
                         <div class="col-6">
                             <label>Trạng thái</label>
-                            <select style="border-radius: 10px;" class="form-select" th:onchange="this.form.submit()"
-                                    name="trangThai">
+                            <select style="border-radius: 10px;" class="form-select" name="trangThai" id="trangThaiSelect" onchange="this.form.submit()">
                                 <div style="border: 10px">
                                     <option th:selected="${trangThai}  == -1 ? true:false" value="-1"> Tất cả
                                     </option>
                                     <option th:selected="${trangThai} == 0 ? true:false" value="0"> Còn hạn
                                     </option>
-                                    <!--                                                th:selected="${chucVu.tenChucVu}.equal('Nhân viên')  ? true : false"-->
                                     <option th:selected="${trangThai} == 1 ? true:false" value="1">Hết hạn
                                     </option>
                                 </div>
                             </select>
                         </div>
                     </div>
+
                     <div class="d-flex justify-content-center">
                         <a th:href="@{/giay/hien-thi}" class="btn btn-primary">Làm mới</a>
                     </div>
@@ -141,24 +142,44 @@
                     <ul class="pagination">
                         <li class="page-item">
                             <a class="page-link" th:if="${pageNo > 0}"
-                               th:href="@{/admin/giay/hien-thi#table(pageNo=${i},trangThai=${trangThai},textSearch=${textSearch})}">Prev</a>
+                               th:href="@{/giay/hien-thi#table(pageNo=${i},trangThai=${trangThai},textSearch=${textSearch})}">Prev</a>
                             <span class="page-link" th:unless="${pageNo > 0}">Prev</span>
                         </li>
                         <li th:each="i: ${#numbers.sequence(0, danhSachGiay.totalPages-1)}" class="page-item">
-                            <a th:href="@{/admin/giay/hien-thi#table(pageNo=${i},trangThai=${trangThai},textSearch=${textSearch})}"
+                            <a th:href="@{/giay/hien-thi#table(pageNo=${i},trangThai=${trangThai},textSearch=${textSearch})}"
                                class="page-link"
                                th:text="${i +1}"></a>
                         </li>
 
                         <li class="page-item">
                             <a class="page-link" th:if="${pageNo < danhSachGiay.totalPages -1}"
-                               th:href="@{/admin/giay/hien-thi#table(pageNo=${i},trangThai=${trangThai},textSearch=${textSearch})}">Next</a>
+                               th:href="@{/giay/hien-thi#table(pageNo=${i},trangThai=${trangThai},textSearch=${textSearch})}">Next</a>
                             <span class="page-link" th:unless="${pageNo < danhSachGiay.totalPages -1}">Next</span>
                         </li>
                     </ul>
                 </div>
             </div>
         </div>
+    </div>
 </section>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!--<script>-->
+<!--    var lastInputValue = ""; // Biến lưu giá trị trước đó của trường nhập liệu-->
+
+<!--    function handleInput() {-->
+<!--        var inputText = document.getElementById("txtSearchInput").value;-->
+<!--        console.log("Nội dung đã nhập: " + inputText);-->
+<!--        lastInputValue = inputText;-->
+<!--    }-->
+
+<!--    function handleKeydown(event) {-->
+<!--        var inputText = document.getElementById("txtSearchInput").value;-->
+
+<!--        // Nếu giá trị đã thay đổi từ lần nhập trước đó và không phải là phím space-->
+<!--        if (inputText !== lastInputValue && event.key !== " ") {-->
+<!--            console.log("Sự kiện keydown: " + inputText);-->
+<!--        }-->
+<!--    }-->
+<!--</script>-->
 </body>
 </html>
