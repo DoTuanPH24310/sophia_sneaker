@@ -13,8 +13,10 @@ import java.util.UUID;
 @Repository
 public interface GiayRepository extends JpaRepository<Giay, UUID> {
 
-    @Query(value = "select LOWER(id) from Giay",nativeQuery = true)
-    List<String> finAllId();
+    @Query(value = "select LOWER(id) from Giay where trangThai= ?1",nativeQuery = true)
+    List<String> finAllId(Integer trangThai);
+
+    List<Giay> findAllByTrangThaiEquals(int trangThai);
 
 
 }

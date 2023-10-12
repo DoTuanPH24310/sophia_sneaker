@@ -1,27 +1,20 @@
 package com.example.sneaker_sophia.controller;
 
-
 import com.example.sneaker_sophia.entity.Voucher;
-import com.example.sneaker_sophia.repository.ChiTietGiayRepository;
+import com.example.sneaker_sophia.service.ChiTietGiayService;
 import com.example.sneaker_sophia.service.GiayService;
 import com.example.sneaker_sophia.service.VoucherService;
-import com.example.sneaker_sophia.util.ListIDGiay;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.ServerProperties;
-import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+
 
 @Controller
 @RequestMapping("/admin/voucher")
@@ -32,6 +25,9 @@ public class VoucherController {
 
     @Autowired
     private GiayService giayService;
+
+    @Autowired
+    private ChiTietGiayService chiTietGiayService;
 
 
     @Autowired
@@ -54,23 +50,31 @@ public class VoucherController {
     public String viewAdd(Model model) {
         model.addAttribute("listId", new ArrayList<>(List.of("false")));
         model.addAttribute("listIdCTG", new ArrayList<>(List.of("false")));
-        model.addAttribute("listGiay", giayService.findAll());
+        model.addAttribute("listGiay", giayService.findAllByTrangThaiEquals(0));
         return "admin/voucher/add";
     }
 
 
     @PostMapping("/view-add")
     public String getTable(Model model, @RequestParam(value = "requestId", defaultValue = "false") List<String> listId,
-                            @RequestParam(value = "requestIdCTG", defaultValue = "false") List<String>listIDCTG) {
-        System.out.println(listId.size() + " chek size");
-        // khi chọn cả 3
-        // Khi chọn nút all rồi lại bỏ chọn
-        // Khi chọn All rồi nhưng lại bỏ chọn 1 dòng dữ liệu khác
+                           @RequestParam(value = "requestIdCTG", defaultValue = "false") List<String> listIDCTG) {
+//        để so sánh các trường được chọn
         listId = giayService.checkedGiay(listId, model);
+        if (listId.contains("false") == false) {
+            listIDCTG = chiTietGiayService.checkedCTG(listIDCTG, model, listId);
+        }
+        System.out.println("Danh sách id của giày: ");
+        for (String x: listId) {
+            System.out.println(x);
+        }
 
+        System.out.println("Danh sách id của chi tiết giày: ");
+        for (String x: listIDCTG) {
+            System.out.println(x);
+        }
         model.addAttribute("listId", listId);
-        model.addAttribute("listIdCTG",listIDCTG);
-        model.addAttribute("listGiay", giayService.findAll());
+        model.addAttribute("listIDCTG", listIDCTG);
+        model.addAttribute("listGiay", giayService.findAllByTrangThaiEquals(0));
         return "admin/voucher/add";
     }
 

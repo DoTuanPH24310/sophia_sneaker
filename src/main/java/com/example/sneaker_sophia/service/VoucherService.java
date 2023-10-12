@@ -36,6 +36,8 @@ public class VoucherService {
         return voucherRepository.searchAndFilter(text,trangThai,pageable);
     }
 
+
+
     public Page locVaTimKiem(Pageable pageable, Model model) {
         Page page = null;
         String txtSearch = request.getParameter("textSearch");

@@ -61,82 +61,85 @@
 
 <body>
 <div layout:fragment="content" class="container px-2">
-    <div class="row">
+    <form  action="/admin/voucher/view-add#tableCTG" method="post">
+        <div class="row">
 
-        <!-- Form nhập liệu -->
-        <div class="col-3 formInput">
-            <div class="row">
-                <h4 style="font-weight: bold; text-align: center; margin-top: 4px">THÊM VOUCHER</h4>
-            </div>
-            <br><br>
-
-            <div class="row">
-                <div class="form-floating">
-                    <input id="tenNhanVien" type="text" class="form-control" placeholder="Enter email">
-                    <label for="tenNhanVien"> &nbsp; Mã giảm giá</label>
-                    <p class="text-danger"></p>
+            <!-- Form nhập liệu -->
+            <div class="col-3 formInput">
+                <div class="row">
+                    <h5 style="font-weight: bold; text-align: center; margin-top: 10px">THÊM VOUCHER</h5>
                 </div>
-            </div>
-            <br>
+                <br><br>
 
-            <div class="row">
-                <div class="form-floating">
-                    <input id="tenNhanVien" type="text" class="form-control" placeholder="Enter email">
-                    <label for="tenNhanVien"> &nbsp; Giá trị</label>
-                    <p class="text-danger"></p>
-                </div>
-            </div>
-            <br>
-
-
-            <div class="row">
-                <div class="form-floating">
-                    <input id="tenNhanVien" type="datetime-local" class="form-control" placeholder="Enter email">
-                    <label for="tenNhanVien"> &nbsp; Ngày bắt đầu</label>
-                    <p class="text-danger"></p>
-                </div>
-            </div>
-            <br>
-
-
-            <div class="row">
-                <div class="form-floating">
-                    <input id="tenNhanVien" type="datetime-local" class="form-control" placeholder="Enter email">
-                    <label for="tenNhanVien"> &nbsp; Ngày kết thúc</label>
-                    <p class="text-danger"></p>
-                </div>
-            </div>
-            <br>
-
-            <div class="row">
-                <div class="form-floating">
-                    <input id="tenNhanVien" type="text" class="form-control" placeholder="Enter email">
-                    <label for="tenNhanVien"> &nbsp; Mô tả</label>
-                    <p class="text-danger"></p>
-                </div>
-            </div>
-            <br>
-
-
-            <button class="btn btn-primary mt-3" style="margin-left: 33%">
-                Thêm mới
-            </button>
-        </div>
-        <div class="col-1"></div>
-
-        <div class="col-8 formTable">
-            <form class="table" action="/admin/voucher/view-add#tableCTG" method="post">
-            <!-- Bảng sản phẩm -->
-            <div class="row">
-
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="position-relative">
-                        <span class="position-absolute search mt-2"><i class="fa fa-search"></i></span>
-                        <input class="form-control w-100 mt-2" placeholder="Tìm kiếm theo tên, mã,...">
+                <div class="row">
+                    <div class="form-floating">
+                        <input id="tenNhanVien" type="text" class="form-control" placeholder="Enter email">
+                        <label for="tenNhanVien"> &nbsp; Mã giảm giá</label>
+                        <p class="text-danger"></p>
                     </div>
-
                 </div>
-                <div class=" table-responsive table-wrapper-scroll-y my-custom-scrollbar">
+                <br>
+
+                <div class="row">
+                    <div class="form-floating">
+                        <input id="tenNhanVien" type="text" class="form-control" placeholder="Enter email">
+                        <label for="tenNhanVien"> &nbsp; Giá trị</label>
+                        <p class="text-danger"></p>
+                    </div>
+                </div>
+                <br>
+
+
+                <div class="row">
+                    <div class="form-floating">
+                        <input id="tenNhanVien" type="datetime-local" class="form-control"
+                               placeholder="Ngày bắt đầu">
+                        <label for="tenNhanVien"> &nbsp; Ngày bắt đầu</label>
+                        <p class="text-danger"></p>
+                    </div>
+                </div>
+                <br>
+
+
+                <div class="row">
+                    <div class="form-floating">
+                        <input id="tenNhanVien" type="datetime-local" class="form-control" placeholder="Enter email">
+                        <label for="tenNhanVien"> &nbsp; Ngày kết thúc</label>
+                        <p class="text-danger"></p>
+                    </div>
+                </div>
+                <br>
+
+                <div class="row">
+                    <div class="form-floating">
+                        <input id="tenNhanVien" type="text" class="form-control" placeholder="Enter email">
+                        <label for="tenNhanVien"> &nbsp; Mô tả</label>
+                        <p class="text-danger"></p>
+                    </div>
+                </div>
+                <br>
+
+                <div class="d-flex justify-content-center">
+                    <button class="btn btn-primary mb-3 ">
+                        Thêm mới
+                    </button>
+                </div>
+
+            </div>
+            <div class="col-1"></div>
+
+            <div class="col-8 formTable">
+                <!-- Bảng sản phẩm -->
+                <div class="row">
+
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div class="position-relative">
+                            <span class="position-absolute search"><i class="fa fa-search"></i></span>
+                            <input class="form-control w-100" placeholder="Tìm kiếm theo tên, mã,...">
+                        </div>
+
+                    </div>
+                    <div class="table table-responsive table-wrapper-scroll-y my-custom-scrollbar">
 
                         <table class="table table-responsive table-borderless">
                             <thead>
@@ -186,90 +189,90 @@
                             </tbody>
                         </table>
 
-                </div>
-            </div>
-
-
-            <!-- Bảng chỉ tiết sản phẩm -->
-            <div class="row mt-3">
-                <h4 style="font-weight: bold; ">Chi tiết sản phẩm</h4>
-
-                <div class="mb-2 d-flex justify-content-between align-items-center">
-                    <div class="position-relative">
-                        <span class="position-absolute search"><i class="fa fa-search"></i></span>
-                        <input class="form-control w-100" placeholder="Tìm kiếm theo tên, mã,...">
                     </div>
+                </div>
 
-                    <div class="px-2">
-                        <span>Bộ lọc <i class="fa fa-angle-down"></i></span>
-                        <i class="fa fa-ellipsis-h ms-3"></i>
+
+                <!-- Bảng chỉ tiết sản phẩm -->
+                <div class="row mt-4">
+                    <h6 style="font-weight: bold; ">Chi tiết sản phẩm</h6>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="position-relative">
+                            <span class="position-absolute search"><i class="fa fa-search"></i></span>
+                            <input class="form-control w-100" placeholder="Tìm kiếm theo tên, mã,...">
+                        </div>
                     </div>
+                    <div class="table table-responsive table-wrapper-scroll-y my-custom-scrollbar mb-3">
+                        <table id="tableCTG" class="table table-responsive table-borderless">
 
+                            <thead>
+                            <tr class="bg-light">
+                                <th scope="col" width="10%">
+                                    <input class="form-check-input"
+                                           type="checkbox"
+                                           th:value="AllCTG"
+                                           th:name="requestIdCTG"
+                                           th:onchange="this.form.submit()"
+                                           th:checked="${checkAllCTG}"
+
+                                    >
+                                </th>
+                                <th scope="col" width="5%">#</th>
+                                <th scope="col" width="15%">Ảnh</th>
+                                <th scope="col" width="20%">Tên sản phẩm</th>
+                                <th scope="col" width="10%">Kích cỡ</th>
+                                <th scope="col" width="10%">Màu</th>
+                                <th scope="col" width="35%">Trạng thái</th>
+                                <th scope="col" width="5%">Thao tác</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            <tr th:each="x : ${listCTG}">
+                                <th scope="row">
+                                    <input class="form-check-input"
+                                           type="checkbox"
+                                           th:value="${x.id}"
+                                           th:name="requestIdCTG"
+                                           th:onchange="this.form.submit()"
+                                           th:checked="${#strings.contains(listIDCTG, x.id)} ? true:false"
+                                    >
+                                </th>
+                                <td th:text="${xStat.index + 1}"></td>
+                                <td><i class="fa fa-check-circle-o green"></i><span class="ms-1"></span></td>
+                                <td th:text="${x.giay.ten}"></td>
+                                <td th:text="${x.kichCo.ten}"></td>
+                                <td></td>
+                                <td th:if="${x.trangThai == 0}">
+                                    <button type="button" class="btn btn-success"
+                                            style="border-radius: 30px; font-size: 11px; height: 40px">
+                                        Đang kinh doanh
+                                    </button>
+                                </td>
+                                <td th:unless="${x.trangThai == 0}">
+                                    <button type="button" class="btn btn-danger"
+                                            style="border-radius: 30px; font-size: 11px; height: 40px">
+                                        Ngừng kinh doanh
+                                    </button>
+                                </td>
+                                <td>
+                                    <a href="">
+                                        <i class="material-icons text-warning" style="font-size: 23px" title="Chi tiết">visibility</i>
+                                    </a>
+                                </td>
+                            </tr>
+
+
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="table table-responsive table-wrapper-scroll-y my-custom-scrollbar mb-3">
-                    <table id="tableCTG" class="table table-responsive table-borderless">
 
-                        <thead>
-                        <tr class="bg-light">
-                            <th scope="col" width="10%">
-                                <input class="form-check-input"
-                                       type="checkbox"
-                                       th:value="AllCTG"
-                                       th:name="requestIDCTG"
-                                       th:onchange="this.form.submit()"
-                                       th:checked="${checkedCTG}"
-
-                                >
-                            </th>
-                            <th scope="col" width="5%">#</th>
-                            <th scope="col" width="15%">Ảnh</th>
-                            <th scope="col" width="20%">Tên sản phẩm</th>
-                            <th scope="col" width="10%">Kích cỡ</th>
-                            <th scope="col" width="10%">Màu</th>
-                            <th scope="col" width="35%">Trạng thái</th>
-                            <th scope="col" width="5%">Thao tác</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-
-                        <tr th:each="x : ${listCTG}">
-                            <th scope="row">
-                                <input class="form-check-input"
-                                       type="checkbox"
-                                       th:value="${x.id}"
-                                       th:name="requestIDCTG"
-                                       th:onchange="this.form.submit()"
-                                       th:checked="${#strings.contains(listIdCTG, x.id)} ? true:false"
-                                >
-                            </th>
-                            <td th:text="${xStat.index + 1}"></td>
-                            <td><i class="fa fa-check-circle-o green"></i><span class="ms-1"></span></td>
-                            <td th:text="${x.giay.ten}"></td>
-                            <td th:text="${x.kichCo.ten}"></td>
-                            <td></td>
-                            <td th:if="${x.trangThai == 0}">
-                                <button type="button" class="btn btn-success"
-                                        style="border-radius: 30px; font-size: 11px; height: 40px">
-                                    Đang kinh doanh
-                                </button>
-                            </td>
-                            <td th:unless="${x.trangThai == 0}">
-                                <button type="button" class="btn btn-danger"
-                                        style="border-radius: 30px; font-size: 11px; height: 40px">
-                                    Ngừng kinh doanh
-                                </button>
-                            </td>
-                            <td>a</td>
-                        </tr>
-
-
-                        </tbody>
-                    </table>
-                </div>
-                </form>
             </div>
         </div>
-    </div>
+    </form>
+</div>
 
 </div>
 </body>
