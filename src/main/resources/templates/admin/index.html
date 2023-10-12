@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    layout:decorate="~{/layouts/layout}">
+      layout:decorate="~{/layouts/layout}">
 
 <head>
 
@@ -12,143 +12,144 @@
 </head>
 
 <body>
-    <section>
-        <div layout:fragment="content" class="col-md-12">
-            <div>
-                <div class="row">
-                    <div class="col-12">
-                        <form class="form-floating">
-                            <div class="row d-flex justify-content-center">
-                                <div class="col-3">
-                                    <div class="input-group">
-                                        <div class="form-floating">
-                                            <input type="text" class="form-control"
-                                                placeholder="Nhập mã,tên, email..." id="textSearch" name="textSearch"
-                                                aria-label="Search" />
-                                            <label for="textSearch" class="form-label">Nhập mã, tên, địa
-                                                chỉ..</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <br>
-                                <div class="col-3">
-                                    <div class="input-group">
-                                        <div class="form-floating">
-                                            <select id="trangThai" style="border-radius: 10px;" class="form-select">
-                                                <div style="border: 10px">
-                                                </div>
-                                            </select> &nbsp;
-                                            <label for="trangThai">Trạng thái: </label>
-                                        </div>
-                                        <button type="reset">Làm mới</button>
-                                    </div>
-                                </div>
-                                <div class="col-3">
-                                    <div class="input-group" style="margin-left: 35px">
-                                        <div class="form-floating">
-                                            <select style="border-radius: 10px;" id="chucVu" class="form-select">
-                                            </select> &nbsp;
-                                            <label for="chucVu" class="form-label">Chức Vụ</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row d-flex justify-content-center">
-                                    <div class="col-3">
-                                        <button type="submit" class="btn btn-warning text-white mx-2">Submit</button>
-                                        <a class="btn btn-primary text-white mx-2">Làm mới</a>
+<section>
+    <div layout:fragment="content" class="col-md-12">
+        <div>
+            <div class="row">
+                <div class="col-12">
+                    <form class="form-floating">
+                        <div class="row d-flex justify-content-center">
+                            <div class="col-3">
+                                <div class="input-group">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control"
+                                               placeholder="Nhập mã,tên, email..." id="textSearch" name="textSearch"
+                                               aria-label="Search"/>
+                                        <label for="textSearch" class="form-label">Nhập mã, tên, địa
+                                            chỉ..</label>
                                     </div>
                                 </div>
                             </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <br>
-            <div class="table-wrapper">
-                <div class="table-title">
-                    <div class="row">
-                        <div class="col-sm-6 p-0 d-flex  justify-content-center">
-                            <h2 class="ml-lg-2">QUẢN LÍ NHÂN VIÊN</h2>
+                            <br>
+                            <div class="col-3">
+                                <div class="input-group">
+                                    <div class="form-floating">
+                                        <select id="trangThai" style="border-radius: 10px;" class="form-select">
+                                            <div style="border: 10px">
+                                            </div>
+                                        </select> &nbsp;
+                                        <label for="trangThai">Trạng thái: </label>
+                                    </div>
+                                    <button type="reset">Làm mới</button>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="input-group" style="margin-left: 35px">
+                                    <div class="form-floating">
+                                        <select style="border-radius: 10px;" id="chucVu" class="form-select">
+                                        </select> &nbsp;
+                                        <label for="chucVu" class="form-label">Chức Vụ</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row d-flex justify-content-center">
+                                <div class="col-3">
+                                    <button type="submit" class="btn btn-warning text-white mx-2">Submit</button>
+                                    <a class="btn btn-primary text-white mx-2">Làm mới</a>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-sm-6 p-0 d-flex justify-content-lg-end justify-content-center">
-                            <a href="/admin/nhanvien/create" class="btn btn-success">
-                                <i class="material-icons">&#xE147;</i> <span>THÊM MỚI</span></a>
-                        </div>
-                    </div>
-                </div>
-                <table class="table  table-hover table-bordered">
-                    <thead>
-                        <tr>
-                            <th>STT</th>
-                            <th>Mã</th>
-                            <th>Tên</th>
-                            <th>Email</th>
-                            <th>Địa chỉ</th>
-                            <th>Ngày Sinh</th>
-                            <th>Số điện thoại</th>
-                            <th>Chức vụ</th>
-                            <th>Trạng thái</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="width: 160px;">
-
-                            </td>
-                            <td style="width: 160px;">
-
-                            </td>
-                            <td style="width: 160px;">
-
-                            </td>
-                            <td style="width: 160px;">
-
-                            </td>
-                            <td style="width: 160px;">
-
-                            </td>
-                            <td style="width: 160px;">
-
-                            </td>
-                            <td style="width: 160px;">
-
-                            </td>
-                            <td style="width: 160px;">
-
-                            </td>
-                            <td style="width: 160px;">
-                                <button class="btn btn-danger" style="border-radius: 30px; font-size: 9px;">Ngưng hoạt động</button>
-                            </td>
-                            <td>
-                                <a class="edit">
-                                    <i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i>
-                                </a>
-                                <a onclick="return confirm('Bạn có muốn xóa không')" class="delete">
-                                    <i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i>
-                                </a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="">
-                    <div class="col-3">
-                        <div class="hint-text">Tổng NV: &ensp; Xem trang <b></b>
-                        </div>
-                    </div>
-                    <div class="col-7">
-
-                        <ul class="pagination">
-                            <li class="page-item">
-                                <a class="page-link">Prev</a>
-                                <span class="page-link">Prev</span>
-                            </li>
-                        </ul>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
-    </section>
+        <br>
+        <div class="table-wrapper">
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-6 p-0 d-flex  justify-content-center">
+                        <h2 class="ml-lg-2">QUẢN LÍ NHÂN VIÊN</h2>
+                    </div>
+                    <div class="col-sm-6 p-0 d-flex justify-content-lg-end justify-content-center">
+                        <a href="/admin/nhanvien/create" class="btn btn-success">
+                            <i class="material-icons">&#xE147;</i> <span>THÊM MỚI</span></a>
+                    </div>
+                </div>
+            </div>
+            <table class="table  table-hover table-bordered">
+                <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Mã</th>
+                    <th>Tên</th>
+                    <th>Email</th>
+                    <th>Địa chỉ</th>
+                    <th>Ngày Sinh</th>
+                    <th>Số điện thoại</th>
+                    <th>Chức vụ</th>
+                    <th>Trạng thái</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td style="width: 160px;">
+
+                    </td>
+                    <td style="width: 160px;">
+
+                    </td>
+                    <td style="width: 160px;">
+
+                    </td>
+                    <td style="width: 160px;">
+
+                    </td>
+                    <td style="width: 160px;">
+
+                    </td>
+                    <td style="width: 160px;">
+
+                    </td>
+                    <td style="width: 160px;">
+
+                    </td>
+                    <td style="width: 160px;">
+
+                    </td>
+                    <td style="width: 160px;">
+                        <button class="btn btn-danger" style="border-radius: 30px; font-size: 9px;">Ngưng hoạt động
+                        </button>
+                    </td>
+                    <td>
+                        <a class="edit">
+                            <i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i>
+                        </a>
+                        <a onclick="return confirm('Bạn có muốn xóa không')" class="delete">
+                            <i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="">
+                <div class="col-3">
+                    <div class="hint-text">Tổng NV: &ensp; Xem trang <b></b>
+                    </div>
+                </div>
+                <div class="col-7">
+
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <a class="page-link">Prev</a>
+                            <span class="page-link">Prev</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 </body>
 
 </html>

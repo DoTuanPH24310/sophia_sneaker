@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layouts/layout}">
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
+    <!----css3---->
+    <link rel="stylesheet" href="/css/custom.css">
+    <style>
+
+
+        .container {
+            background-color: #EAEAEA;
+        }
+
+        .page-link {
+            background-color: #fff;
+            color: #0d6efd;
+
+            border: 1px solid #dee2e6;
+        }
+
+        .form-control {
+            padding-left: 32px;
+        }
+
+        .form-control:focus {
+
+            border: none;
+            box-shadow: none;
+        }
+
+
+        .formTable {
+            background-color: #FFFFFF;
+        }
+
+        .my-custom-scrollbar {
+            position: relative;
+            height: 600px;
+            overflow: auto;
+        }
+
+        .table-wrapper-scroll-y {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+<section>
+    <div layout:fragment="content" class="container mt-1 px-2 ">
+        <div class="row">
+            <h3 style="font-weight: bold; text-align: center;" class="mt-2">Quản Lý Giày</h3>
+            <div class="col-1"></div>
+            <div class="col-10 mt-4 formTable">
+                <h5 style="font-weight: bold;" class="mt-3">Bộ lọc</h5>
+                <hr>
+                <form th:action="@{/giay/hien-thi#table}" class="mt-3 mb-3">
+                    <div class="row">
+                        <div class="col-6">
+                            <label> Tìm kiếm </label>
+                            <input style="border-radius: 10px;" type="text" th:value="${textSearch}"
+                                   class="form-control" name="textSearch"
+                                   placeholder="Nhập mã, tên của giày...">
+                            <p class="text-danger"></p>
+                        </div>
+                        <div class="col-6">
+                            <label>Trạng thái</label>
+                            <select style="border-radius: 10px;" class="form-select" th:onchange="this.form.submit()"
+                                    name="trangThai">
+                                <div style="border: 10px">
+                                    <option th:selected="${trangThai}  == -1 ? true:false" value="-1"> Tất cả
+                                    </option>
+                                    <option th:selected="${trangThai} == 0 ? true:false" value="0"> Còn hạn
+                                    </option>
+                                    <!--                                                th:selected="${chucVu.tenChucVu}.equal('Nhân viên')  ? true : false"-->
+                                    <option th:selected="${trangThai} == 1 ? true:false" value="1">Hết hạn
+                                    </option>
+                                </div>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <a th:href="@{/giay/hien-thi}" class="btn btn-primary">Làm mới</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <h5 style="font-weight: bold; text-align: center;" class="mt-3">Danh sách Giày </h5>
+            <hr>
+            <div class="table table-wrapper-scroll-y my-custom-scrollbar">
+                <a class="btn btn-primary mt-1 mb-1 float-right" th:href="@{/giay/view-add}">
+                    <i style="font-size: 18px" class="fab fa-plus"></i> Thêm
+                </a>
+                <table id="table" class="table  table-borderless  formTable">
+                    <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Mã giày</th>
+                        <th>Tên giày</th>
+                        <th>Trạng thái</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="g,giay : ${danhSachGiay}">
+                        <td th:text="${giay.count}"></td>
+                        <td th:text="${g.ma}"></td>
+                        <td th:text="${g.ten}"></td>
+                        <td th:if="${g.trangThai!=0}" style="width: 160px;">
+                            <button class="btn btn-danger" style="border-radius: 30px; font-size: 9px;">Ngưng hoạt
+                                động
+                            </button>
+                        </td>
+                        <td th:if="${g.trangThai==0}" style="width: 160px;">
+                            <button class="btn btn-primary" style="border-radius: 30px; font-size: 9px;">Hoạt động
+                            </button>
+                        </td>
+                        <td>
+                            <a class="edit" th:href="@{/giay/view-update/{id}(id=${g.id})}">
+                                <i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i>
+                            </a>
+                            <a onclick="return confirm('Bạn có muốn xóa không')" class="delete">
+                                <i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i>
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row">
+                <div class="col-3">
+                    <div class="hint-text">Tổng Voucher: <b th:text="${tongGiay}"></b> &ensp; Xem trang <b
+                            th:text="${pageNo+1}+'/'+${danhSachGiay.totalPages}"></b>
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <a class="page-link" th:if="${pageNo > 0}"
+                               th:href="@{/admin/giay/hien-thi#table(pageNo=${i},trangThai=${trangThai},textSearch=${textSearch})}">Prev</a>
+                            <span class="page-link" th:unless="${pageNo > 0}">Prev</span>
+                        </li>
+                        <li th:each="i: ${#numbers.sequence(0, danhSachGiay.totalPages-1)}" class="page-item">
+                            <a th:href="@{/admin/giay/hien-thi#table(pageNo=${i},trangThai=${trangThai},textSearch=${textSearch})}"
+                               class="page-link"
+                               th:text="${i +1}"></a>
+                        </li>
+
+                        <li class="page-item">
+                            <a class="page-link" th:if="${pageNo < danhSachGiay.totalPages -1}"
+                               th:href="@{/admin/giay/hien-thi#table(pageNo=${i},trangThai=${trangThai},textSearch=${textSearch})}">Next</a>
+                            <span class="page-link" th:unless="${pageNo < danhSachGiay.totalPages -1}">Next</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+</section>
+</body>
+</html>

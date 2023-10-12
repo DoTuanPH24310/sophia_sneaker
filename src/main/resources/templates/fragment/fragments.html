@@ -1,0 +1,213 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- fragment cho header-->
+
+
+<head th:fragment="page_head">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <link th:href="@{/css/bootstrap.min.css}">
+    <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+    <link th:href="@{https://use.fontawesome.com/releases/v6.3.0/css/all.css}" crossorigin="anonymous">
+    <script th:src="@{https://code.jquery.com/jquery-3.6.0.min.js}"></script>
+    <script th:src="@{https://use.fontawesome.com/releases/v6.3.0/js/all.js}" crossorigin="anonymous"></script>
+    <script th:src="@{/js/scripts.js}"></script>
+    <script th:src="@{/js/index_form.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/datatables-simple-demo.js}"></script>
+</head>
+<body>
+
+<!--fragment cho footer-->
+<div th:fragment="footer" class="text-center m-3">
+    <p>5S Watch Control Pannel - copyright &copy; 5S</p>
+</div>
+
+
+<!-- fragment cho navigation-->
+<th th:fragment="column_link(fieldName, columnLabel)">
+    <a style="text-decoration: none; color: black"
+       th:href="@{'/admin/users/page/' + ${currentPage} + '?sortField=' + ${fieldName} + '&sortDir=' + ${sortField != fieldName ? sortDir : reverseSortDir} + ${keyword !=null ? '&keyword=' + keyword:''}}">
+        [[${columnLabel}]]
+    </a>
+    <span th:if="${sortField == fieldName}" style="text-decoration: none; color: black"
+          th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
+</th>
+
+
+<th th:fragment="products_link(fieldProducts, columnLabel)">
+    <a style="text-decoration: none; color: black"
+       th:href="@{'/admin/products/page/' + ${currentPage} + '?sortField=' + ${fieldProducts} + '&sortDir=' + ${sortField != fieldProducts ? sortDir : reverseSortDir} + ${keyword !=null ? '&keyword=' + keyword:''}}">
+        [[${columnLabel}]]
+    </a>
+    <span th:if="${sortField == fieldProducts}" style="text-decoration: none; color: black"
+          th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
+</th>
+
+<th th:fragment="productDetails_link(fieldProductDetails, columnLabel)">
+    <a style="text-decoration: none; color: black"
+       th:href="@{'/admin/productDetails/page/' + ${currentPage} + '?sortField=' + ${fieldProductDetails} + '&sortDir=' + ${sortField != fieldProductDetails ? sortDir : reverseSortDir} + ${keyword != null ? '&keyword=' + keyword : ''} + ${productName != null ? '&productName=' + productName : ''}}">
+        [[${columnLabel}]]
+    </a>
+    <span th:if="${sortField == fieldProductDetails}" style="text-decoration: none; color: black"
+          th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
+</th>
+
+
+<th th:fragment="danhmuc_link(fieldDanhMuc, columnLabel)">
+    <a style="text-decoration: none; color: black"
+       th:href="@{'/admin/categories/page/' + ${currentPage} + '?sortField=' + ${fieldDanhMuc} + '&sortDir=' + ${sortField != fieldDanhMuc ? sortDir : reverseSortDir} + ${keyword !=null ? '&keyword=' + keyword:''}}">
+        [[${columnLabel}]]
+    </a>
+    <span th:if="${sortField == fieldDanhMuc}" style="text-decoration: none; color: black"
+          th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
+</th>
+
+<th th:fragment="thuonghieu_link(fieldThuongHieu, columnLabel)">
+    <a style="text-decoration: none; color: black"
+       th:href="@{'/admin/brands/page/' + ${currentPage} + '?sortField=' + ${fieldThuongHieu} + '&sortDir=' + ${sortField != fieldThuongHieu ? sortDir : reverseSortDir} + ${keyword !=null ? '&keyword=' + keyword:''}}">
+        [[${columnLabel}]]
+    </a>
+    <span th:if="${sortField == fieldThuongHieu}" style="text-decoration: none; color: black"
+          th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
+</th>
+
+<th th:fragment="daydeo_link(fieldDayDeo, columnLabel)">
+    <a style="text-decoration: none; color: black"
+       th:href="@{'/admin/straps/page/' + ${currentPage} + '?sortField=' + ${fieldDayDeo} + '&sortDir=' + ${sortField != fieldDayDeo ? sortDir : reverseSortDir} + ${keyword !=null ? '&keyword=' + keyword:''}}">
+        [[${columnLabel}]]
+    </a>
+    <span th:if="${sortField == fieldDayDeo}" style="text-decoration: none; color: black"
+          th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
+</th>
+
+<th th:fragment="khuyenmai_link(fieldKhuyenMai, columnLabel)">
+    <a style="text-decoration: none; color: black"
+       th:href="@{'/admin/discounts/page/' + ${currentPage} + '?sortField=' + ${fieldKhuyenMai} + '&sortDir=' + ${sortField != fieldKhuyenMai ? sortDir : reverseSortDir} + ${keyword !=null ? '&keyword=' + keyword:''}}">
+        [[${columnLabel}]]
+    </a>
+    <span th:if="${sortField == fieldKhuyenMai}" style="text-decoration: none; color: black"
+          th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
+</th>
+
+<th th:fragment="vatlieu_link(fieldVatLieu, columnLabel)">
+    <a style="text-decoration: none; color: black"
+       th:href="@{'/admin/materials/page/' + ${currentPage} + '?sortField=' + ${fieldVatLieu} + '&sortDir=' + ${sortField != fieldVatLieu ? sortDir : reverseSortDir} + ${keyword !=null ? '&keyword=' + keyword:''}}">
+        [[${columnLabel}]]
+    </a>
+    <span th:if="${sortField == fieldVatLieu}" style="text-decoration: none; color: black"
+          th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
+</th>
+
+<th th:fragment="kichco_link(fieldKichCo, columnLabel)">
+    <a style="text-decoration: none; color: black"
+       th:href="@{'/admin/sizes/page/' + ${currentPage} + '?sortField=' + ${fieldKichCo} + '&sortDir=' + ${sortField != fieldKichCo ? sortDir : reverseSortDir} + ${keyword !=null ? '&keyword=' + keyword:''}}">
+        [[${columnLabel}]]
+    </a>
+    <span th:if="${sortField == fieldKichCo}" style="text-decoration: none; color: black"
+          th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
+</th>
+
+<th th:fragment="khachhang_link(fieldKhachHang, columnLabel)">
+    <a style="text-decoration: none; color: black"
+       th:href="@{'/admin/customers/page/' + ${currentPage} + '?sortField=' + ${fieldKhachHang} + '&sortDir=' + ${sortField != fieldKhachHang ? sortDir : reverseSortDir} + ${keyword !=null ? '&keyword=' + keyword:''}}">
+        [[${columnLabel}]]
+    </a>
+    <span th:if="${sortField == fieldKhachHang}" style="text-decoration: none; color: black"
+          th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
+</th>
+
+<th th:fragment="thongke_link(fieldDonHang, columnLabel)">
+    <a style="text-decoration: none; color: black"
+       th:href="@{'/admin/statisticals/page/' + ${currentPage} + '?sortField=' + ${fieldDonHang} + '&sortDir=' + ${sortField != fieldDonHang ? sortDir : reverseSortDir} + ${keyword !=null ? '&keyword=' + keyword:''}}">
+        [[${columnLabel}]]
+    </a>
+    <span th:if="${sortField == fieldDonHang}" style="text-decoration: none; color: black"
+          th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>
+</th>
+<!--    <th th:fragment="seri_link(fieldSeri, columnLabel)">-->
+<!--        <a style="text-decoration: none; color: black"-->
+<!--           th:href="@{'/admin/series/page/' + ${currentPage} + '?sortField=' + ${fieldSeri} + '&sortDir=' + ${sortField != fieldSeri ? sortDir : reverseSortDir} + ${keyword !=null ? '&keyword=' + keyword:''}}">-->
+<!--            [[${columnLabel}]]-->
+<!--        </a>-->
+<!--        <span th:if="${sortField == fieldSeri}" style="text-decoration: none; color: black"-->
+<!--              th:class="${sortDir == 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down'}"></span>-->
+<!--    </th>-->
+<!-- fragment cho phân trang-->
+
+<a th:fragment="page_spct_link(pageNum, label)"
+   class="page-link"
+   th:href="@{'/admin/ban-hang/sanpham/page/' + ${pageNum}}"> [[${label}]]</a>
+
+<a th:fragment="mausac_link(pageNum, label)"
+   class="page-link"
+   th:href="@{'/admin/colors/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword' + keyword : ''}}">
+    [[${label}]]</a>
+
+<a th:fragment="page_link(pageNum, label)"
+   class="page-link"
+   th:href="@{'/admin/users/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword' + keyword : ''}}">
+    [[${label}]]</a>
+
+<a th:fragment="pageproduct_link(pageNum, label)"
+   class="page-link"
+   th:href="@{'/admin/products/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword' + keyword : ''}}">
+    [[${label}]]</a>
+
+<a th:fragment="pageproductDetail_link(pageNum, label)"
+   class="page-link"
+   th:href="@{'/giay/hien-thi/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword=' + keyword : ''} + ${productName != null ? '&productName=' + productName : ''}}">
+    [[${label}]]</a>
+
+<a th:fragment="pagecategory_link(pageNum, label)"
+   class="page-link"
+   th:href="@{'/admin/categories/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword' + keyword : ''}}">
+    [[${label}]]</a>
+
+<a th:fragment="pagebrand_link(pageNum, label)"
+   class="page-link"
+   th:href="@{'/admin/brands/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword' + keyword : ''}}">
+    [[${label}]]</a>
+
+<a th:fragment="pagestraps_link(pageNum, label)"
+   class="page-link"
+   th:href="@{'/admin/straps/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword' + keyword : ''}}">
+    [[${label}]]</a>
+
+<a th:fragment="pagesdiscounts_link(pageNum, label)"
+   class="page-link"
+   th:href="@{'/admin/discounts/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword' + keyword : ''}}">
+    [[${label}]]</a>
+
+<a th:fragment="pagematerial_link(pageNum, label)"
+   class="page-link"
+   th:href="@{'/admin/materials/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword' + keyword : ''}}">
+    [[${label}]]</a>
+
+<a th:fragment="pageseri_link(pageNum, label)"
+   class="page-link"
+   th:href="@{'/admin/series/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword' + keyword : ''}}">
+    [[${label}]]</a>
+
+<a th:fragment="pagesize_link(pageNum, label)"
+   class="page-link"
+   th:href="@{'/admin/sizes/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword' + keyword : ''}}">
+    [[${label}]]</a>
+<!--  Quan ly Don hang  -->
+<a th:fragment="page_donhang_link(pageNum, label)"
+   class="page-link"
+   th:href="@{'/admin/don-hang/page/' + ${pageNum}}"> [[${label}]]</a>
+
+<a th:fragment="pagecustomer_link(pageNum, label)"
+   class="page-link"
+   th:href="@{'/admin/customers/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword' + keyword : ''}}">
+    [[${label}]]</a>
+
+<a th:fragment="pagedonhangreport_link(pageNum, label)"
+   class="page-link"
+   th:href="@{'/admin/statisticals/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword' + keyword : ''}}">
+    [[${label}]]</a>
+</body>
+</html>

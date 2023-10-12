@@ -1,31 +1,46 @@
 package com.example.sneaker_sophia.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
+import org.springframework.stereotype.Component;
+
+import java.util.Date;
+import java.util.UUID;
 
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "Giay")
+@Component
+@Builder
 public class Giay {
     @Id
     @Column(name = "Id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
+    @Column(name = "ma")
+    private String ma;
 
     @Column(name = "ten")
     private String ten;
 
-    public String getId() {
-        return this.id;
-    }
+    @Column(name = "ngayTao")
+    private Date ngayTao;
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    @Column(name = "ngaySua")
+    private Date ngaySua;
 
-    public String getTen() {
-        return this.ten;
-    }
+    @Column(name = "nguoiTao")
+    private UUID nguoiTao;
 
-    public void setTen(String ten) {
-        this.ten = ten;
-    }
+    @Column(name = "nguoiSua")
+    private UUID nguoiSua;
+
+    @Column(name = "trangThai")
+    private Integer trangThai;
+
+
 }
