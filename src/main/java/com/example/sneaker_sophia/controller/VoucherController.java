@@ -2,21 +2,26 @@ package com.example.sneaker_sophia.controller;
 
 
 import com.example.sneaker_sophia.entity.Voucher;
+import com.example.sneaker_sophia.repository.ChiTietGiayRepository;
+import com.example.sneaker_sophia.service.GiayService;
 import com.example.sneaker_sophia.service.VoucherService;
+import com.example.sneaker_sophia.util.ListIDGiay;
 import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
+import org.springframework.boot.autoconfigure.web.ServerProperties;
+import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/admin/voucher")
@@ -26,48 +31,48 @@ public class VoucherController {
     private VoucherService voucherService;
 
     @Autowired
-    private ServletRequest request;
+    private GiayService giayService;
 
-    @GetMapping("/hienthi")
-    public String hienthi(Model model, @RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo) {
+
+    @Autowired
+    private HttpSession session;
+
+
+    @GetMapping("/hien-thi")
+    public String hienThi(Model model, @RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo) {
         List<Voucher> listVC = new ArrayList<>();
         Pageable pageable = PageRequest.of(pageNo, 5);
-        Page page = locVaTimKiem(pageable, model);
+        Page page = voucherService.locVaTimKiem(pageable, model);
         model.addAttribute("listVC", page);
-        model.addAttribute("tongVC",page.getTotalElements());
-        model.addAttribute("pageNo",pageNo);
+        model.addAttribute("tongVC", page.getTotalElements());
+        model.addAttribute("pageNo", pageNo);
         return "/admin/voucher/index";
     }
 
 
-    public Page locVaTimKiem(Pageable pageable, Model model) {
-        Page page = null;
-        String txtSearch = request.getParameter("textSearch");
-        String trangThaiReq = request.getParameter("trangThai");
-        String trangThai = trangThaiReq == null || (trangThaiReq.equals("0") == false && trangThaiReq.equals("1") == false) ? "-1" : trangThaiReq;
-        model.addAttribute("trangThai", trangThai);
-        model.addAttribute("textSearch", txtSearch);
-
-        if (txtSearch == null || txtSearch.trim().length() == 0) {
-            if (trangThai.equals("-1")) {
-                return voucherService.findAll(pageable);
-            }
-
-            Voucher voucher = Voucher.builder()
-                    .trangThai(Integer.parseInt(trangThai))
-                    .build();
-
-
-            page = voucherService.findAll(Example.of(voucher), pageable);
-
-
-        } else {
-            if (trangThai.equals("-1")) {
-                return voucherRepository.searchAndFilter(txtSearch, null, pageable);
-            }
-            page = voucherRepository.searchAndFilter(txtSearch, trangThai, pageable);
-        }
-
-        return page;
+    @GetMapping("/view-add")
+    public String viewAdd(Model model) {
+        model.addAttribute("listId", new ArrayList<>(List.of("false")));
+        model.addAttribute("listIdCTG", new ArrayList<>(List.of("false")));
+        model.addAttribute("listGiay", giayService.findAll());
+        return "admin/voucher/add";
     }
+
+
+    @PostMapping("/view-add")
+    public String getTable(Model model, @RequestParam(value = "requestId", defaultValue = "false") List<String> listId,
+                            @RequestParam(value = "requestIdCTG", defaultValue = "false") List<String>listIDCTG) {
+        System.out.println(listId.size() + " chek size");
+        // khi chọn cả 3
+        // Khi chọn nút all rồi lại bỏ chọn
+        // Khi chọn All rồi nhưng lại bỏ chọn 1 dòng dữ liệu khác
+        listId = giayService.checkedGiay(listId, model);
+
+        model.addAttribute("listId", listId);
+        model.addAttribute("listIdCTG",listIDCTG);
+        model.addAttribute("listGiay", giayService.findAll());
+        return "admin/voucher/add";
+    }
+
+
 }

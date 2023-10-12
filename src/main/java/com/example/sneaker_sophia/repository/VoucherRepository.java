@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 
 
 @Repository
@@ -14,4 +15,7 @@ public interface VoucherRepository extends JpaRepository<Voucher, String> {
             "and (?2 is null or trangthai =?2)"
             ,nativeQuery = true)
     Page<Voucher> searchAndFilter(String text, String trangThai, Pageable pageable);
+
+
+
 }
