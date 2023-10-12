@@ -1,51 +1,41 @@
 package com.example.sneaker_sophia.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
-import java.util.UUID;
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "GioHangChiTiet")
 public class GioHangChiTiet {
     @Id
     @Column(name = "IdGioHang")
-    private UUID idGioHang;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String idGioHang;
 
     @Id
     @Column(name = "IdChiTietGiay")
-    private UUID idChiTietGiay;
+    private String idChiTietGiay;
 
     @Column(name = "soLuong")
     private Integer soLuong;
 
     @Column(name = "ngayTao")
-    private UUID ngayTao;
+    private String ngayTao;
 
     @Column(name = "ngaySua")
-    private UUID ngaySua;
+    private String ngaySua;
 
-    @Column(name = "nguoiTao")
-    private UUID nguoiTao;
-
-    @Column(name = "nguoiSua")
-    private UUID nguoiSua;
-
-    public UUID getIdGioHang() {
+    public String getIdGioHang() {
         return this.idGioHang;
     }
 
-    public void setIdGioHang(UUID idGioHang) {
+    public void setIdGioHang(String idGioHang) {
         this.idGioHang = idGioHang;
     }
 
-    public UUID getIdChiTietGiay() {
+    public String getIdChiTietGiay() {
         return this.idChiTietGiay;
     }
 
-    public void setIdChiTietGiay(UUID idChiTietGiay) {
+    public void setIdChiTietGiay(String idChiTietGiay) {
         this.idChiTietGiay = idChiTietGiay;
     }
 
@@ -57,35 +47,19 @@ public class GioHangChiTiet {
         this.soLuong = soLuong;
     }
 
-    public UUID getNgayTao() {
+    public String getNgayTao() {
         return this.ngayTao;
     }
 
-    public void setNgayTao(UUID ngayTao) {
+    public void setNgayTao(String ngayTao) {
         this.ngayTao = ngayTao;
     }
 
-    public UUID getNgaySua() {
+    public String getNgaySua() {
         return this.ngaySua;
     }
 
-    public void setNgaySua(UUID ngaySua) {
+    public void setNgaySua(String ngaySua) {
         this.ngaySua = ngaySua;
-    }
-
-    public UUID getNguoiTao() {
-        return this.nguoiTao;
-    }
-
-    public void setNguoiTao(UUID nguoiTao) {
-        this.nguoiTao = nguoiTao;
-    }
-
-    public UUID getNguoiSua() {
-        return this.nguoiSua;
-    }
-
-    public void setNguoiSua(UUID nguoiSua) {
-        this.nguoiSua = nguoiSua;
     }
 }
