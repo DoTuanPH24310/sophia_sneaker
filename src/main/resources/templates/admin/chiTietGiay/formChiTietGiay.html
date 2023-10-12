@@ -3,17 +3,128 @@
       layout:decorate="~{/layouts/layout}">
 <head>
     <link rel="stylesheet" href="/css/custom.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/min/dropzone.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.2/min/dropzone.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
     <style>
         .custom-width {
-            height: 60px;
-            border-radius:20px;
+            height: 40px;
+            border-radius: 12px;
         }
-         .custom-radio{
-             width: 50px;
-             margin-left: 50px;
-             margin-top: 20px;
-         }
+
+        .custom-radio {
+            width: 50px;
+            margin-left: 50px;
+            margin-top: 20px;
+        }
+
+        #imageList {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        #imageList li {
+            width: 150px;
+            margin: 10px;
+        }
+
+        #imageList img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        #imageList {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            padding: 0;
+        }
+
+        #imageList li {
+            width: 150px;
+            margin: 10px;
+            position: relative;
+        }
+
+        #imageList img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        #imageList button {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: transparent;
+            border: none;
+            color: #5a6268;
+            transition: color 0.2s; /* Hiệu ứng màu khi hover */
+        }
+
+        #imageList button:hover {
+            color: red; /* Thay đổi màu khi hover */
+        }
+
+        /* Ẩn trường input mặc định */
+        input[type="file"] {
+            display: none;
+        }
+
     </style>
+    <script>
+        var selectedImages = []; // Mảng lưu trữ các ảnh đã chọn
+
+        function showSelectedImages(input) {
+            var imageList = document.getElementById("imageList");
+            imageList.innerHTML = ''; // Xóa bỏ danh sách ảnh trước đó
+
+            for (var i = 0; i < input.files.length; i++) {
+                var file = input.files[i];
+
+                if (file) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        var img = document.createElement("img");
+                        img.src = e.target.result;
+
+                        var listItem = document.createElement("li");
+                        listItem.appendChild(img);
+
+                        // Tạo nút xóa và thêm sự kiện xóa
+                        var deleteButton = document.createElement("button");
+                        deleteButton.innerHTML = '<i class="fa fa-times-circle"></i>'; // Biểu tượng X
+                        deleteButton.onclick = function () {
+                            deleteImage(this);
+                        };
+                        listItem.appendChild(deleteButton);
+
+                        imageList.appendChild(listItem);
+                        selectedImages.push(file); // Lưu trữ ảnh đã chọn
+                    };
+
+                    reader.readAsDataURL(file);
+                }
+            }
+        }
+
+        function deleteImage(button) {
+            var listItem = button.parentElement;
+            var index = Array.from(listItem.parentElement.children).indexOf(listItem);
+            selectedImages.splice(index, 1); // Xóa ảnh khỏi mảng
+            listItem.remove(); // Xóa phần tử li chứa ảnh
+        }
+
+        function deleteSelectedImages() {
+            // Xóa tất cả các ảnh đã chọn
+            selectedImages = [];
+            var imageList = document.getElementById("imageList");
+            imageList.innerHTML = '';
+        }
+    </script>
+
+
 </head>
 <body>
 <section>
@@ -23,11 +134,13 @@
                 <div class="row">
                     <div class="col">
                         <label for="maChiTietGiay">Mã chi tiết giày:</label>
-                        <input  th:field="*{ma}" class="form-control custom-width" id="maChiTietGiay" name="maChiTietGiay">
+                        <input th:field="*{ma}" class="form-control custom-width" id="maChiTietGiay"
+                               name="maChiTietGiay">
                     </div>
                     <div class="col">
                         <label for="tenGiay">Tên giày:</label>
-                        <select th:field="*{giay}" class="form-control custom-width" id="tenGiay" required="" name="tenGiay">
+                        <select th:field="*{giay}" class="form-control custom-width" id="tenGiay" required=""
+                                name="tenGiay">
                             <th:block th:each="giay : ${giay}">
                                 <option th:value="${giay.id}">[[${giay.ten}]]</option>
                             </th:block>
@@ -40,18 +153,20 @@
                 <div class="row">
                     <div class="col">
                         <label for="kichCo">Kích cỡ:</label>
-                        <select th:field="*{kichCo}" class="form-control custom-width" id="kichCo" required="" name="dayDeo">
+                        <select th:field="*{kichCo}" class="form-control custom-width" id="kichCo" required=""
+                                name="dayDeo">
                             <th:block th:each="kichCo : ${kichCo}">
-                                    <option th:value="${kichCo.id}" th:label="${kichCo.ten}">
-<!--                                        [[${kichCo.ten}]]-->
-                                    </option>
+                                <option th:value="${kichCo.id}" th:label="${kichCo.ten}">
+                                    <!--                                        [[${kichCo.ten}]]-->
+                                </option>
                             </th:block>
                         </select>
 
                     </div>
                     <div class="col">
                         <label for="loaiDe">Loại đế:</label>
-                        <select th:field="*{deGiay}" class="form-control custom-width" id="loaiDe" required="" name="loaiDe">
+                        <select th:field="*{deGiay}" class="form-control custom-width" id="loaiDe" required=""
+                                name="loaiDe">
                             <th:block th:each="deGiay : ${deGiay}">
                                 <option th:value="${deGiay.id}">[[${deGiay.ten}]]</option>
                             </th:block>
@@ -72,7 +187,8 @@
                     </div>
                     <div class="col">
                         <label for="loaiGiay">Loại giày:</label>
-                        <select th:field="*{loaiGiay}" class="form-control custom-width" id="loaiGiay" required="" name="loaiGiay">
+                        <select th:field="*{loaiGiay}" class="form-control custom-width" id="loaiGiay" required=""
+                                name="loaiGiay">
                             <th:block th:each="loaiGiay : ${loaiGiay}">
                                 <option th:value="${loaiGiay.id}">[[${loaiGiay.ten}]]</option>
                             </th:block>
@@ -85,7 +201,8 @@
                 <div class="row">
                     <div class="col">
                         <label for="mauSac">Màu sắc:</label>
-                        <select th:field="*{mauSac}" class="form-control custom-width" id="mauSac" required="" name="mauSac">
+                        <select th:field="*{mauSac}" class="form-control custom-width" id="mauSac" required=""
+                                name="mauSac">
                             <th:block th:each="mauSac : ${mauSac}">
                                 <option th:value="${mauSac.id}">[[${mauSac.ten}]]</option>
                             </th:block>
@@ -93,7 +210,7 @@
                     </div>
                     <div class="col">
                         <label for="gia">Giá:</label>
-                        <input  th:field="*{gia}" class="form-control custom-width" id="gia" name="gia">
+                        <input th:field="*{gia}" class="form-control custom-width" id="gia" name="gia">
                     </div>
                 </div>
             </div>
@@ -116,10 +233,26 @@
                     </div>
                 </div>
             </div>
+            <h1>Upload Images</h1>
+            <ul id="imageList">
+                <!-- Danh sách các ảnh đã chọn sẽ được hiển thị ở đây -->
+            </ul>
+
+                <input id="customFileInput" type="file" name="files" multiple required
+                       onchange="showSelectedImages(this)"/>
+                <label for="customFileInput" class="btn btn-danger">
+                    Choose Files
+                </label>
+                <label>
+                <button type="button" class="btn btn-danger" onclick="deleteSelectedImages()">Xóa ảnh đã chọn</button>
+                </label>
+
             <div class="form-group" style="text-align: center">
                 <input type="submit" class="btn btn-primary" style="height: 50px; margin-top: 50px" value="Submit">
             </div>
+
         </form>
+
 
     </div>
 </section>

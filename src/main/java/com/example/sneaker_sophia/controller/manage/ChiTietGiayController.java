@@ -1,25 +1,30 @@
 package com.example.sneaker_sophia.controller.manage;
 
+import com.example.sneaker_sophia.entity.Anh;
 import com.example.sneaker_sophia.entity.ChiTietGiay;
 import com.example.sneaker_sophia.service.*;
-import com.example.sneaker_sophia.service.iplm.ChiTietGiayIplm;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
+import java.awt.*;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
 @Controller
 @RequestMapping("/admin/")
-public class chiTietGiayController {
+public class ChiTietGiayController {
 
     @Autowired
     ChiTietGiayService chiTietGiayService;
@@ -35,6 +40,8 @@ public class chiTietGiayController {
     LoaiGiayService loaiGiayService;
     @Autowired
     KichCoService kichCoService;
+    @Autowired
+    AnhService anhService;
     @Autowired
     HttpServletRequest request;
 
@@ -87,6 +94,7 @@ public class chiTietGiayController {
         model.addAttribute("mauSac", mauSacService.getAll());
         model.addAttribute("loaiGiay", loaiGiayService.getAll());
         model.addAttribute("kichCo", kichCoService.getAll());
+        model.addAttribute("anh", anhService.getAll());
 
         return "admin/chiTietGiay/formChiTietGiay";
     }

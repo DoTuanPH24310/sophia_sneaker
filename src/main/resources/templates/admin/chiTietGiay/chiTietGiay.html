@@ -59,6 +59,7 @@
                 <thead>
                 <tr>
                     <th>STT</th>
+                    <th>Ảnh</th>
                     <th>Mã chi tiết giày</th>
                     <th>Tên giày</th>
                     <th>Size</th>
@@ -75,6 +76,10 @@
                 <tbody>
                 <tr th:each="ctg, iterStat : ${listChiTietGiay}">
                     <td th:text="${iterStat.count}"></td>
+                    <td>
+                        <img th:src="@{'/img/' + ${ctg.anhs.get(0).anhChinh}}"
+                             style="width: 100px; height: 100px" class="img-fluid" alt=""/>
+                    </td>
                     <td>[[${ctg.ma}]]</td>
                     <td>[[${ctg.giay.ten}]]</td>
                     <td>[[${ctg.kichCo.ten}]]</td>
