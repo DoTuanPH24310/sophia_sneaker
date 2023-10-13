@@ -17,10 +17,6 @@ public class HangService {
     @Autowired
     private HangRepository hangRepository;
 
-//    public Page<HangResponse> getAll(Pageable pageable) {
-//        return this.hangRepository.getAll(pageable);
-//    }
-
     public Hang add(HangRequest hangRequest) {
         Hang hang = hangRequest.loadForm(new Hang());
         return this.hangRepository.save(hang);

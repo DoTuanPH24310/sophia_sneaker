@@ -17,10 +17,6 @@ public class DeGiayService {
     @Autowired
     private DeGiayRepository deGiayRepository;
 
-//    public Page<DeGiayResponse> getAll(Pageable pageable) {
-//        return this.deGiayRepository.getAll(pageable);
-//    }
-
     public DeGiay add(DeGiayRequest deGiayRequest) {
         DeGiay deGiay = deGiayRequest.loadForm(new DeGiay());
         return this.deGiayRepository.save(deGiay);
