@@ -1,16 +1,21 @@
 package com.example.sneaker_sophia.controller;
 
+import com.example.sneaker_sophia.dto.VoucherDTO;
+import com.example.sneaker_sophia.entity.ChiTietGiay;
 import com.example.sneaker_sophia.entity.Voucher;
+import com.example.sneaker_sophia.repository.ChiTietGiayRepository;
 import com.example.sneaker_sophia.service.ChiTietGiayService;
 import com.example.sneaker_sophia.service.GiayService;
 import com.example.sneaker_sophia.service.VoucherService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,9 +34,9 @@ public class VoucherController {
     @Autowired
     private ChiTietGiayService chiTietGiayService;
 
+     static List<String> tempListId ;
 
-    @Autowired
-    private HttpSession session;
+     static List<String> tempListIdCTG ;
 
 
     @GetMapping("/hien-thi")
@@ -48,9 +53,8 @@ public class VoucherController {
 
     @GetMapping("/view-add")
     public String viewAdd(Model model) {
-        model.addAttribute("listId", new ArrayList<>(List.of("false")));
-        model.addAttribute("listIdCTG", new ArrayList<>(List.of("false")));
-        model.addAttribute("listGiay", giayService.findAllByTrangThaiEquals(0));
+        model.addAttribute("data", new VoucherDTO());
+        voucherService.addAttributeModel(model, new ArrayList<>(List.of("false")), new ArrayList<>(List.of("false")));
         return "admin/voucher/add";
     }
 
@@ -58,24 +62,40 @@ public class VoucherController {
     @PostMapping("/view-add")
     public String getTable(Model model, @RequestParam(value = "requestId", defaultValue = "false") List<String> listId,
                            @RequestParam(value = "requestIdCTG", defaultValue = "false") List<String> listIDCTG) {
+        this.tempListId = listId;
+        this.tempListIdCTG = listIDCTG;
 //        để so sánh các trường được chọn
+        model.addAttribute("data", new VoucherDTO());
+        System.out.println(listId.size() + "Size 0.1");
+        System.out.println( this.tempListId.size() + "Size 0.2");
         listId = giayService.checkedGiay(listId, model);
+//        Nếu listId mà chưa được chọn thì mới check listIDCT(không cho chọn chekbox ctg)
         if (listId.contains("false") == false) {
             listIDCTG = chiTietGiayService.checkedCTG(listIDCTG, model, listId);
         }
-        System.out.println("Danh sách id của giày: ");
-        for (String x: listId) {
-            System.out.println(x);
+
+        voucherService.addAttributeModel(model, listId, listIDCTG);
+        return "admin/voucher/add";
+    }
+
+
+    @PostMapping("/add")
+    public String add(@Valid @ModelAttribute("data") VoucherDTO vc,
+                      BindingResult result, Model model) {
+        System.out.println(this.tempListId.size() + "Size 1.1");
+        if (result.hasErrors()) {
+            System.out.println(this.tempListId.size() + "Size 1.1");
+            tempListId = giayService.checkedGiay(tempListId, model);
+            System.out.println(tempListId.size() + "Size 1.2");
+
+            if (tempListId.contains("false") == false) {
+                tempListIdCTG = chiTietGiayService.checkedCTG(tempListIdCTG, model, tempListId);
+            }
+            voucherService.addAttributeModel(model, tempListId, tempListIdCTG);
+            return "admin/voucher/add";
         }
 
-        System.out.println("Danh sách id của chi tiết giày: ");
-        for (String x: listIDCTG) {
-            System.out.println(x);
-        }
-        model.addAttribute("listId", listId);
-        model.addAttribute("listIDCTG", listIDCTG);
-        model.addAttribute("listGiay", giayService.findAllByTrangThaiEquals(0));
-        return "admin/voucher/add";
+        return "redirect:/admin/voucher/index";
     }
 
 

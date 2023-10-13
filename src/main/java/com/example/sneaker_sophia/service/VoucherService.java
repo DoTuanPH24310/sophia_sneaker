@@ -3,6 +3,7 @@ package com.example.sneaker_sophia.service;
 import com.example.sneaker_sophia.entity.Voucher;
 import com.example.sneaker_sophia.repository.VoucherRepository;
 import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -24,6 +25,12 @@ public class VoucherService {
     @Autowired
     private ServletRequest request;
 
+    @Autowired
+    private HttpSession session;
+
+    @Autowired
+    private GiayService giayService;
+
     public Page<Voucher> findAll(Pageable pageable){
         return  voucherRepository.findAll(pageable);
     }
@@ -36,6 +43,11 @@ public class VoucherService {
         return voucherRepository.searchAndFilter(text,trangThai,pageable);
     }
 
+    public void addAttributeModel(Model model, List<String> listId, List<String> listIdCTG){
+        model.addAttribute("listId", listId);
+        model.addAttribute("listIDCTG", listIdCTG);
+        model.addAttribute("listGiay", giayService.findAllByTrangThaiEquals(0));
+    }
 
 
     public Page locVaTimKiem(Pageable pageable, Model model) {
