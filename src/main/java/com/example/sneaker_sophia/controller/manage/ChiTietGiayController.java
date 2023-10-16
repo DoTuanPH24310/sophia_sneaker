@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.awt.*;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -95,9 +96,9 @@ public class ChiTietGiayController {
         model.addAttribute("loaiGiay", loaiGiayService.getAll());
         model.addAttribute("kichCo", kichCoService.getAll());
         model.addAttribute("anh", anhService.getAll());
-
         return "admin/chiTietGiay/formChiTietGiay";
     }
+
 
     @GetMapping("chi-tiet-giay/edit/{id}")
     public String edit(Model model, @PathVariable("id")UUID id) {
@@ -113,11 +114,41 @@ public class ChiTietGiayController {
         return "admin/chiTietGiay/formEditChiTietGiay";
     }
 
-    @PostMapping("chi-tiet-giay/save")
-    public String add(ChiTietGiay chiTietGiay) {
-        chiTietGiayService.save(chiTietGiay);
+    @PostMapping("/chi-tiet-giay/save")
+    public String add(
+            @ModelAttribute ChiTietGiay chiTietGiay,
+            @RequestParam("imageFile") MultipartFile imageFile) {
+        try {
+            // Lưu chi tiết giày vào cơ sở dữ liệu
+            chiTietGiayService.save(chiTietGiay);
+
+            String originalFilename = imageFile.getOriginalFilename();
+
+            // Tạo một đối tượng ảnh và thiết lập các thông tin cần thiết
+            Anh anh = new Anh();
+            anh.setAnhChinh(originalFilename);
+            anh.setTen(originalFilename);
+            anh.setChiTietGiay(chiTietGiay); // Sử dụng service hoặc repository để lấy chi tiết giày
+
+            // Lưu đối tượng ảnh vào cơ sở dữ liệu
+            anhService.save(anh);
+
+            // Lưu tệp hình ảnh vào thư mục trên máy chủ
+            String uploadDir = "C:/Users/Tuan1/IdeaProjects/sophia_sneaker/src/main/resources/static/img";
+            Path uploadPath = Paths.get(uploadDir);
+
+            try (InputStream inputStream = imageFile.getInputStream()) {
+                Files.copy(inputStream, uploadPath.resolve(originalFilename));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return "redirect:/admin/chi-tiet-giay";
     }
+
     @PostMapping("chi-tiet-giay/update")
     public String update(ChiTietGiay chiTietGiay) {
         chiTietGiayService.save(chiTietGiay);

@@ -86,8 +86,10 @@
                     var reader = new FileReader();
 
                     reader.onload = function (e) {
+
                         var img = document.createElement("img");
                         img.src = e.target.result;
+                        img.setAttribute("name", "imageFile"); // Đặt thuộc tính name của thẻ img
 
                         var listItem = document.createElement("li");
                         listItem.appendChild(img);
@@ -109,6 +111,7 @@
             }
         }
 
+
         function deleteImage(button) {
             var listItem = button.parentElement;
             var index = Array.from(listItem.parentElement.children).indexOf(listItem);
@@ -129,7 +132,7 @@
 <body>
 <section>
     <div layout:fragment="content" class="col-md-9" style="margin: auto">
-        <form method="post" th:action="@{/admin/chi-tiet-giay/save}" th:object="${chiTietGiay}">
+        <form method="post" th:action="@{/admin/chi-tiet-giay/save}" th:object="${chiTietGiay}" enctype="multipart/form-data">
             <div class="form-group">
                 <div class="row">
                     <div class="col">
