@@ -93,5 +93,7 @@ public class VoucherService {
     }
 
 
-
+    public boolean validate() {
+        return true;
+    }
 }

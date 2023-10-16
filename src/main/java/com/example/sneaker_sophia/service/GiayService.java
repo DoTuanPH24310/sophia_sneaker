@@ -1,5 +1,6 @@
 package com.example.sneaker_sophia.service;
 
+//Khi check all cả 2 nhưng lại bỏ check all ở listIDG
 
 import com.example.sneaker_sophia.entity.ChiTietGiay;
 import com.example.sneaker_sophia.entity.Giay;
@@ -21,8 +22,7 @@ public class GiayService {
     @Autowired
     private ChiTietGiayService chiTietGiayService;
 
-    public int check = 0;
-
+    public static int check = 0;
 
 
     public List<ChiTietGiay> listCTG = new ArrayList<>();
@@ -31,7 +31,7 @@ public class GiayService {
         return giayRepository.findAll();
     }
 
-    public List<Giay> findAllByTrangThaiEquals(int trangThai){
+    public List<Giay> findAllByTrangThaiEquals(int trangThai) {
         return giayRepository.findAllByTrangThaiEquals(trangThai);
     }
 
@@ -46,22 +46,32 @@ public class GiayService {
             check = 1;
             listId.remove("AllG");
             model.addAttribute("checkAll", true);
-            listCTG =chiTietGiayService.findAllByIdGiay(this.findAllID(0));
+            listCTG = chiTietGiayService.findAllByIdGiay(this.findAllID(0));
             model.addAttribute("listCTG", listCTG);
             return this.findAllID(0);
         }
 
         // Khi đã chọn All nhưng lại không chọn nữa
-        if (check == 1 && listId.contains("AllG") == false && listId.size() <= findAllByTrangThaiEquals(0).size()) {
+        if (check == 1 && !listId.contains("AllG")) {
             check = 0;
             return new ArrayList<String>();
         }
 
-//        Khi đã chọn All nhưng lại bỏ chọn các giá trị bên dưới
-        if (check == 1 && listId.contains("AllG") && findAllByTrangThaiEquals(0).size()>= listId.size()) {
+//        Khi đã chọn All sau đó lại bỏ  chọn 1 trong  các giá trị bên dưới
+        if (check == 1 && listId.contains("AllG") && findAllByTrangThaiEquals(0).size() >= listId.size()) {
             check = 0;
             model.addAttribute("checkAll", false);
             listId.remove("AllG");
+            listCTG = chiTietGiayService.findAllByIdGiay(listId);
+            model.addAttribute("listCTG", listCTG);
+            return listId;
+        }
+
+//          Khi đã chọn all nhưng không bỏ chọn giá trị nào khác(khi gọi lại server, khi chọn CTG)
+//        Bởi vì khi đã chọn giày nhưng lại chọn chi tiết thì giá trị check vẫn là 1
+        if (check == 1 && listId.contains("AllG") && findAllByTrangThaiEquals(0).size() < listId.size()) {
+            listId.remove("AllG");
+            model.addAttribute("checkAll", true);
             listCTG = chiTietGiayService.findAllByIdGiay(listId);
             model.addAttribute("listCTG", listCTG);
             return listId;
@@ -71,16 +81,7 @@ public class GiayService {
         if (listId.size() == findAllByTrangThaiEquals(0).size() && check == 0) {
             check = 1;
             model.addAttribute("checkAll", true);
-            listCTG =  chiTietGiayService.findAllByIdGiay(this.findAllID(0));
-            model.addAttribute("listCTG", listCTG);
-            return listId;
-        }
-
-//        Khi đã chọn all nhưng không bỏ chọn giá trị nào khác(khi gọi lại server)
-        if (check == 1 && listId.contains("AllG") && findAllByTrangThaiEquals(0).size() < listId.size()) {
-            listId.remove("AllG");
-            model.addAttribute("checkAll", true);
-            listCTG = chiTietGiayService.findAllByIdGiay(listId);
+            listCTG = chiTietGiayService.findAllByIdGiay(this.findAllID(0));
             model.addAttribute("listCTG", listCTG);
             return listId;
         }
@@ -88,13 +89,6 @@ public class GiayService {
         model.addAttribute("listCTG", chiTietGiayService.findAllByIdGiay(temp));
         return temp;
     }
-
-
-
-
-
-
-
 
 
 }

@@ -16,7 +16,8 @@ public class ChiTietGiayService {
     @Autowired
     private ChiTietGiayRepository chiTietGiayRepository;
 
-    public int checkCTG = 0;
+
+    public static int checkCTG = 0;
 
     List<ChiTietGiay> findAllByIdGiay(List<String> listId) {
         return chiTietGiayRepository.findAllByIdGiay(convertStringListToUUIDList(listId));
@@ -35,8 +36,8 @@ public class ChiTietGiayService {
     }
 
     public List<String> checkedCTG(List<String> listIDCTG, Model model, List<String> listIDG) {
-        List<String> temp = listIDCTG;
 
+        List<String> temp = listIDCTG;
         // Khi chọn All lần đầu tiên
         if (listIDCTG.contains("AllCTG") && checkCTG == 0) {
             checkCTG = 1;
@@ -46,12 +47,14 @@ public class ChiTietGiayService {
 
         // Khi đã chọn All nhưng lại không chọn nữa
         if (checkCTG == 1 && listIDCTG.contains("AllCTG") == false && listIDCTG.size() <= findAllByTrangThaiEquals(0).size()) {
+            listIDCTG.remove("AllG");
             checkCTG = 0;
             return new ArrayList<String>();
         }
 
 //        Khi đã chọn All nhưng lại bỏ chọn các giá trị bên dưới
         if (checkCTG == 1 && listIDCTG.contains("AllCTG") && findAllByTrangThaiEquals(0).size() >= listIDCTG.size()) {
+            listIDCTG.remove("AllG");
             checkCTG = 0;
             model.addAttribute("checkAllCTG", false);
             listIDCTG.remove("AllCTG");
@@ -67,6 +70,7 @@ public class ChiTietGiayService {
 
 //        Khi đã chọn all nhưng không bỏ chọn giá trị nào khác(khi gọi lại server)
         if (checkCTG == 1 && listIDCTG.contains("AllCTG") && findAllByTrangThaiEquals(0).size() < listIDCTG.size()) {
+            listIDCTG.remove("AllG");
             model.addAttribute("checkAllCTG", true);
             return listIDCTG;
         }
