@@ -89,7 +89,6 @@
 
                         var img = document.createElement("img");
                         img.src = e.target.result;
-                        img.setAttribute("name", "imageFile"); // Đặt thuộc tính name của thẻ img
 
                         var listItem = document.createElement("li");
                         listItem.appendChild(img);
@@ -241,7 +240,7 @@
                 <!-- Danh sách các ảnh đã chọn sẽ được hiển thị ở đây -->
             </ul>
 
-                <input id="customFileInput" type="file" name="files" multiple required
+                <input id="customFileInput" type="file" name="imageFile" multiple required
                        onchange="showSelectedImages(this)"/>
                 <label for="customFileInput" class="btn btn-danger">
                     Choose Files

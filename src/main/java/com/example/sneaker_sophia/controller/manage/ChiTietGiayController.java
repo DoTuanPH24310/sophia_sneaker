@@ -110,6 +110,7 @@ public class ChiTietGiayController {
         model.addAttribute("mauSac", mauSacService.getAll());
         model.addAttribute("loaiGiay", loaiGiayService.getAll());
         model.addAttribute("kichCo", kichCoService.getAll());
+        model.addAttribute("anh", anhService.anhsFindIdChitietGiay(chiTietGiay));
 
         return "admin/chiTietGiay/formEditChiTietGiay";
     }
@@ -117,30 +118,32 @@ public class ChiTietGiayController {
     @PostMapping("/chi-tiet-giay/save")
     public String add(
             @ModelAttribute ChiTietGiay chiTietGiay,
-            @RequestParam("imageFile") MultipartFile imageFile) {
+            @RequestParam("imageFile") MultipartFile[] imageFiles) {
         try {
             // Lưu chi tiết giày vào cơ sở dữ liệu
             chiTietGiayService.save(chiTietGiay);
 
-            String originalFilename = imageFile.getOriginalFilename();
+            for (MultipartFile imageFile : imageFiles) {
+                String originalFilename = imageFile.getOriginalFilename();
 
-            // Tạo một đối tượng ảnh và thiết lập các thông tin cần thiết
-            Anh anh = new Anh();
-            anh.setAnhChinh(originalFilename);
-            anh.setTen(originalFilename);
-            anh.setChiTietGiay(chiTietGiay); // Sử dụng service hoặc repository để lấy chi tiết giày
+                // Tạo một đối tượng ảnh và thiết lập các thông tin cần thiết
+                Anh anh = new Anh();
+                anh.setAnhChinh(originalFilename);
+                anh.setTen(originalFilename);
+                anh.setChiTietGiay(chiTietGiay);
 
-            // Lưu đối tượng ảnh vào cơ sở dữ liệu
-            anhService.save(anh);
+                // Lưu đối tượng ảnh vào cơ sở dữ liệu
+                anhService.save(anh);
 
-            // Lưu tệp hình ảnh vào thư mục trên máy chủ
-            String uploadDir = "C:/Users/Tuan1/IdeaProjects/sophia_sneaker/src/main/resources/static/img";
-            Path uploadPath = Paths.get(uploadDir);
+                // Lưu tệp hình ảnh vào thư mục trên máy chủ
+                String uploadDir = "C:/Users/Tuan1/IdeaProjects/sophia_sneaker/src/main/resources/static/img";
+                Path uploadPath = Paths.get(uploadDir);
 
-            try (InputStream inputStream = imageFile.getInputStream()) {
-                Files.copy(inputStream, uploadPath.resolve(originalFilename));
-            } catch (IOException e) {
-                e.printStackTrace();
+                try (InputStream inputStream = imageFile.getInputStream()) {
+                    Files.copy(inputStream, uploadPath.resolve(originalFilename));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -149,8 +152,40 @@ public class ChiTietGiayController {
         return "redirect:/admin/chi-tiet-giay";
     }
 
+
     @PostMapping("chi-tiet-giay/update")
-    public String update(ChiTietGiay chiTietGiay) {
+    public String update(ChiTietGiay chiTietGiay,
+                         @RequestParam("imageFile") MultipartFile[] imageFiles) {
+        try {
+            // Lưu chi tiết giày vào cơ sở dữ liệu
+            chiTietGiayService.save(chiTietGiay);
+
+            for (MultipartFile imageFile : imageFiles) {
+                String originalFilename = imageFile.getOriginalFilename();
+
+                // Tạo một đối tượng ảnh và thiết lập các thông tin cần thiết
+                Anh anh = new Anh();
+                anh.setAnhChinh(originalFilename);
+                anh.setTen(originalFilename);
+                anh.setChiTietGiay(chiTietGiay);
+
+                // Lưu đối tượng ảnh vào cơ sở dữ liệu
+                anhService.save(anh);
+
+                // Lưu tệp hình ảnh vào thư mục trên máy chủ
+                String uploadDir = "C:/Users/Tuan1/IdeaProjects/sophia_sneaker/src/main/resources/static/img";
+                Path uploadPath = Paths.get(uploadDir);
+
+                try (InputStream inputStream = imageFile.getInputStream()) {
+                    Files.copy(inputStream, uploadPath.resolve(originalFilename));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         chiTietGiayService.save(chiTietGiay);
         return "redirect:/admin/chi-tiet-giay";
     }

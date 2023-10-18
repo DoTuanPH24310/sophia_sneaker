@@ -5,20 +5,129 @@
     <link rel="stylesheet" href="/css/custom.css">
     <style>
         .custom-width {
-            height: 60px;
-            border-radius:20px;
+            height: 40px;
+            border-radius: 12px;
         }
-         .custom-radio{
-             width: 50px;
-             margin-left: 50px;
-             margin-top: 20px;
-         }
+
+        .custom-radio {
+            width: 50px;
+            margin-left: 50px;
+            margin-top: 20px;
+        }
+
+        #imageList {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        #imageList li {
+            width: 150px;
+            margin: 10px;
+        }
+
+        #imageList img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        #imageList {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            padding: 0;
+        }
+
+        #imageList li {
+            width: 150px;
+            margin: 10px;
+            position: relative;
+        }
+
+        #imageList img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        #imageList button {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: transparent;
+            border: none;
+            color: #5a6268;
+            transition: color 0.2s; /* Hiệu ứng màu khi hover */
+        }
+
+        #imageList button:hover {
+            color: red; /* Thay đổi màu khi hover */
+        }
+
+        /* Ẩn trường input mặc định */
+        input[type="file"] {
+            display: none;
+        }
+
     </style>
+    <script>
+        var selectedImages = []; // Mảng lưu trữ các ảnh đã chọn
+
+        function showSelectedImages(input) {
+            var imageList = document.getElementById("imageList");
+            imageList.innerHTML = ''; // Xóa bỏ danh sách ảnh trước đó
+
+            for (var i = 0; i < input.files.length; i++) {
+                var file = input.files[i];
+
+                if (file) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+
+                        var img = document.createElement("img");
+                        img.src = e.target.result;
+
+                        var listItem = document.createElement("li");
+                        listItem.appendChild(img);
+
+                        // Tạo nút xóa và thêm sự kiện xóa
+                        var deleteButton = document.createElement("button");
+                        deleteButton.innerHTML = '<i class="fa fa-times-circle"></i>'; // Biểu tượng X
+                        deleteButton.onclick = function () {
+                            deleteImage(this);
+                        };
+                        listItem.appendChild(deleteButton);
+
+                        imageList.appendChild(listItem);
+                        selectedImages.push(file); // Lưu trữ ảnh đã chọn
+                    };
+
+                    reader.readAsDataURL(file);
+                }
+            }
+        }
+
+
+        function deleteImage(button) {
+            var listItem = button.parentElement;
+            var index = Array.from(listItem.parentElement.children).indexOf(listItem);
+            selectedImages.splice(index, 1); // Xóa ảnh khỏi mảng
+            listItem.remove(); // Xóa phần tử li chứa ảnh
+        }
+
+        function deleteSelectedImages() {
+            // Xóa tất cả các ảnh đã chọn
+            selectedImages = [];
+            var imageList = document.getElementById("imageList");
+            imageList.innerHTML = '';
+        }
+    </script>
+
 </head>
 <body>
 <section>
     <div layout:fragment="content" class="col-md-9" style="margin: auto">
-        <form method="post" th:action="@{/admin/chi-tiet-giay/update}" th:object="${chiTietGiay}">
+        <form method="post" th:action="@{/admin/chi-tiet-giay/update}" th:object="${chiTietGiay}" enctype="multipart/form-data">
                 <input  th:field="*{id}" class="form-control custom-width" id="id" name="id" style="display: none;">
             <div class="form-group">
                 <div class="row">
@@ -117,6 +226,27 @@
                     </div>
                 </div>
             </div>
+
+            <h1>Upload Images</h1>
+            <div th:with="anhList=${anh}">
+                <ul id="imageList">
+                    <li th:each="anh : ${anh}">
+                        <img th:src="@{'/img/' + ${anh.anhChinh}}"
+                             class="img-fluid" alt="" />
+                        <button ><i class="fa fa-times-circle"></i></button>
+                    </li>
+                </ul>
+            </div>
+
+            <input id="customFileInput" type="file" name="imageFile" multiple required
+                   onchange="showSelectedImages(this)"/>
+            <label for="customFileInput" class="btn btn-danger">
+                Choose Files
+            </label>
+            <label>
+                <button type="button" class="btn btn-danger" onclick="deleteSelectedImages()">Xóa ảnh đã chọn</button>
+            </label>
+
             <div class="form-group" style="text-align: center">
                 <input type="submit" class="btn btn-primary" style="height: 50px; margin-top: 50px" value="Submit">
             </div>

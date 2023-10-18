@@ -1,6 +1,7 @@
 package com.example.sneaker_sophia.service.iplm;
 
 import com.example.sneaker_sophia.entity.Anh;
+import com.example.sneaker_sophia.entity.ChiTietGiay;
 import com.example.sneaker_sophia.repository.AnhRepository;
 import com.example.sneaker_sophia.service.AnhService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,5 +33,10 @@ public class AnhIplm implements AnhService {
     @Override
     public void delete(UUID id) {
         anhRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Anh> anhsFindIdChitietGiay(ChiTietGiay chiTietGiay) {
+        return anhRepository.findAnhsByChiTietGiay(chiTietGiay);
     }
 }
