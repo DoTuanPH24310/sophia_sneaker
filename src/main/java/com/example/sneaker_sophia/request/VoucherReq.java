@@ -1,4 +1,4 @@
-package com.example.sneaker_sophia.dto;
+package com.example.sneaker_sophia.request;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
@@ -9,11 +9,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class VoucherDTO {
-
+public class VoucherReq{
     private UUID id;
-
-
 
     private String ten;
 
@@ -25,6 +22,6 @@ public class VoucherDTO {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate ngayKetThuc;
-
-//    private String moTa;
 }
+
+

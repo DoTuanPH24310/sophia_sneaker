@@ -19,4 +19,7 @@ public interface GiayRepository extends JpaRepository<Giay, UUID> {
     List<Giay> findAllByTrangThaiEquals(int trangThai);
 
 
+
+
+
 }

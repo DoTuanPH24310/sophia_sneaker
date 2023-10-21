@@ -1,11 +1,10 @@
 package com.example.sneaker_sophia.entity;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+import java.util.List;
 import java.util.UUID;
 @Entity
 @Table(name = "ChiTietGiay")
@@ -26,6 +25,9 @@ public class ChiTietGiay {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "IdKichCo")
     private KichCo kichCo;
+
+    @OneToMany(mappedBy = "id.chiTietGiay")
+    private List<CTG_KhuyenMai> listCTG_KM;
 
 
     @Column(name = "ma")

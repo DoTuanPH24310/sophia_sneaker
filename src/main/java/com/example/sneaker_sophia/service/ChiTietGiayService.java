@@ -1,7 +1,7 @@
 package com.example.sneaker_sophia.service;
 
 import com.example.sneaker_sophia.entity.ChiTietGiay;
-import com.example.sneaker_sophia.entity.Giay;
+import com.example.sneaker_sophia.entity.Voucher;
 import com.example.sneaker_sophia.repository.ChiTietGiayRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,9 +23,11 @@ public class ChiTietGiayService {
         return chiTietGiayRepository.findAllByIdGiay(convertStringListToUUIDList(listId));
     }
 
-//    List<ChiTietGiay> findAll(){
-//        return  chiTietGiayRepository.findAll();
-//    }
+
+    List<ChiTietGiay> findAllById(List<UUID> listIDG) {
+        return chiTietGiayRepository.findAllById(listIDG);
+    }
+
 
     public List<ChiTietGiay> findAllByTrangThaiEquals(int trangThai) {
         return chiTietGiayRepository.findAllByTrangThaiEquals(trangThai);
@@ -34,6 +36,12 @@ public class ChiTietGiayService {
     public List<String> findIdByIdGiay(List<String> listIDGiay) {
         return chiTietGiayRepository.findIdByIdGiay(convertStringListToUUIDList(listIDGiay));
     }
+
+    public String findMaByIdCTG(UUID id) {
+        return chiTietGiayRepository.findMaByIdCTG(id);
+    }
+
+
 
     public List<String> checkedCTG(List<String> listIDCTG, Model model, List<String> listIDG) {
 
@@ -47,14 +55,14 @@ public class ChiTietGiayService {
 
         // Khi đã chọn All nhưng lại không chọn nữa
         if (checkCTG == 1 && listIDCTG.contains("AllCTG") == false && listIDCTG.size() <= findAllByTrangThaiEquals(0).size()) {
-            listIDCTG.remove("AllG");
+//            listIDCTG.remove("AllG");
             checkCTG = 0;
             return new ArrayList<String>();
         }
 
 //        Khi đã chọn All nhưng lại bỏ chọn các giá trị bên dưới
         if (checkCTG == 1 && listIDCTG.contains("AllCTG") && findAllByTrangThaiEquals(0).size() >= listIDCTG.size()) {
-            listIDCTG.remove("AllG");
+//            listIDCTG.remove("AllG");
             checkCTG = 0;
             model.addAttribute("checkAllCTG", false);
             listIDCTG.remove("AllCTG");
@@ -70,7 +78,8 @@ public class ChiTietGiayService {
 
 //        Khi đã chọn all nhưng không bỏ chọn giá trị nào khác(khi gọi lại server)
         if (checkCTG == 1 && listIDCTG.contains("AllCTG") && findAllByTrangThaiEquals(0).size() < listIDCTG.size()) {
-            listIDCTG.remove("AllG");
+//            listIDCTG.remove("AllG");
+            listIDCTG.remove("AllCTG");
             model.addAttribute("checkAllCTG", true);
             return listIDCTG;
         }

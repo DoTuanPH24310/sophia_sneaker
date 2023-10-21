@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -11,12 +14,15 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Builder
-@Table(name = "Voucher")
+@Table(name = "KhuyenMai")
 public class Voucher {
     @Id
     @Column(name = "Id")
-//    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
+    @OneToMany(mappedBy = "id.voucher")
+    private List<CTG_KhuyenMai> listCTG_KM;
 
     @Column(name = "ma")
     private String ma;
@@ -28,13 +34,7 @@ public class Voucher {
     private Integer soLuong;
 
     @Column(name = "phanTramGiam")
-    private Double phanTramGiam;
-
-    @Column(name = "soTienGiam")
-    private Double soTienGiam;
-
-    @Column(name = "giaTriToiThieu")
-    private Double giaTriToiThieu;
+    private Integer phanTramGiam;
 
     @Column(name = "ngayBatDau")
     private LocalDate ngayBatDau;

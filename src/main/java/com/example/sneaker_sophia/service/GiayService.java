@@ -1,35 +1,22 @@
 package com.example.sneaker_sophia.service;
-
-//Khi check all cả 2 nhưng lại bỏ check all ở listIDG
-
 import com.example.sneaker_sophia.entity.ChiTietGiay;
 import com.example.sneaker_sophia.entity.Giay;
-import com.example.sneaker_sophia.repository.ChiTietGiayRepository;
 import com.example.sneaker_sophia.repository.GiayRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-
 @Service
 public class GiayService {
     @Autowired
     private GiayRepository giayRepository;
-
     @Autowired
     private ChiTietGiayService chiTietGiayService;
-
     public static int check = 0;
-
-
     public List<ChiTietGiay> listCTG = new ArrayList<>();
 
-    public List<Giay> findAll() {
-        return giayRepository.findAll();
-    }
+
 
     public List<Giay> findAllByTrangThaiEquals(int trangThai) {
         return giayRepository.findAllByTrangThaiEquals(trangThai);
