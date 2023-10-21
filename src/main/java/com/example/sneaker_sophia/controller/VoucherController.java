@@ -1,12 +1,7 @@
 package com.example.sneaker_sophia.controller;
-
 import com.example.sneaker_sophia.dto.VoucherDTO;
 import com.example.sneaker_sophia.entity.ChiTietGiay;
-import com.example.sneaker_sophia.entity.Giay;
-import com.example.sneaker_sophia.entity.IDVoucher;
 import com.example.sneaker_sophia.entity.Voucher;
-import com.example.sneaker_sophia.repository.CTG_KhuyenMaiRespsitory;
-import com.example.sneaker_sophia.repository.ChiTietGiayRepository;
 import com.example.sneaker_sophia.request.VoucherReq;
 import com.example.sneaker_sophia.service.CTG_KhuyenMaiService;
 import com.example.sneaker_sophia.service.ChiTietGiayService;
@@ -21,11 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
 
 @Controller
 @RequestMapping("/admin/voucher")
@@ -116,6 +108,7 @@ public class VoucherController {
         }
         model.addAttribute("listCTG", listCTG);
         model.addAttribute("checkAllCTG","true");
+        chiTietGiayService.checkCTG = 1;
         model.addAttribute("data", voucherReq);
         voucherService.addAttributeModel(model, listId, listIDCTG);
         return "/admin/voucher/update";
