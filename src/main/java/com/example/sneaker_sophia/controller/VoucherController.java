@@ -125,6 +125,10 @@ public class VoucherController {
     public String delete(Model model, @PathVariable("id") Voucher vc, HttpSession session) {
 //      Nếu trạng thái sắp diễn ra thì xóa luôn
 //      Nếu hết hạn thì xóa mềm
+        if (vc.getTrangThai() != 0 && vc.getTrangThai() != 2){
+            checkSession = 0;
+            session.setAttribute("mess","Thao tác không chính xác");
+        }
 
         if (vc.getTrangThai() == 0) {
             ctg_khuyenMaiService.deleteByIdKM(vc);
@@ -146,6 +150,7 @@ public class VoucherController {
                           @RequestParam(value = "requestIdCTG", defaultValue = "false") List<String> listIDCTG,
                           @RequestParam(value = "button", defaultValue = "false") String button,
                           @ModelAttribute(value = "data") VoucherDTO vc, HttpSession session, Model model ){
+
         listId = giayService.checkedGiay(listId, model);
         if (!listId.contains("false") && listId.size() > 0) {
             listIDCTG = chiTietGiayService.checkedCTG(listIDCTG, model, listId);

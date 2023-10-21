@@ -166,8 +166,14 @@ public class VoucherService {
         BeanUtils.copyProperties(voucherDTO, voucher);
         voucher.setMa("VC31");
         this.testTrangThai(voucher);
-        voucherRepository.save(voucher);
-        this.saveCTG_VC(voucher, listIDCTG);
+        if (voucher.getId() != null){
+            voucherRepository.save(voucher);
+            this.updateCTG_VC(voucher, listIDCTG);
+
+        }else{
+            voucherRepository.save(voucher);
+            this.saveCTG_VC(voucher, listIDCTG);
+        }
     }
 
     public void saveCTG_VC(Voucher voucher, List<String> listIDCTG) {
@@ -176,11 +182,28 @@ public class VoucherService {
         IDVoucher idVoucher = new IDVoucher();
         ctg_km.setTrangThai(0);
         idVoucher.setVoucher(voucher);
+
         for (ChiTietGiay x : list) {
             idVoucher.setChiTietGiay(x);
             ctg_km.setId(idVoucher);
             chCtg_khuyenMaiService.save(ctg_km);
         }
+
+    }
+
+    public void updateCTG_VC(Voucher voucher, List<String> listIDCTG) {
+        List<ChiTietGiay> list = chiTietGiayService.findAllById(chiTietGiayService.convertStringListToUUIDList(listIDCTG));
+        CTG_KhuyenMai ctg_km = new CTG_KhuyenMai();
+        IDVoucher idVoucher = new IDVoucher();
+        ctg_km.setTrangThai(0);
+        idVoucher.setVoucher(voucher);
+        chCtg_khuyenMaiService.deleteByIdKM(voucher);
+        for (ChiTietGiay x : list) {
+            idVoucher.setChiTietGiay(x);
+            ctg_km.setId(idVoucher);
+            chCtg_khuyenMaiService.save(ctg_km);
+        }
+
     }
 
     public Map checkPhanTram(List<UUID> listCTG, Integer phanTram) {

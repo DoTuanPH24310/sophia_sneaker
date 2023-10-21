@@ -21,9 +21,6 @@
             border: 1px solid #dee2e6;
         }
 
-        .form-control {
-            padding-left: 32px;
-        }
 
 
         .formTable {
@@ -106,12 +103,12 @@
                 <tr class="bg-light">
                     <th scope="col" width="10%">Mã </th>
                     <th scope="col" width="15%">Tên</th>
-                    <th scope="col" width="5%">Phần trăm</th>
+                    <th scope="col" width="10%">Giá trị</th>
                     <th scope="col" width="12%">Ngày bắt đầu</th>
                     <th scope="col" width="12%">Ngày kết thúc</th>
                     <th scope="col" width="12%">Ngày cập nhật</th>
                     <th scope="col" width="20%">Trạng thái</th>
-                    <th scope="col" width="25%">Thao tác</th>
+                    <th scope="col" width="20%">Thao tác</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -120,7 +117,7 @@
 
                     <td th:text="${vc.ma}"></td>
                     <td th:text="${vc.ten}"></td>
-                    <td th:text="${vc.phanTramGiam}"></td>
+                    <td th:text="${vc.phanTramGiam} +'%'"></td>
                     <td th:text="${vc.ngayBatDau}"></td>
                     <td th:text="${vc.ngayKetThuc}"></td>
                     <td th:text="${vc.ngaySua}"></td>
@@ -143,23 +140,23 @@
                     </td>
                     <td>
                         <a th:if="${vc.trangThai == 0}" class="edit" th:href="@{/admin/voucher/view-update/{id}#tableCTG(id=${vc.id})}">
-                            <i class="material-icons" title="Edit">&#xE254;</i>
+                            <i class="material-icons" title="Cập nhật">&#xE254;</i>
                         </a>
 
                         <a th:unless="${vc.trangThai == 0}" class="edit" type="button" onclick="thongBao('Chỉ cập nhật được khuyến mại sắp diễn ra');">
-                            <i class="material-icons" title="Edit">&#xE254;</i>
+                            <i class="material-icons" title="Cập nhật">&#xE254;</i>
                         </a>
 
                         <a th:if="${vc.trangThai == 1}" type="button" onclick="thongBao('Chỉ xóa được khuyến mại hết hạn hoặc sáp diễn ra');"
                            class="delete">
-                            <i class="material-icons" title="Delete">&#xE872;</i>
+                            <i class="material-icons" title="Xóa">&#xE872;</i>
                         </a>
 
 
 
                         <a th:unless="${vc.trangThai ==1}"  th:href="@{/admin/voucher/delete/{id}(id = ${vc.id})}" onclick="return confirm('Bạn chắc chăn muốn xóa');"
                            class="delete">
-                            <i class="material-icons" title="Delete">&#xE872;</i>
+                            <i class="material-icons" title="Xóa">&#xE872;</i>
                         </a>
                     </td>
                 </tr>
@@ -211,10 +208,6 @@
             window.addEventListener("load", function () {
                 alert(mess);
             });
-        }
-
-        function thongBao(s){
-             alert(s);
         }
     </script>
 
