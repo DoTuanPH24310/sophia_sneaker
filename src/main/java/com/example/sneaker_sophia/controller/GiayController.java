@@ -1,4 +1,4 @@
-package com.example.sneaker_sophia.controller.giay;
+package com.example.sneaker_sophia.controller;
 
 import com.example.sneaker_sophia.dto.GiayRequest;
 import com.example.sneaker_sophia.entity.Giay;
@@ -41,19 +41,19 @@ public class GiayController {
         model.addAttribute("textSearch", txtSearch);
         model.addAttribute("trangThai", trangThai);
 
-        return "admin/giay";
+        return "admin/giay/giay";
     }
 
     @GetMapping("view-add")
     private String viewAdd(Model model) {
         model.addAttribute("data", giay);
-        return "admin/form_giay";
+        return "admin/giay/form_giay";
     }
 
     @PostMapping("add")
     private String add(@Valid @ModelAttribute("data") GiayRequest giayRequest, BindingResult result) {
         if (result.hasErrors()) {
-            return "admin/form_giay";
+            return "admin/giay/form_giay";
         }
         this.giayService.add(giayRequest);
         return "redirect:/giay/hien-thi";
@@ -64,14 +64,14 @@ public class GiayController {
         Optional<Giay> giay1 = this.giayService.findOne(giay.getId());
         model.addAttribute("data", giay1);
         model.addAttribute("action", "/giay/update/" +giay.getId());
-        return "admin/form_giay_update";
+        return "admin/giay/form_giay_update";
     }
 
     @PostMapping("update/{id}")
     private String update(@PathVariable("id") Giay giay, @Valid @ModelAttribute("data") GiayRequest giayRequest, BindingResult result, Model model){
         if(result.hasErrors()){
             model.addAttribute("action", "/giay/update/" +giay.getId());
-            return "admin/form_giay_update";
+            return "admin/giay/form_giay_update";
         }
         this.giayService.update(giay.getId(), giayRequest);
         return "redirect:/giay/hien-thi";
