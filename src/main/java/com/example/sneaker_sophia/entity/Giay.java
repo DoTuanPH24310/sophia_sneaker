@@ -1,6 +1,9 @@
 package com.example.sneaker_sophia.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
+import org.springframework.stereotype.Component;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +17,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @Table(name = "Giay")
+@Component
+@Builder
 public class Giay {
     @Id
     @Column(name = "Id")
