@@ -1,23 +1,17 @@
 package com.example.sneaker_sophia.service;
 
 import com.example.sneaker_sophia.dto.GiayRequest;
-import com.example.sneaker_sophia.dto.GiayResponse;
 import com.example.sneaker_sophia.entity.Giay;
 import com.example.sneaker_sophia.repository.GiayRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import org.thymeleaf.util.StringUtils;
 
 import java.util.Optional;
 import java.util.UUID;
 
 import com.example.sneaker_sophia.entity.ChiTietGiay;
-import com.example.sneaker_sophia.repository.GiayRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,14 +69,13 @@ public class GiayService {
         }).orElse(null);
     }
 
-    public Giay delete(UUID id){
+    public Giay delete(UUID id) {
         Optional<Giay> optional = this.giayRepository.findById(id);
-        return optional.map(o ->{
+        return optional.map(o -> {
             this.giayRepository.delete(o);
             return o;
         }).orElse(null);
-
-
+    }
 
 
     public List<Giay> findAllByTrangThaiEquals(int trangThai) {

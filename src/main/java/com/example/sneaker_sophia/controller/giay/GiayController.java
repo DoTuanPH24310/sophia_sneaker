@@ -77,7 +77,7 @@ public class GiayController {
         return "redirect:/giay/hien-thi";
     }
 
-    @DeleteMapping("delete/{id}")
+    @GetMapping("delete/{id}")
     private String delete(@PathVariable("id") Giay giay){
         this.giayService.delete(giay.getId());
         return "redirect:/giay/hien-thi";
