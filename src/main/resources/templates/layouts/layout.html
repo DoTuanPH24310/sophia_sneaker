@@ -38,10 +38,7 @@
                 <h3><img src="/img/logo.png" class="img-fluid" /><span>SOPHIA STORE</span></h3>
             </div>
             <ul class="list-unstyled components">
-                <li class="active">
-                    <a href="#" class="dashboard"><i class="material-icons">dashboard</i>
-                        <span>BẢNG ĐIỀU KHIỂN</span></a>
-                </li>
+
                 <li class="">
                     <a href="/ban-hang#"><i class="material-icons">date_range</i><span>BÁN HÀNG</span></a>
                 </li>
@@ -107,19 +104,8 @@
                     </ul>
                 </li>
                 <li class="dropdown">
-                    <a href="#pageSubmenu5" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-                        <i class="material-icons">border_color</i><span>VOUCHER</span></a>
-                    <ul class="collapse list-unstyled menu" id="pageSubmenu5">
-                        <li>
-                            <a href="#">Page 1</a>
-                        </li>
-                        <li>
-                            <a href="#">Page 2</a>
-                        </li>
-                        <li>
-                            <a href="#">Page 3</a>
-                        </li>
-                    </ul>
+                    <a href="/admin/voucher/hien-thi" >
+                        <i class="material-icons">border_color</i><span>KHUYẾN MẠI</span></a>
                 </li>
                 <li class="dropdown">
                     <a href="#pageSubmenu6" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
@@ -173,16 +159,7 @@
                             <!-- End XP Col -->
                             <!-- Start XP Col -->
                             <div class="col-md-5 col-lg-3 order-3 order-md-2">
-                                <div class="xp-searchbar">
-                                    <form>
-                                        <div class="input-group">
-                                            <input type="search" class="form-control" placeholder="Search">
-                                            <div class="input-group-append">
-                                                <button class="btn" type="submit" id="button-addon2">GO</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
+
                             </div>
                             <!-- End XP Col -->
                             <!-- Start XP Col  End XP Col -->
@@ -248,37 +225,27 @@
                         </div>
                         <!-- End XP Row -->
                     </div>
-                    <div class="xp-breadcrumbbar text-center">
-                        <h4 class="page-title">Bảng điều khiển</h4>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="#">Nhân viên</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Nhân viên</li>
-                        </ol>
-                    </div>
+
                 </div>
             </div>
-            <div class="main-content">
-                <div class="row">
-                    <section layout:fragment="content">
+            <div class="main-content" style=" background-color: #EAEAEA;">
+                <div  class="row">
+                    <section  layout:fragment="content">
 
                     </section>
                 </div>
             </div>
         </div>
-            <footer class="footer">
-                <div class="container-fluid">
-                    <div class="footer-in">
-                        <p class="mb-0">&copy 2020 Vishweb design - All Rights Reserved.</p>
-                    </div>
-                </div>
-            </footer>
+
     </div>
     <script src="/js/jquery-3.3.1.slim.min.js"></script>
     <script src="/js/popper.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/jquery-3.3.1.min.js"></script>
     <script type="text/javascript">
-
+        function thongBao(s){
+            alert(s);
+        }
         $(document).ready(function () {
             $(".xp-menubar").on('click', function () {
                 $('#sidebar').toggleClass('active');
@@ -289,6 +256,48 @@
                 $('#sidebar,.body-overlay').toggleClass('show-nav');
             });
 
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const startDateInput = document.getElementById("ngayBatDau");
+            const endDateInput = document.getElementById("ngayKetThuc");
+            const selectBox = document.getElementById("selectBox");
+            const now = new Date();
+            // Sử dụng sự kiện "change" khi người dùng thay đổi ngày bắt đầu hoặc kết thúc
+            endDateInput.addEventListener("change", updateSelectBox);
+            startDateInput.addEventListener("change", updateSelectBox);
+            window.addEventListener("load", updateSelectBox);
+            window.addEventListener("load", updateSelectBox);
+
+            function updateSelectBox() {
+                const startDate = new Date(startDateInput.value);
+                const endDate = new Date(endDateInput.value);
+                const option1 = document.createElement("option");
+                if (startDateInput.value != "" && endDateInput.value != ""){
+                    selectBox.innerHTML = "";
+
+
+                    if (startDate.getDate() === now.getDate() && startDate.getMonth() === now.getMonth() &&
+                        startDate.getFullYear() === now.getFullYear() && endDate > now) {
+                        option1.text = "Đang diễn ra";
+                        selectBox.add(option1);
+                    } else if (startDate > now && endDate >startDate) {
+                        option1.text = "Sắp diễn ra";
+                        selectBox.add(option1);
+                    }else if (endDate < now && endDate.getDay() < now.getDay() && endDate > startDate) {
+                        option1.text = "Hết hạn";
+                        selectBox.add(option1);
+                    }else {
+                        option1.text = "--Thiết lập ngày sai--";
+                        selectBox.add(option1);
+                    }
+                }else {
+                    selectBox.innerHTML = "";
+                    option1.text = "-----------------";
+                    selectBox.add(option1);
+                }
+
+            }
         });
     </script>
 </body>

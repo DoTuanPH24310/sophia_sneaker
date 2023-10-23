@@ -118,7 +118,8 @@
 
                             </td>
                             <td style="width: 160px;">
-                                <button class="btn btn-danger" style="border-radius: 30px; font-size: 9px;">Ngưng hoạt động</button>
+                                <button class="btn btn-danger" style="border-radius: 30px; font-size: 9px;">Ngưng hoạt
+                                    động</button>
                             </td>
                             <td>
                                 <a class="edit">
@@ -131,21 +132,28 @@
                         </tr>
                     </tbody>
                 </table>
-                <div class="">
-                    <div class="col-3">
-                        <div class="hint-text">Tổng NV: &ensp; Xem trang <b></b>
-                        </div>
-                    </div>
-                    <div class="col-7">
 
-                        <ul class="pagination">
-                            <li class="page-item">
-                                <a class="page-link">Prev</a>
-                                <span class="page-link">Prev</span>
-                            </li>
-                        </ul>
-                    </div>
+                <div class="col-7">
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <a class="page-link" th:if="${pageNo > 0}"
+                                th:href="@{/admin/nhanvien/hienthi(pageNo=${pageNo - 1})}">Prev</a>
+                            <span class="page-link" th:unless="${pageNo > 0}">Prev</span>
+                        </li>
+                        <li th:each="i: ${#numbers.sequence(0, listNV.totalPages-1)}" class="page-item">
+                            <a th:href="@{/admin/nhanvien/hienthi(pageNo=${i})}" class="page-link"
+                                th:text="${i +1}"></a>
+                        </li>
+
+                        <li class="page-item">
+                            <a class="page-link" th:if="${pageNo < listNV.totalPages -1}"
+                                th:href="@{/admin/nhanvien/hienthi(pageNo=${pageNo + 1})}">Next</a>
+                            <span class="page-link" th:unless="${pageNo < listNV.totalPages -1}">Next</span>
+                        </li>
+                    </ul>
                 </div>
+
+                
             </div>
         </div>
     </section>
