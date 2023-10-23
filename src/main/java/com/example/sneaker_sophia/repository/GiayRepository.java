@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import com.example.sneaker_sophia.entity.ChiTietGiay;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,4 +23,10 @@ public interface GiayRepository extends JpaRepository<Giay, UUID> {
 
     @Query("SELECT g FROM Giay g WHERE g.ten LIKE %:txtSearch% AND (g.trangThai = :trangThai OR :trangThai IS NULL)")
     Page<Giay> searchAndFilter(@Param("txtSearch") String txtSearch, @Param("trangThai") String trangThai, Pageable pageable);
+
+  @Query(value = "select LOWER(id) from Giay where trangThai= ?1",nativeQuery = true)
+    List<String> finAllId(Integer trangThai);
+
+    List<Giay> findAllByTrangThaiEquals(int trangThai);
+
 }

@@ -1,31 +1,50 @@
 package com.example.sneaker_sophia.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table(name = "KichCo")
 public class KichCo {
     @Id
     @Column(name = "Id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
+    @Column(name = "ma")
+    private String ma;
 
     @Column(name = "ten")
     private String ten;
 
-    public String getId() {
-        return this.id;
-    }
+    @Column(name = "ngayTao")
+    private LocalDate ngayTao;
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    @Column(name = "ngaySua")
+    private LocalDate ngaySua;
 
-    public String getTen() {
-        return this.ten;
-    }
+    @Column(name = "nguoiTao")
+    private UUID nguoiTao;
 
-    public void setTen(String ten) {
-        this.ten = ten;
-    }
+    @Column(name = "nguoiSua")
+    private UUID nguoiSua;
+
+    @Column(name = "trangThai")
+    private Integer trangThai;
+
+    @OneToMany(mappedBy = "")
+    private List<ChiTietGiay> listCTG = new ArrayList<>();
+
+
 }

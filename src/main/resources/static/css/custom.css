@@ -586,14 +586,17 @@ table.table tr td {
 
 table.table td a:hover {
     color: #2196F3;
+
 }
 
 .edit {
     color: #FFC107;
+    font-size: 24px;
 }
 
 .delete {
     color: #F44336;
+    font-size: 24px;
 }
 
 table.table td i {

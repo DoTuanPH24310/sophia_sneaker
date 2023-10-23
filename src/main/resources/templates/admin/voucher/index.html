@@ -1,0 +1,216 @@
+
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layouts/layout}" >
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        .container {
+            background-color: #EAEAEA;
+        }
+
+        .page-link {
+            background-color: #fff;
+            color: #0d6efd;
+
+            border: 1px solid #dee2e6;
+        }
+
+
+
+        .formTable {
+            background-color: #FFFFFF;
+        }
+
+        .my-custom-scrollbar {
+            position: relative;
+            height: 600px;
+            overflow: auto;
+        }
+
+        .table-wrapper-scroll-y {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+
+<div layout:fragment="content" class="container mt-1 px-2 ">
+    <!--Bộ lọc, tìm kiếm  -->
+
+
+    <div class="row">
+        <h3 style="font-weight: bold; text-align: center;" class="mt-2">Quản Lý Khuyến Mại</h3>
+        <div class="col-1"></div>
+        <div class="col-10 mt-4 formTable">
+            <h5 style="font-weight: bold;" class="mt-3">Bộ lọc</h5>
+            <hr>
+
+            <form th:action="@{/admin/voucher/hien-thi#table}" class="mt-3 mb-3">
+                <div class="row">
+                    <div class="col-6">
+                        <label> Tìm kiếm </label>
+                        <input style="border-radius: 10px;" type="text" th:value="${textSearch}" class="form-control"
+                               name="textSearch"
+                               placeholder="Nhập mã hoặc tên khuyến mại...">
+                        <p class="text-danger"></p>
+                    </div>
+
+                    <div class="col-6">
+                        <label>Trạng thái</label>
+                        <select style="border-radius: 10px;" class="form-select" th:onchange="this.form.submit()"
+                                name="trangThai">
+                            <div style="border: 10px">
+                                <option th:selected="${trangThai}  == -1 ? true:false" value="-1"> Tất cả
+                                </option>
+                                <option th:selected="${trangThai} == 0 ? true:false" value="0"> Sắp diễn ra
+                                </option>
+                                <!--                                                th:selected="${chucVu.tenChucVu}.equal('Nhân viên')  ? true : false"-->
+                                <option th:selected="${trangThai} == 1 ? true:false" value="1">Đang diễn ra
+                                </option>
+
+                                <option th:selected="${trangThai} == 2 ? true:false" value="2">Hết hạn
+                                </option>
+                            </div>
+                        </select>
+
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <a th:href="@{/admin/voucher/hien-thi}" class="btn btn-primary">Làm mới</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Danh sách vourcher -->
+    <div class="row mt-3">
+        <h5 style="font-weight: bold; text-align: center;" class="mt-3">Danh sách khuyến mại </h5>
+        <hr>
+        <div class="table table-wrapper-scroll-y my-custom-scrollbar">
+            <a class="btn btn-primary mt-1 mb-1 float-right" th:href="@{/admin/voucher/view-add}">
+                <i style="font-size: 18px" class="fab fa-plus"></i> Thêm
+            </a>
+            <table id="table" class="table  table-borderless  formTable">
+                <thead>
+                <tr class="bg-light">
+                    <th scope="col" width="10%">Mã </th>
+                    <th scope="col" width="15%">Tên</th>
+                    <th scope="col" width="10%">Giá trị</th>
+                    <th scope="col" width="12%">Ngày bắt đầu</th>
+                    <th scope="col" width="12%">Ngày kết thúc</th>
+                    <th scope="col" width="12%">Ngày cập nhật</th>
+                    <th scope="col" width="20%">Trạng thái</th>
+                    <th scope="col" width="20%">Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <tr th:each="vc : ${listVC.content}" style="line-height: 25px">
+
+                    <td th:text="${vc.ma}"></td>
+                    <td th:text="${vc.ten}"></td>
+                    <td th:text="${vc.phanTramGiam} +'%'"></td>
+                    <td th:text="${vc.ngayBatDau}"></td>
+                    <td th:text="${vc.ngayKetThuc}"></td>
+                    <td th:text="${vc.ngaySua}"></td>
+                    <td th:if="${vc.trangThai ==0}">
+                        <button class="btn btn-primary" style="border-radius: 30px; font-size: 12px; height: 40px">
+                            Sắp diễn ra
+                        </button>
+                    </td>
+
+                    <td th:if="${vc.trangThai ==1}">
+                        <button class="btn btn-success" style="border-radius: 30px; font-size: 12px; height: 40px">
+                          Đang diễn ra
+                        </button>
+                    </td>
+
+                    <td th:if="${vc.trangThai ==2}">
+                        <button class="btn btn-danger" style="border-radius: 30px; font-size: 12px; height: 40px">
+                            Hết hạn
+                        </button>
+                    </td>
+                    <td>
+                        <a th:if="${vc.trangThai == 0}" class="edit" th:href="@{/admin/voucher/view-update/{id}#tableCTG(id=${vc.id})}">
+                            <i class="material-icons" title="Cập nhật">&#xE254;</i>
+                        </a>
+
+                        <a th:unless="${vc.trangThai == 0}" class="edit" type="button" onclick="thongBao('Chỉ cập nhật được khuyến mại sắp diễn ra');">
+                            <i class="material-icons" title="Cập nhật">&#xE254;</i>
+                        </a>
+
+                        <a th:if="${vc.trangThai == 1}" type="button" onclick="thongBao('Chỉ xóa được khuyến mại hết hạn hoặc sáp diễn ra');"
+                           class="delete">
+                            <i class="material-icons" title="Xóa">&#xE872;</i>
+                        </a>
+
+
+
+                        <a th:unless="${vc.trangThai ==1}"  th:href="@{/admin/voucher/delete/{id}(id = ${vc.id})}" onclick="return confirm('Bạn chắc chăn muốn xóa');"
+                           class="delete">
+                            <i class="material-icons" title="Xóa">&#xE872;</i>
+                        </a>
+                    </td>
+                </tr>
+
+
+                </tbody>
+
+            </table>
+
+            <div th:if="${#lists.size(listVC.content) >0 }" class="row">
+                <div class="col-3">
+                    <div class="hint-text">Tổng khuyên mại: <b th:text="${tongVC}"></b> &ensp; Xem trang <b
+                            th:text="${pageNo+1}+'/'+${listVC.totalPages}"></b>
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <a class="page-link" th:if="${pageNo > 0}"
+                               th:href="@{/admin/voucher/hien-thi#table(pageNo=${pageNo-1},trangThai=${trangThai},textSearch=${textSearch})}">Prev</a>
+                            <span class="page-link" th:unless="${pageNo > 0}">Prev</span>
+                        </li>
+                        <li th:each="i: ${#numbers.sequence(0, listVC.totalPages-1)}" class="page-item">
+                            <a th:href="@{/admin/voucher/hien-thi#table(pageNo=${i},trangThai=${trangThai},textSearch=${textSearch})}"
+                               class="page-link"
+                               th:text="${i +1}"></a>
+                        </li>
+
+                        <li class="page-item">
+                            <a class="page-link" th:if="${pageNo < listVC.totalPages -1}"
+                               th:href="@{/admin/voucher/hien-thi#table(pageNo=${pageNo+1},trangThai=${trangThai},textSearch=${textSearch})}">Next</a>
+                            <span class="page-link" th:unless="${pageNo < listVC.totalPages -1}">Next</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div th:unless="${#lists.size(listVC.content) >0 }">
+                <h3 class="text-center text-body">Không có dữ liệu phù hợp</h3>
+            </div>
+
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        let mess = [[${session.mess}]];
+        if (mess != '' && mess != null){
+            window.addEventListener("load", function () {
+                alert(mess);
+            });
+        }
+    </script>
+
+</div>
+</body>
+</html>

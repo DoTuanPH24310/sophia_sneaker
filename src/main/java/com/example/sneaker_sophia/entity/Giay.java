@@ -4,14 +4,18 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.time.LocalDate;
+import java.util.UUID;
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @Table(name = "Giay")
 @Component
 @Builder
@@ -28,10 +32,10 @@ public class Giay {
     private String ten;
 
     @Column(name = "ngayTao")
-    private Date ngayTao;
+    private LocalDate ngayTao;
 
     @Column(name = "ngaySua")
-    private Date ngaySua;
+    private LocalDate ngaySua;
 
     @Column(name = "nguoiTao")
     private UUID nguoiTao;
@@ -41,6 +45,4 @@ public class Giay {
 
     @Column(name = "trangThai")
     private Integer trangThai;
-
-
 }
