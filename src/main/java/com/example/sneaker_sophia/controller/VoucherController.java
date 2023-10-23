@@ -164,9 +164,5 @@ public class VoucherController {
         return "admin/voucher/update";
     }
 
-    public void test(){
-
-    }
-
 }
 
