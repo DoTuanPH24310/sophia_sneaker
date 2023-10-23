@@ -74,7 +74,7 @@ public class KichCoController {
         return "redirect:/kichCo/hien-thi";
     }
 
-    @DeleteMapping("delete/{id}")
+    @GetMapping("delete/{id}")
     private String delete(@PathVariable("id") KichCo kichCo){
         this.kichCoService.delete(kichCo.getId());
         return "redirect:/kichCo/hien-thi";

@@ -73,7 +73,7 @@ public class MauSacController {
         return "redirect:/mauSac/hien-thi";
     }
 
-    @DeleteMapping("delete/{id}")
+    @GetMapping("delete/{id}")
     private String delete(@PathVariable("id") MauSac mauSac){
         this.mauSacService.delete(mauSac.getId());
         return "redirect:/mauSac/hien-thi";

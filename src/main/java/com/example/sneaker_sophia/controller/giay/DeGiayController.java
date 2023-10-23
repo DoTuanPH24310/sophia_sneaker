@@ -73,7 +73,7 @@ public class DeGiayController {
         return "redirect:/deGiay/hien-thi";
     }
 
-    @DeleteMapping("delete/{id}")
+    @GetMapping("delete/{id}")
     private String delete(@PathVariable("id") DeGiay deGiay){
         this.deGiayService.delete(deGiay.getId());
         return "redirect:/deGiay/hien-thi";

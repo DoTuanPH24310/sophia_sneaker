@@ -71,10 +71,10 @@
                                 <div style="border: 10px">
                                     <option th:selected="${trangThai}  == -1 ? true:false" value="-1"> Tất cả
                                     </option>
-                                    <option th:selected="${trangThai} == 0 ? true:false" value="0"> Còn hạn
+                                    <option th:selected="${trangThai} == 0 ? true:false" value="0"> Hoạt động
                                     </option>
                                     <!--                                                th:selected="${chucVu.tenChucVu}.equal('Nhân viên')  ? true : false"-->
-                                    <option th:selected="${trangThai} == 1 ? true:false" value="1">Hết hạn
+                                    <option th:selected="${trangThai} == 1 ? true:false" value="1"> Ngưng hoạt động
                                     </option>
                                 </div>
                             </select>
@@ -121,7 +121,7 @@
                             <a class="edit" th:href="@{/hang/view-update/{id}(id=${g.id})}">
                                 <i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i>
                             </a>
-                            <a onclick="return confirm('Bạn có muốn xóa không')" class="delete">
+                            <a onclick="return confirm('Bạn có muốn xóa không')" class="delete" th:href="@{/hang/delete/{id}(id=${g.id})}">
                                 <i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i>
                             </a>
                         </td>

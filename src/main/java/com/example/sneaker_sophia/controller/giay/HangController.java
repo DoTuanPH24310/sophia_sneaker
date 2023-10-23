@@ -73,7 +73,7 @@ public class HangController {
         return "redirect:/hang/hien-thi";
     }
 
-    @DeleteMapping("delete/{id}")
+    @GetMapping("delete/{id}")
     private String delete(@PathVariable("id") Hang hang){
         this.hangService.delete(hang.getId());
         return "redirect:/hang/hien-thi";
