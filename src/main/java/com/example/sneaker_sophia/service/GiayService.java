@@ -1,33 +1,46 @@
 package com.example.sneaker_sophia.service;
 
 import com.example.sneaker_sophia.dto.GiayRequest;
+import com.example.sneaker_sophia.entity.ChiTietGiay;
 import com.example.sneaker_sophia.entity.Giay;
 import com.example.sneaker_sophia.repository.GiayRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import java.util.Optional;
-import java.util.UUID;
-
-import com.example.sneaker_sophia.entity.ChiTietGiay;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class GiayService {
     @Autowired
     private GiayRepository giayRepository;
-  
-      @Autowired
+
+    @Autowired
     private ChiTietGiayService chiTietGiayService;
     public static int check = 0;
     public List<ChiTietGiay> listCTG = new ArrayList<>();
 
+    public boolean checkMa(String ma) {
+        for (Giay giay : this.giayRepository.findAll()) {
+            if (giay.getMa().equals(ma)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public Giay add(GiayRequest giayRequest) {
         Giay giay = giayRequest.loadForm(new Giay());
-        return this.giayRepository.save(giay);
+        if (checkMa(giay.getMa())) {
+            return this.giayRepository.save(giay);
+        }
+        return null;
     }
 
     public Optional<Giay> findOne(UUID id) {
@@ -38,7 +51,7 @@ public class GiayService {
         Page<Giay> page = null;
 
         if (txtSearch == null || txtSearch.trim().isEmpty()) {
-            if (trangThai == null || trangThai.equals("-1")) {
+            if (trangThai == null || trangThai == "" || trangThai.equals("-1")) {
                 return giayRepository.getAll(pageable);
             }
 

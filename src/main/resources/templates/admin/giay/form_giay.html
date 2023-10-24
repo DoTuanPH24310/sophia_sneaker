@@ -25,13 +25,16 @@
 <body>
 <section>
     <div layout:fragment="content" class="col-md-9" style="margin: auto">
-        <form method="post" th:action="@{/giay/add}" th:object="${data}">
+        <form method="post" th:action="@{/admin/giay/add}" th:object="${data}">
             <div class="row mb-3">
                 <div class="col-6">
                     <div class="form-floating">
                         <input type="text" class="form-control" name="maGiamGia" th:field="*{ma}" id="maGiamGia" placeholder="Nhập mã giày"/>
                         <label for="maGiamGia" class="form-label">Mã Giày</label>
                         <span th:errors="*{ma}"></span>
+                        <div th:if="${ma}">
+                            Mã giày đã tồn tại. Vui lòng chọn mã khác.
+                        </div>
                     </div>
                 </div>
                 <div class="col-6">
