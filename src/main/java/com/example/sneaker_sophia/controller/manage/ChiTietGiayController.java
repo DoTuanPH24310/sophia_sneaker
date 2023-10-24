@@ -136,7 +136,7 @@ public class ChiTietGiayController {
                 anhService.save(anh);
 
                 // Lưu tệp hình ảnh vào thư mục trên máy chủ
-                String uploadDir = "../resources/static/img";
+                String uploadDir = "C:/Users/Tuan1/IdeaProjects/sophia_sneaker/src/main/resources/static/img";
                 Path uploadPath = Paths.get(uploadDir);
 
                 try (InputStream inputStream = imageFile.getInputStream()) {
@@ -173,7 +173,7 @@ public class ChiTietGiayController {
                 anhService.save(anh);
 
                 // Lưu tệp hình ảnh vào thư mục trên máy chủ
-                String uploadDir = "../resources/static/img";
+                String uploadDir = "C:/Users/Tuan1/IdeaProjects/sophia_sneaker/src/main/resources/static/img";
                 Path uploadPath = Paths.get(uploadDir);
 
                 try (InputStream inputStream = imageFile.getInputStream()) {
