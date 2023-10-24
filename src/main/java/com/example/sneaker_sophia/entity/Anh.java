@@ -17,7 +17,7 @@ public class Anh {
     @Id
     @Column(name = "Id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private UUID id;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ChiTietGiay", referencedColumnName = "Id")

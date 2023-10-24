@@ -26,6 +26,11 @@ public class GiayService {
     public static int check = 0;
     public List<ChiTietGiay> listCTG = new ArrayList<>();
 
+
+    public List<Giay> getAll(){
+        return giayRepository.findAll();
+    }
+
     public boolean checkMa(String ma) {
         for (Giay giay : this.giayRepository.findAll()) {
             if (giay.getMa().equals(ma)) {

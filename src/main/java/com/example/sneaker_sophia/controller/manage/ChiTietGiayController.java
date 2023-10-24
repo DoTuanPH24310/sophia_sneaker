@@ -129,7 +129,7 @@ public class ChiTietGiayController {
                 // Tạo một đối tượng ảnh và thiết lập các thông tin cần thiết
                 Anh anh = new Anh();
                 anh.setAnhChinh(originalFilename);
-                anh.setTen(originalFilename);
+                anh.setDuongDan(originalFilename);
                 anh.setChiTietGiay(chiTietGiay);
 
                 // Lưu đối tượng ảnh vào cơ sở dữ liệu
@@ -166,7 +166,7 @@ public class ChiTietGiayController {
                 // Tạo một đối tượng ảnh và thiết lập các thông tin cần thiết
                 Anh anh = new Anh();
                 anh.setAnhChinh(originalFilename);
-                anh.setTen(originalFilename);
+                anh.setDuongDan(originalFilename);
                 anh.setChiTietGiay(chiTietGiay);
 
                 // Lưu đối tượng ảnh vào cơ sở dữ liệu

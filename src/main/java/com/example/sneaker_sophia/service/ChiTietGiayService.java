@@ -4,10 +4,13 @@ import com.example.sneaker_sophia.entity.ChiTietGiay;
 import com.example.sneaker_sophia.entity.Voucher;
 import com.example.sneaker_sophia.repository.ChiTietGiayRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.thymeleaf.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,24 +107,36 @@ public class ChiTietGiayService {
 
     public static final int PRODUCT_DETAIL_PER_PAGE = 10;
     public List<ChiTietGiay> getAll(){
-
+        return chiTietGiayRepository.findAll();
     }
     public void save(ChiTietGiay chiTietGiay){
-
+        chiTietGiayRepository.save(chiTietGiay);
     }
     public ChiTietGiay getOne(UUID id){
-
+        return chiTietGiayRepository.findById(id).get();
     }
     public void delete(UUID id){
-
+            chiTietGiayRepository.deleteById(id);
     }
 
     public Page<ChiTietGiay> findAll(Pageable pageable){
-
+        return chiTietGiayRepository.findAll(pageable);
     }
 
     public Page<ChiTietGiay> listByPageAndProductName(int pageNum, String sortField, String sortDir, String keyword, String productName){
+        Sort sort = Sort.by(sortField);
+        sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
+        Pageable pageable = PageRequest.of(pageNum - 1, PRODUCT_DETAIL_PER_PAGE, sort);
 
+        if (StringUtils.isEmpty(productName) && StringUtils.isEmpty(keyword)) {
+            return chiTietGiayRepository.findAll(pageable);
+        } else if (StringUtils.isEmpty(productName)) {
+            return chiTietGiayRepository.findByKeyword(keyword, pageable);
+        } else if (StringUtils.isEmpty(keyword)) {
+            return chiTietGiayRepository.findByGiay_TenContainingIgnoreCase(productName, pageable);
+        } else {
+            return chiTietGiayRepository.findByMaAndKeyWord(keyword, productName, pageable);
+        }
     }
 
 }
