@@ -46,6 +46,10 @@ public class VoucherService {
         model.addAttribute("listGiay", giayService.findAllByTrangThaiEquals(0));
     }
 
+    public List<Voucher> findByTrangThaiNotLike(Integer tt){
+        return voucherRepository.findByTrangThaiNotLike(tt);
+    }
+
 
     public Page locVaTimKiem(Pageable pageable, Model model) {
         Page page = null;
@@ -133,7 +137,8 @@ public class VoucherService {
 //        Ngày kết thúc ở trước now                -> 2 kết thúc
         LocalDate now = LocalDate.now();
         for (Voucher v : list) {
-            if (v.getNgayBatDau().isBefore(now) && v.getNgayKetThuc().isAfter(now)) {
+            if ((v.getNgayBatDau().isBefore(now) || v.getNgayBatDau().isEqual(now))
+                    && (v.getNgayKetThuc().isAfter(now) || v.getNgayKetThuc().isEqual(now))) {
                 v.setTrangThai(1);
                 voucherRepository.save(v);
             } else if (v.getNgayBatDau().isAfter(now)) {

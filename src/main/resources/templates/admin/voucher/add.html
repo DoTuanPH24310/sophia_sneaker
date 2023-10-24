@@ -24,6 +24,20 @@
         .formTable {
             background-color: #FFFFFF;
         }
+
+        .modal-backdrop.fade.show {
+            opacity: 0.8;
+        }
+
+        .my-custom-scrollbar {
+            position: relative;
+            height: 400px;
+            overflow: auto;
+        }
+
+        .table-wrapper-scroll-y {
+            display: block;
+        }
     </style>
 </head>
 
@@ -38,22 +52,22 @@
                     </div>
                     <br>
 
-                    <label>Tên khuyến mại</label>
+                    <label><span style="color: #c82333">*</span>Tên khuyến mại</label>
                     <input th:field="*{ten}" type="text" class="form-control">
                     <p th:text="${errTen}" class="text-danger"></p> <br>
 
 
-                    <label>Giá trị (%)</label>
+                    <label><span style="color: #c82333">*</span>Giá trị (%)</label>
                     <input th:field="*{phanTramGiam}" type="number" min="1" class="form-control">
                     <p th:text="${errGiaTri}" class="text-danger"></p> <br>
 
 
-                    <label>Ngày bắt đầu</label>
+                    <label><span style="color: #c82333">*</span>Ngày bắt đầu</label>
                     <input th:field="*{ngayBatDau}" id="ngayBatDau" type="date" class="form-control">
                     <p th:text="${errNBD}" class="text-danger"></p> <br>
 
 
-                    <label>Ngày kết thúc</label>
+                    <label><span style="color: #c82333">*</span>Ngày kết thúc</label>
                     <input th:field="*{ngayKetThuc}" id="ngayKetThuc" type="date" class="form-control">
                     <p th:text="${errNKT}" class="text-danger"></p>   <br>
 
@@ -76,15 +90,8 @@
 
                 <div class="col-8 formTable">
                     <!-- Bảng sản phẩm -->
-
-                    <div class="row">
-                        <div class="d-flex justify-content-between align-items-center mt-3">
-                            <div class="position-relative">
-                                <span class="position-absolute search"><i class="fa fa-search"></i></span>
-                                <input class="form-control w-100" placeholder="Tìm kiếm theo tên, mã,...">
-                            </div>
-
-                        </div>
+                    <h5 style="font-weight: bold; margin-top: 4px;">Danh mục</h5>
+                    <div class="row mt-2">
                         <div class="table table-responsive table-wrapper-scroll-y my-custom-scrollbar">
 
                             <table class="table table-responsive table-borderless">
@@ -140,7 +147,7 @@
 
                     <!-- Bảng chỉ tiết sản phẩm -->
                     <div class="row mt-4">
-                        <h6 style="font-weight: bold; ">Chi tiết sản phẩm</h6>
+                        <h5 style="font-weight: bold; ">Chi tiết sản phẩm</h5>
 
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="position-relative">

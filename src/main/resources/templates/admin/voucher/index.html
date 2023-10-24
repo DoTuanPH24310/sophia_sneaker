@@ -147,14 +147,7 @@
                             <i class="material-icons" title="Cập nhật">&#xE254;</i>
                         </a>
 
-                        <a th:if="${vc.trangThai == 1}" type="button" onclick="thongBao('Chỉ xóa được khuyến mại hết hạn hoặc sáp diễn ra');"
-                           class="delete">
-                            <i class="material-icons" title="Xóa">&#xE872;</i>
-                        </a>
-
-
-
-                        <a th:unless="${vc.trangThai ==1}"  th:href="@{/admin/voucher/delete/{id}(id = ${vc.id})}" onclick="return confirm('Bạn chắc chăn muốn xóa');"
+                        <a  th:href="@{/admin/voucher/delete/{id}(id = ${vc.id})}" onclick="return confirm('Bạn chắc chăn muốn xóa');"
                            class="delete">
                             <i class="material-icons" title="Xóa">&#xE872;</i>
                         </a>

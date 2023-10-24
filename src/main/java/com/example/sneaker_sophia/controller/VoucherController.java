@@ -2,6 +2,7 @@ package com.example.sneaker_sophia.controller;
 import com.example.sneaker_sophia.dto.VoucherDTO;
 import com.example.sneaker_sophia.entity.ChiTietGiay;
 import com.example.sneaker_sophia.entity.Voucher;
+import com.example.sneaker_sophia.repository.VoucherRepository;
 import com.example.sneaker_sophia.request.VoucherReq;
 import com.example.sneaker_sophia.service.CTG_KhuyenMaiService;
 import com.example.sneaker_sophia.service.ChiTietGiayService;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +28,7 @@ public class VoucherController {
     @Autowired
     private VoucherService voucherService;
 
+
     @Autowired
     private GiayService giayService;
 
@@ -36,14 +39,15 @@ public class VoucherController {
     private CTG_KhuyenMaiService ctg_khuyenMaiService;
 
 
+
     public static int checkSession = 0;
 
 
-//    @Scheduled(initialDelay = 10000, fixedDelay = 600000)
-//    public void test() {
-//        List<Voucher> listUpdate = voucherRepository.findAll();
-//        voucherService.jobUpdate(listUpdate);
-//    }
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void test() {
+        List<Voucher> listUpdate = voucherService.findByTrangThaiNotLike(3);
+        voucherService.jobUpdate(listUpdate);
+    }
 
     @GetMapping("/hien-thi")
     public String hienThi(Model model, @RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo, HttpSession session) {
@@ -53,7 +57,7 @@ public class VoucherController {
             }
             checkSession = 1;
         }
-        Pageable pageable = PageRequest.of(pageNo, 5);
+        Pageable pageable = PageRequest.of(pageNo, 10);
         Page page = voucherService.locVaTimKiem(pageable, model);
         model.addAttribute("listVC", page);
         model.addAttribute("tongVC", page.getTotalElements());
@@ -115,14 +119,7 @@ public class VoucherController {
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(Model model, @PathVariable("id") Voucher vc, HttpSession session) {
-//      Nếu trạng thái sắp diễn ra thì xóa luôn
-//      Nếu hết hạn thì xóa mềm
-        if (vc.getTrangThai() != 0 && vc.getTrangThai() != 2){
-            checkSession = 0;
-            session.setAttribute("mess","Thao tác không chính xác");
-        }
-
+    public String delete(@PathVariable("id") Voucher vc, HttpSession session) {
         if (vc.getTrangThai() == 0) {
             ctg_khuyenMaiService.deleteByIdKM(vc);
             voucherService.delete(vc);
@@ -163,6 +160,8 @@ public class VoucherController {
         }
         return "admin/voucher/update";
     }
+
+    //  Cho phép xóa khuyến mại đang áp dụng
 
 }
 
