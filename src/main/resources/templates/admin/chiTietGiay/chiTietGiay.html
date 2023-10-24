@@ -77,7 +77,7 @@
                 <tr th:each="ctg, iterStat : ${listChiTietGiay}">
                     <td th:text="${iterStat.count}"></td>
                     <td>
-                        <img th:src="@{'/img/' + ${ctg.anhs.get(0).duongDan}}"
+                        <img th:src="@{'/img/' + ${ctg.anhs.get(0).anhChinh}}"
                              style="width: 100px; height: 100px" class="img-fluid" alt="" />
                     </td>
                     <td>[[${ctg.ma}]]</td>
