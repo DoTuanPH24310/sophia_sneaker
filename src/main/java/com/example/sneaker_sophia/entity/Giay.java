@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,6 +31,9 @@ public class Giay {
 
     @Column(name = "ten")
     private String ten;
+
+    @OneToMany(mappedBy = "giay", fetch = FetchType.EAGER)
+    private List<ChiTietGiay> chiTietGiayList;
 
     @Column(name = "ngayTao")
     private LocalDate ngayTao;

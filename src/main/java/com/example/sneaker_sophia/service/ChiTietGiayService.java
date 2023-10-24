@@ -6,6 +6,8 @@ import com.example.sneaker_sophia.repository.ChiTietGiayRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,4 +101,27 @@ public class ChiTietGiayService {
         }
         return uuidList;
     }
+
+    public static final int PRODUCT_DETAIL_PER_PAGE = 10;
+    public List<ChiTietGiay> getAll(){
+
+    }
+    public void save(ChiTietGiay chiTietGiay){
+
+    }
+    public ChiTietGiay getOne(UUID id){
+
+    }
+    public void delete(UUID id){
+
+    }
+
+    public Page<ChiTietGiay> findAll(Pageable pageable){
+
+    }
+
+    public Page<ChiTietGiay> listByPageAndProductName(int pageNum, String sortField, String sortDir, String keyword, String productName){
+
+    }
+
 }
