@@ -168,7 +168,6 @@ public class ChiTietGiayController {
                 anh.setAnhChinh(originalFilename);
                 anh.setDuongDan(originalFilename);
                 anh.setChiTietGiay(chiTietGiay);
-
                 // Lưu đối tượng ảnh vào cơ sở dữ liệu
                 anhService.save(anh);
 

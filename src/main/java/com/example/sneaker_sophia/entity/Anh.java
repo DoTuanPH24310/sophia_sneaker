@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,10 +32,10 @@ public class Anh {
     private String anhChinh;
 
     @Column(name = "ngayTao")
-    private UUID ngayTao;
+    private LocalDate ngayTao;
 
     @Column(name = "ngaySua")
-    private UUID ngaySua;
+    private LocalDate ngaySua;
 
     @Column(name = "nguoiTao")
     private UUID nguoiTao;
