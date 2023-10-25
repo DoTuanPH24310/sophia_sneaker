@@ -64,7 +64,7 @@ public class NhanVienController {
         model.addAttribute("listNV", list);
         model.addAttribute("tongNV", list.getTotalElements());
         model.addAttribute("pageNo", pageNo);
-        return "nhanvien/index";
+        return "admin/nhanvien/indexnv";
     }
 
     @GetMapping("/create")
@@ -74,7 +74,7 @@ public class NhanVienController {
         session.setAttribute("phuong", "-1");
         NhanVienRequest nhanVienRequest = new NhanVienRequest();
         model.addAttribute("nhanVienRequest", nhanVienRequest);
-        return "nhanvien/create";
+        return "admin/nhanvien/createnv";
     }
 
     @GetMapping("/edit/{id}")
@@ -91,7 +91,7 @@ public class NhanVienController {
         session.setAttribute("phuong", diaChiList.getPhuongXa());
         session.setAttribute("anhDaiDien", taiKhoanDiaChi.getAnhDaiDien());
 
-        return "nhanvien/edit";
+        return "admin/nhanvien/editnv";
     }
 
     @PostMapping("/store")
@@ -112,7 +112,7 @@ public class NhanVienController {
                 session.setAttribute("anhDaiDien", nv_rq.getAnhDaiDien());
             }
 
-            return "nhanvien/create";
+            return "admin/nhanvien/createnv";
         }
         return "redirect:/admin/nhanvien/hienthi";
 
