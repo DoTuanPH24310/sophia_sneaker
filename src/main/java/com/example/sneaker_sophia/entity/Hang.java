@@ -2,18 +2,14 @@ package com.example.sneaker_sophia.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.stereotype.Component;
 
-import java.util.Date;
 import java.util.UUID;
-
-@Entity
-@Table(name = "Hang")
-@Getter
-@Setter
-@AllArgsConstructor
 @NoArgsConstructor
-@Component
+@AllArgsConstructor
+@Entity
+@Setter
+@Getter
+@Table(name = "Hang")
 @Builder
 public class Hang {
     @Id
@@ -28,10 +24,10 @@ public class Hang {
     private String ten;
 
     @Column(name = "ngayTao")
-    private Date ngayTao;
+    private UUID ngayTao;
 
     @Column(name = "ngaySua")
-    private Date ngaySua;
+    private UUID ngaySua;
 
     @Column(name = "nguoiTao")
     private UUID nguoiTao;
@@ -41,5 +37,6 @@ public class Hang {
 
     @Column(name = "trangThai")
     private Integer trangThai;
+
 
 }

@@ -1,53 +1,49 @@
 package com.example.sneaker_sophia.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.UUID;
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table(name = "Anh")
 public class Anh {
     @Id
     @Column(name = "Id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
-    @Column(name = "ChiTietGiay")
-    private String chiTietGiay;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "ChiTietGiay", referencedColumnName = "Id")
+    private ChiTietGiay chiTietGiay;
 
-    @Column(name = "ten")
-    private String ten;
+    @Column(name = "duongDan")
+    private String duongDan;
 
     @Column(name = "anhChinh")
     private String anhChinh;
 
-    public String getId() {
-        return this.id;
-    }
+    @Column(name = "ngayTao")
+    private LocalDate ngayTao;
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    @Column(name = "ngaySua")
+    private LocalDate ngaySua;
 
-    public String getChiTietGiay() {
-        return this.chiTietGiay;
-    }
+    @Column(name = "nguoiTao")
+    private UUID nguoiTao;
 
-    public void setChiTietGiay(String chiTietGiay) {
-        this.chiTietGiay = chiTietGiay;
-    }
+    @Column(name = "nguoiSua")
+    private UUID nguoiSua;
 
-    public String getTen() {
-        return this.ten;
-    }
+    @Column(name = "trangThai")
+    private Integer trangThai;
 
-    public void setTen(String ten) {
-        this.ten = ten;
-    }
-
-    public String getAnhChinh() {
-        return this.anhChinh;
-    }
-
-    public void setAnhChinh(String anhChinh) {
-        this.anhChinh = anhChinh;
-    }
 }
