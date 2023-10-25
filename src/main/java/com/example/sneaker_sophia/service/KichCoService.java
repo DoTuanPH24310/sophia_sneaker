@@ -33,7 +33,7 @@ public class KichCoService {
     public Page<KichCo> fillter(String txtSearch, String trangThai, Pageable pageable) {
         Page<KichCo> page = null;
         if (txtSearch == null || txtSearch.trim().isEmpty()) {
-            if (trangThai == null || trangThai.equals("-1")) {
+            if (trangThai == null || trangThai == ""  || trangThai.equals("-1")) {
                 return kichCoRepository.getAll(pageable);
             }
 

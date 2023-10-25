@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("kichCo")
+@RequestMapping("/admin/kichCo")
 public class KichCoController {
     @Autowired
     private KichCo kichCo;
@@ -50,33 +50,33 @@ public class KichCoController {
     @PostMapping("add")
     private String add(@Valid @ModelAttribute("data") KichCoRequest kichCoRequest, BindingResult result) {
         if (result.hasErrors()) {
-            return "admin/form_kichCo";
+            return "admin/kichCo/form_kichCo";
         }
         this.kichCoService.add(kichCoRequest);
-        return "redirect:/kichCo/hien-thi";
+        return "redirect:/admin/kichCo/hien-thi";
     }
 
     @GetMapping("view-update/{id}")
     private String viewUpdate(Model model, KichCo kichCo) {
         Optional<KichCo> kichCo1 = this.kichCoService.findOne(kichCo.getId());
         model.addAttribute("data", kichCo1);
-        model.addAttribute("action", "/kichCo/update/" +kichCo.getId());
+        model.addAttribute("action", "/admin/kichCo/update/" +kichCo.getId());
         return "admin/kichCo/form_kichCo_update";
     }
 
     @PostMapping("update/{id}")
     private String update(@PathVariable("id") KichCo kichCo, @Valid @ModelAttribute("data") KichCoRequest kichCoRequest, BindingResult result, Model model){
         if(result.hasErrors()){
-            model.addAttribute("action", "/kichCo/update/" +kichCo.getId());
+            model.addAttribute("action", "/admin/kichCo/update/" +kichCo.getId());
             return "admin/kichCo/form_kichCo_update";
         }
         this.kichCoService.update(kichCo.getId(), kichCoRequest);
-        return "redirect:/kichCo/hien-thi";
+        return "redirect:/admin/kichCo/hien-thi";
     }
 
     @GetMapping("delete/{id}")
     private String delete(@PathVariable("id") KichCo kichCo){
         this.kichCoService.delete(kichCo.getId());
-        return "redirect:/kichCo/hien-thi";
+        return "redirect:/admin/kichCo/hien-thi";
     }
 }

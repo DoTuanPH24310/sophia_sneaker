@@ -30,7 +30,7 @@ public class DeGiayService {
         Page<DeGiay> page = null;
 
         if (txtSearch == null || txtSearch.trim().isEmpty()) {
-            if (trangThai == null || trangThai.equals("-1")) {
+            if (trangThai == null || trangThai == "" || trangThai.equals("-1")) {
                 return deGiayRepository.getAll(pageable);
             }
 

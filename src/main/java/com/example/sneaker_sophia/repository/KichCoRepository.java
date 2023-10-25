@@ -19,4 +19,9 @@ public interface KichCoRepository extends JpaRepository<KichCo, UUID> {
 
     @Query("SELECT g FROM KichCo g WHERE g.ten LIKE %:txtSearch% AND (g.trangThai = :trangThai OR :trangThai IS NULL)")
     Page<KichCo> searchAndFilter(@Param("txtSearch") String txtSearch, @Param("trangThai") String trangThai, Pageable pageable);
+
+//    @Query(value = "select obj from KichCo obj where (obj.trangThai <> 3) " +
+//            "and (?1 is null or obj.trangThai =?1) " +
+//            "and (?2 is null or obj.ma like ?2 or obj.ten like ?2)")
+//    Page<KichCo> locVaTimKiem(Integer tt, String txt,Pageable pageable);
 }

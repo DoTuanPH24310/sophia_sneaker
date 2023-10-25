@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("mauSac")
+@RequestMapping("/admin/mauSac")
 public class MauSacController {
     @Autowired
     private MauSac mauSac;
@@ -52,30 +52,30 @@ public class MauSacController {
             return "admin/mauSac/form_mauSac";
         }
         this.mauSacService.add(mauSacRequest);
-        return "redirect:/mauSac/hien-thi";
+        return "redirect:/admin/mauSac/hien-thi";
     }
 
     @GetMapping("view-update/{id}")
     private String viewUpdate(Model model, MauSac mauSac) {
         Optional<MauSac> mauSac1 = this.mauSacService.findOne(mauSac.getId());
         model.addAttribute("data", mauSac1);
-        model.addAttribute("action", "/mauSac/update/" +mauSac.getId());
+        model.addAttribute("action", "/admin/mauSac/update/" +mauSac.getId());
         return "admin/mauSac/form_mauSac_update";
     }
 
     @PostMapping("update/{id}")
     private String update(@PathVariable("id") MauSac mauSac, @Valid @ModelAttribute("data") MauSacRequest mauSacRequest, BindingResult result, Model model){
         if(result.hasErrors()){
-            model.addAttribute("action", "/mauSac/update/" +mauSac.getId());
+            model.addAttribute("action", "/admin/mauSac/update/" +mauSac.getId());
             return "admin/mauSac/form_mauSac_update";
         }
         this.mauSacService.update(mauSac.getId(), mauSacRequest);
-        return "redirect:/mauSac/hien-thi";
+        return "redirect:/admin/mauSac/hien-thi";
     }
 
     @GetMapping("delete/{id}")
     private String delete(@PathVariable("id") MauSac mauSac){
         this.mauSacService.delete(mauSac.getId());
-        return "redirect:/mauSac/hien-thi";
+        return "redirect:/admin/mauSac/hien-thi";
     }
 }

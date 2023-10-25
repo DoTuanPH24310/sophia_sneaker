@@ -29,7 +29,7 @@ public class MauSacService {
     public Page<MauSac> fillter(String txtSearch, String trangThai, Pageable pageable) {
         Page<MauSac> page = null;
         if (txtSearch == null || txtSearch.trim().isEmpty()) {
-            if (trangThai == null || trangThai.equals("-1")) {
+            if (trangThai == null || trangThai == "" || trangThai.equals("-1")) {
                 return mauSacRepository.getAll(pageable);
             }
 

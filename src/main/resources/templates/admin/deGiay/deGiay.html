@@ -55,7 +55,7 @@
             <div class="col-10 mt-4 formTable">
                 <h5 style="font-weight: bold;" class="mt-3">Bộ lọc</h5>
                 <hr>
-                <form th:action="@{/deGiay/hien-thi#table}" class="mt-3 mb-3">
+                <form th:action="@{/admin/deGiay/hien-thi#table}" class="mt-3 mb-3">
                     <div class="row">
                         <div class="col-6">
                             <label> Tìm kiếm </label>
@@ -81,7 +81,7 @@
                         </div>
                     </div>
                     <div class="d-flex justify-content-center">
-                        <a th:href="@{/deGiay/hien-thi}" class="btn btn-primary">Làm mới</a>
+                        <a th:href="@{/admin/deGiay/hien-thi}" class="btn btn-primary">Làm mới</a>
                     </div>
                 </form>
             </div>
@@ -89,8 +89,8 @@
         <div class="row mt-3">
             <h5 style="font-weight: bold; text-align: center;" class="mt-3">Danh sách Đế giày </h5>
             <hr>
-            <div class="table table-wrapper-scroll-y my-custom-scrollbar">
-                <a class="btn btn-primary mt-1 mb-1 float-right" th:href="@{/deGiay/view-add}">
+            <div class="table table-wrapper-scroll-y">
+                <a class="btn btn-primary mt-1 mb-1 float-right" th:href="@{/admin/deGiay/view-add}">
                     <i style="font-size: 18px" class="fab fa-plus"></i> Thêm
                 </a>
                 <table id="table" class="table  table-borderless  formTable">
@@ -118,10 +118,10 @@
                             </button>
                         </td>
                         <td>
-                            <a class="edit" th:href="@{/deGiay/view-update/{id}(id=${g.id})}">
+                            <a class="edit" th:href="@{/admin/deGiay/view-update/{id}(id=${g.id})}">
                                 <i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i>
                             </a>
-                            <a onclick="return confirm('Bạn có muốn xóa không')" class="delete" th:href="@{/deGiay/delete/{id}(id=${g.id})}">
+                            <a onclick="return confirm('Bạn có muốn xóa không')" class="delete" th:href="@{/admin/deGiay/delete/{id}(id=${g.id})}">
                                 <i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i>
                             </a>
                         </td>
@@ -130,9 +130,9 @@
                 </table>
             </div>
 
-            <div class="row">
+            <div th:if="${#lists.size(danhSachDeGiay.content) >0 }" class="row">
                 <div class="col-3">
-                    <div class="hint-text">Tổng Voucher: <b th:text="${tongDeGiay}"></b> &ensp; Xem trang <b
+                    <div class="hint-text">Tổng: <b th:text="${tongDeGiay}"></b> &ensp; Xem trang <b
                             th:text="${pageNo+1}+'/'+${danhSachDeGiay.totalPages}"></b>
                     </div>
                 </div>
@@ -141,22 +141,26 @@
                     <ul class="pagination">
                         <li class="page-item">
                             <a class="page-link" th:if="${pageNo > 0}"
-                               th:href="@{/admin/deGiay/hien-thi#table(pageNo=${i},trangThai=${trangThai},textSearch=${textSearch})}">Prev</a>
+                               th:href="@{/admin/deGiay/hien-thi#table(pageNo=${pageNo-1},trangThai=${trangThai},txtSearch=${txtSearch})}">Prev</a>
                             <span class="page-link" th:unless="${pageNo > 0}">Prev</span>
                         </li>
                         <li th:each="i: ${#numbers.sequence(0, danhSachDeGiay.totalPages-1)}" class="page-item">
-                            <a th:href="@{/admin/deGiay/hien-thi#table(pageNo=${i},trangThai=${trangThai},textSearch=${textSearch})}"
+                            <a th:href="@{/admin/deGiay/hien-thi#table(pageNo=${i},trangThai=${trangThai},txtSearch=${txtSearch})}"
                                class="page-link"
                                th:text="${i +1}"></a>
                         </li>
 
                         <li class="page-item">
                             <a class="page-link" th:if="${pageNo < danhSachDeGiay.totalPages -1}"
-                               th:href="@{/admin/deGiay/hien-thi#table(pageNo=${i},trangThai=${trangThai},textSearch=${textSearch})}">Next</a>
+                               th:href="@{/admin/deGiay/hien-thi#table(pageNo=${pageNo+1},trangThai=${trangThai},txtSearch=${txtSearch})}">Next</a>
                             <span class="page-link" th:unless="${pageNo < danhSachDeGiay.totalPages -1}">Next</span>
                         </li>
                     </ul>
                 </div>
+            </div>
+
+            <div th:unless="${#lists.size(danhSachDeGiay.content) >0 }">
+                <h3 class="text-center text-body">Không có dữ liệu phù hợp</h3>
             </div>
         </div>
 </section>

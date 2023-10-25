@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("deGiay")
+@RequestMapping("/admin/deGiay")
 public class DeGiayController {
     @Autowired
     private DeGiay deGiay;
@@ -52,30 +52,30 @@ public class DeGiayController {
             return "admin/deGiay/form_deGiay";
         }
         this.deGiayService.add(deGiayRequest);
-        return "redirect:/deGiay/hien-thi";
+        return "redirect:/admin/deGiay/hien-thi";
     }
 
     @GetMapping("view-update/{id}")
     private String viewUpdate(Model model, DeGiay deGiay) {
         Optional<DeGiay> deGiay1 = this.deGiayService.findOne(deGiay.getId());
         model.addAttribute("data", deGiay1);
-        model.addAttribute("action", "/deGiay/update/" +deGiay.getId());
+        model.addAttribute("action", "/admin/deGiay/update/" +deGiay.getId());
         return "admin/deGiay/form_deGiay_update";
     }
 
     @PostMapping("update/{id}")
     private String update(@PathVariable("id") DeGiay deGiay, @Valid @ModelAttribute("data") DeGiayRequest deGiayRequest, BindingResult result, Model model){
         if(result.hasErrors()){
-            model.addAttribute("action", "/deGiay/update/" +deGiay.getId());
+            model.addAttribute("action", "/admin/deGiay/update/" +deGiay.getId());
             return "admin/deGiay/form_deGiay_update";
         }
         this.deGiayService.update(deGiay.getId(), deGiayRequest);
-        return "redirect:/deGiay/hien-thi";
+        return "redirect:/admin/deGiay/hien-thi";
     }
 
     @GetMapping("delete/{id}")
     private String delete(@PathVariable("id") DeGiay deGiay){
         this.deGiayService.delete(deGiay.getId());
-        return "redirect:/deGiay/hien-thi";
+        return "redirect:/admin/deGiay/hien-thi";
     }
 }

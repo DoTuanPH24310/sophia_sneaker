@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("hang")
+@RequestMapping("/admin/hang")
 public class HangController {
     @Autowired
     private Hang hang;
@@ -52,30 +52,30 @@ public class HangController {
             return "admin/hang/form_hang";
         }
         this.hangService.add(hangRequest);
-        return "redirect:/hang/hien-thi";
+        return "redirect:/admin/hang/hien-thi";
     }
 
     @GetMapping("view-update/{id}")
     private String viewUpdate(Model model, Hang hang) {
         Optional<Hang> hang1 = this.hangService.findOne(hang.getId());
         model.addAttribute("data", hang1);
-        model.addAttribute("action", "/hang/update/" +hang.getId());
+        model.addAttribute("action", "/admin/hang/update/" +hang.getId());
         return "admin/hang/form_hang_update";
     }
 
     @PostMapping("update/{id}")
     private String update(@PathVariable("id") Hang hang, @Valid @ModelAttribute("data") HangRequest hangRequest, BindingResult result, Model model){
         if(result.hasErrors()){
-            model.addAttribute("action", "/hang/update/" +hang.getId());
+            model.addAttribute("action", "/admin/hang/update/" +hang.getId());
             return "admin/hang/form_hang_update";
         }
         this.hangService.update(hang.getId(), hangRequest);
-        return "redirect:/hang/hien-thi";
+        return "redirect:/admin/hang/hien-thi";
     }
 
     @GetMapping("delete/{id}")
     private String delete(@PathVariable("id") Hang hang){
         this.hangService.delete(hang.getId());
-        return "redirect:/hang/hien-thi";
+        return "redirect:/admin/hang/hien-thi";
     }
 }
