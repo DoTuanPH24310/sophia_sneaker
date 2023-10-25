@@ -79,4 +79,6 @@ public class KichCoController {
         this.kichCoService.delete(kichCo.getId());
         return "redirect:/admin/kichCo/hien-thi";
     }
+
+//    -----
 }
