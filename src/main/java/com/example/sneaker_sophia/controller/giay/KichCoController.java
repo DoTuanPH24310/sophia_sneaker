@@ -44,7 +44,9 @@ public class KichCoController {
     @GetMapping("view-add")
     private String viewAdd(Model model) {
         model.addAttribute("data", kichCo);
+        System.out.println("");
         return "admin/kichCo/form_kichCo";
+
     }
 
     @PostMapping("add")
