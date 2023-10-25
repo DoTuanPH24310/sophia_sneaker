@@ -1,17 +1,31 @@
 package com.example.sneaker_sophia.entity;
 
+import com.example.sneaker_sophia.request.NhanVienRequest;
 import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "DiaChi")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class DiaChi {
     @Id
-    @Column(name = "Id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GenericGenerator(name = "generator", strategy = "guid", parameters = {})
+    @GeneratedValue(generator = "generator")
+    @Column(name = "Id", columnDefinition = "uniqueidentifier")
     private String id;
-
-    @Column(name = "IdTaiKhoan")
-    private String idTaiKhoan;
 
     @Column(name = "ten")
     private String ten;
@@ -23,86 +37,47 @@ public class DiaChi {
     private String diaChiCuThe;
 
     @Column(name = "phuongXa")
-    private String phuongXa;
+    private Integer phuongXa;
 
     @Column(name = "quanHuyen")
-    private String quanHuyen;
+    private Integer quanHuyen;
 
     @Column(name = "tinh")
-    private String tinh;
+    private Integer tinh;
 
     @Column(name = "diaChiMacDinh")
-    private String diaChiMacDinh;
+    private Integer diaChiMacDinh;
 
-    public String getId() {
-        return this.id;
-    }
+    @Column(name = "trangThai")
+    private Integer trangThai;
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    @CreatedBy
+    @Column(name = "nguoiTao")
+    private String createdBy;
 
-    public String getIdTaiKhoan() {
-        return this.idTaiKhoan;
-    }
+    @CreatedDate
+    @Column(name = "ngayTao")
+    private LocalDateTime createdDate;
 
-    public void setIdTaiKhoan(String idTaiKhoan) {
-        this.idTaiKhoan = idTaiKhoan;
-    }
+    @LastModifiedBy
+    @Column(name = "nguoiSua")
+    private String updatedBy;
 
-    public String getTen() {
-        return this.ten;
-    }
+    @LastModifiedDate
+    @Column(name = "ngaySua")
+    private LocalDateTime updatedDate;
 
-    public void setTen(String ten) {
-        this.ten = ten;
-    }
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "IdTaiKhoan")
+    private TaiKhoan taiKhoan;
 
-    public String getSdt() {
-        return this.sdt;
-    }
-
-    public void setSdt(String sdt) {
-        this.sdt = sdt;
-    }
-
-    public String getDiaChiCuThe() {
-        return this.diaChiCuThe;
-    }
-
-    public void setDiaChiCuThe(String diaChiCuThe) {
-        this.diaChiCuThe = diaChiCuThe;
-    }
-
-    public String getPhuongXa() {
-        return this.phuongXa;
-    }
-
-    public void setPhuongXa(String phuongXa) {
-        this.phuongXa = phuongXa;
-    }
-
-    public String getQuanHuyen() {
-        return this.quanHuyen;
-    }
-
-    public void setQuanHuyen(String quanHuyen) {
-        this.quanHuyen = quanHuyen;
-    }
-
-    public String getTinh() {
-        return this.tinh;
-    }
-
-    public void setTinh(String tinh) {
-        this.tinh = tinh;
-    }
-
-    public String getDiaChiMacDinh() {
-        return this.diaChiMacDinh;
-    }
-
-    public void setDiaChiMacDinh(String diaChiMacDinh) {
-        this.diaChiMacDinh = diaChiMacDinh;
+    public DiaChi(NhanVienRequest nhanVienRequest) {
+        this.setDiaChiCuThe(nhanVienRequest.getDiaChiCuThe());
+        this.setTinh(nhanVienRequest.getTinh());
+        this.setQuanHuyen(nhanVienRequest.getQuanHuyen());
+        this.setPhuongXa(nhanVienRequest.getPhuongXa());
+        this.setTaiKhoan(TaiKhoan.builder().id(nhanVienRequest.getIdTaiKhoan()).build());
+        this.setDiaChiMacDinh(1);
+        this.setTrangThai(1);
     }
 }

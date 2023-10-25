@@ -1,4 +1,4 @@
-body, html {
+table.table tr tdbody, html {
     line-height: 1.8;
     color: #555e58;
     /*text-transform:capitalize;*/
@@ -544,7 +544,7 @@ table.table tr td {
     /*padding: 8px 15px;*/
     /*font-size: 14px;*/
     /*font-weight: 400;*/
-    /*vertical-align: middle;*/
+    vertical-align: middle;
     text-align: center;
 }
 

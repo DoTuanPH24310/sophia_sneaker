@@ -14,6 +14,6 @@ public class GiayController {
 
     @GetMapping("/giay")
     public String index(Model model) {
-        return "admin/index";
+        return "nhan_vien/index";
     }
 }

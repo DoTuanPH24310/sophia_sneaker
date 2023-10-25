@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Call API các tỉnh</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js" integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+
+<body>
+<div class="container">
+    <h1>Chọn danh sách tỉnh</h1>
+    <form action="">
+        <select name="province" id="province" th:field="${province}">
+            <option th:each="p : ${provinces}" th:value="${p.code}" th:text="${p.name}"></option>
+        </select>
+        <select name="district" id="district" th:field="${district}">
+            <option value="">chọn quận</option>
+        </select>
+        <select name="ward" id="ward" th:field="${ward}">
+            <option value="">chọn phường</option>
+        </select>
+    </form>
+</div>
+<script>
+    const host = "https://provinces.open-api.vn/api/";
+    var callAPI = (api, selectElement) => {
+        return axios.get(api)
+            .then((response) => {
+                renderData(response.data, selectElement);
+            });
+    }
+
+    var renderData = (array, select) => {
+        let row = '<option value="">chọn thành phố</option>';
+        array.forEach(element => {
+            row += `<option value="${element.code}">${element.name}</option>`
+        });
+        document.querySelector("#" + select).innerHTML = row;
+    }
+
+    $("#province").change(() => {
+        callAPI(host + "p/" + $("#province").val() + "?depth=2", "district");
+    });
+    $("#district").change(() => {
+        callAPI(host + "d/" + $("#district").val() + "?depth=2", "ward");
+    });
+    $("#ward").change(() => {
+        printResult();
+    })
+</script>
+</body>
+
+</html>
