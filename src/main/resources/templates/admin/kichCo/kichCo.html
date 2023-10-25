@@ -59,14 +59,15 @@
                     <div class="row">
                         <div class="col-6">
                             <label> Tìm kiếm </label>
-                            <input style="border-radius: 10px;" type="text" th:value="${textSearch}"
-                                   class="form-control" name="textSearch"
-                                   placeholder="Nhập mã, tên của kích cỡ...">
+                            <input th:value="${txtSearch}"
+                                   class="form-control" name="txtSearch"
+                                   placeholder="Nhập mã, tên của kích cỡ..." onchange="this.form.submit()"
+                                   style="border-radius: 10px;" id="txtSearchInput">
                             <p class="text-danger"></p>
                         </div>
                         <div class="col-6">
                             <label>Trạng thái</label>
-                            <select style="border-radius: 10px;" class="form-select" th:onchange="this.form.submit()"
+                            <select style="border-radius: 10px;" class="form-select" id="trangThaiSelect" onchange="this.form.submit()"
                                     name="trangThai">
                                 <div style="border: 10px">
                                     <option th:selected="${trangThai}  == -1 ? true:false" value="-1"> Tất cả

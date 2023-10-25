@@ -35,7 +35,7 @@ public class KichCoController {
         model.addAttribute("danhSachKichCo", page);
         model.addAttribute("tongKichCo", page.getTotalElements());
         model.addAttribute("pageNo", pageNo);
-        model.addAttribute("textSearch", txtSearch);
+        model.addAttribute("txtSearch", txtSearch);
         model.addAttribute("trangThai", trangThai);
 
         return "admin/kichCo/kichCo";
