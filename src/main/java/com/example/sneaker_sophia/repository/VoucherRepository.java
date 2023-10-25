@@ -23,5 +23,5 @@ public interface VoucherRepository extends JpaRepository<Voucher, UUID> {
     @Query(value = "select obj from Voucher obj where obj.trangThai <> 3")
     Page<Voucher> findAll(Pageable pageable);
 
-    List<Voucher> findByTrangThaiNotLike(Integer tt);
+//    List<Voucher> findByTrangThaiNotLike(Integer tt);
 }

@@ -1,22 +1,46 @@
 package com.example.sneaker_sophia.entity;
 
+import com.example.sneaker_sophia.request.NhanVienRequest;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 
 import java.util.UUID;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "TaiKhoan")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class TaiKhoan {
     @Id
-    @Column(name = "Id")
-    private UUID id;
+    @GenericGenerator(name = "generator", strategy = "guid", parameters = {})
+    @GeneratedValue(generator = "generator")
+    @Column(name = "Id", columnDefinition = "uniqueidentifier")
+//    @Column(name = "Id")
+//    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
-    @Column(name = "IdVaiTro")
-    private UUID idVaiTro;
+    @JoinColumn(name = "IdVaiTro")
+    @ManyToOne(fetch = FetchType.EAGER)
+    private VaiTro vaiTro;
 
     @Column(name = "taiKhoan")
     private String taiKhoan;
@@ -33,136 +57,50 @@ public class TaiKhoan {
     @Column(name = "canCuoc")
     private String canCuoc;
 
+    @Column(name = "sdt")
+    private String sdt;
+
     @Column(name = "ngaySinh")
-    private UUID ngaySinh;
+    private LocalDate ngaySinh;
+
+    @Column(name = "gioitinh")
+    private Integer gioiTinh;
 
     @Column(name = "anhDaiDien")
     private String anhDaiDien;
 
-    @Column(name = "ngayTao")
-    private UUID ngayTao;
-
-    @Column(name = "ngaySua")
-    private UUID ngaySua;
-
-    @Column(name = "nguoiTao")
-    private UUID nguoiTao;
-
-    @Column(name = "nguoiSua")
-    private UUID nguoiSua;
-
     @Column(name = "trangThai")
     private Integer trangThai;
 
-    public UUID getId() {
-        return this.id;
-    }
+    @CreatedBy
+    @Column(name = "nguoiTao")
+    private String createdBy;
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+    @CreatedDate
+    @Column(name = "ngayTao")
+    private LocalDateTime createdDate;
 
-    public UUID getIdVaiTro() {
-        return this.idVaiTro;
-    }
+    @LastModifiedBy
+    @Column(name = "nguoiSua")
+    private String updatedBy;
 
-    public void setIdVaiTro(UUID idVaiTro) {
-        this.idVaiTro = idVaiTro;
-    }
+    @LastModifiedDate
+    @Column(name = "ngaySua")
+    private LocalDateTime updatedDate;
 
-    public String getTaiKhoan() {
-        return this.taiKhoan;
-    }
+    @OneToMany(mappedBy = "taiKhoan", fetch = FetchType.LAZY)
+    private List<DiaChi> diaChiList = new ArrayList<>();
 
-    public void setTaiKhoan(String taiKhoan) {
-        this.taiKhoan = taiKhoan;
-    }
 
-    public String getTen() {
-        return this.ten;
-    }
-
-    public void setTen(String ten) {
-        this.ten = ten;
-    }
-
-    public String getEmail() {
-        return this.email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getMatKhau() {
-        return this.matKhau;
-    }
-
-    public void setMatKhau(String matKhau) {
-        this.matKhau = matKhau;
-    }
-
-    public String getCanCuoc() {
-        return this.canCuoc;
-    }
-
-    public void setCanCuoc(String canCuoc) {
-        this.canCuoc = canCuoc;
-    }
-
-    public UUID getNgaySinh() {
-        return this.ngaySinh;
-    }
-
-    public void setNgaySinh(UUID ngaySinh) {
-        this.ngaySinh = ngaySinh;
-    }
-
-    public String getAnhDaiDien() {
-        return this.anhDaiDien;
-    }
-
-    public void setAnhDaiDien(String anhDaiDien) {
-        this.anhDaiDien = anhDaiDien;
-    }
-
-    public UUID getNgayTao() {
-        return this.ngayTao;
-    }
-
-    public void setNgayTao(UUID ngayTao) {
-        this.ngayTao = ngayTao;
-    }
-
-    public UUID getNgaySua() {
-        return this.ngaySua;
-    }
-
-    public void setNgaySua(UUID ngaySua) {
-        this.ngaySua = ngaySua;
-    }
-
-    public UUID getNguoiTao() {
-        return this.nguoiTao;
-    }
-
-    public void setNguoiTao(UUID nguoiTao) {
-        this.nguoiTao = nguoiTao;
-    }
-
-    public UUID getNguoiSua() {
-        return this.nguoiSua;
-    }
-
-    public void setNguoiSua(UUID nguoiSua) {
-        this.nguoiSua = nguoiSua;
-    }
-
-    public Integer getTrangThai() {
-        return this.trangThai;
-    }
-
-    public void setTrangThai(Integer trangThai) {
-        this.trangThai = trangThai;
+    public TaiKhoan(NhanVienRequest nhanVienRequest) {
+        this.setTen(nhanVienRequest.getTen());
+        this.setEmail(nhanVienRequest.getEmail());
+        this.setNgaySinh(nhanVienRequest.getNgaySinh());
+        this.setGioiTinh(nhanVienRequest.getGioiTinh());
+        this.setCanCuoc(nhanVienRequest.getCanCuoc());
+        this.setSdt(nhanVienRequest.getSdt());
+        this.setTrangThai(nhanVienRequest.getTrangThai());
+        this.setAnhDaiDien(nhanVienRequest.getAnhDaiDien());
+        this.setVaiTro(VaiTro.builder().id(nhanVienRequest.getIdVaiTro()).build());
     }
 }

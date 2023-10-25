@@ -46,9 +46,9 @@ public class VoucherService {
         model.addAttribute("listGiay", giayService.findAllByTrangThaiEquals(0));
     }
 
-    public List<Voucher> findByTrangThaiNotLike(Integer tt){
-        return voucherRepository.findByTrangThaiNotLike(tt);
-    }
+//    public List<Voucher> findByTrangThaiNotLike(Integer tt){
+//        return voucherRepository.findByTrangThaiNotLike(tt);
+//    }
 
 
     public Page locVaTimKiem(Pageable pageable, Model model) {
