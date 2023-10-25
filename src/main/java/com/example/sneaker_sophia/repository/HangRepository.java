@@ -8,4 +8,5 @@ import java.util.UUID;
 
 @Repository
 public interface HangRepository extends JpaRepository<Hang, UUID> {
+    Hang findHangByTen(String ten);
 }

@@ -8,4 +8,5 @@ import java.util.UUID;
 
 @Repository
 public interface KichCoRepository extends JpaRepository<KichCo, UUID> {
+    KichCo findKichCoByTen(String ten);
 }
