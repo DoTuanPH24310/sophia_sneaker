@@ -16,50 +16,6 @@
             keywordInput.value = '';
             productNameInput.value = '';
         }
-        $('#multi3').mdbRange({
-            width: '100%',
-            single: {
-                active: true,
-                multi: {
-                    active: true,
-                    rangeLength: 2
-                },
-            }
-        });
-
-        $('#multi4').mdbRange({
-            width: '75%',
-            single: {
-                active: true,
-                multi: {
-                    active: true,
-                    rangeLength: 2
-                },
-            }
-        });
-
-        $('#multi5').mdbRange({
-            width: '50%',
-            single: {
-                active: true,
-                multi: {
-                    active: true,
-                    rangeLength: 2
-                },
-            }
-        });
-
-        $('#multi6').mdbRange({
-            width: '25%',
-            single: {
-                active: true,
-                multi: {
-                    active: true,
-                    rangeLength: 2
-                },
-            }
-        });
-
     </script>
 </head>
 <body>
@@ -83,65 +39,6 @@
                         </div>
 
                     </form>
-                </div>
-            </div>
-        </div>
-
-        <div>
-            <div class="row">
-                <div class="col-12">
-                    <form th:action="@{/admin/chi-tiet-giay/page/1}" class="form-inline m-3" id="">
-                        <input type="hidden" name="sortField" th:value="${sortField}"/>
-                        <input type="hidden" name="sortDir" th:value="${sortDir}"/>
-                        <div>
-                            <label>Loại giày</label>
-                            <select id="loaiGiayCombobox" name="loaiGiay">
-                                <option value="null" th:selected="${loaiGiay == null}">Tất cả</option>
-                                <option th:each="loaiGiayItem : ${loaiGiayList}" th:value="${loaiGiayItem.ten}" th:text="${loaiGiayItem.ten}" th:selected="${loaiGiayItem.ten == loaiGiay}"></option>
-                            </select>
-                        </div>
-                        <div>
-                            <label>Đế giày</label>
-                            <select id="deGiayCombobox" name="deGiay">
-                                <option value="null" th:selected="${deGiay == null}">Tất cả</option>
-                                <option th:each="deGiayItem : ${deGiayList}" th:value="${deGiayItem.ten}" th:text="${deGiayItem.ten}" th:selected="${deGiayItem.ten == deGiay}"></option>
-                            </select>
-                        </div>
-                        <div>
-                            <label>Kích cỡ</label>
-                            <select id="kichCoCombobox" name="kichCo">
-                                <option value="null" th:selected="${kichCo == null}">Tất cả</option>
-                                <option th:each="kichCoItem : ${kichCoList}" th:value="${kichCoItem.ten}" th:text="${kichCoItem.ten}" th:selected="${kichCoItem.ten == kichCo}"></option>
-                            </select>
-                        </div>
-                        <div>
-                            <label>Màu sắc</label>
-                            <select id="mauSacCombobox" name="mauSac">
-                                <option value="null" th:selected="${mauSac == null}">Tất cả</option>
-                                <option th:each="mauSacItem : ${mauSacList}" th:value="${mauSacItem.ten}" th:text="${mauSacItem.ten}" th:selected="${mauSacItem.ten == mauSac}"></option>
-                            </select>
-                        </div>
-                        <div>
-                            <label>Hãng</label>
-                            <select id="hangCombobox" name="hang">
-                                <option value="null" th:selected="${hang == null}">Tất cả</option>
-                                <option th:each="hangItem : ${hangList}" th:value="${hangItem.ten}" th:text="${hangItem.ten}" th:selected="${hangItem.ten == hang}"></option>
-                            </select>
-                        </div>
-                        <div>
-                            <label>Giày</label>
-                            <select id="giayCombobox" name="giay">
-                                <option value="null" th:selected="${giay == null}">Tất cả</option>
-                                <option th:each="giayItem : ${giayList}" th:value="${giayItem.ten}" th:text="${giayItem.ten}" th:selected="${giayItem.ten == giay}"></option>
-                            </select>
-                        </div>
-                        <input id="multi6" class="multi-range" type="range" />
-
-                        <div>
-                            <button type="submit">Lọc</button>
-                        </div>
-                    </form>
-
                 </div>
             </div>
         </div>

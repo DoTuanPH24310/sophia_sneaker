@@ -8,5 +8,4 @@ import java.util.UUID;
 
 @Repository
 public interface DeGiayRepository extends JpaRepository<DeGiay, UUID> {
-    DeGiay findDeGiayByTen(String ten);
 }

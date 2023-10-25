@@ -1,10 +1,9 @@
 package com.example.sneaker_sophia.repository;
-import com.example.sneaker_sophia.entity.*;
+import com.example.sneaker_sophia.entity.ChiTietGiay;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.UUID;
@@ -44,22 +43,5 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
         AND (ctsp.giay.ten LIKE %?2%)
     """)
     public Page<ChiTietGiay> findByMaAndKeyWord(String keyword, String productName, Pageable pageable);
-
-    @Query("SELECT c FROM ChiTietGiay c WHERE " +
-            "(:giay IS NULL OR c.giay = :giay) AND " +
-            "(:deGiay IS NULL OR c.deGiay = :deGiay) AND " +
-            "(:hang IS NULL OR c.hang = :hang) AND " +
-            "(:loaiGiay IS NULL OR c.loaiGiay = :loaiGiay) AND " +
-            "(:mauSac IS NULL OR c.mauSac = :mauSac) AND " +
-            "(:kichCo IS NULL OR c.kichCo = :kichCo)")
-    Page<ChiTietGiay> findChiTietGiayByMultipleParams(
-            @Param("giay") Giay giay,
-            @Param("deGiay") DeGiay deGiay,
-            @Param("hang") Hang hang,
-            @Param("loaiGiay") LoaiGiay loaiGiay,
-            @Param("mauSac") MauSac mauSac,
-            @Param("kichCo") KichCo kichCo,
-            Pageable pageable
-    );
 }
 

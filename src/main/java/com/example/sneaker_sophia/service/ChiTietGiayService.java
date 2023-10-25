@@ -1,6 +1,7 @@
 package com.example.sneaker_sophia.service;
 
-import com.example.sneaker_sophia.entity.*;
+import com.example.sneaker_sophia.entity.ChiTietGiay;
+import com.example.sneaker_sophia.entity.Voucher;
 import com.example.sneaker_sophia.repository.ChiTietGiayRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -138,10 +139,4 @@ public class ChiTietGiayService {
         }
     }
 
-    public Page<ChiTietGiay> filterCombobox(int pageNum, String sortField, String sortDir,Giay giay, DeGiay deGiay, Hang hang, LoaiGiay loaiGiay, MauSac mauSac, KichCo kichCo){
-        Sort sort = Sort.by(sortField);
-        sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
-        Pageable pageable = PageRequest.of(pageNum - 1, PRODUCT_DETAIL_PER_PAGE, sort);
-        return chiTietGiayRepository.findChiTietGiayByMultipleParams(giay,deGiay,hang,loaiGiay,mauSac,kichCo,pageable);
-    }
 }

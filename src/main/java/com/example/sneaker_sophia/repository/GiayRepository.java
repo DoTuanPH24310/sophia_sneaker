@@ -29,8 +29,6 @@ public interface GiayRepository extends JpaRepository<Giay, UUID> {
 
     boolean existsGiayByMa(String ma);
 
-    Giay findGiayByTen(String ten);
-
 }
 
 
