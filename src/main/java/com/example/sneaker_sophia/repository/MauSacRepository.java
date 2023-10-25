@@ -8,4 +8,5 @@ import java.util.UUID;
 
 @Repository
 public interface MauSacRepository extends JpaRepository<MauSac, UUID> {
+    MauSac findMauSacByTen(String ten);
 }

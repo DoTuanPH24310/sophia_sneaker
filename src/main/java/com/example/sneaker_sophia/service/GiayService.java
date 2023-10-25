@@ -2,7 +2,9 @@ package com.example.sneaker_sophia.service;
 
 import com.example.sneaker_sophia.dto.GiayRequest;
 import com.example.sneaker_sophia.entity.ChiTietGiay;
+import com.example.sneaker_sophia.entity.DeGiay;
 import com.example.sneaker_sophia.entity.Giay;
+import com.example.sneaker_sophia.entity.Hang;
 import com.example.sneaker_sophia.repository.GiayRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -155,5 +157,11 @@ public class GiayService {
         return temp;
     }
 
+    public Giay getOne(UUID uuid) {
+        return giayRepository.findById(uuid).get();
+    }
 
+    public Giay findByTen(String ten){
+        return giayRepository.findGiayByTen(ten);
+    }
 }

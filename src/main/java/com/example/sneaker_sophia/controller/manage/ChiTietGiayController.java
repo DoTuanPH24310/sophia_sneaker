@@ -1,11 +1,13 @@
 package com.example.sneaker_sophia.controller.manage;
 
-import com.example.sneaker_sophia.entity.Anh;
-import com.example.sneaker_sophia.entity.ChiTietGiay;
+import com.example.sneaker_sophia.entity.*;
 import com.example.sneaker_sophia.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,10 +20,8 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Base64;
+import java.util.*;
 import java.util.List;
-import java.util.UUID;
 
 @Controller
 @RequestMapping("/admin/")
@@ -52,16 +52,34 @@ public class ChiTietGiayController {
 //        if(session.getAttribute("admin") == null ){
 //            return "redirect:/login-admin" ;
 //        }
-        return listByPage(1,model,"gia","asc",null,null);
+        return listByPage(1,model,"gia","asc",null,null,null,null,null,null,null,null,null);
     }
     @GetMapping("chi-tiet-giay/page/{pageNum}")
     private String listByPage(@PathVariable(name = "pageNum") int pageNum, Model model,
                               @Param("sortField") String sortField,
                               @Param("sortDir") String sortDir,
                               @Param("keyword") String keyword,
-                              @Param("productName") String productName) {
-
-        Page<ChiTietGiay> page = chiTietGiayService.listByPageAndProductName(pageNum, sortField, sortDir, keyword, productName);
+                              @Param("productName") String productName,
+                              @Param("giay") String giay,
+                              @Param("deGiay") String deGiay,
+                              @Param("hang") String hang,
+                              @Param("loaiGiay") String loaiGiay,
+                              @Param("mauSac") String mauSac,
+                              @Param("kichCo") String kichCo,
+                              @RequestParam Map<String, String> params) {
+        Page<ChiTietGiay> page;
+        if(giay!=null||deGiay!=null||hang!=null||loaiGiay!=null||mauSac!=null||kichCo!=null){
+             page = chiTietGiayService.filterCombobox(pageNum, sortField, sortDir,
+                     giayService.findByTen(giay),
+                     deGiayService.findByTen(deGiay),
+                     hangService.findByTen(hang),
+                     loaiGiayService.findByTen(loaiGiay),
+                     mauSacService.findByTen(mauSac),
+                     kichCoService.findByTen(kichCo)
+             );
+        }else{
+            page = chiTietGiayService.listByPageAndProductName(pageNum, sortField, sortDir, keyword, productName);
+        }
         List<ChiTietGiay> listChiTietSanPham = page.getContent();
 
         int startCount = (pageNum - 1) * chiTietGiayService.PRODUCT_DETAIL_PER_PAGE + 1;
@@ -82,9 +100,23 @@ public class ChiTietGiayController {
         model.addAttribute("reverseSortDir", reverseSortDir);
         model.addAttribute("keyword", keyword);
         model.addAttribute("productName", productName);
+        model.addAttribute("deGiayList", deGiayService.getAll());
+        model.addAttribute("loaiGiayList", loaiGiayService.getAll());
+        model.addAttribute("mauSacList", mauSacService.getAll());
+        model.addAttribute("kichCoList", kichCoService.getAll());
+        model.addAttribute("giayList", giayService.getAll());
+        model.addAttribute("hangList", hangService.getAll());
 
+// để giữ cac giá trị combobõx
+        model.addAttribute("loaiGiay", params.get("loaiGiay"));
+        model.addAttribute("deGiay", params.get("deGiay"));
+        model.addAttribute("kichCo", params.get("kichCo"));
+        model.addAttribute("mauSac", params.get("mauSac"));
+        model.addAttribute("hang", params.get("hang"));
+        model.addAttribute("giay", params.get("giay"));
         return "admin/chiTietGiay/chiTietGiay";
     }
+
     @GetMapping("chi-tiet-giay/add")
     public String formAdd(Model model) {
         ChiTietGiay chiTietGiay = new ChiTietGiay();
