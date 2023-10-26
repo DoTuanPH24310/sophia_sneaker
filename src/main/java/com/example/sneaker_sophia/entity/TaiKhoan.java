@@ -15,6 +15,8 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -36,6 +38,9 @@ public class TaiKhoan {
     @JoinColumn(name = "IdVaiTro")
     @ManyToOne(fetch = FetchType.EAGER)
     private VaiTro vaiTro;
+
+    @OneToMany(mappedBy = "taiKhoan", fetch = FetchType.LAZY)
+    List<HoaDon> hoaDons = new ArrayList<>();
 
     @Column(name = "taiKhoan")
     private String taiKhoan;

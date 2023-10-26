@@ -58,30 +58,9 @@
 
 
         <div class="row mb-3">
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" href="#">Hóa đơn 1
-                        <button
-                                style="background-color: white; border: none; color: red; font-weight: bold;">x
-                        </button>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Hóa đơn 2
-                        <button
-                                style="background-color: white; border: none; color: red; font-weight: bold;">x
-                        </button>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Hóa đơn 3
-                        <button
-                                style="background-color: white; border: none; color: red; font-weight: bold;">x
-                        </button>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link ">Hóa đơn 4
+            <ul class="nav nav-tabs" >
+                <li class="nav-item" th:each="hdc : ${listHDC}" >
+                    <a class="nav-link" href="#" th:text="${hdc.maHoaDOn}">
                         <button
                                 style="background-color: white; border: none; color: red; font-weight: bold;">x
                         </button>
