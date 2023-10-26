@@ -9,11 +9,40 @@
 
 
     <style>
+        .container {
+            background-color: #EAEAEA;
+        }
         .modal-backdrop.fade.show {
             opacity: 0.8;
             pointer-events: none;
         }
+
+
+        .page-link {
+            background-color: #fff;
+            color: #0d6efd;
+
+            border: 1px solid #dee2e6;
+        }
+
+
+
+        .formTable {
+            background-color: #FFFFFF;
+        }
+
+        .my-custom-scrollbar {
+            position: relative;
+            height: 600px;
+            overflow: auto;
+        }
+
+        .table-wrapper-scroll-y {
+            display: block;
+        }
     </style>
+
+
 </head>
 
 <body>
@@ -245,27 +274,115 @@
 
             </div>
         </div>
-        <!-- Button trigger modal -->
-        <a data-toggle="modal" data-target="#exampleModal" type="button" class="btn btn-primary">
-            Launch demo modal
-        </a>
+
         <!--    modal thêm sản phẩm-->
         <!-- Modal -->
-        <div th:if="${modalSanPham}" class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+        <div th:if="${modalSanPham}"  class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
              style="display: block;" data-keyboard="false" data-backdrop="static">
-            <div class="modal-dialog">
+            <div class="modal-dialog" style="max-width: 1100px;">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-
+                        <h5 class="modal-title" id="exampleModalLabel">Chi tiết giày</h5>
+                        <a type="button" th:href="@{/admin/tai-quay/hien-thi}">
+                            <span aria-hidden="true">&times;</span>
+                        </a>
                     </div>
                     <div class="modal-body">
-                        ...
-                    </div>
+
+                        <div class="row mb-5 mx-5 mt-3">
+
+                            <div class="col-8 mx-4">
+                                <input type="text" class="form-control" placeholder="Tìm sản phẩm">
+                            </div>
+
+                            <div class="col-3">
+                                <button type="submit" class="btn btn-primary ">Tìm kiếm</button>
+                                <button type="submit" class="btn btn-danger">Làm mới</button>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-3">
+                                <label>Hãng:&nbsp;&nbsp;</label>
+                                <select style="border-radius: 7px; min-width:120px; min-height: 30px;">
+                                    <option value="">Tất cả</option>
+                                </select>
+                            </div>
+
+                            <div class="col-3">
+
+                                <label>Giày: &nbsp;&nbsp;</label>
+                                <select style="border-radius: 7px; min-width: 120px; min-height: 30px;">
+                                    <option value="">Tất cả</option>
+                                </select>
+                            </div>
+
+                            <div class="col-3">
+
+                                <label>Loại đế: &nbsp;&nbsp;</label>
+                                <select style="border-radius: 7px; min-width: 120px; min-height: 30px;">
+                                    <option value="">Tất cả</option>
+                                </select>
+                            </div>
+
+                            <div class="col-3">
+
+                                <label>Loại giày: &nbsp;&nbsp;</label>
+                                <select style="border-radius: 7px; min-width: 120px; min-height: 30px;">
+                                    <option value="">Tất cả</option>
+                                </select>
+                            </div>
+
+
+                        </div>
+
+                        <div class="row mb-3 mt-4 justify-content-center">
+                            <div class="col-4">
+                                <label>Size:&nbsp;&nbsp;</label>
+                                <select style="border-radius: 7px; min-width:140px; min-height: 30px;">
+                                    <option value="">Tất cả</option>
+                                </select>
+                            </div>
+
+                            <div class="col-4">
+                                <label>Màu:&nbsp;&nbsp;</label>
+                                <select style="border-radius: 7px; min-width:140px; min-height: 30px;">
+                                    <option value="">Tất cả</option>
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="row mt-2">
+                            <div class="table table-wrapper-scroll-y my-custom-scrollbar">
+
+                                <table id="table" class="table  table-borderless  formTable">
+                                    <thead>
+                                    <tr class="bg-light">
+                                        <th scope="col" width="10%">Mã </th>
+                                        <th scope="col" width="15%">Tên</th>
+                                        <th scope="col" width="10%">Giá trị</th>
+                                        <th scope="col" width="12%">Ngày bắt đầu</th>
+                                        <th scope="col" width="12%">Ngày kết thúc</th>
+                                        <th scope="col" width="12%">Ngày cập nhật</th>
+                                        <th scope="col" width="20%">Trạng thái</th>
+                                        <th scope="col" width="20%">Thao tác</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+
+
+                                    </tbody>
+
+                                </table>
+                            </div>
+
+                        </div>
                     <div class="modal-footer">
 
-                        <button type="button" th:href="@{/admin/tai-quay/hien-thi}" class="btn btn-primary">Quay lại
-                        </button>
+
                     </div>
                 </div>
             </div>
