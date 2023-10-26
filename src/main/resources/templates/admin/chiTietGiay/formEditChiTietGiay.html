@@ -244,7 +244,7 @@
                 Choose Files
             </label>
             <label>
-                <button type="button" class="btn btn-danger" onclick="deleteSelectedImages()">Xóa ảnh đã chọn</button>
+                <a type="button" class="btn btn-danger" th:href="@{'/admin/chi-tiet-giay/delete-anh/' + ${id}}" title="Xóa" onclick="deleteSelectedImages()">Xóa ảnh đã chọn</a>
             </label>
 
             <div class="form-group" style="text-align: center">

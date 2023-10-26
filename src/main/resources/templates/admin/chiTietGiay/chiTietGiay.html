@@ -5,62 +5,33 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
     <!----css3---->
     <link rel="stylesheet" href="/css/custom.css">
-    <link href="./css/chiTietGiay.css">
-    <script>
-        function clearFilter() {
-            // Lấy ra hai ô input theo tên
-            var keywordInput = document.getElementsByName('keyword')[0];
-            var productNameInput = document.getElementsByName('productName')[0];
-
-            // Đặt giá trị của hai ô input về rỗng
-            keywordInput.value = '';
-            productNameInput.value = '';
+    <style>
+        .filter form {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
         }
-        $('#multi3').mdbRange({
-            width: '100%',
-            single: {
-                active: true,
-                multi: {
-                    active: true,
-                    rangeLength: 2
-                },
-            }
-        });
 
-        $('#multi4').mdbRange({
-            width: '75%',
-            single: {
-                active: true,
-                multi: {
-                    active: true,
-                    rangeLength: 2
-                },
-            }
-        });
+        .form-group {
+            flex-basis: calc(20% - 10px); /* Điều chỉnh độ rộng của mỗi thành phần */
+            margin-right: 10px; /* Tạo khoảng cách giữa các thành phần */
+        }
 
-        $('#multi5').mdbRange({
-            width: '50%',
-            single: {
-                active: true,
-                multi: {
-                    active: true,
-                    rangeLength: 2
-                },
-            }
-        });
+        /* Điều chỉnh kích thước của select box */
+        select.form-control {
+            width: 100%;
+        }
 
-        $('#multi6').mdbRange({
-            width: '25%',
-            single: {
-                active: true,
-                multi: {
-                    active: true,
-                    rangeLength: 2
-                },
-            }
-        });
+        .form-group input.form-control {
+            width: 40%;
+        }
 
-    </script>
+        /* Điều chỉnh khoảng cách giữa nút Lọc và các thành phần trước nó */
+        .form-group:last-child {
+            margin-right: 0;
+        }
+    </style>
+
 </head>
 <body>
 <section>
@@ -74,12 +45,13 @@
                             <input type="hidden" name="sortDir" th:value="${sortDir}"/>
 
                             <input type="search" name="keyword"
-                                   th:value="${keyword}" placeholder="Nhập từ khóa tìm kiếm" class="form-control search"/>
+                                   th:value="${keyword}" placeholder="Nhập từ khóa tìm kiếm"
+                                   class="form-control search"/>
                             <input type="search" name="productName" th:value="${productName}"
                                    placeholder="Nhập tên sản phẩm" class="form-control search"/>
                             <input style="margin-right: 10px" type="submit" value="Search"
                                    class="btn btn-primary ml-2"/>
-                            <button class="btn btn-secondary" type="button" onclick="clearFilter()">CLEAR</button>
+                            <a class="btn btn-danger" href="/admin/chi-tiet-giay">CLEAR</a>
                         </div>
 
                     </form>
@@ -87,64 +59,77 @@
             </div>
         </div>
 
-        <div>
+        <div class="filter">
             <div class="row">
-                <div class="col-12">
+                <div class="col-md-11">
                     <form th:action="@{/admin/chi-tiet-giay/page/1}" class="form-inline m-3" id="">
                         <input type="hidden" name="sortField" th:value="${sortField}"/>
                         <input type="hidden" name="sortDir" th:value="${sortDir}"/>
-                        <div>
+                        <div class="form-group">
                             <label>Loại giày</label>
-                            <select id="loaiGiayCombobox" name="loaiGiay">
+                            <select id="loaiGiayCombobox" name="loaiGiay" class="form-control">
                                 <option value="null" th:selected="${loaiGiay == null}">Tất cả</option>
-                                <option th:each="loaiGiayItem : ${loaiGiayList}" th:value="${loaiGiayItem.ten}" th:text="${loaiGiayItem.ten}" th:selected="${loaiGiayItem.ten == loaiGiay}"></option>
+                                <option th:each="loaiGiayItem : ${loaiGiayList}" th:value="${loaiGiayItem.ten}"
+                                        th:text="${loaiGiayItem.ten}"
+                                        th:selected="${loaiGiayItem.ten == loaiGiay}"></option>
                             </select>
                         </div>
-                        <div>
+                        <div class="form-group">
                             <label>Đế giày</label>
-                            <select id="deGiayCombobox" name="deGiay">
+                            <select id="deGiayCombobox" name="deGiay" class="form-control">
                                 <option value="null" th:selected="${deGiay == null}">Tất cả</option>
-                                <option th:each="deGiayItem : ${deGiayList}" th:value="${deGiayItem.ten}" th:text="${deGiayItem.ten}" th:selected="${deGiayItem.ten == deGiay}"></option>
+                                <option th:each="deGiayItem : ${deGiayList}" th:value="${deGiayItem.ten}"
+                                        th:text="${deGiayItem.ten}" th:selected="${deGiayItem.ten == deGiay}"></option>
                             </select>
                         </div>
-                        <div>
+                        <div class="form-group">
                             <label>Kích cỡ</label>
-                            <select id="kichCoCombobox" name="kichCo">
+                            <select id="kichCoCombobox" name="kichCo" class="form-control">
                                 <option value="null" th:selected="${kichCo == null}">Tất cả</option>
-                                <option th:each="kichCoItem : ${kichCoList}" th:value="${kichCoItem.ten}" th:text="${kichCoItem.ten}" th:selected="${kichCoItem.ten == kichCo}"></option>
+                                <option th:each="kichCoItem : ${kichCoList}" th:value="${kichCoItem.ten}"
+                                        th:text="${kichCoItem.ten}" th:selected="${kichCoItem.ten == kichCo}"></option>
                             </select>
                         </div>
-                        <div>
+                        <div class="form-group">
                             <label>Màu sắc</label>
-                            <select id="mauSacCombobox" name="mauSac">
+                            <select id="mauSacCombobox" name="mauSac" class="form-control">
                                 <option value="null" th:selected="${mauSac == null}">Tất cả</option>
-                                <option th:each="mauSacItem : ${mauSacList}" th:value="${mauSacItem.ten}" th:text="${mauSacItem.ten}" th:selected="${mauSacItem.ten == mauSac}"></option>
+                                <option th:each="mauSacItem : ${mauSacList}" th:value="${mauSacItem.ten}"
+                                        th:text="${mauSacItem.ten}" th:selected="${mauSacItem.ten == mauSac}"></option>
                             </select>
                         </div>
-                        <div>
+                        <div class="form-group">
                             <label>Hãng</label>
-                            <select id="hangCombobox" name="hang">
+                            <select id="hangCombobox" name="hang" class="form-control">
                                 <option value="null" th:selected="${hang == null}">Tất cả</option>
-                                <option th:each="hangItem : ${hangList}" th:value="${hangItem.ten}" th:text="${hangItem.ten}" th:selected="${hangItem.ten == hang}"></option>
+                                <option th:each="hangItem : ${hangList}" th:value="${hangItem.ten}"
+                                        th:text="${hangItem.ten}" th:selected="${hangItem.ten == hang}"></option>
                             </select>
                         </div>
-                        <div>
+                        <div class="form-group">
                             <label>Giày</label>
-                            <select id="giayCombobox" name="giay">
+                            <select id="giayCombobox" name="giay" class="form-control">
                                 <option value="null" th:selected="${giay == null}">Tất cả</option>
-                                <option th:each="giayItem : ${giayList}" th:value="${giayItem.ten}" th:text="${giayItem.ten}" th:selected="${giayItem.ten == giay}"></option>
+                                <option th:each="giayItem : ${giayList}" th:value="${giayItem.ten}"
+                                        th:text="${giayItem.ten}" th:selected="${giayItem.ten == giay}"></option>
                             </select>
                         </div>
-                        <input id="multi6" class="multi-range" type="range" />
-
-                        <div>
-                            <button type="submit">Lọc</button>
+                        <div class="form-group">
+                            <label for="giaMin">Giá thấp nhất</label>
+                            <input id="giaMin" name="giaMin" class="form-control" th:value="${giaMin}">
+                        </div>
+                        <div class="form-group">
+                            <label for="giaMax">Giá cao nhất</label>
+                            <input id="giaMax" name="giaMax" class="form-control" th:value="${giaMax}">
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Lọc</button>
                         </div>
                     </form>
-
                 </div>
             </div>
         </div>
+
         <br>
         <div class="table-wrapper">
             <div class="table-title">
@@ -181,7 +166,7 @@
                     <td th:text="${iterStat.count}"></td>
                     <td>
                         <img th:src="@{'/img/' + ${ctg.anhs.get(0).anhChinh}}"
-                             style="width: 100px; height: 100px" class="img-fluid" alt="" />
+                             style="width: 100px; height: 100px" class="img-fluid" alt=""/>
                     </td>
                     <td>[[${ctg.ma}]]</td>
                     <td>[[${ctg.giay.ten}]]</td>
@@ -190,8 +175,8 @@
                     <td>[[${ctg.hang.ten}]]</td>
                     <td>[[${ctg.loaiGiay.ten}]]</td>
                     <td>[[${ctg.mauSac.ten}]]</td>
-                    <td>[[${ctg.gia}]]</td>
-                    <td>[[${ctg.soLuong}]]</td>
+                    <td>[[${#numbers.formatDecimal(ctg.gia, 0, 'COMMA', 0, 'POINT')}]]</td>
+                    <td>[[${#numbers.formatDecimal(ctg.soLuong, 0, 'COMMA', 0, 'POINT')}]]</td>
                     <td style="width: 160px;">
                         <button class="btn"
                                 th:classappend="${ctg.trangThai == 1} ? 'btn-success' : 'btn-danger'"
