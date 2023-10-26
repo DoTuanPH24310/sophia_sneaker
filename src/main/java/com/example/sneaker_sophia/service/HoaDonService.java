@@ -21,4 +21,11 @@ public class HoaDonService {
     public List<HoaDon> getHoaDonByTrangThai(){
         return hoaDonRepository.getHoaDonByTrangThai();
     }
+    public void addHD(){
+        HoaDon hoaDon = new HoaDon();
+        int soHD = hoaDonRepository.soHD() + 1;
+        hoaDon.setMaHoaDOn("HD" + soHD);
+        hoaDon.setTrangThai(2);
+        hoaDonRepository.save(hoaDon);
+    }
 }

@@ -12,6 +12,7 @@
         .container {
             background-color: #EAEAEA;
         }
+
         .modal-backdrop.fade.show {
             opacity: 0.8;
             pointer-events: none;
@@ -24,7 +25,6 @@
 
             border: 1px solid #dee2e6;
         }
-
 
 
         .formTable {
@@ -48,23 +48,26 @@
 <body>
 <div>
     <div class="container" style="background-color: white;">
-<!--        <form action="/admin/tai-quay/addHD" method="post">-->
-            <div class="row float-right">
-                <a th:href="@{/admin/tai-quay/addHD}" class="btn btn-primary mt-2">Tạo hóa đơn</a>
-            </div>
-<!--        </form>-->
+        <!--        <form action="/admin/tai-quay/addHD" method="post">-->
+        <div class="row float-right">
+            <a th:href="@{/admin/tai-quay/addHD}" class="btn btn-primary mt-2">Tạo hóa đơn</a>
+        </div>
+        <!--        </form>-->
 
         <br> <br> <br>
 
 
         <div class="row mb-3">
-            <ul class="nav nav-tabs" >
-                <li class="nav-item" th:each="hdc : ${listHDC}" >
-                    <a class="nav-link" href="#" th:text="${hdc.maHoaDOn}">
-                        <button
-                                style="background-color: white; border: none; color: red; font-weight: bold;">x
-                        </button>
+            <ul class="nav nav-tabs">
+                <li class="nav-item" th:each="hdc : ${listHDC}">
+
+                    <a class="nav-link active" style=" display: inline-block;" th:href="@{/admin/tai-quay/detail/{id}(id=${hdc.id})}">
+                        <span th:text="${hdc.maHoaDOn}"></span>
                     </a>
+
+                    <a style="background-color: white; border: none; color: red; font-weight: bold; font-size: 14px; margin-left: 10px; margin-right: 10px" href="/youtube.com">X
+                    </a>
+
                 </li>
             </ul>
         </div>
@@ -79,7 +82,7 @@
 
 
             <div class="col-9">
-                <a class="btn btn-primary  float-right">
+                <a class="btn btn-primary  float-right" href="/admin/tai-quay/pdf">
                     QR code sản phẩm
                 </a>
 
@@ -106,8 +109,12 @@
                     </thead>
                     <tbody>
 
-                    <tr style="line-height: 25px">
-
+                    <tr style="line-height: 25px" th:each="hdct : ${listhdct}">
+                        <td th:text="${hdct.idHoaDonCT.chiTietGiay.giay.ma}"></td>
+                        <td th:text="${hdct.idHoaDonCT.chiTietGiay.giay.ten}"></td>
+                        <td th:text="${hdct.soLuong}"></td>
+                        <td th:text="${hdct.idHoaDonCT.chiTietGiay.kichCo.ten}"></td>
+                        <td th:text="${hdct.soLuong}"></td>
                     </tr>
 
 
@@ -259,7 +266,7 @@
 
         <!--    modal thêm sản phẩm-->
         <!-- Modal -->
-        <div th:if="${modalSanPham}"  class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+        <div th:if="${modalSanPham}" class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
              style="display: block;" data-keyboard="false" data-backdrop="static">
             <div class="modal-dialog" style="max-width: 1100px;">
                 <div class="modal-content">
@@ -342,7 +349,7 @@
                                 <table id="table" class="table  table-borderless  formTable">
                                     <thead>
                                     <tr class="bg-light">
-                                        <th scope="col" width="10%">Mã </th>
+                                        <th scope="col" width="10%">Mã</th>
                                         <th scope="col" width="15%">Tên</th>
                                         <th scope="col" width="10%">Giá trị</th>
                                         <th scope="col" width="12%">Ngày bắt đầu</th>
@@ -355,44 +362,43 @@
                                     <tbody>
 
 
-
                                     </tbody>
 
                                 </table>
                             </div>
 
                         </div>
-                    <div class="modal-footer">
+                        <div class="modal-footer">
 
 
+                        </div>
                     </div>
                 </div>
             </div>
+
         </div>
 
-    </div>
 
+        <!--    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>-->
 
-    <!--    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>-->
+        <script th:inline="javascript">
+            const customSwitches = document.getElementById("customSwitches");
+            const form = document.getElementById("form");
 
-    <script th:inline="javascript">
-        const customSwitches = document.getElementById("customSwitches");
-        const form = document.getElementById("form");
-
-        function loadding() {
-            if (customSwitches.checked) {
-                form.style.display = "block";
-            } else {
-                form.style.display = "none";
+            function loadding() {
+                if (customSwitches.checked) {
+                    form.style.display = "block";
+                } else {
+                    form.style.display = "none";
+                }
             }
-        }
 
-        customSwitches.addEventListener("change", loadding);
-        window.addEventListener("load", loadding);
+            customSwitches.addEventListener("change", loadding);
+            window.addEventListener("load", loadding);
 
 
-    </script>
-</div>
+        </script>
+    </div>
 </body>
 
 

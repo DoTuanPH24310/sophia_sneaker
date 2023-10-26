@@ -13,6 +13,8 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
     Integer soHD();
 
     // Trn
-    @Query(value = "select hd from HoaDon hd where hd.trangThai = 2")
+    @Query(value = "select hd from HoaDon hd where hd.trangThai = 2 order by hd.maHoaDOn")
     List<HoaDon> getHoaDonByTrangThai();
+
+
 }
