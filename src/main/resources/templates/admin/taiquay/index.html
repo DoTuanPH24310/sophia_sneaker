@@ -58,15 +58,23 @@
 
 
         <div class="row mb-3">
+
             <ul class="nav nav-tabs">
                 <li class="nav-item" th:each="hdc : ${listHDC}">
 
                     <a class="nav-link active" style=" display: inline-block;" th:href="@{/admin/tai-quay/detail/{id}(id=${hdc.id})}">
+
+            <ul class="nav nav-tabs" >
+                <li class="nav-item" th:each="hdc : ${listHDC}">
+
+                    <a class="nav-link active" style=" display: inline-block;" href="/admin/banhang/hienthi/${hdc.maHoaDOn}">
+
                         <span th:text="${hdc.maHoaDOn}"></span>
                     </a>
 
                     <a style="background-color: white; border: none; color: red; font-weight: bold; font-size: 14px; margin-left: 10px; margin-right: 10px" href="/youtube.com">X
                     </a>
+
 
                 </li>
             </ul>

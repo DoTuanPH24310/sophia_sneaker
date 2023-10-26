@@ -5,13 +5,26 @@ import com.example.sneaker_sophia.entity.HoaDon;
 import com.example.sneaker_sophia.entity.HoaDonChiTiet;
 import com.example.sneaker_sophia.service.HoaDonChiTietServive;
 import com.example.sneaker_sophia.service.HoaDonService;
+import com.lowagie.text.*;
+import com.lowagie.text.Font;
+import com.lowagie.text.pdf.*;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.awt.*;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -38,6 +51,8 @@ public class TaiQuayController {
         return "/admin/taiquay/index";
 
     }
+
+
 
     @RequestMapping("/addHD")
     public String addHD(
