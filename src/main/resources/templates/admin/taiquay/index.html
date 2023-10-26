@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layouts/layout}">
+      layout:decorate="~{/layouts/layout}" layout:fragment="content">
 
 <head>
     <meta charset="UTF-8">
@@ -8,276 +8,291 @@
     <title>Document</title>
 
 
-
+    <style>
+        .modal-backdrop.fade.show {
+            opacity: 0.8;
+            pointer-events: none;
+        }
+    </style>
 </head>
 
 <body>
+<div>
+    <div class="container" style="background-color: white;">
+        <div class="row float-right">
+            <a href="" class="btn btn-primary mt-2">Tạo hóa đơn</a>
+        </div>
+        <br> <br> <br>
 
-<div layout:fragment="content">
-<div class="container" style="background-color: white;">
-    <div class="row float-right">
-        <a href="" class="btn btn-primary mt-2">Tạo hóa đơn</a>
-    </div> <br> <br> <br>
 
-
-
-    <div class="row mb-3">
-        <ul class="nav nav-tabs">
-            <li class="nav-item">
-                <a class="nav-link active" href="#">Hóa đơn 1<button
-                        style="background-color: white; border: none; color: red; font-weight: bold;">x</button></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Hóa đơn 2<button
-                        style="background-color: white; border: none; color: red; font-weight: bold;">x</button></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Hóa đơn 3<button
-                        style="background-color: white; border: none; color: red; font-weight: bold;">x</button></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link ">Hóa đơn 4<button
-                        style="background-color: white; border: none; color: red; font-weight: bold;">x</button></a>
-            </li>
-        </ul>
-    </div>
-
-    <div class="row mb-3">
-        <div class="col-3">
-            <a class="btn btn-primary float-left">
-                <i style="font-size: 18px" class="fab fa-plus"></i> Thêm
-            </a>
-
+        <div class="row mb-3">
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Hóa đơn 1
+                        <button
+                                style="background-color: white; border: none; color: red; font-weight: bold;">x
+                        </button>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Hóa đơn 2
+                        <button
+                                style="background-color: white; border: none; color: red; font-weight: bold;">x
+                        </button>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Hóa đơn 3
+                        <button
+                                style="background-color: white; border: none; color: red; font-weight: bold;">x
+                        </button>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link ">Hóa đơn 4
+                        <button
+                                style="background-color: white; border: none; color: red; font-weight: bold;">x
+                        </button>
+                    </a>
+                </li>
+            </ul>
         </div>
 
+        <div class="row mb-3">
+            <div class="col-3">
+                <a class="btn btn-primary float-left">
+                    <i style="font-size: 18px" class="fab fa-plus"></i> Thêm
+                </a>
+
+            </div>
 
 
-        <div class="col-9">
-            <a class="btn btn-primary  float-right">
-                QR code sản phẩm
-            </a>
+            <div class="col-9">
+                <a class="btn btn-primary  float-right">
+                    QR code sản phẩm
+                </a>
 
-            <a href="/admin/tai-quay/open-sanpham" class="btn btn-primary  float-right mx-2">
-                Thêm sản phẩm
-            </a>
-        </div>
-
-    </div>
-    <!--  Đặt form ở đây -->
-    <!-- Danh sách sản phẩm -->
-    <div class="row">
-        <div class="table table-wrapper-scroll-y my-custom-scrollbar">
-            <table style="min-height: 300px;" id="table" class="table  table-borderless">
-                <thead>
-                <tr class="bg-light">
-                    <th scope="col" width="10%">Mã </th>
-                    <th scope="col" width="15%">Tên</th>
-                    <th scope="col" width="10%">Số lượng</th>
-                    <th scope="col" width="12%">Size</th>
-                    <th scope="col" width="20%">Thao tác</th>
-
-                </tr>
-                </thead>
-                <tbody>
-
-                <tr style="line-height: 25px">
-
-                </tr>
-
-
-                </tbody>
-
-            </table>
-        </div>
-    </div>
-
-    <!-- Tài khoản khách hàng -->
-    <div class="row mb-3">
-        <div class="col-3">
-            <h5 style="font-weight: bold;" class="mt-3">Tài khoản</h5>
+                <a href="/admin/tai-quay/open-sanpham" class="btn btn-primary  float-right mx-2">
+                    Thêm sản phẩm
+                </a>
+            </div>
 
         </div>
-        <div class="col-5"></div>
+        <!--  Đặt form ở đây -->
+        <!-- Danh sách sản phẩm -->
+        <div class="row">
+            <div class="table table-wrapper-scroll-y my-custom-scrollbar">
+                <table style="min-height: 300px;" id="table" class="table  table-borderless">
+                    <thead>
+                    <tr class="bg-light">
+                        <th scope="col" width="10%">Mã</th>
+                        <th scope="col" width="15%">Tên</th>
+                        <th scope="col" width="10%">Số lượng</th>
+                        <th scope="col" width="12%">Size</th>
+                        <th scope="col" width="20%">Thao tác</th>
 
-        <div class="col-4 ">
-            <a class="btn btn-primary float-right">
-                <i style="font-size: 18px" class="fab fa-plus"></i> Chọn tài khoản
-            </a>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <tr style="line-height: 25px">
+
+                    </tr>
+
+
+                    </tbody>
+
+                </table>
+            </div>
         </div>
-    </div>
-    <hr>
 
-    <div class="row">
-        <div class="col-3">
-            <span>Tên khách hàng: &nbsp;&nbsp;</span> <a href="" style="border-radius: 20px;"
-                                                           class="btn btn-secondary"> Khách lẻ</a>
+        <!-- Tài khoản khách hàng -->
+        <div class="row mb-3">
+            <div class="col-3">
+                <h5 style="font-weight: bold;" class="mt-3">Tài khoản</h5>
+
+            </div>
+            <div class="col-5"></div>
+
+            <div class="col-4 ">
+                <a class="btn btn-primary float-right">
+                    <i style="font-size: 18px" class="fab fa-plus"></i> Chọn tài khoản
+                </a>
+            </div>
         </div>
-    </div>
+        <hr>
 
-    <!-- Thông tin khách hàng -->
-    <div class="row">
-        <div class="col-3">
-            <h5 style="font-weight: bold;" class="mt-3">Khách hàng</h5>
+        <div class="row">
+            <div class="col-3">
+                <span>Tên khách hàng: &nbsp;&nbsp;</span> <a href="" style="border-radius: 20px;"
+                                                               class="btn btn-secondary"> Khách lẻ</a>
+            </div>
         </div>
-        <div class="col-5"></div>
 
-    </div>
-    <hr>
+        <!-- Thông tin khách hàng -->
+        <div class="row">
+            <div class="col-3">
+                <h5 style="font-weight: bold;" class="mt-3">Khách hàng</h5>
+            </div>
+            <div class="col-5"></div>
+
+        </div>
+        <hr>
 
 
-    <div class="row mb-5">
-        <div class="col-6">
-            <div  id="form">
-                <div class="row mx-1 mb-4">
-                    <input type="text" placeholder="tên khách hàng" class="form-control">
+        <div class="row mb-5">
+            <div class="col-6">
+                <div id="form" style="display: none;">
+                    <div class="row mx-1 mb-4">
+                        <input type="text" placeholder="tên khách hàng" class="form-control">
+                    </div>
+                    <div class="row mx-1  mb-4">
+                        <input type="text" placeholder="số điện thoại" class="form-control">
+                    </div>
+                    <div class="row mx-1  mb-4">
+                        <input type="text" placeholder="địa chỉ cụ thể" class="form-control">
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-4">
+                            <input type="text" placeholder="Tỉnh" class="form-control">
+                        </div>
+                        <div class="col-4">
+                            <input type="text" placeholder="Quận" class="form-control">
+                        </div>
+                        <div class="col-4">
+                            <input type="text" placeholder="Xã" class="form-control">
+                        </div>
+                    </div>
+
+
+                    <div class="row mx-1  mb-4">
+                        <textarea rows="5" placeholder="Ghi chú" class="form-control"></textarea>
+
+                    </div>
                 </div>
-                <div class="row mx-1  mb-4">
-                    <input type="text" placeholder="số điện thoại" class="form-control">
-                </div>
-                <div class="row mx-1  mb-4">
-                    <input type="text" placeholder="địa chỉ cụ thể" class="form-control">
-                </div>
+            </div>
+            <!-- Form thông tin thanh toán -->
 
-                <div class="row mb-4">
+            <div class="col-5">
+
+                <h5 class="text-center">Thông tin thanh toán</h5> <br>
+                <div class="row">
                     <div class="col-4">
-                        <input type="text" placeholder="Tỉnh" class="form-control">
+                        <label for="">Hình thức: </label>
                     </div>
+                </div>
+
+                <div class="row mt-2">
                     <div class="col-4">
-                        <input type="text" placeholder="Quận" class="form-control">
+                        <label for="">Giao hàng: </label>
                     </div>
+
                     <div class="col-4">
-                        <input type="text" placeholder="Xã" class="form-control">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="customSwitches">
+                            <label class="custom-control-label" for="customSwitches"></label>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row mt-2">
+
+                    <div class="col-4">Tiền hàng</div>
+
+                    <div class="col-8 ">
+                        <span class="float-right">18.000.000 VNĐ</span>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+
+                    <div class="col-4">Phí vận chuyển:</div>
+
+                    <div class="col-8 ">
+                        <span class="float-right">0 VNĐ</span>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+
+                    <div class="col-4">Giảm giá:</div>
+
+                    <div class="col-8 ">
+                        <span class="float-right">0 VNĐ</span>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+
+                    <div class="col-4">
+                        <h6>Tổng tiền: </h6>
+                    </div>
+
+                    <div class="col-8 ">
+                        <span class="float-right">0 VNĐ</span>
+                    </div>
+                </div>
+
+                <div class="row mb-5">
+                    <div class="col-3"></div>
+                    <div class="col-9">
+                        <button class="btn btn-danger mt-5 float-right">Xác nhận đặt hàng</button>
                     </div>
                 </div>
 
 
-                <div class="row mx-1  mb-4">
-                    <textarea rows="5" placeholder="Ghi chú" class="form-control"></textarea>
-
-                </div>
             </div>
         </div>
-        <!-- Form thông tin thanh toán -->
+        <!-- Button trigger modal -->
+        <a data-toggle="modal" data-target="#exampleModal" type="button" class="btn btn-primary">
+            Launch demo modal
+        </a>
+        <!--    modal thêm sản phẩm-->
+        <!-- Modal -->
+        <div th:if="${modalSanPham}" class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+             style="display: block;" data-keyboard="false" data-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
 
-        <div class="col-5">
+                    </div>
+                    <div class="modal-body">
+                        ...
+                    </div>
+                    <div class="modal-footer">
 
-            <h5 class="text-center">Thông tin thanh toán</h5> <br>
-            <div class="row">
-                <div class="col-4">
-                    <label for="">Hình thức: </label>
-                </div>
-            </div>
-
-            <div class="row mt-2">
-                <div class="col-4">
-                    <label for="">Giao hàng: </label>
-                </div>
-
-                <div class="col-4">
-                    <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="customSwitches">
-                        <label class="custom-control-label" for="customSwitches"></label>
+                        <button type="button" th:href="@{/admin/tai-quay/hien-thi}" class="btn btn-primary">Quay lại
+                        </button>
                     </div>
                 </div>
-
-            </div>
-
-            <div class="row mt-2">
-
-                <div class="col-4">Tiền hàng</div>
-
-                <div class="col-8 ">
-                    <span class="float-right">18.000.000 VNĐ</span>
-                </div>
-            </div>
-
-            <div class="row mt-2">
-
-                <div class="col-4">Phí vận chuyển: </div>
-
-                <div class="col-8 ">
-                    <span class="float-right">0 VNĐ</span>
-                </div>
-            </div>
-
-            <div class="row mt-2">
-
-                <div class="col-4">Giảm giá: </div>
-
-                <div class="col-8 ">
-                    <span class="float-right">0 VNĐ</span>
-                </div>
-            </div>
-
-            <div class="row mt-3">
-
-                <div class="col-4">
-                    <h6>Tổng tiền: </h6>
-                </div>
-
-                <div class="col-8 ">
-                    <span class="float-right">0 VNĐ</span>
-                </div>
-            </div>
-
-            <div class="row mb-5">
-                <div class="col-3"></div>
-                <div class="col-9">
-                    <button class="btn btn-danger mt-5 float-right">Xác nhận đặt hàng</button>
-                </div>
-            </div>
-
-
-
-
-        </div>
-    </div>
-    <!-- Button trigger modal -->
-    <a  data-toggle="modal" data-target="#exampleModal"  href="/admin/tai-quay/open-sanpham" type="button" class="btn btn-primary">
-        Launch demo modal
-    </a>
-<!--    modal thêm sản phẩm-->
-    <!-- Modal -->
-    <div th:if="${modalSanPham}" class="modal fade" data-backdrop="static" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-
-                </div>
-                <div class="modal-body">
-                    ...
-                </div>
-                <div class="modal-footer">
-
-                    <button type="button" th:href="@{/admin/tai-quay/hien-thi}" class="btn btn-primary">Quay lại</button>
-                </div>
             </div>
         </div>
+
     </div>
 
-</div>
 
+    <!--    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>-->
 
-<!--    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>-->
+    <script th:inline="javascript">
+        const customSwitches = document.getElementById("customSwitches");
+        const form = document.getElementById("form");
 
-<script th:inline="javascript">
-    const customSwitches = document.getElementById("customSwitches");
-    const form = document.getElementById("form");
-
-    function loadding(){
-        if (customSwitches.checked) {
-            form.style.display = "block";
-        } else {
-            form.style.display = "none";
+        function loadding() {
+            if (customSwitches.checked) {
+                form.style.display = "block";
+            } else {
+                form.style.display = "none";
+            }
         }
-    }
 
-    customSwitches.addEventListener("change",loadding);
-    window.addEventListener("load",loadding);
+        customSwitches.addEventListener("change", loadding);
+        window.addEventListener("load", loadding);
 
 
-</script>
+    </script>
 </div>
 </body>
 
