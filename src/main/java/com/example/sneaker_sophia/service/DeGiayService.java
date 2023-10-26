@@ -14,8 +14,12 @@ import java.util.UUID;
 
 import com.example.sneaker_sophia.entity.ChiTietGiay;
 import com.example.sneaker_sophia.entity.DeGiay;
+import com.example.sneaker_sophia.repository.DeGiayRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public interface DeGiayService {
@@ -30,4 +34,9 @@ public interface DeGiayService {
     DeGiay update(UUID id, DeGiayRequest deGiayRequest);
 
     DeGiay delete(UUID id);
+
+    DeGiay getOne(UUID uuid);
+
+    DeGiay findByTen(String ten);
+
 }

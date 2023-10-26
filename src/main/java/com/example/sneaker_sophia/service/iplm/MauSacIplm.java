@@ -79,4 +79,14 @@ public class MauSacIplm implements MauSacService {
             return o;
         }).orElse(null);
     }
+
+    @Override
+    public MauSac getOne(UUID uuid) {
+        return mauSacRepository.findById(uuid).get();
+    }
+
+    @Override
+    public MauSac findByTen(String ten){
+        return mauSacRepository.findMauSacByTen(ten);
+    }
 }

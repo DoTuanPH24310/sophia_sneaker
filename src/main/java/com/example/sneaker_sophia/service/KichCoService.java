@@ -31,4 +31,10 @@ public interface KichCoService {
     KichCo update(UUID id, KichCoRequest kichCoRequest);
 
     KichCo delete(UUID id);
+
+
+    KichCo getOne(UUID uuid);
+
+    KichCo findByTen(String ten);
+
 }

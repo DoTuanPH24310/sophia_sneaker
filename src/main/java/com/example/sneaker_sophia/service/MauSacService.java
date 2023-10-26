@@ -25,4 +25,9 @@ public interface MauSacService {
     MauSac update(UUID id, MauSacRequest mauSacRequest);
 
     MauSac delete(UUID id);
+
+    MauSac getOne(UUID uuid);
+
+    MauSac findByTen(String ten);
+
 }

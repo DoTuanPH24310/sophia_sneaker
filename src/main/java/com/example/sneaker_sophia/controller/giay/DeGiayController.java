@@ -34,7 +34,7 @@ public class DeGiayController {
         model.addAttribute("danhSachDeGiay", page);
         model.addAttribute("tongDeGiay", page.getTotalElements());
         model.addAttribute("pageNo", pageNo);
-        model.addAttribute("textSearch", txtSearch);
+        model.addAttribute("txtSearch", txtSearch);
         model.addAttribute("trangThai", trangThai);
 
         return "admin/deGiay/deGiay";

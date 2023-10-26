@@ -2,16 +2,36 @@ package com.example.sneaker_sophia.service;
 
 import com.example.sneaker_sophia.entity.Anh;
 import com.example.sneaker_sophia.entity.ChiTietGiay;
+import com.example.sneaker_sophia.repository.AnhRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
+@Service
+public class AnhService {
+    @Autowired
+    AnhRepository anhRepository;
+    public List<Anh> getAll() {
+        return anhRepository.findAll();
+    }
+    public void save(Anh anh) {
+        anhRepository.save(anh);
+    }
+    public Anh getOne(UUID id) {
+        return anhRepository.findById(id).get();
+    }
 
-public interface AnhService {
-    List<Anh> getAll();
-    void save(Anh anh);
-    Anh getOne(UUID id);
+    public void delete(UUID id) {
+        anhRepository.deleteById(id);
+    }
 
-    void delete(UUID id);
-
-    List<Anh> anhsFindIdChitietGiay(ChiTietGiay chiTietGiay);
+    public List<Anh> anhsFindIdChitietGiay(ChiTietGiay chiTietGiay) {
+        return anhRepository.findAnhsByChiTietGiay(chiTietGiay);
+    }
+    @Transactional
+    public void deleteAnhByChiTietGiay(ChiTietGiay giay){
+        anhRepository.deleteAllByChiTietGiay(giay);
+    }
 }

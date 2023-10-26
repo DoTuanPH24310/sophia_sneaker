@@ -11,6 +11,7 @@ import java.util.UUID;
 
 @Repository
 public interface MauSacRepository extends JpaRepository<MauSac, UUID> {
+
     @Query(value = "select * from MauSac", nativeQuery = true)
     Page<MauSac> getAll(Pageable pageable);
 
@@ -19,4 +20,6 @@ public interface MauSacRepository extends JpaRepository<MauSac, UUID> {
 
     @Query("SELECT g FROM MauSac g WHERE g.ten LIKE %:txtSearch% AND (g.trangThai = :trangThai OR :trangThai IS NULL)")
     Page<MauSac> searchAndFilter(@Param("txtSearch") String txtSearch, @Param("trangThai") String trangThai, Pageable pageable);
+
+    MauSac findMauSacByTen(String ten);
 }

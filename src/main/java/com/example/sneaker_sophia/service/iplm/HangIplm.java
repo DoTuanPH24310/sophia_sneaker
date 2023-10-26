@@ -80,4 +80,14 @@ public class HangIplm implements HangService {
             return o;
         }).orElse(null);
     }
+
+    @Override
+    public Hang getOne(UUID uuid) {
+        return hangRepository.findById(uuid).get();
+    }
+
+    @Override
+    public Hang findByTen(String ten){
+        return hangRepository.findHangByTen(ten);
+    }
 }

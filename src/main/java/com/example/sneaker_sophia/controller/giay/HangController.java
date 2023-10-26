@@ -34,7 +34,7 @@ public class HangController {
         model.addAttribute("danhSachHang", page);
         model.addAttribute("tongHang", page.getTotalElements());
         model.addAttribute("pageNo", pageNo);
-        model.addAttribute("textSearch", txtSearch);
+        model.addAttribute("txtSearch", txtSearch);
         model.addAttribute("trangThai", trangThai);
 
         return "admin/hang/hang";

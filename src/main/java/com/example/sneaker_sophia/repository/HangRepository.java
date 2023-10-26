@@ -12,6 +12,7 @@ import java.util.UUID;
 
 @Repository
 public interface HangRepository extends JpaRepository<Hang, UUID> {
+
     @Query(value = "select * from Hang", nativeQuery = true)
     Page<Hang> getAll(Pageable pageable);
 
@@ -20,4 +21,7 @@ public interface HangRepository extends JpaRepository<Hang, UUID> {
 
     @Query("SELECT g FROM Hang g WHERE g.ten LIKE %:txtSearch% AND (g.trangThai = :trangThai OR :trangThai IS NULL)")
     Page<Hang> searchAndFilter(@Param("txtSearch") String txtSearch, @Param("trangThai") String trangThai, Pageable pageable);
+
+    Hang findHangByTen(String ten);
+
 }

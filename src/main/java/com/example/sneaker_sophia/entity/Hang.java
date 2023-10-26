@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
@@ -31,16 +31,16 @@ public class Hang {
     private String ten;
 
     @Column(name = "ngayTao")
-    private Date ngayTao;
+    private LocalDate ngayTao;
 
     @Column(name = "ngaySua")
-    private Date ngaySua;
+    private LocalDate ngaySua;
 
     @Column(name = "nguoiTao")
-    private UUID nguoiTao;
+    private String nguoiTao;
 
     @Column(name = "nguoiSua")
-    private UUID nguoiSua;
+    private String nguoiSua;
 
     @Column(name = "trangThai")
     private Integer trangThai;

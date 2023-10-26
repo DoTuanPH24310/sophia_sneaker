@@ -11,4 +11,5 @@ import java.util.UUID;
 public interface AnhRepository extends JpaRepository<Anh, UUID> {
     List<Anh> findAnhsByChiTietGiay(ChiTietGiay chiTietGiay);
 
+    void deleteAllByChiTietGiay(ChiTietGiay giay);
 }

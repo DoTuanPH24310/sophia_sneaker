@@ -11,6 +11,7 @@ import java.util.UUID;
 
 @Repository
 public interface DeGiayRepository extends JpaRepository<DeGiay, UUID> {
+
     @Query(value = "select * from DeGiay", nativeQuery = true)
     Page<DeGiay> getAll(Pageable pageable);
 
@@ -20,4 +21,5 @@ public interface DeGiayRepository extends JpaRepository<DeGiay, UUID> {
     @Query("SELECT g FROM DeGiay g WHERE g.ten LIKE %:txtSearch% AND (g.trangThai = :trangThai OR :trangThai IS NULL)")
     Page<DeGiay> searchAndFilter(@Param("txtSearch") String txtSearch, @Param("trangThai") String trangThai, Pageable pageable);
 
+    DeGiay findDeGiayByTen(String ten);
 }

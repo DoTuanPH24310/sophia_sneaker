@@ -27,4 +27,8 @@ public interface HangService {
 
     Hang delete(UUID id);
 
+    Hang getOne(UUID uuid);
+
+    Hang findByTen(String ten);
+
 }

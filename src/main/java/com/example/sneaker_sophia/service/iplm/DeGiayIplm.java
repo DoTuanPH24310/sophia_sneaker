@@ -82,4 +82,14 @@ public class DeGiayIplm implements DeGiayService {
             return o;
         }).orElse(null);
     }
+
+    @Override
+    public DeGiay getOne(UUID uuid) {
+        return deGiayRepository.findById(uuid).get();
+    }
+
+    @Override
+    public DeGiay findByTen(String ten){
+        return deGiayRepository.findDeGiayByTen(ten);
+    }
 }

@@ -79,4 +79,14 @@ public class KichCoIplm implements KichCoService {
             return o;
         }).orElse(null);
     }
+
+    @Override
+    public KichCo getOne(UUID uuid) {
+        return kichCoRepository.findById(uuid).get();
+    }
+
+    @Override
+    public KichCo findByTen(String ten){
+        return kichCoRepository.findKichCoByTen(ten);
+    }
 }

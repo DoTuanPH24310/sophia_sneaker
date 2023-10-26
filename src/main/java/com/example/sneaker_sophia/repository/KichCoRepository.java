@@ -12,6 +12,7 @@ import java.util.UUID;
 
 @Repository
 public interface KichCoRepository extends JpaRepository<KichCo, UUID> {
+
     @Query(value = "select * from KichCo", nativeQuery = true)
     Page<KichCo> getAll(Pageable pageable);
 
@@ -25,4 +26,7 @@ public interface KichCoRepository extends JpaRepository<KichCo, UUID> {
 //            "and (?1 is null or obj.trangThai =?1) " +
 //            "and (?2 is null or obj.ma like ?2 or obj.ten like ?2)")
 //    Page<KichCo> locVaTimKiem(Integer tt, String txt,Pageable pageable);
+
+    KichCo findKichCoByTen(String ten);
+
 }
