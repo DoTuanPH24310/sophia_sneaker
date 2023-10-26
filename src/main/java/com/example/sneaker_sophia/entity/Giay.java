@@ -42,10 +42,10 @@ public class Giay {
     private LocalDate ngaySua;
 
     @Column(name = "nguoiTao")
-    private UUID nguoiTao;
+    private String nguoiTao;
 
     @Column(name = "nguoiSua")
-    private UUID nguoiSua;
+    private String nguoiSua;
 
     @Column(name = "trangThai")
     private Integer trangThai;

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 @NoArgsConstructor
@@ -20,25 +21,28 @@ public class DeGiay {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Column(name = "ma")
+    private String ma;
+
     @Column(name = "ten")
     private String ten;
-    @OneToMany(mappedBy = "deGiay")
-    private List<ChiTietGiay> chiTietGiayList;
+
     @Column(name = "ngayTao")
-    private UUID ngayTao;
+    private LocalDate ngayTao;
 
     @Column(name = "ngaySua")
-    private UUID ngaySua;
+    private LocalDate ngaySua;
 
     @Column(name = "nguoiTao")
-    private UUID nguoiTao;
+    private String nguoiTao;
 
     @Column(name = "nguoiSua")
-    private UUID nguoiSua;
+    private String nguoiSua;
 
     @Column(name = "trangThai")
     private Integer trangThai;
 
-
+    @OneToMany(mappedBy = "deGiay")
+    private List<ChiTietGiay> chiTietGiayList;
 
 }

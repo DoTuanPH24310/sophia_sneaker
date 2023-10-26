@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,16 +27,16 @@ public class MauSac {
     private String ten;
 
     @Column(name = "ngayTao")
-    private UUID ngayTao;
+    private LocalDate ngayTao;
 
     @Column(name = "ngaySua")
-    private UUID ngaySua;
+    private LocalDate ngaySua;
 
     @Column(name = "nguoiTao")
-    private UUID nguoiTao;
+    private String nguoiTao;
 
     @Column(name = "nguoiSua")
-    private UUID nguoiSua;
+    private String nguoiSua;
 
     @Column(name = "trangThai")
     private Integer trangThai;
