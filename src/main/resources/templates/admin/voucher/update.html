@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
 
 
         .container {
@@ -31,6 +30,16 @@
 
         .modal-backdrop.fade.show {
             opacity: 0.8;
+        }
+
+        .my-custom-scrollbar {
+            position: relative;
+            height: 400px;
+            overflow: auto;
+        }
+
+        .table-wrapper-scroll-y {
+            display: block;
         }
 
     </style>
@@ -87,13 +96,7 @@
                 <div class="col-8 formTable">
                     <!-- Bảng sản phẩm -->
                     <div class="row">
-                        <div class="d-flex justify-content-between align-items-center mt-3">
-                            <div class="position-relative">
-                                <span class="position-absolute search"><i class="fa fa-search"></i></span>
-                                <input class="form-control w-100" placeholder="Tìm kiếm theo tên, mã,...">
-                            </div>
-
-                        </div>
+                        <h5 style="font-weight: bold; margin-top: 4px;">Danh mục</h5>
                         <div class="table table-responsive table-wrapper-scroll-y my-custom-scrollbar">
 
                             <table class="table table-responsive table-borderless">
@@ -149,14 +152,8 @@
 
                     <!-- Bảng chỉ tiết sản phẩm -->
                     <div class="row mt-4">
-                        <h6 style="font-weight: bold; ">Chi tiết sản phẩm</h6>
+                        <h5 style="font-weight: bold; ">Chi tiết sản phẩm</h5>
 
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="position-relative">
-                                <span class="position-absolute search"><i class="fa fa-search"></i></span>
-                                <input class="form-control w-100" placeholder="Tìm kiếm theo tên, mã,...">
-                            </div>
-                        </div>
                         <div class="table table-responsive table-wrapper-scroll-y my-custom-scrollbar mb-3">
                             <table id="tableCTG" class="table table-responsive table-borderless">
                                 <thead>

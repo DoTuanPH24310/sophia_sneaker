@@ -6,6 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 import java.util.UUID;
 
 
@@ -20,4 +22,6 @@ public interface VoucherRepository extends JpaRepository<Voucher, UUID> {
 
     @Query(value = "select obj from Voucher obj where obj.trangThai <> 3")
     Page<Voucher> findAll(Pageable pageable);
+
+    List<Voucher> findByTrangThaiNotLike(Integer tt);
 }
