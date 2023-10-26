@@ -34,7 +34,7 @@ public class MauSacController {
         model.addAttribute("danhSachMauSac", page);
         model.addAttribute("tongMauSac", page.getTotalElements());
         model.addAttribute("pageNo", pageNo);
-        model.addAttribute("textSearch", txtSearch);
+        model.addAttribute("txtSearch", txtSearch);
         model.addAttribute("trangThai", trangThai);
 
         return "admin/mauSac/mauSac";

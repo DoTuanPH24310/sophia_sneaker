@@ -586,14 +586,17 @@ table.table tr td {
 
 table.table td a:hover {
     color: #2196F3;
+
 }
 
 .edit {
     color: #FFC107;
+    font-size: 24px;
 }
 
 .delete {
     color: #F44336;
+    font-size: 24px;
 }
 
 table.table td i {
@@ -803,11 +806,16 @@ table.table td i {
         background-color: rgba(0, 0, 0, 0.5);
     }
 }
+/*thanh search*/
 
-
-
-
-
+.search{
+    width: 350px !important;
+    margin-right: 10px !important;
+    border-radius: 50px 50px !important;
+    background-color: #FFF !important;
+    border: #495057 solid 1px !important;
+    color: #1b1e21 !important;
+}
 
 
 

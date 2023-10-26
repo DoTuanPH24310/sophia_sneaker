@@ -1,38 +1,56 @@
 package com.example.sneaker_sophia.entity;
 
 import jakarta.persistence.*;
-
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import java.util.List;
+import java.util.UUID;
 @Entity
 @Table(name = "ChiTietGiay")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ChiTietGiay {
     @Id
     @Column(name = "Id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
-    @Column(name = "IdGiay")
-    private String idGiay;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "IdGiay", referencedColumnName = "Id")
+    private Giay giay;
 
-    @Column(name = "IdKichCo")
-    private String idKichCo;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "IdKichCo")
+    private KichCo kichCo;
 
-    @Column(name = "IdDeGiay")
-    private String idDeGiay;
+    @OneToMany(mappedBy = "id.chiTietGiay")
+    private List<CTG_KhuyenMai> listCTG_KM;
 
-    @Column(name = "IdHang")
-    private String idHang;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "IdDeGiay", referencedColumnName = "Id")
+    private DeGiay deGiay;
 
-    @Column(name = "IdLoaiGiay")
-    private String idLoaiGiay;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "IdHang", referencedColumnName = "Id")
+    private Hang hang;
 
-    @Column(name = "IdMauSac")
-    private String idMauSac;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "IdLoaiGiay", referencedColumnName = "Id")
+    private LoaiGiay loaiGiay;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "IdMauSac", referencedColumnName = "Id")
+    private MauSac mauSac;
 
     @Column(name = "ma")
     private String ma;
 
     @Column(name = "gia")
-    private String gia;
+    private Double gia;
 
     @Column(name = "soLuong")
     private Integer soLuong;
@@ -40,91 +58,9 @@ public class ChiTietGiay {
     @Column(name = "trangThai")
     private Integer trangThai;
 
-    public String getId() {
-        return this.id;
-    }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    @OneToMany(mappedBy = "chiTietGiay")
+    private List<Anh> anhs;
 
-    public String getIdGiay() {
-        return this.idGiay;
-    }
-
-    public void setIdGiay(String idGiay) {
-        this.idGiay = idGiay;
-    }
-
-    public String getIdKichCo() {
-        return this.idKichCo;
-    }
-
-    public void setIdKichCo(String idKichCo) {
-        this.idKichCo = idKichCo;
-    }
-
-    public String getIdDeGiay() {
-        return this.idDeGiay;
-    }
-
-    public void setIdDeGiay(String idDeGiay) {
-        this.idDeGiay = idDeGiay;
-    }
-
-    public String getIdHang() {
-        return this.idHang;
-    }
-
-    public void setIdHang(String idHang) {
-        this.idHang = idHang;
-    }
-
-    public String getIdLoaiGiay() {
-        return this.idLoaiGiay;
-    }
-
-    public void setIdLoaiGiay(String idLoaiGiay) {
-        this.idLoaiGiay = idLoaiGiay;
-    }
-
-    public String getIdMauSac() {
-        return this.idMauSac;
-    }
-
-    public void setIdMauSac(String idMauSac) {
-        this.idMauSac = idMauSac;
-    }
-
-    public String getMa() {
-        return this.ma;
-    }
-
-    public void setMa(String ma) {
-        this.ma = ma;
-    }
-
-    public String getGia() {
-        return this.gia;
-    }
-
-    public void setGia(String gia) {
-        this.gia = gia;
-    }
-
-    public Integer getSoLuong() {
-        return this.soLuong;
-    }
-
-    public void setSoLuong(Integer soLuong) {
-        this.soLuong = soLuong;
-    }
-
-    public Integer getTrangThai() {
-        return this.trangThai;
-    }
-
-    public void setTrangThai(Integer trangThai) {
-        this.trangThai = trangThai;
-    }
 }
+

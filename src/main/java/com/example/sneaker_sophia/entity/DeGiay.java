@@ -3,8 +3,12 @@ package com.example.sneaker_sophia.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.stereotype.Component;
-
 import java.util.Date;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -26,7 +30,8 @@ public class DeGiay {
 
     @Column(name = "ten")
     private String ten;
-
+    @OneToMany(mappedBy = "deGiay")
+    private List<ChiTietGiay> chiTietGiayList;
     @Column(name = "ngayTao")
     private Date ngayTao;
 

@@ -12,60 +12,22 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.example.sneaker_sophia.entity.ChiTietGiay;
+import com.example.sneaker_sophia.entity.DeGiay;
+
+import java.util.List;
+
 @Service
-public class DeGiayService {
-    @Autowired
-    private DeGiayRepository deGiayRepository;
+public interface DeGiayService {
+    List<DeGiay> getAll();
 
-    public DeGiay add(DeGiayRequest deGiayRequest) {
-        DeGiay deGiay = deGiayRequest.loadForm(new DeGiay());
-        return this.deGiayRepository.save(deGiay);
-    }
+    DeGiay add(DeGiayRequest deGiayRequest);
 
-    public Optional<DeGiay> findOne(UUID id) {
-        return this.deGiayRepository.findById(id);
-    }
+    Optional<DeGiay> findOne(UUID id);
 
-    public Page<DeGiay> fillter(String txtSearch, String trangThai, Pageable pageable) {
-        Page<DeGiay> page = null;
+    Page<DeGiay> fillter(String txtSearch, String trangThai, Pageable pageable);
 
-        if (txtSearch == null || txtSearch.trim().isEmpty()) {
-            if (trangThai == null || trangThai == "" || trangThai.equals("-1")) {
-                return deGiayRepository.getAll(pageable);
-            }
+    DeGiay update(UUID id, DeGiayRequest deGiayRequest);
 
-            DeGiay deGiay = DeGiay.builder()
-                    .trangThai(Integer.parseInt(trangThai))
-                    .build();
-
-            page = deGiayRepository.findAll(Example.of(deGiay), pageable);
-        } else {
-            if (trangThai == null || trangThai.equals("-1")) {
-                page = deGiayRepository.searchWithoutTrangThai(txtSearch, pageable);
-            } else {
-                page = deGiayRepository.searchAndFilter(txtSearch, trangThai, pageable);
-            }
-        }
-
-        return page;
-    }
-
-    public DeGiay update(UUID id, DeGiayRequest deGiayRequest) {
-        Optional<DeGiay> optional = this.deGiayRepository.findById(id);
-        return optional.map(o -> {
-            o.setId(deGiayRequest.getId());
-            o.setMa(deGiayRequest.getMa());
-            o.setTen(deGiayRequest.getTen());
-            o.setTrangThai(deGiayRequest.getTrangThai());
-            return this.deGiayRepository.save(o);
-        }).orElse(null);
-    }
-
-    public DeGiay delete(UUID id){
-        Optional<DeGiay> optional = this.deGiayRepository.findById(id);
-        return optional.map(o ->{
-            this.deGiayRepository.delete(o);
-            return o;
-        }).orElse(null);
-    }
+    DeGiay delete(UUID id);
 }

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layouts/layout}">
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="/css/custom.css">
+    <style>
+        .custom-width {
+            height: 60px;
+            border-radius: 20px;
+        }
+
+        .custom-radio {
+            width: 50px;
+            margin-left: 50px;
+            margin-top: 20px;
+        }
+        .form-check-input[type="radio"] {
+            position: relative;
+            top: 2px; /* Điều chỉnh giá trị top theo ý muốn của bạn */
+        }
+    </style>
+</head>
+<body>
+<section>
+    <div layout:fragment="content" class="col-md-9" style="margin: auto">
+        <form method="post" th:action="${action}" th:object="${data}">
+            <div class="row mb-3">
+                <div class="col-6">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" name="maGiamGia" th:field="*{ma}" id="maGiamGia" placeholder="Nhập mã giày"/>
+                        <label for="maGiamGia" class="form-label">Mã Giày</label>
+                        <span th:errors="*{ma}"></span>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" name="tenGiamGia" th:field="*{ten}" id="tenGiamGia" placeholder="Nhập tên giày"/>
+                        <label for="tenGiamGia" class="form-label">Tên Giày</label>
+                        <span th:errors="*{ten}"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <div class="form-group">
+                        <label class="form-label">Trạng thái</label>
+                        <div class="form-floating">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="trangThai" th:field="*{trangThai}" value="0" id="radioHoatDong"/>
+                                <label class="form-check-label" for="radioHoatDong">Hoạt động</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="trangThai" th:field="*{trangThai}" value="1" id="radioNgungHoatDong"/>
+                                <label class="form-check-label" for="radioNgungHoatDong">Ngưng hoạt động</label>
+                            </div>
+                        </div>
+                        <span th:errors="*{trangThai}"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </form>
+
+
+    </div>
+</section>
+</body>
+</html>

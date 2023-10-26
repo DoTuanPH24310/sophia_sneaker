@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layouts/layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+
+        .container {
+            background-color: #EAEAEA;
+        }
+
+
+        .search {
+
+            top: 6px;
+            left: 10px;
+        }
+
+
+        .formInput {
+            background-color: #FFFFFF;
+        }
+
+        .formTable {
+            background-color: #FFFFFF;
+        }
+
+        .modal-backdrop.fade.show {
+            opacity: 0.8;
+        }
+
+        .my-custom-scrollbar {
+            position: relative;
+            height: 400px;
+            overflow: auto;
+        }
+
+        .table-wrapper-scroll-y {
+            display: block;
+        }
+
+    </style>
+</head>
+<body>
+<div layout:fragment="content" class="container px-2">
+    <h4 th:text="${err}" style="color: red"></h4>
+    <div class="row">
+        <form th:action="@{/admin/voucher/update/{id}#tableCTG(id=${data.id})}" method="post" th:object="${data}">
+            <div class="row">
+                <div class="col-3 formInput">
+
+                    <div class="row">
+                        <h5 style="font-weight: bold; text-align: center; margin-top: 15px">Cập nhật khuyến mại</h5>
+                    </div>
+                    <br>
+
+                    <label>Tên khuyến mại</label>
+                    <input th:field="*{ten}" type="text" class="form-control">
+                    <p th:text="${errTen}" class="text-danger"></p> <br>
+
+
+                    <label>Giá trị (%)</label>
+                    <input th:field="*{phanTramGiam}" type="number" min="1" class="form-control">
+                    <p th:text="${errGiaTri}" class="text-danger"></p> <br>
+
+
+                    <label>Ngày bắt đầu</label>
+                    <input th:field="*{ngayBatDau}" id="ngayBatDau" type="date" class="form-control">
+                    <p th:text="${errNBD}" class="text-danger"></p> <br>
+
+
+                    <label>Ngày kết thúc</label>
+                    <input th:field="*{ngayKetThuc}" id="ngayKetThuc" type="date" class="form-control">
+                    <p th:text="${errNKT}" class="text-danger"></p>   <br>
+
+
+                    <select style="font-weight: bold;" disabled name="" id="selectBox"  class="form-select text-center">
+                        <option value="">---------------</option>
+                    </select> <br>
+
+                    <br>
+
+                    <div class="d-flex justify-content-center">
+                        <button class="btn btn-primary mb-3" onclick="return confirm('Bạn chắc chăn muốn cập nhật');" name="button" value="button">
+                           Cập nhật
+                        </button>
+                    </div>
+
+                </div>
+
+                <div class="col-1"></div>
+
+                <div class="col-8 formTable">
+                    <!-- Bảng sản phẩm -->
+                    <div class="row">
+                        <h5 style="font-weight: bold; margin-top: 4px;">Danh mục</h5>
+                        <div class="table table-responsive table-wrapper-scroll-y my-custom-scrollbar">
+
+                            <table class="table table-responsive table-borderless">
+                                <thead>
+                                <tr class="bg-light">
+                                    <th scope="col" width="10%">
+                                        <input th:onchange="this.form.submit()"
+                                               th:name="requestId"
+                                               th:value="AllG" class="form-check-input"
+                                               th:checked="${checkAll}"
+                                               type="checkbox">
+                                    </th>
+                                    <th scope="col" width="10%">#</th>
+                                    <th scope="col" width="15%">Mã sản phẩm</th>
+                                    <th scope="col" width="35%">Tên sản phẩm</th>
+                                    <th scope="col" width="30%">Trạng thái</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="x : ${listGiay}">
+
+                                    <th scope="row">
+                                        <input
+                                                :name="requestId"
+                                                th:checked="${#strings.contains(listId, x.id)} ? true:false"
+                                                th:name="requestId"
+                                                th:value="${x.id}"
+                                                th:onchange="this.form.submit()"
+                                                class="form-check-input"
+                                                type="checkbox">
+                                    </th>
+                                    <td th:text="${xStat.index +1}"></td>
+                                    <td th:text="${x.ma}"></td>
+                                    <td th:text="${x.ten}"></td>
+                                    <td th:if="${x.trangThai == 0}">
+                                        <button type="button" class="btn btn-success"
+                                                style="border-radius: 30px; font-size: 12px; height: 40px">
+                                            Đang kinh doanh
+                                        </button>
+                                    </td>
+                                    <td th:unless="${x.trangThai == 0}">
+                                        <button type="button" class="btn btn-danger"
+                                                style="border-radius: 30px; font-size: 12px; height: 40px">
+                                            Ngừng kinh doanh
+                                        </button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
+                    <!-- Bảng chỉ tiết sản phẩm -->
+                    <div class="row mt-4">
+                        <h5 style="font-weight: bold; ">Chi tiết sản phẩm</h5>
+
+                        <div class="table table-responsive table-wrapper-scroll-y my-custom-scrollbar mb-3">
+                            <table id="tableCTG" class="table table-responsive table-borderless">
+                                <thead>
+                                <tr class="bg-light">
+                                    <th scope="col" width="10%">
+                                        <input class="form-check-input"
+                                               type="checkbox"
+                                               th:value="AllCTG"
+                                               th:name="requestIdCTG"
+                                               th:onchange="this.form.submit()"
+                                               th:checked="${checkAllCTG}"
+                                        >
+                                    </th>
+
+                                    <th scope="col" width="15%">Ảnh</th>
+                                    <th scope="col" width="10%">Mã</th>
+                                    <th scope="col" width="20%">Tên sản phẩm</th>
+                                    <th scope="col" width="10%">Kích cỡ</th>
+                                    <th scope="col" width="10%">Màu</th>
+                                    <th scope="col" width="5%">Thao tác</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                <tr th:each="x : ${listCTG}">
+                                    <th scope="row">
+                                        <input class="form-check-input"
+                                               type="checkbox"
+                                               th:value="${x.id}"
+                                               th:name="requestIdCTG"
+                                               th:onchange="this.form.submit()"
+                                               th:checked="${#strings.contains(listIDCTG, x.id)} ? true:false"
+                                        >
+                                    </th>
+
+                                    <td><i class="fa fa-check-circle-o green"></i><span class="ms-1"></span></td>
+                                    <td th:text="${x.ma}"></td>
+                                    <td th:text="${x.giay.ten}"></td>
+                                    <td th:text="${x.kichCo.ten}"></td>
+                                    <td></td>
+                                    <!--                                    <td th:if="${x.trangThai == 0}">-->
+                                    <!--                                        <button type="button" class="btn btn-success"-->
+                                    <!--                                                style="border-radius: 30px; font-size: 11px; height: 40px">-->
+                                    <!--                                            Đang kinh doanh-->
+                                    <!--                                        </button>-->
+                                    <!--                                    </td>-->
+                                    <!--                                    <td th:unless="${x.trangThai == 0}">-->
+                                    <!--                                        <button type="button" class="btn btn-danger"-->
+                                    <!--                                                style="border-radius: 30px; font-size: 11px; height: 40px">-->
+                                    <!--                                            Ngừng kinh doanh-->
+                                    <!--                                        </button>-->
+                                    <!--                                    </td>-->
+                                    <td>
+                                        <a type="button" data-toggle="modal" th:attr="data-target='#detail'+${x.id}">
+                                            <i class="material-icons text-warning" style="font-size: 23px"
+                                               title="Chi tiết">visibility</i>
+                                        </a>
+                                        <!-- Modal -->
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Form nhập liệu -->
+        </form>
+        <!--        modal-->
+        <div th:each="x: ${listCTG}">
+            <div th:id="detail+${x.id}" class="modal fade">
+                <div class="modal-dialog" style="max-width: 800px;">
+                    <div class="modal-content">
+                        <div class="modal-header text-light" style="background-color: #aea7a7;">
+                            <h4 class="modal-title">Chi tiết sản phẩm</h4>
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-hidden="true">&times;
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <b>Mã sản phẩm: </b>
+                                        <i th:text="${x.ma}"></i>
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <b>Tên sản phẩm: </b>
+                                        <i th:text="${x.giay.ten}"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <b>Giá: </b>
+                                        <i th:text="${x.gia}+' VNĐ'"></i>
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <b>Số lượng: </b>
+                                        <i th:text="${x.soLuong}"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <b>Kích cỡ: </b>
+                                        <i th:text="${x.kichCo.ten}"></i>
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <b>Đế giày: </b>
+                                        <i>Cao su</i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <b>Hãng: </b>
+                                        <i>SOPHIa</i>
+                                    </div>
+                                </div>
+
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <b>Màu sắc: </b>
+                                        <i>Đỏ</i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-4">
+
+                                </div>
+                                <b class="col-4">
+                                    Ảnh
+                                </b>
+                            </div>
+                            <div class="row">
+                                <div class="col-4">
+                                    <img style="width: 150px; height: auto"
+                                         src="https://1sneaker.vn/wp-content/uploads/2023/04/giay-nike-air-Jordan-1-low-panda-co-thap-rep-12-2.jpg"
+                                         alt="">
+                                </div>
+
+
+                                <div class="col-4">
+                                    <img style="width: 150px; height: auto"
+                                         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBFzHX36KlCVX29BMD_FlZ3NSDZJ_eTNRDEkJY011DwzUHvxNHxenQVqmSxIza87LcxMs&usqp=CAU"
+                                         alt="">
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="button" class="btn btn-primary"
+                                   data-dismiss="modal" value="Thoát">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        let mess = [[${err}]];
+        if (mess != '' && mess != null) {
+            window.addEventListener("load", function () {
+                alert(mess)
+            });
+        }
+
+
+
+    </script>
+</div>
+
+</body>
+</html>
