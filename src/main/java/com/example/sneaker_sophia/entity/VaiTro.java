@@ -1,87 +1,60 @@
 package com.example.sneaker_sophia.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 import java.util.UUID;
 
 @Entity
 @Table(name = "VaiTro")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class VaiTro {
     @Id
-    @Column(name = "Id")
-    private UUID id;
+    @GenericGenerator(name = "generator", strategy = "guid", parameters = {})
+    @GeneratedValue(generator = "generator")
+    @Column(name = "Id", columnDefinition = "uniqueidentifier")
+//    @Column(name = "Id")
+//    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
     @Column(name = "ten")
     private String ten;
 
-    @Column(name = "ngayTao")
-    private UUID ngayTao;
-
-    @Column(name = "ngaySua")
-    private UUID ngaySua;
-
-    @Column(name = "nguoiTao")
-    private UUID nguoiTao;
-
-    @Column(name = "nguoiSua")
-    private UUID nguoiSua;
 
     @Column(name = "trangThai")
     private Integer trangThai;
 
-    public UUID getId() {
-        return this.id;
-    }
+//    @CreatedBy
+//    @Column(name = "nguoiTao")
+//    private String createdBy;
+//
+//    @CreatedDate
+//    @Column(name = "ngayTao")
+//    private LocalDateTime createdDate;
+//
+//    @LastModifiedBy
+//    @Column(name = "nguoiSua")
+//    private String updatedBy;
+//
+//    @LastModifiedDate
+//    @Column(name = "ngaySua")
+//    private LocalDateTime updatedDate;
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getTen() {
-        return this.ten;
-    }
-
-    public void setTen(String ten) {
-        this.ten = ten;
-    }
-
-    public UUID getNgayTao() {
-        return this.ngayTao;
-    }
-
-    public void setNgayTao(UUID ngayTao) {
-        this.ngayTao = ngayTao;
-    }
-
-    public UUID getNgaySua() {
-        return this.ngaySua;
-    }
-
-    public void setNgaySua(UUID ngaySua) {
-        this.ngaySua = ngaySua;
-    }
-
-    public UUID getNguoiTao() {
-        return this.nguoiTao;
-    }
-
-    public void setNguoiTao(UUID nguoiTao) {
-        this.nguoiTao = nguoiTao;
-    }
-
-    public UUID getNguoiSua() {
-        return this.nguoiSua;
-    }
-
-    public void setNguoiSua(UUID nguoiSua) {
-        this.nguoiSua = nguoiSua;
-    }
-
-    public Integer getTrangThai() {
-        return this.trangThai;
-    }
-
-    public void setTrangThai(Integer trangThai) {
-        this.trangThai = trangThai;
-    }
+    @OneToMany(mappedBy = "vaiTro", fetch = FetchType.LAZY)
+    private List<TaiKhoan> taiKhoans = new ArrayList<>();
 }

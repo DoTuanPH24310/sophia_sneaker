@@ -1,0 +1,324 @@
+<section xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+         layout:decorate="~{/layouts/layout}">
+
+    <div layout:fragment="content" class="col-md-12">
+        <form action="/admin/nhanvien/store" method="post" th:object="${nhanVienRequest}">
+            <div class="row mt-3">
+                <div class="col-2">
+                    <h5 style="font-weight: bold; text-align: center;" class="mt-3">Ảnh đại diện</h5>
+                    <img th:src="@{'/getimage/' + 'thumbnail.png'}" class="rounded-circle mb-3 ml-3" style="width: 160px; height: 150px"
+                         alt="Avatar"/>
+                    <input type="file" id="fileImage" th:field="*{anhDaiDien}" name="fileImage"
+                           accept="image/png,image/jpg" onchange="previewImage(event)"/>
+                </div>
+                <div class="col-1">
+
+                </div>
+                <div class="col-9">
+                    <div class="row mt-3">
+                        <div class="col-6">
+                            <label for="tenNhanVien"><span style="color: #c82333">*</span> Tên</label>
+                            <input id="tenNhanVien" type="text" class="form-control" th:field="*{ten}"
+                                   placeholder="Tên nhân viên">
+                            <span class="text-danger" th:text="${errTen}"></span>
+
+                        </div>
+                        <div class="col-6">
+                            <label for="email"><span style="color: #c82333">*</span> Email</label>
+                            <input id="email" type="text" class="form-control" th:field="*{email}" placeholder="Email">
+                            <span class="text-danger" th:text="${errEmail}"></span>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-6">
+                            <label for="ngaySinh"><span style="color: #c82333">*</span> Ngày sinh nhật</label>
+                            <input id="ngaySinh" type="date" class="form-control" th:field="*{ngaySinh}"
+                                   placeholder="Nhập ngày sinh">
+                            <span class="text-danger" th:text="${errNgaySinh}"></span>
+                        </div>
+                        <div class="col-6">
+
+                            <label><span style="color: #c82333">*</span> Giới tính</label> <br>
+
+                            <div class="form-check form-check-inline">
+                                <label class="radio-inline">
+                                    <input type="radio" th:field="*{gioiTinh}" th:value="1" checked> Nam
+                                </label>
+                            </div>
+
+                            <div class="form-check form-check-inline">
+                                <label class="radio-inline">
+                                    <input type="radio" th:field="*{gioiTinh}" th:value="0"> Nữ
+                                </label>
+                            </div>
+                            <br>
+                            <span class="text-danger" th:text="${errGT}"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-6">
+                            <label for="cccd"><span style="color: #c82333">*</span> CCCD</label>
+                            <input id="cccd" type="text" class="form-control" th:field="*{canCuoc}"
+                                   placeholder="Nhập CCCD">
+                            <span class="text-danger" th:text="${errCCCD}"></span>
+                        </div>
+
+                        <div class="col-6">
+                            <label for="soDienThoai"><span style="color: #c82333">*</span> Số điện thoại</label>
+                            <input id="soDienThoai" type="text" class="form-control" th:field="*{sdt}"
+                                   placeholder="Số điện thoại">
+                            <span class="text-danger" th:text="${errSDT}"></span>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-4">
+                            <label for="province"><span style="color: #c82333">*</span>Tỉnh/Thành phố</label>
+                            <select th:field="*{tinh}" id="province" class="form-control">
+                                <option value="">--Chọn Tỉnh/Thành phố--</option>
+                            </select>
+                            <span class="text-danger" th:text="${errTinh}"></span>
+                        </div>
+                        <div class="col-4">
+                            <label for="district"><span style="color: #c82333">*</span>Quận/Huyện</label>
+                            <select th:field="*{quanHuyen}" id="district" class="form-control">
+                                <option value="">--Chọn Quận/Huyện--</option>
+                            </select>
+                            <span class="text-danger" th:text="${errQuanHuyen}"></span>
+                        </div>
+
+                        <div class="col-4">
+                            <label for="ward"><span style="color: #c82333">*</span>Phường/Xã</label>
+                            <select th:field="*{phuongXa}" id="ward" class="form-control">
+                                <option value="">--Chọn Phường/Xã--</option>
+                            </select>
+                            <span class="text-danger" th:text="${errPhuongXa}"></span>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-6">
+                            <label for="dcCuThe"><span style="color: #c82333">*</span>Số nhà/Ngõ/Đường</label>
+                            <input id="dcCuThe" type="text" th:field="*{diaChiCuThe}" class="form-control" placeholder="Địa chỉ cụ thể">
+                            <span class="text-danger" th:text="${errDCCuThe}"></span>
+                        </div>
+
+                        <div class="col-6">
+                            <label for="trangThai"><span style="color: #c82333">*</span> Trạng thái</label>
+                            <select th:field="*{trangThai}" id="trangThai" class="form-control">
+                                <option value="1">Kích hoạt</option>
+                            </select>
+                            <span class="text-danger" th:text="${errTrangThai}"></span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <button class="btn btn-primary mt-3" style="margin-left: 46%">
+                Thêm mới
+            </button>
+        </form>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+                integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+                crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js"
+                integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ=="
+                crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script>
+            const tinh = [[${session.tinh}]];
+            const quan = [[${session.quan}]];
+            let phuong = [[${session.phuong}]];
+            const host = "https://provinces.open-api.vn/api/";
+            console.log(tinh)
+            if(tinh == "-1"){
+                var renderData = (array, select) => {
+                    let row = ' <option disable value="">--Chọn Tỉnh/Thành phố--</option>';
+                    array.forEach(element => {
+                        row += `<option name="tinh" value="${element.code}">${element.name}</option>`;
+                    });
+                    document.querySelector("#" + select).innerHTML = row;
+                }
+
+                var renderDataDis = (array, select) => {
+                    let row = ' <option disable value="">--Chọn Quận/Huyện--</option>';
+                    array.forEach(element => {
+                        row += `<option name="quan" value="${element.code}">${element.name}</option>`;
+                    });
+                    document.querySelector("#" + select).innerHTML = row;
+                }
+
+                var renderDataWar = (array, select) => {
+                    let row = ' <option disable value="">--Chọn Phường/Xã--</option>';
+                    array.forEach(element => {
+                        row += `<option name="phuong" value="${element.code}">${element.name}</option>`;
+                    });
+                    document.querySelector("#" + select).innerHTML = row;
+                }
+
+                var callAPI = (api) => {
+                    return axios.get(api)
+                        .then((response) => {
+                            renderData(response.data, "province");
+                        });
+                };
+                callAPI('https://provinces.open-api.vn/api/?depth=2');
+
+
+                var callApiDistrict = (api) => {
+                    return axios.get(api)
+                        .then((response) => {
+                            renderDataDis(response.data.districts, "district");
+                        });
+                };
+                var callApiWard = (api) => {
+                    return axios.get(api)
+                        .then((response) => {
+                            renderDataWar(response.data.wards, "ward");
+                        });
+                }
+
+
+                $("#province").change(() => {
+                    callApiDistrict(host + "p/" + $("#province").val() + "?depth=2")
+                        .then(response => {
+                            console.log(response.data); // In ra dữ liệu từ API
+                        })
+                        .catch(error => {
+                            console.error(error);
+                        });
+                    printResult();
+                });
+                $("#district").change(() => {
+                    callApiWard(host + "d/" + $("#district").val() + "?depth=2");
+                    printResult();
+                });
+                $("#ward").change(() => {
+                    printResult();
+                })
+
+                var printResult = () => {
+                    if ($("#district").val() != "" && $("#province").val() != "" &&
+                        $("#ward").val() != "") {
+                        let result = $("#province option:selected").text() +
+                            " | " + $("#district option:selected").text() + " | " +
+                            $("#ward option:selected").text();
+                        $("#result").text(result)
+                    }
+
+                }
+            }else{
+                var renderData = (array, select) => {
+                    let row ;
+                    array.forEach(element => {
+                        if (tinh === element.code) {
+                            renderDataDis(element.districts, "district");
+                            row += `<option selected value="${element.code}">${element.name}</option>`;
+                        } else {
+                            row += `<option value="${element.code}">${element.name}</option>`;
+                        }
+                    });
+                    document.querySelector("#" + select).innerHTML = row;
+                }
+
+                var renderDataDis = (array, select) => {
+                    let row = ' <option disable value="">--Chọn Quận/Huyện--</option>';
+                    array.forEach(element => {
+                        if (quan === element.code) {
+                            renderDataWar(element.wards, "ward");
+                            row += `<option selected value="${element.code}">${element.name}</option>`;
+                        } else {
+                            row += `<option value="${element.code}">${element.name}</option>`;
+                        }
+
+                    });
+
+                    document.querySelector("#" + select).innerHTML = row;
+                }
+
+                var renderDataWar = (array, select) => {
+                    let row = ' <option disable value="">--Chọn Phường/Xã--</option>';
+                    array.forEach(element => {
+                        if (phuong === element.code) {
+                            row += `<option selected value="${element.code}">${element.name}</option>`;
+                            console.log(element);
+                        } else {
+                            row += `<option value="${element.code}">${element.name}</option>`;
+                        }
+
+                    });
+                    document.querySelector("#" + select).innerHTML = row;
+                }
+
+                var callAPI = (api) => {
+                    return axios.get(api)
+                        .then((response) => {
+                            renderData(response.data, "province");
+                        });
+                };
+                callAPI('https://provinces.open-api.vn/api/?depth=3');
+
+
+                var callApiDistrict = (api) => {
+                    return axios.get(api)
+                        .then((response) => {
+                            renderDataDis(response.data.districts, "district");
+                        });
+                };
+                var callApiWard = (api) => {
+                    return axios.get(api)
+                        .then((response) => {
+                            renderDataWar(response.data.wards, "ward");
+                        });
+                }
+
+                $("#province").change(() => {
+                    phuong = 0;
+                    callApiDistrict(host + "p/" + $("#province").val() + "?depth=2")
+                    callApiWard(host + "d/" + $("#district").val() + "?depth=2");
+                    printResult();
+                });
+
+
+                $("#district").change(() => {
+                    callApiWard(host + "d/" + $("#district").val() + "?depth=2");
+                    printResult();
+                });
+                $("#ward").change(() => {
+                    printResult();
+                })
+
+                var printResult = () => {
+                    if ($("#district").val() != "" && $("#province").val() != "" &&
+                        $("#ward").val() != "") {
+                        let result = $("#province option:selected").text() +
+                            " | " + $("#district option:selected").text() + " | " +
+                            $("#ward option:selected").text();
+                        $("#result").text(result)
+                    }
+
+                }
+            }
+
+
+
+            function previewImage(event) {
+                const fileInput = event.target;
+                const file = fileInput.files[0];
+
+                if (file) {
+                    const reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        const imageElement = document.querySelector('img[alt="Avatar"]'); // Chọn thẻ img của bạn
+                        imageElement.src = e.target.result;
+                    };
+
+                    reader.readAsDataURL(file);
+                }
+            }
+        </script>
+    </div>
+</section>
+
+
+

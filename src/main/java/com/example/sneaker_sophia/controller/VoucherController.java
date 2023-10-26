@@ -43,11 +43,11 @@ public class VoucherController {
     public static int checkSession = 0;
 
 
-    @Scheduled(cron = "0 0 0 * * ?")
-    public void test() {
-        List<Voucher> listUpdate = voucherService.findByTrangThaiNotLike(3);
-        voucherService.jobUpdate(listUpdate);
-    }
+//    @Scheduled(cron = "0 0 0 * * ?")
+//    public void test() {
+//        List<Voucher> listUpdate = voucherService.findByTrangThaiNotLike(3);
+//        voucherService.jobUpdate(listUpdate);
+//    }
 
     @GetMapping("/hien-thi")
     public String hienThi(Model model, @RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo, HttpSession session) {
