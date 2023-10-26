@@ -4,6 +4,7 @@ package com.example.sneaker_sophia.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -11,17 +12,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class TaiQuayController {
 
     @GetMapping("/hien-thi")
-    public String index(Model model){
+    public String index(Model model) {
         return "/admin/taiquay/index";
     }
 
 
     @GetMapping("/open-sanpham")
-    public String showModal(Model model){
+    public String showModal(Model model) {
         model.addAttribute("modalSanPham", true);
         return "/admin/taiquay/index";
 
     }
 
+    @RequestMapping("/addHD")
+    public String addHD(
+
+    ) {
+
+        return "redirect:/admin/tai-quay/hien-thi";
+    }
 
 }
