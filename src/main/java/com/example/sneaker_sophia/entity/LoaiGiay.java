@@ -1,16 +1,13 @@
 package com.example.sneaker_sophia.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
-@NoArgsConstructor
-@AllArgsConstructor
+
 @Entity
 @Getter
 @Setter
@@ -41,6 +38,5 @@ public class LoaiGiay {
 
     @Column(name = "trangThai")
     private Integer trangThai;
-
 
 }
