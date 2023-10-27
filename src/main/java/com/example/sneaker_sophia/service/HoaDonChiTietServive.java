@@ -6,6 +6,7 @@ import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service("hoaDonChiTietServive")
 public class HoaDonChiTietServive {
@@ -14,5 +15,9 @@ public class HoaDonChiTietServive {
 
     public List<HoaDonChiTiet> getHDCTByIdHD(String idhd){
         return hoaDonCTRepository.getHDCTByIdHD(idhd);
+    }
+
+    public void deleteByIdCTSP(UUID idhdct){
+        hoaDonCTRepository.deleteByIdCTSP(idhdct);
     }
 }

@@ -14,18 +14,27 @@ public class HoaDonService {
     @Resource(name = "hoaDonRepository")
     HoaDonRepository hoaDonRepository;
 
-    public Integer soHD(){
+    public Integer soHD() {
         return hoaDonRepository.soHD();
     }
 
-    public List<HoaDon> getHoaDonByTrangThai(){
+    public List<HoaDon> getHoaDonByTrangThai() {
         return hoaDonRepository.getHoaDonByTrangThai();
     }
-    public void addHD(){
+
+    public void addHD() {
         HoaDon hoaDon = new HoaDon();
         int soHD = hoaDonRepository.soHD() + 1;
         hoaDon.setMaHoaDOn("HD" + soHD);
         hoaDon.setTrangThai(2);
         hoaDonRepository.save(hoaDon);
+    }
+
+    public HoaDon getHoaDonById(String idhd) {
+        return hoaDonRepository.findById(idhd).orElse(null);
+    }
+
+    public void deleteHD(HoaDon hoaDon) {
+        hoaDonRepository.delete(hoaDon);
     }
 }
