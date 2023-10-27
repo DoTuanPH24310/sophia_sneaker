@@ -5,6 +5,7 @@ import com.example.sneaker_sophia.repository.HoaDonRepository;
 import jakarta.annotation.Resource;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import java.util.List;
 
@@ -22,12 +23,18 @@ public class HoaDonService {
         return hoaDonRepository.getHoaDonByTrangThai();
     }
 
-    public void addHD() {
-        HoaDon hoaDon = new HoaDon();
-        int soHD = hoaDonRepository.soHD() + 1;
-        hoaDon.setMaHoaDOn("HD" + soHD);
-        hoaDon.setTrangThai(2);
-        hoaDonRepository.save(hoaDon);
+    public HoaDon addHD(Model model) {
+        if (hoaDonRepository.countHoaDonByTrangThai() >= 5) {
+            model.addAttribute("errAddHd", "Không thể thêm mới hóa đơn");
+            return null;
+        } else {
+            HoaDon hoaDon = new HoaDon();
+            int soHD = hoaDonRepository.soHD() + 1;
+            hoaDon.setMaHoaDOn("HD" + soHD);
+            hoaDon.setTrangThai(2);
+            return hoaDonRepository.save(hoaDon);
+        }
+
     }
 
     public HoaDon getHoaDonById(String idhd) {

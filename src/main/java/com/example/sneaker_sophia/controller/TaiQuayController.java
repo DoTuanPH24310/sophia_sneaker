@@ -1,11 +1,11 @@
 package com.example.sneaker_sophia.controller;
 
 
+import com.example.sneaker_sophia.entity.ChiTietGiay;
+import com.example.sneaker_sophia.entity.DeGiay;
 import com.example.sneaker_sophia.entity.HoaDon;
 import com.example.sneaker_sophia.entity.HoaDonChiTiet;
-import com.example.sneaker_sophia.service.ChiTietGiayService;
-import com.example.sneaker_sophia.service.HoaDonChiTietServive;
-import com.example.sneaker_sophia.service.HoaDonService;
+import com.example.sneaker_sophia.service.*;
 import com.lowagie.text.*;
 import com.lowagie.text.Font;
 import com.lowagie.text.pdf.*;
@@ -49,6 +49,24 @@ public class TaiQuayController {
     @Autowired
     private ChiTietGiayService chiTietGiayService;
 
+    @Autowired
+    private DeGiayService deGiayService ;
+
+    @Autowired
+    private GiayService giayService;
+
+    @Autowired
+    private HangService hangService;
+
+    @Autowired
+    private KichCoService kichCoService;
+
+    @Autowired
+    private MauSacService mauSacService;
+
+    @Autowired
+    private LoaiGiayService loaiGiayService;
+
 
     @GetMapping("/hien-thi")
     public String index(Model model) {
@@ -56,15 +74,23 @@ public class TaiQuayController {
         List<HoaDon> list = hoaDonService.getHoaDonByTrangThai();
         model.addAttribute("listHDC", list);
         return "/admin/taiquay/index";
-
-
     }
 
 
     @GetMapping("/open-sanpham")
     public String showModal(Model model) {
-        List<HoaDon> list = hoaDonService.getHoaDonByTrangThai();
-        model.addAttribute("listHDC", list);
+        if(tempId.isEmpty()){
+            model.addAttribute("errShowModal", "Phải chọn HĐ trước thằng ngu");
+            return "forward:/admin/tai-quay/hien-thi";
+        }
+        List<ChiTietGiay> listCTG = chiTietGiayService.findAllByTrangThaiEquals(0);
+        model.addAttribute("loaiGiayList", loaiGiayService.findByTrangThaiEquals(0));
+        model.addAttribute("mauSacList", mauSacService.findByTrangThaiEquals(0));
+        model.addAttribute("kichCoList", kichCoService.findByTrangThaiEquals(0));
+        model.addAttribute("giayList", giayService.findAllByTrangThaiEquals(0));
+        model.addAttribute("hangList", hangService.findByTrangThaiEquals(0));
+        model.addAttribute("deList", deGiayService.findByTrangThaiEquals(0));
+        model.addAttribute("listCTG",listCTG);
         model.addAttribute("modalSanPham", true);
         return "forward:/admin/tai-quay/detail/"+tempId;
     }
@@ -72,9 +98,15 @@ public class TaiQuayController {
 
     @RequestMapping("/addHD")
     public String addHD(
+            Model model
     ) {
-        hoaDonService.addHD();
-        return "redirect:/admin/tai-quay/hien-thi";
+        HoaDon hd = hoaDonService.addHD(model);
+        if (hd != null) {
+            tempId = hd.getId();
+            return "forward:/admin/tai-quay/detail/" + tempId;
+        }
+
+        return "forward:/admin/tai-quay/hien-thi";
     }
 
     @GetMapping("/detail/{id}")
@@ -93,6 +125,7 @@ public class TaiQuayController {
         return "/admin/taiquay/index";
     }
 
+
     @GetMapping("deletehd/{id}")
     public String deleteHD(
             @PathVariable("id") String id,
@@ -105,6 +138,7 @@ public class TaiQuayController {
         return "/admin/taiquay/index";
     }
 
+
     @GetMapping("/deletehdct/{idctsp}")
     public String deletehdct(
             @PathVariable("idctsp") UUID idctsp,
@@ -116,6 +150,28 @@ public class TaiQuayController {
         return "/admin/taiquay/index";
     }
 
+
+    @GetMapping("/update-down/{id}")
+    public String updateDownSLHDCT(
+            Model model,
+            @PathVariable("id") UUID idctsp
+    ) {
+        hoaDonChiTietServive.updateDownSLHDCT(idctsp, model);
+        List<HoaDon> list = hoaDonService.getHoaDonByTrangThai();
+        model.addAttribute("listHDC", list);
+        return "forward:/admin/tai-quay/detail/" + tempId;
+    }
+
+    @GetMapping("/update-up/{id}")
+    public String updateUpSLHDCT(
+            Model model,
+            @PathVariable("id") UUID idctsp
+    ) {
+        hoaDonChiTietServive.updateUpSLHDCT(idctsp, model);
+        List<HoaDon> list = hoaDonService.getHoaDonByTrangThai();
+        model.addAttribute("listHDC", list);
+        return "forward:/admin/tai-quay/detail/" + tempId;
+    }
 
 // =================================================================
 //@GetMapping("/pdf")

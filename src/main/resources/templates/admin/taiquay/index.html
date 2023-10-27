@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layouts/layout}" layout:fragment="content">
+      layout:decorate="~{/layouts/layout}" layout:fragment="content" th:lang="vi">
 
 <head>
     <meta charset="UTF-8">
@@ -40,9 +40,8 @@
         .table-wrapper-scroll-y {
             display: block;
         }
-        td {
-            width: 100px; /* Thay đổi giá trị 100px thành giá trị bạn muốn */
-        }    </style>
+
+         </style>
 
 
 </head>
@@ -116,6 +115,10 @@
                 <a href="/admin/tai-quay/open-sanpham" class="btn btn-primary  float-right mx-2">
                     Thêm sản phẩm
                 </a>
+                <span th:text="${errupdateDownSLHDCT}"></span>
+                <span th:text="${errupdateUpSLHDCT}"></span>
+                <span th:text="${errAddHd}"></span>
+                <span th:text="${errShowModal}"></span>
             </div>
 
         </div>
@@ -144,14 +147,14 @@
 
                                 <span class="input-group-btn" >
 
-                                                   <a th:href="@{|/admin/tai-quay/update-down/{id}(id=${hdct.idHoaDonCT.chiTietGiay.id}|}"
+                                                   <a th:href="@{/admin/tai-quay/update-down/{id}(id=${hdct.idHoaDonCT.chiTietGiay.id})}"
                                                       class="" style="width: 10px"> <span class="fa fa-minus"></span></a>
                                 </span>
-<!--                                <input style="width: 40px" type="text"-->
-<!--                                       th:value="${hdct.soLuong}" th:name="soLuong"/>-->
-                                <span th:text="${hdct.soLuong}" style="margin-left: 10px; margin-right: 10px"></span>
-                                <span class="input-group-btn">
-                                                            <a th:href="@{|/admin/tai-quay/update-up/{id}(id=${hdct.idHoaDonCT.chiTietGiay.id}|}"
+                            <!--                                <input style="width: 40px" type="text"-->
+                            <!--                                       th:value="${hdct.soLuong}" th:name="soLuong"/>-->
+                            <span th:text="${hdct.soLuong}" style="margin-left: 10px; margin-right: 10px"></span>
+                            <span class="input-group-btn">
+                                                            <a th:href="@{/admin/tai-quay/update-up/{id}(id=${hdct.idHoaDonCT.chiTietGiay.id})}"
                                                                class=""  style="width: 10px; text-align: center"><span class="fa fa-plus"></span></a>
                                 </span>
 
@@ -345,7 +348,8 @@
                             <div class="col-3">
                                 <label>Hãng:&nbsp;&nbsp;</label>
                                 <select style="border-radius: 7px; min-width:120px; min-height: 30px;">
-                                    <option value="">Tất cả</option>
+                                    <option style="text-align: center" value="">---Tất cả---</option>
+                                    <option  style="text-align: center" th:each="x : ${hangList}" th:value="${x.ma}" th:text="${x.ten}"></option>
                                 </select>
                             </div>
 
@@ -353,7 +357,8 @@
 
                                 <label>Giày: &nbsp;&nbsp;</label>
                                 <select style="border-radius: 7px; min-width: 120px; min-height: 30px;">
-                                    <option value="">Tất cả</option>
+                                    <option  style="text-align: center" value="">---Tất cả---</option>
+                                    <option  style="text-align: center" th:each="x : ${giayList}" th:value="${x.ma}" th:text="${x.ten}"></option>
                                 </select>
                             </div>
 
@@ -361,7 +366,8 @@
 
                                 <label>Loại đế: &nbsp;&nbsp;</label>
                                 <select style="border-radius: 7px; min-width: 120px; min-height: 30px;">
-                                    <option value="">Tất cả</option>
+                                    <option  style="text-align: center" value="">---Tất cả---</option>
+                                    <option  style="text-align: center" th:each="x : ${deList}" th:value="${x.ma}" th:text="${x.ten}"></option>
                                 </select>
                             </div>
 
@@ -369,50 +375,64 @@
 
                                 <label>Loại giày: &nbsp;&nbsp;</label>
                                 <select style="border-radius: 7px; min-width: 120px; min-height: 30px;">
-                                    <option value="">Tất cả</option>
+                                    <option  style="text-align: center" value="">---Tất cả---</option>
+                                    <option  style="text-align: center" th:each="x : ${giayList}" th:value="${x.ma}" th:text="${x.ten}"></option>
                                 </select>
                             </div>
 
 
                         </div>
 
-                        <div class="row mb-3 mt-4 justify-content-center">
+                        <div class="row mb-5 mt-4  justify-content-center">
                             <div class="col-4">
                                 <label>Size:&nbsp;&nbsp;</label>
                                 <select style="border-radius: 7px; min-width:140px; min-height: 30px;">
-                                    <option value="">Tất cả</option>
+                                    <option  style="text-align: center" value="">---Tất cả---</option>
+                                    <option  style="text-align: center" th:each="x : ${kichCoList}" th:value="${x.ma}" th:text="${x.ten}"></option>
                                 </select>
                             </div>
 
                             <div class="col-4">
                                 <label>Màu:&nbsp;&nbsp;</label>
                                 <select style="border-radius: 7px; min-width:140px; min-height: 30px;">
-                                    <option value="">Tất cả</option>
+                                    <option  style="text-align: center" value="">---Tất cả---</option>
+                                    <option  style="text-align: center" th:each="x : ${mauSacList}" th:value="${x.ma}" th:text="${x.ten}"></option>
                                 </select>
                             </div>
                         </div>
 
 
-                        <div class="row mt-2">
-                            <div class="table table-wrapper-scroll-y my-custom-scrollbar">
-
-                                <table id="table" class="table  table-borderless  formTable">
+                        <div class="row mt-4">
+                            <div  class="table table-wrapper-scroll-y my-custom-scrollbar">
+                                <table  id="table" class="table table-borderless">
                                     <thead>
                                     <tr class="bg-light">
-                                        <th>Ảnh</th>
-                                        <th>Mã</th>
+                                        <th width="15%">Ảnh</th>
+                                        <th width="10%">Mã</th>
 <!--                                        Cộng chuỗi tên + size + màu sắc-->
-                                        <th>Tên giày</th>
-                                        <th>Loại đế</th>
-                                        <th>Hãng</th>
-                                        <th>Loại giày</th>
-                                        <th>Số lượng</th>
-                                        <th>Giá</th>
-                                        <th>Trạng thái</th>
-                                        <th>Actions</th>
+                                        <th width="20%">Tên giày</th>
+                                        <th width="10%">Loại đế</th>
+                                        <th width="10%">Hãng</th>
+                                        <th width="10%">Loại giày</th>
+                                        <th width="10%">Số lượng</th>
+                                        <th width="20%">Giá(VNĐ)</th>
+                                        <th width="10%">Actions</th>
                                     </tr>
                                     </thead>
                                     <tbody>
+                                    <tr th:each="x : ${listCTG}">
+                                        <td></td>
+                                        <td th:text="${x.ma}"></td>
+                                        <td th:text="${x.giay.ten} +' [' +${x.mauSac.ten} +' ,'+${x.kichCo.ten}+' ]'"></td>
+                                        <td th:text="${x.deGiay.ten}"></td>
+                                        <td th:text="${x.hang.ten}"></td>
+                                        <td th:text="${x.loaiGiay.ten}"></td>
+                                        <td th:text="${x.soLuong}"></td>
+                                        <td  th:text="${#numbers.formatCurrency(x.gia)}"></td>
+                                        <td>
+                                            <button class="btn btn-warning">Thêm</button>
+                                        </td>
+                                    </tr>
 
 
                                     </tbody>

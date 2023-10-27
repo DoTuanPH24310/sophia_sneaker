@@ -18,11 +18,16 @@ public class HangService {
     public List<Hang> getAll() {
         return hangRepository.findAll();
     }
+
     public Hang getOne(UUID uuid) {
         return hangRepository.findById(uuid).get();
     }
 
-    public Hang findByTen(String ten){
+    public Hang findByTen(String ten) {
         return hangRepository.findHangByTen(ten);
+    }
+
+    public List<Hang> findByTrangThaiEquals(Integer trangThai) {
+        return hangRepository.findByTrangThaiEquals(trangThai);
     }
 }

@@ -1,7 +1,5 @@
 package com.example.sneaker_sophia.service;
 
-import com.example.sneaker_sophia.entity.DeGiay;
-import com.example.sneaker_sophia.entity.Hang;
 import com.example.sneaker_sophia.entity.KichCo;
 import com.example.sneaker_sophia.repository.KichCoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,14 +12,20 @@ import java.util.UUID;
 public class KichCoService {
     @Autowired
     KichCoRepository kichCoRepository;
+
     public List<KichCo> getAll() {
         return kichCoRepository.findAll();
     }
+
     public KichCo getOne(UUID uuid) {
         return kichCoRepository.findById(uuid).get();
     }
 
-    public KichCo findByTen(String ten){
+    public KichCo findByTen(String ten) {
         return kichCoRepository.findKichCoByTen(ten);
+    }
+
+    public List<KichCo> findByTrangThaiEquals(Integer trangThai) {
+        return kichCoRepository.findByTrangThaiEquals(trangThai);
     }
 }

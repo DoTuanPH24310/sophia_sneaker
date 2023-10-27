@@ -25,4 +25,9 @@ public class MauSacService {
     public MauSac findByTen(String ten){
         return mauSacRepository.findMauSacByTen(ten);
     }
+
+    public List<MauSac> findByTrangThaiEquals(Integer trangThai){
+        return mauSacRepository.findByTrangThaiEquals(trangThai);
+    }
+
 }

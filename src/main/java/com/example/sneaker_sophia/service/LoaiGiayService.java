@@ -1,7 +1,5 @@
 package com.example.sneaker_sophia.service;
 
-import com.example.sneaker_sophia.entity.DeGiay;
-import com.example.sneaker_sophia.entity.KichCo;
 import com.example.sneaker_sophia.entity.LoaiGiay;
 import com.example.sneaker_sophia.repository.LoaiGiayRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +17,15 @@ public class LoaiGiayService {
         return loaiGiayRepository.findAll();
     }
 
+    public List<LoaiGiay> findByTrangThaiEquals(Integer tt) {
+        return loaiGiayRepository.findByTrangThaiEquals(tt);
+    }
+
     public LoaiGiay getOne(UUID uuid) {
         return loaiGiayRepository.findById(uuid).get();
     }
 
-    public LoaiGiay findByTen(String ten){
+    public LoaiGiay findByTen(String ten) {
         return loaiGiayRepository.findLoaiGiayByTen(ten);
     }
 }
