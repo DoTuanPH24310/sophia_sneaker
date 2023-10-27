@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class websiteshopController {
     @GetMapping("/sophia-store/home")
     public String home(){
-        return "website/index-2";
+        return "website/index-3";
     }
 }
