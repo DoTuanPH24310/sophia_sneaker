@@ -6,9 +6,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("sophia-store")
-public class websiteshopController {
-    @GetMapping("/home")
+public class ProductWebController {
+
+    @GetMapping("/product")
     public String home(){
-        return "website/index-2";
+        return "website/product-details-default";
     }
 }
