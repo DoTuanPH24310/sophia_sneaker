@@ -3,6 +3,7 @@ package com.example.sneaker_sophia.controller;
 
 import com.example.sneaker_sophia.entity.HoaDon;
 import com.example.sneaker_sophia.entity.HoaDonChiTiet;
+import com.example.sneaker_sophia.service.ChiTietGiayService;
 import com.example.sneaker_sophia.service.HoaDonChiTietServive;
 import com.example.sneaker_sophia.service.HoaDonService;
 import com.lowagie.text.*;
@@ -11,10 +12,12 @@ import com.lowagie.text.pdf.*;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,9 +31,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+
 @Controller
 @RequestMapping("/admin/tai-quay")
 public class TaiQuayController {
+    public static String tempId = "";
     // trạnh thái = 2 (chờ)tai-quay
     @Resource(name = "hoaDonService")
     HoaDonService hoaDonService;
@@ -38,19 +43,30 @@ public class TaiQuayController {
     @Resource(name = "hoaDonChiTietServive")
     HoaDonChiTietServive hoaDonChiTietServive;
 
+    @Autowired
+    private HttpSession session;
+
+    @Autowired
+    private ChiTietGiayService chiTietGiayService;
+
+
     @GetMapping("/hien-thi")
     public String index(Model model) {
+        tempId = "";
         List<HoaDon> list = hoaDonService.getHoaDonByTrangThai();
         model.addAttribute("listHDC", list);
         return "/admin/taiquay/index";
+
+
     }
 
 
     @GetMapping("/open-sanpham")
     public String showModal(Model model) {
+        List<HoaDon> list = hoaDonService.getHoaDonByTrangThai();
+        model.addAttribute("listHDC", list);
         model.addAttribute("modalSanPham", true);
-        return "/admin/taiquay/index";
-
+        return "forward:/admin/tai-quay/detail/"+tempId;
     }
 
 
@@ -66,6 +82,9 @@ public class TaiQuayController {
             @PathVariable("id") String id,
             Model model
     ) {
+        tempId = id;
+        session.setAttribute("idHoaDon", id);
+        System.out.println(session.getAttribute("mySessionAttribute"));
         List<HoaDon> list = hoaDonService.getHoaDonByTrangThai();
         model.addAttribute("listHDC", list);
         model.addAttribute("maHD", id);
@@ -91,11 +110,13 @@ public class TaiQuayController {
             @PathVariable("idctsp") UUID idctsp,
             Model model
     ) {
-        hoaDonChiTietServive.deleteByIdCTSP(idctsp);
+        hoaDonChiTietServive.deleteHDCT(idctsp);
         List<HoaDon> list = hoaDonService.getHoaDonByTrangThai();
         model.addAttribute("listHDC", list);
         return "/admin/taiquay/index";
     }
+
+
 // =================================================================
 //@GetMapping("/pdf")
 //public void pdf(HttpServletResponse response) throws IOException {

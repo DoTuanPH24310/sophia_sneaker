@@ -42,8 +42,7 @@
         }
         td {
             width: 100px; /* Thay đổi giá trị 100px thành giá trị bạn muốn */
-        }
-    </style>
+        }    </style>
 
 
 </head>
@@ -323,7 +322,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Chi tiết giày</h5>
-                        <a type="button" th:href="@{/admin/tai-quay/hien-thi}">
+                        <a type="button" th:href="@{/admin/tai-quay/detail/{idHoaDon}(idHoaDon=${session.get('idHoaDon')})}">
                             <span aria-hidden="true">&times;</span>
                         </a>
                     </div>
@@ -400,14 +399,17 @@
                                 <table id="table" class="table  table-borderless  formTable">
                                     <thead>
                                     <tr class="bg-light">
-                                        <th scope="col" width="10%">Mã</th>
-                                        <th scope="col" width="15%">Tên</th>
-                                        <th scope="col" width="10%">Giá trị</th>
-                                        <th scope="col" width="12%">Ngày bắt đầu</th>
-                                        <th scope="col" width="12%">Ngày kết thúc</th>
-                                        <th scope="col" width="12%">Ngày cập nhật</th>
-                                        <th scope="col" width="20%">Trạng thái</th>
-                                        <th scope="col" width="20%">Thao tác</th>
+                                        <th>Ảnh</th>
+                                        <th>Mã</th>
+<!--                                        Cộng chuỗi tên + size + màu sắc-->
+                                        <th>Tên giày</th>
+                                        <th>Loại đế</th>
+                                        <th>Hãng</th>
+                                        <th>Loại giày</th>
+                                        <th>Số lượng</th>
+                                        <th>Giá</th>
+                                        <th>Trạng thái</th>
+                                        <th>Actions</th>
                                     </tr>
                                     </thead>
                                     <tbody>

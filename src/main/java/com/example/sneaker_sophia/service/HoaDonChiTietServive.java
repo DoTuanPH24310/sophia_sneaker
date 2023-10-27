@@ -17,7 +17,9 @@ public class HoaDonChiTietServive {
         return hoaDonCTRepository.getHDCTByIdHD(idhd);
     }
 
-    public void deleteByIdCTSP(UUID idhdct){
-        hoaDonCTRepository.deleteByIdCTSP(idhdct);
+    public void deleteHDCT(UUID idhdct){
+        HoaDonChiTiet hdct =  hoaDonCTRepository.getHDCTByIdCTSP(idhdct);
+        hoaDonCTRepository.delete(hdct);
     }
+
 }

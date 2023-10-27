@@ -14,6 +14,6 @@ public interface HoaDonCTRepository extends JpaRepository<HoaDonChiTiet, Object>
     @Query(value = "select * from HoaDonChiTiet where IdHoaDon = ?1", nativeQuery = true)
     List<HoaDonChiTiet> getHDCTByIdHD(String idhd);
 
-    @Query(value = "delete from HoaDonChiTiet where IdChiTietGiay = ?1", nativeQuery = true)
-    HoaDonChiTiet deleteByIdCTSP(UUID idctsp);
+    @Query(value = "select hdct from HoaDonChiTiet hdct where hdct.idHoaDonCT.chiTietGiay.id = ?1")
+    HoaDonChiTiet getHDCTByIdCTSP(UUID idctsp);
 }
