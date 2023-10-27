@@ -21,7 +21,7 @@ public interface TaiKhoanRepository extends JpaRepository<TaiKhoan, String> {
 
 //
     @Query(value = "select tk from TaiKhoan tk " +
-            "join VaiTro vt on tk.vaiTro.id = vt.id " +
+            "join VaiTro vt on tk.idVaiTro.id = vt.id " +
             "where vt.ten = 'Nhân Viên' " +
             "and (:trangThai = -1 and (:search is null or tk.ten like %:search% or tk.sdt like %:search% )) " +
             "or (:trangThai is null and (:search is null or tk.ten like %:search% or tk.sdt like %:search% )) " +

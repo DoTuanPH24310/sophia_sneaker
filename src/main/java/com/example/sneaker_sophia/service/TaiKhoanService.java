@@ -81,7 +81,7 @@ public class TaiKhoanService {
             taiKhoan.setSdt(nhanVienRequest.getSdt());
             taiKhoan.setTrangThai(nhanVienRequest.getTrangThai());
             taiKhoan.setAnhDaiDien(nhanVienRequest.getAnhDaiDien());
-            taiKhoan.setVaiTro(VaiTro.builder().id(nhanVienRequest.getIdVaiTro()).build());
+            taiKhoan.setIdVaiTro(VaiTro.builder().id(nhanVienRequest.getIdVaiTro()).build());
 
             diaChi.setDiaChiCuThe(nhanVienRequest.getDiaChiCuThe());
             diaChi.setTinh(nhanVienRequest.getTinh());
