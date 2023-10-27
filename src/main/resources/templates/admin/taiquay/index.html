@@ -430,7 +430,12 @@
                                         <td th:text="${x.soLuong}"></td>
                                         <td  th:text="${#numbers.formatCurrency(x.gia)}"></td>
                                         <td>
-                                            <button class="btn btn-warning">Thêm</button>
+
+                                            <a class="btn btn-warning" style="text-decoration: none"
+                                               th:href="@{/admin/tai-quay/addhdct/{id}(id=${x.id})}"
+                                               title="Thêm sản phẩm" th:text="Thêm">
+
+                                            </a>
                                         </td>
                                     </tr>
 
