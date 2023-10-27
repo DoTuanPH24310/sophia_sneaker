@@ -92,7 +92,6 @@ public class TaiQuayController {
         model.addAttribute("deList", deGiayService.findByTrangThaiEquals(0));
         model.addAttribute("listCTG",listCTG);
         model.addAttribute("modalSanPham", true);
-        model.addAttribute("modalSoLuong", true);
         return "forward:/admin/tai-quay/detail/"+tempId;
     }
 
