@@ -55,6 +55,6 @@ public class VaiTro {
 //    @Column(name = "ngaySua")
 //    private LocalDateTime updatedDate;
 
-    @OneToMany(mappedBy = "vaiTro", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "idVaiTro", fetch = FetchType.LAZY)
     private List<TaiKhoan> taiKhoans = new ArrayList<>();
 }

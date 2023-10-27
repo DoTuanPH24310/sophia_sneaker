@@ -2,9 +2,7 @@ package com.example.sneaker_sophia.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -56,6 +54,5 @@ public class Voucher {
 
     @Column(name = "trangThai")
     private Integer trangThai;
-
 
 }

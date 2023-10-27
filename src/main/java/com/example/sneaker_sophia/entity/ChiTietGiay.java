@@ -58,7 +58,9 @@ public class ChiTietGiay {
     @Column(name = "trangThai")
     private Integer trangThai;
 
+
     @OneToMany(mappedBy = "chiTietGiay")
     private List<Anh> anhs;
+
 }
 

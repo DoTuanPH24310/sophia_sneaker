@@ -1,39 +1,35 @@
 package com.example.sneaker_sophia.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
-import java.util.UUID;
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "TaiKhoan_Voucher")
 public class TaiKhoanVoucher {
     @Id
     @Column(name = "IdVoucher")
-    private UUID idVoucher;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String idVoucher;
 
     @Id
     @Column(name = "IdTaiKhoan")
-    private UUID idTaiKhoan;
+    private String idTaiKhoan;
 
     @Column(name = "trangThai")
     private Integer trangThai;
 
-    public UUID getIdVoucher() {
+    public String getIdVoucher() {
         return this.idVoucher;
     }
 
-    public void setIdVoucher(UUID idVoucher) {
+    public void setIdVoucher(String idVoucher) {
         this.idVoucher = idVoucher;
     }
 
-    public UUID getIdTaiKhoan() {
+    public String getIdTaiKhoan() {
         return this.idTaiKhoan;
     }
 
-    public void setIdTaiKhoan(UUID idTaiKhoan) {
+    public void setIdTaiKhoan(String idTaiKhoan) {
         this.idTaiKhoan = idTaiKhoan;
     }
 

@@ -1,19 +1,23 @@
 package com.example.sneaker_sophia.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
+import org.springframework.stereotype.Component;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.time.LocalDate;
 import java.util.UUID;
-@NoArgsConstructor
-@AllArgsConstructor
+
 @Entity
+@Table(name = "MauSac")
 @Getter
 @Setter
-@Table(name = "MauSac")
+@AllArgsConstructor
+@NoArgsConstructor
+@Component
+@Builder
 public class MauSac {
     @Id
     @Column(name = "Id")
@@ -40,7 +44,4 @@ public class MauSac {
 
     @Column(name = "trangThai")
     private Integer trangThai;
-
-
-
 }

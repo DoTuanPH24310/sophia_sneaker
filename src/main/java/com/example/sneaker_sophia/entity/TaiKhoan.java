@@ -9,6 +9,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,6 +24,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Component
 public class TaiKhoan {
     @Id
     @GenericGenerator(name = "generator", strategy = "guid", parameters = {})
@@ -34,7 +36,7 @@ public class TaiKhoan {
 
     @JoinColumn(name = "IdVaiTro")
     @ManyToOne(fetch = FetchType.EAGER)
-    private VaiTro vaiTro;
+    private VaiTro idVaiTro;
 
     @Column(name = "taiKhoan")
     private String taiKhoan;
@@ -95,6 +97,6 @@ public class TaiKhoan {
         this.setSdt(nhanVienRequest.getSdt());
         this.setTrangThai(nhanVienRequest.getTrangThai());
         this.setAnhDaiDien(nhanVienRequest.getAnhDaiDien());
-        this.setVaiTro(VaiTro.builder().id(nhanVienRequest.getIdVaiTro()).build());
+        this.setIdVaiTro(VaiTro.builder().id(nhanVienRequest.getIdVaiTro()).build());
     }
 }

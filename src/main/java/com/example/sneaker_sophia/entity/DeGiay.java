@@ -1,6 +1,9 @@
 package com.example.sneaker_sophia.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
+import org.springframework.stereotype.Component;
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,12 +12,15 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
-@NoArgsConstructor
-@AllArgsConstructor
+
 @Entity
+@Table(name = "DeGiay")
 @Getter
 @Setter
-@Table(name = "DeGiay")
+@AllArgsConstructor
+@NoArgsConstructor
+@Component
+@Builder
 public class DeGiay {
     @Id
     @Column(name = "Id")
@@ -44,5 +50,4 @@ public class DeGiay {
 
     @OneToMany(mappedBy = "deGiay")
     private List<ChiTietGiay> chiTietGiayList;
-
 }
