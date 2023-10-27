@@ -13,10 +13,10 @@
             background-color: #EAEAEA;
         }
 
-        .modal-backdrop.fade.show {
-            opacity: 0.8;
-            pointer-events: none;
-        }
+        /*.modal-backdrop.fade.show {*/
+        /*    opacity: 0.;*/
+        /*  */
+        /*}*/
 
 
         .page-link {
@@ -430,12 +430,14 @@
                                         <td th:text="${x.soLuong}"></td>
                                         <td  th:text="${#numbers.formatCurrency(x.gia)}"></td>
                                         <td>
-
+<!--Đay nữa ok chưa-->
                                             <a class="btn btn-warning" style="text-decoration: none"
-                                               th:href="@{/admin/tai-quay/addhdct/{id}(id=${x.id})}"
+                                               th:href="/admin/tai-quay/open-soluong"
                                                title="Thêm sản phẩm" th:text="Thêm">
 
                                             </a>
+
+
                                         </td>
                                     </tr>
 
@@ -454,6 +456,38 @@
                 </div>
             </div>
 
+        </div>
+
+
+<!--        Modal chọn số lượng-->
+        <div th:if="${modalSoLuong}" class="modal fade" id="modalSoLuong" tabindex="-1" data-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Số lượng tồn: </h5>
+                        <a type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </a>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-4"></div>
+                                <div class="col-4 d-flex justify-content-center ">
+                                    <input type="number" min="1" value="1" class="form-control text-center">
+                                </div>
+                                <div class="col-4"></div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary">Close</button>
+                        <button type="button" class="btn btn-primary">Xác nhận</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
 
