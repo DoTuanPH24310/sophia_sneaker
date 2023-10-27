@@ -13,7 +13,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("sophia-store")
-public class websiteshopController {
+public class WebsiteshopController {
     @Autowired
     ChiTietGiayService chiTietGiayService;
     @GetMapping("/home")
