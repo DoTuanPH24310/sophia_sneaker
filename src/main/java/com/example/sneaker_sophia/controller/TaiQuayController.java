@@ -1,6 +1,7 @@
 package com.example.sneaker_sophia.controller;
 
 
+import com.example.sneaker_sophia.dto.IdHoaDonCT;
 import com.example.sneaker_sophia.entity.ChiTietGiay;
 import com.example.sneaker_sophia.entity.DeGiay;
 import com.example.sneaker_sophia.entity.HoaDon;
@@ -20,10 +21,7 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.awt.*;
 import java.io.IOException;
@@ -35,7 +33,8 @@ import java.util.UUID;
 @Controller
 @RequestMapping("/admin/tai-quay")
 public class TaiQuayController {
-    public static String tempId = "";
+    public static String tempIdHD = "";
+    public static UUID tempIdCTSP;
     // trạnh thái = 2 (chờ)tai-quay
     @Resource(name = "hoaDonService")
     HoaDonService hoaDonService;
@@ -50,7 +49,7 @@ public class TaiQuayController {
     private ChiTietGiayService chiTietGiayService;
 
     @Autowired
-    private DeGiayService deGiayService ;
+    private DeGiayService deGiayService;
 
     @Autowired
     private GiayService giayService;
@@ -70,7 +69,7 @@ public class TaiQuayController {
 
     @GetMapping("/hien-thi")
     public String index(Model model) {
-        tempId = "";
+        tempIdHD = "";
         List<HoaDon> list = hoaDonService.getHoaDonByTrangThai();
         model.addAttribute("listHDC", list);
         return "/admin/taiquay/index";
@@ -79,30 +78,72 @@ public class TaiQuayController {
 
     @GetMapping("/open-sanpham")
     public String showModal(Model model) {
-        if(tempId.isEmpty()){
+        if (tempIdHD.isEmpty()) {
             model.addAttribute("errShowModal", "Phải chọn HĐ trước thằng ngu");
             return "forward:/admin/tai-quay/hien-thi";
         }
-        List<ChiTietGiay> listCTG = chiTietGiayService.findAllByTrangThaiEquals(0);
-        model.addAttribute("loaiGiayList", loaiGiayService.findByTrangThaiEquals(0));
-        model.addAttribute("mauSacList", mauSacService.findByTrangThaiEquals(0));
-        model.addAttribute("kichCoList", kichCoService.findByTrangThaiEquals(0));
-        model.addAttribute("giayList", giayService.findAllByTrangThaiEquals(0));
-        model.addAttribute("hangList", hangService.findByTrangThaiEquals(0));
-        model.addAttribute("deList", deGiayService.findByTrangThaiEquals(0));
-        model.addAttribute("listCTG",listCTG);
+//        List<ChiTietGiay> listCTG = chiTietGiayService.findAllByTrangThaiEquals(0);
+//        model.addAttribute("loaiGiayList", loaiGiayService.findByTrangThaiEquals(0));
+//        model.addAttribute("mauSacList", mauSacService.findByTrangThaiEquals(0));
+//        model.addAttribute("kichCoList", kichCoService.findByTrangThaiEquals(0));
+//        model.addAttribute("giayList", giayService.findAllByTrangThaiEquals(0));
+//        model.addAttribute("hangList", hangService.findByTrangThaiEquals(0));
+//        model.addAttribute("deList", deGiayService.findByTrangThaiEquals(0));
+//        model.addAttribute("listCTG", listCTG);
         model.addAttribute("modalSanPham", true);
-        return "forward:/admin/tai-quay/detail/"+tempId;
+        return "forward:/admin/tai-quay/detail/" + tempIdHD;
     }
 
-//    Bạt ở đây nha thằng ngiu
-    @GetMapping("/open-soluong")
-    public String showSoLuong(Model model) {
+    //    Bạt ở đây nha thằng ngiu
+    @GetMapping("/open-soluong/{id}")
+    public String showSoLuong(
+            Model model,
+            @PathVariable("id") UUID idctsp
+
+    ) {
+        tempIdCTSP = idctsp;
+        ChiTietGiay chiTietGiay = chiTietGiayService.getChiTietGiayByIdctg(idctsp);
+        model.addAttribute("soLuongTon", chiTietGiay.getSoLuong());
         model.addAttribute("modalSanPham", true);
         model.addAttribute("modalSoLuong", true);
         return "forward:/admin/tai-quay/open-sanpham";
     }
 
+    //28-10
+    @GetMapping("addhdct")
+    public String addhdct(
+            @RequestParam("soLuong") Integer soLuong,
+            Model model
+    ) {
+        HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
+        HoaDonChiTiet hoaDonChiTietOld = hoaDonChiTietServive.getHDCTByIdCTSP(tempIdCTSP, tempIdHD);
+        ChiTietGiay chiTietGiay = chiTietGiayService.getChiTietGiayByIdctg(tempIdCTSP);
+        if (hoaDonChiTietOld == null &&  soLuong > chiTietGiay.getSoLuong()) {
+            model.addAttribute("errSLT", "Không đủ số lượng tồn");
+            return "forward:/admin/tai-quay/open-soluong/" + tempIdCTSP;
+        }
+        if (hoaDonChiTietOld != null && hoaDonChiTietOld.getSoLuong() + soLuong > chiTietGiay.getSoLuong() + hoaDonChiTietOld.getSoLuong()) {
+            model.addAttribute("errSLT", "Không đủ số lượng tồn");
+            return "forward:/admin/tai-quay/open-soluong/" + tempIdCTSP;
+
+        }
+        if (hoaDonChiTietServive.getHDCTByIdCTSP(chiTietGiay.getId(), tempIdHD) != null) {
+            hoaDonChiTiet.setSoLuong(hoaDonChiTietOld.getSoLuong() + soLuong);
+        } else {
+            hoaDonChiTiet.setSoLuong(soLuong);
+        }
+        IdHoaDonCT idHoaDonCT = new IdHoaDonCT();
+        idHoaDonCT.setHoaDon(hoaDonService.getHoaDonById(tempIdHD));
+        idHoaDonCT.setChiTietGiay(chiTietGiay);
+
+        hoaDonChiTiet.setTrangThai(1);
+        hoaDonChiTiet.setDonGia(chiTietGiay.getGia());
+        hoaDonChiTiet.setIdHoaDonCT(idHoaDonCT);
+        chiTietGiay.setSoLuong(chiTietGiay.getSoLuong() - soLuong);
+        chiTietGiayService.save(chiTietGiay);
+        hoaDonChiTietServive.addhdct(hoaDonChiTiet);
+        return "forward:/admin/tai-quay/detail/" + tempIdHD;
+    }
 
     @RequestMapping("/addHD")
     public String addHD(
@@ -110,8 +151,8 @@ public class TaiQuayController {
     ) {
         HoaDon hd = hoaDonService.addHD(model);
         if (hd != null) {
-            tempId = hd.getId();
-            return "forward:/admin/tai-quay/detail/" + tempId;
+            tempIdHD = hd.getId();
+            return "forward:/admin/tai-quay/detail/" + tempIdHD;
         }
 
         return "forward:/admin/tai-quay/hien-thi";
@@ -122,7 +163,7 @@ public class TaiQuayController {
             @PathVariable("id") String id,
             Model model
     ) {
-        tempId = id;
+        tempIdHD = id;
         session.setAttribute("idHoaDon", id);
         System.out.println(session.getAttribute("mySessionAttribute"));
         List<HoaDon> list = hoaDonService.getHoaDonByTrangThai();
@@ -140,6 +181,11 @@ public class TaiQuayController {
             Model model
     ) {
         HoaDon hoaDon = hoaDonService.getHoaDonById(id);
+        if (hoaDon.getListHoaDonChiTiet().size() > 1){
+            tempIdHD = id;
+            model.addAttribute("errHD", "Hóa đơn vẫn còn sản phẩm");
+            return "forward:/admin/tai-quay/detail/" + tempIdHD;
+        }
         hoaDonService.deleteHD(hoaDon);
         List<HoaDon> list = hoaDonService.getHoaDonByTrangThai();
         model.addAttribute("listHDC", list);
@@ -152,10 +198,10 @@ public class TaiQuayController {
             @PathVariable("idctsp") UUID idctsp,
             Model model
     ) {
-        hoaDonChiTietServive.deleteHDCT(idctsp);
+        hoaDonChiTietServive.deleteHDCT(idctsp, tempIdHD);
         List<HoaDon> list = hoaDonService.getHoaDonByTrangThai();
         model.addAttribute("listHDC", list);
-        return "/admin/taiquay/index";
+        return "forward:/admin/tai-quay/detail/" + tempIdHD;
     }
 
 
@@ -164,10 +210,10 @@ public class TaiQuayController {
             Model model,
             @PathVariable("id") UUID idctsp
     ) {
-        hoaDonChiTietServive.updateDownSLHDCT(idctsp, model);
+        hoaDonChiTietServive.updateDownSLHDCT(idctsp, tempIdHD, model);
         List<HoaDon> list = hoaDonService.getHoaDonByTrangThai();
         model.addAttribute("listHDC", list);
-        return "forward:/admin/tai-quay/detail/" + tempId;
+        return "forward:/admin/tai-quay/detail/" + tempIdHD;
     }
 
     @GetMapping("/update-up/{id}")
@@ -175,10 +221,10 @@ public class TaiQuayController {
             Model model,
             @PathVariable("id") UUID idctsp
     ) {
-        hoaDonChiTietServive.updateUpSLHDCT(idctsp, model);
+        hoaDonChiTietServive.updateUpSLHDCT(idctsp, tempIdHD, model);
         List<HoaDon> list = hoaDonService.getHoaDonByTrangThai();
         model.addAttribute("listHDC", list);
-        return "forward:/admin/tai-quay/detail/" + tempId;
+        return "forward:/admin/tai-quay/detail/" + tempIdHD;
     }
 
 // =================================================================

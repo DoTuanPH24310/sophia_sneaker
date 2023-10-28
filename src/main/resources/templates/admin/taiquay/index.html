@@ -33,14 +33,16 @@
 
         .my-custom-scrollbar {
             position: relative;
-            height: 600px;
+            height: 400px;
             overflow: auto;
         }
 
         .table-wrapper-scroll-y {
             display: block;
         }
-
+        h5.modal-title p {
+            display: inline; /* hoặc display: inline-block; */
+        }
          </style>
 
 
@@ -112,13 +114,15 @@
                     QR code sản phẩm
                 </a>
 
-                <a href="/admin/tai-quay/open-sanpham" class="btn btn-primary  float-right mx-2">
+                <a th:href="@{/admin/tai-quay/open-sanpham}"  onclick="getAllList();" class="btn btn-primary  float-right mx-2" data-toggle="modal"
+                   data-target="#modalChiTietGiay">
                     Thêm sản phẩm
                 </a>
                 <span th:text="${errupdateDownSLHDCT}"></span>
                 <span th:text="${errupdateUpSLHDCT}"></span>
                 <span th:text="${errAddHd}"></span>
                 <span th:text="${errShowModal}"></span>
+                <span th:text="${errHD}"></span>
             </div>
 
         </div>
@@ -319,149 +323,129 @@
 
         <!--    modal thêm sản phẩm-->
         <!-- Modal -->
-        <div th:if="${modalSanPham}" class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
-             style="display: block;" data-keyboard="false" data-backdrop="static">
-            <div class="modal-dialog" style="max-width: 1100px;">
+        <div class="modal" id="modalChiTietGiay" tabindex="-1" data-backdrop="static" role="dialog"
+             aria-labelledby="modalALabel" aria-hidden="true">
+            <div class="modal-dialog" id="contentToBeBlurred" style="max-width: 1100px;" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Chi tiết giày</h5>
-                        <a type="button" th:href="@{/admin/tai-quay/detail/{idHoaDon}(idHoaDon=${session.get('idHoaDon')})}">
+                        <h5 class="modal-title" id="modalALabel">Chi tiết giày</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
-                        </a>
+                        </button>
                     </div>
                     <div class="modal-body">
-
-                        <div class="row mb-5 mx-5 mt-3">
-
-                            <div class="col-8 mx-4">
-                                <input type="text" class="form-control" placeholder="Tìm sản phẩm">
-                            </div>
-
-                            <div class="col-3">
-                                <button type="submit" class="btn btn-primary ">Tìm kiếm</button>
-                                <button type="submit" class="btn btn-danger">Làm mới</button>
-                            </div>
-                        </div>
+                        <div class="container">
 
 
-                        <div class="row">
-                            <div class="col-3">
-                                <label>Hãng:&nbsp;&nbsp;</label>
-                                <select style="border-radius: 7px; min-width:120px; min-height: 30px;">
-                                    <option style="text-align: center" value="">---Tất cả---</option>
-                                    <option  style="text-align: center" th:each="x : ${hangList}" th:value="${x.ma}" th:text="${x.ten}"></option>
-                                </select>
-                            </div>
 
-                            <div class="col-3">
+                            <div class="row mb-5 mx-5 mt-3">
 
-                                <label>Giày: &nbsp;&nbsp;</label>
-                                <select style="border-radius: 7px; min-width: 120px; min-height: 30px;">
-                                    <option  style="text-align: center" value="">---Tất cả---</option>
-                                    <option  style="text-align: center" th:each="x : ${giayList}" th:value="${x.ma}" th:text="${x.ten}"></option>
-                                </select>
-                            </div>
+                                <div class="col-8 mx-4">
+                                    <input type="text" class="form-control" id="textSearch"
+                                           placeholder="Nhập mã hoặc tên sản phẩm....">
+                                </div>
 
-                            <div class="col-3">
-
-                                <label>Loại đế: &nbsp;&nbsp;</label>
-                                <select style="border-radius: 7px; min-width: 120px; min-height: 30px;">
-                                    <option  style="text-align: center" value="">---Tất cả---</option>
-                                    <option  style="text-align: center" th:each="x : ${deList}" th:value="${x.ma}" th:text="${x.ten}"></option>
-                                </select>
-                            </div>
-
-                            <div class="col-3">
-
-                                <label>Loại giày: &nbsp;&nbsp;</label>
-                                <select style="border-radius: 7px; min-width: 120px; min-height: 30px;">
-                                    <option  style="text-align: center" value="">---Tất cả---</option>
-                                    <option  style="text-align: center" th:each="x : ${giayList}" th:value="${x.ma}" th:text="${x.ten}"></option>
-                                </select>
+                                <div class="col-3">
+                                    <button type="submit" class="btn btn-primary" onclick="test();">Tìm kiếm</button>
+                                    <button class="btn btn-danger" onclick="getAllList();">Làm mới</button>
+                                </div>
                             </div>
 
 
-                        </div>
+                            <div class="row">
+                                <div class="col-3">
+                                    <label>Hãng:&nbsp;&nbsp;</label>
+                                    <select onchange="test();"
+                                            style="border-radius: 7px; min-width:120px; min-height: 30px;" id="cbbHang">
 
-                        <div class="row mb-5 mt-4  justify-content-center">
-                            <div class="col-4">
-                                <label>Size:&nbsp;&nbsp;</label>
-                                <select style="border-radius: 7px; min-width:140px; min-height: 30px;">
-                                    <option  style="text-align: center" value="">---Tất cả---</option>
-                                    <option  style="text-align: center" th:each="x : ${kichCoList}" th:value="${x.ma}" th:text="${x.ten}"></option>
-                                </select>
+                                    </select>
+                                </div>
+
+                                <div class="col-3">
+
+                                    <label>Giày: &nbsp;&nbsp;</label>
+                                    <select onchange="test();"
+                                            style="border-radius: 7px; min-width: 120px; min-height: 30px;" id="cbbGiay">
+
+                                    </select>
+                                </div>
+
+                                <div class="col-3">
+
+                                    <label>Loại đế: &nbsp;&nbsp;</label>
+                                    <select onchange="test();"
+                                            style="border-radius: 7px; min-width: 120px; min-height: 30px;" id="cbbDe">
+
+                                    </select>
+                                </div>
+
+                                <div class="col-3">
+
+                                    <label>Loại giày: &nbsp;&nbsp;</label>
+                                    <select onchange="test();"
+                                            style="border-radius: 7px; min-width: 120px; min-height: 30px;" id="cbbLoaiGiay">
+
+                                    </select>
+                                </div>
                             </div>
 
-                            <div class="col-4">
-                                <label>Màu:&nbsp;&nbsp;</label>
-                                <select style="border-radius: 7px; min-width:140px; min-height: 30px;">
-                                    <option  style="text-align: center" value="">---Tất cả---</option>
-                                    <option  style="text-align: center" th:each="x : ${mauSacList}" th:value="${x.ma}" th:text="${x.ten}"></option>
-                                </select>
-                            </div>
-                        </div>
+                            <div class="row mb-5 mt-4  justify-content-center">
+                                <div class="col-4">
+                                    <label>Size:&nbsp;&nbsp;</label>
+                                    <select onchange="test();"
+                                            style="border-radius: 7px; min-width:140px; min-height: 30px;" id="cbbSize">
+                                    </select>
+                                </div>
 
+                                <div class="col-4">
+                                    <label>Màu:&nbsp;&nbsp;</label>
+                                    <select onchange="test();"
+                                            style="border-radius: 7px; min-width:140px; min-height: 30px;" id="cbbMau">
 
-                        <div class="row mt-4">
-                            <div  class="table table-wrapper-scroll-y my-custom-scrollbar">
-                                <table  id="table" class="table table-borderless">
-                                    <thead>
-                                    <tr class="bg-light">
-                                        <th width="15%">Ảnh</th>
-                                        <th width="10%">Mã</th>
-<!--                                        Cộng chuỗi tên + size + màu sắc-->
-                                        <th width="20%">Tên giày</th>
-                                        <th width="10%">Loại đế</th>
-                                        <th width="10%">Hãng</th>
-                                        <th width="10%">Loại giày</th>
-                                        <th width="10%">Số lượng</th>
-                                        <th width="20%">Giá(VNĐ)</th>
-                                        <th width="10%">Actions</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr th:each="x : ${listCTG}">
-                                        <td></td>
-                                        <td th:text="${x.ma}"></td>
-                                        <td th:text="${x.giay.ten} +' [' +${x.mauSac.ten} +' ,'+${x.kichCo.ten}+' ]'"></td>
-                                        <td th:text="${x.deGiay.ten}"></td>
-                                        <td th:text="${x.hang.ten}"></td>
-                                        <td th:text="${x.loaiGiay.ten}"></td>
-                                        <td th:text="${x.soLuong}"></td>
-                                        <td  th:text="${#numbers.formatCurrency(x.gia)}"></td>
-                                        <td>
-<!--Đay nữa ok chưa-->
-                                            <a class="btn btn-warning" style="text-decoration: none"
-                                               th:href="/admin/tai-quay/open-soluong"
-                                               title="Thêm sản phẩm" th:text="Thêm">
-
-                                            </a>
-
-
-                                        </td>
-                                    </tr>
-
-
-                                    </tbody>
-
-                                </table>
+                                    </select>
+                                </div>
                             </div>
 
-                        </div>
-                        <div class="modal-footer">
+                            <!--  Phần table-->
+                            <div class="row mt-4">
+                                <div class="table table-wrapper-scroll-y my-custom-scrollbar">
+                                    <table id="tableModal" class="table table-borderless">
+                                        <thead>
+                                        <tr class="bg-light">
+                                            <th width="15%">Ảnh</th>
+                                            <th width="10%">Mã</th>
+                                            <th width="20%">Tên giày</th>
+                                            <th width="10%">Loại đế</th>
+                                            <th width="10%">Hãng</th>
+                                            <th width="10%">Loại giày</th>
+                                            <th width="10%">Số lượng</th>
+                                            <th width="20%">Giá(VNĐ)</th>
+                                            <th width="10%">Actions</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="sinhvien">
+
+                                        </tbody>
+
+                                    </table>
+                                    <h2 class="text-center mt-4" id="err"></h2>
+                                </div>
+                            </div>
+
 
 
                         </div>
                     </div>
                 </div>
             </div>
-
-        </div>
+        </div>>
 
 
 <!--        Modal chọn số lượng-->
-        <div th:if="${modalSoLuong}" class="modal fade" id="modalSoLuong" tabindex="-1" data-backdrop="static" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+
+        <div class="modal fade" id="modalSoLuong" tabindex="-1" data-backdrop="static" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" style="max-width: 500px;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Số lượng tồn: </h5>
@@ -471,12 +455,29 @@
                     </div>
                     <div class="modal-body">
                         <div class="container">
+
                             <div class="row">
-                                <div class="col-4"></div>
+                                <div class="col-4">
+
+                                </div>
                                 <div class="col-4 d-flex justify-content-center ">
-                                    <input type="number" min="1" value="1" class="form-control text-center">
+
                                 </div>
                                 <div class="col-4"></div>
+
+
+                            </div>
+                            <div class="row">
+                                <div class="col-1"> </div>
+
+                                <div class="-col-5 d-flex justify-content-center ">
+                                    <input class="form-control text-center" type="text" id="inputMaCTG" readonly>
+
+                                </div>
+                                <div class="col-5 d-flex justify-content-center ">
+                                    <input type="number" min="1" value="1" class="form-control text-center">
+                                </div>
+                                <div class="col-1"></div>
 
 
                             </div>
@@ -489,6 +490,8 @@
                 </div>
             </div>
         </div>
+
+
 
 
         <!--    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>-->
@@ -508,9 +511,176 @@
             customSwitches.addEventListener("change", loadding);
             window.addEventListener("load", loadding);
 
+            // load modal
+
+            var buttons = null;
+            const tableBody = document.getElementById("sinhvien");
+            const table = document.getElementById("tableModal");
+            var maCTG = '';
+            var selectHang = document.getElementById('cbbHang');
+            var selectGiay = document.getElementById('cbbGiay');
+            var selectDe = document.getElementById('cbbDe');
+            var selectLoaiGiay = document.getElementById('cbbLoaiGiay');
+            var selectSize = document.getElementById('cbbSize');
+            var selectMauSac = document.getElementById('cbbMau');
+            // Fill and click CTG
+            function getAllList() {
+                $.ajax({
+                    type: "get",
+                    url: "http://localhost:9090/api/chi-tiet-giay/allCTG",
+                    success: function (data) {
+                        document.getElementById('err').innerHTML = "";
+                        document.getElementById('textSearch').value = "";
+                        loadAll(data);
+                        buttons = document.querySelectorAll("#sinhvien  button");
+                        loadAllSelect();
+                        addEventButton();
+
+                    }
+                })
+            }
+
+            function loadAll(data) {
+                tableBody.innerHTML = '';
+                for (let index = 0; index < data.length; index++) {
+                    insertTr(data[index]);
+                }
+            }
+
+            function insertTr(x) {
+                var btn = '<button class="btn btn-primary" data-toggle="modal" data-target="#modalSoLuong">Thêm</button>';
+                const row = tableBody.insertRow();
+                const anh = row.insertCell().innerHTML = '';
+                const ma = row.insertCell().innerHTML = x.ma;
+                const tenGiay = row.insertCell().innerHTML = x.giay.ten;
+                const loaiDe = row.insertCell().innerHTML = x.deGiay.ten;
+                const hang = row.insertCell().innerHTML = x.hang.ten;
+                const loaiGiay = row.insertCell().innerHTML = x.loaiGiay.ten;
+                const soLuong = row.insertCell().innerHTML = x.soLuong;
+                const gia = row.insertCell().innerHTML = x.gia;
+                const button = row.insertCell().innerHTML = btn;
+            }
+            // Thêm sự kiện click cho mỗi button
+
+            function addEventButton() {
+                for (let index = 0; index < buttons.length; index++) {
+                    buttons[index].addEventListener("click", function () {
+                        var row = index+1;
+                        maCTG = table.rows[row].cells[1].textContent;
+                        document.getElementById("inputMaCTG").value = maCTG;
+                    });
+                }
+            }
+
+
+            function loadAllSelect() {
+                $.ajax({
+                    type: "Get",
+                    url: "http://localhost:9090/api/chi-tiet-giay/hang",
+                    success: function (data) {
+                        findAll(data, selectHang);
+                    }
+
+                })
+
+                $.ajax({
+                    type: "Get",
+                    url: "http://localhost:9090/api/chi-tiet-giay/giay",
+                    success: function (data) {
+                        findAll(data, selectGiay);
+                    }
+
+                })
+
+                $.ajax({
+                    type: "Get",
+                    url: "http://localhost:9090/api/chi-tiet-giay/de",
+                    success: function (data) {
+                        findAll(data, selectDe);
+                    }
+
+                })
+
+                $.ajax({
+                    type: "Get",
+                    url: "http://localhost:9090/api/chi-tiet-giay/loaiGiay",
+                    success: function (data) {
+                        findAll(data, selectLoaiGiay);
+                    }
+
+                })
+
+                $.ajax({
+                    type: "Get",
+                    url: "http://localhost:9090/api/chi-tiet-giay/size",
+                    success: function (data) {
+                        findAll(data, selectSize);
+                    }
+
+                })
+
+                $.ajax({
+                    type: "Get",
+                    url: "http://localhost:9090/api/chi-tiet-giay/mau",
+                    success: function (data) {
+                        findAll(data, selectMauSac);
+                    }
+
+                })
+            }
+
+            function findAll(data, select) {
+                select.innerHTML = '';
+                var row = document.createElement('option');
+                row.text = '---Tất cả---';
+                row.value = null;
+                row.style.textAlign = 'center';
+                select.add(row);
+                for (let index = 0; index < data.length; index++) {
+                    insertCbb(data[index], select);
+                }
+            }
+
+            // Fill Hang
+            function insertCbb(x, select) {
+                var row = document.createElement('option');
+                row.text = x.ten;
+                row.value = x.id;
+                row.style.textAlign = 'center';
+                select.add(row);
+            }
+
+            function test() {
+                var params = {
+                    idGiay: selectGiay.value,
+                    idHang: selectHang.value,
+                    idDe: selectDe.value,
+                    idLoaigiay: selectLoaiGiay.value,
+                    idSize: selectSize.value,
+                    idMau: selectMauSac.value,
+                    textSearch: document.getElementById('textSearch').value
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost:9090/api/chi-tiet-giay/multipleFind",
+                    data: JSON.stringify(params),
+                    contentType: 'application/json',
+                    success: function (data) {
+                        if (data.length == 0) {
+                            document.getElementById('err').innerHTML = "Không có dữ liệu phù hợp";
+                            loadAll(data);
+                        }
+                        else {
+                            document.getElementById('err').innerHTML = "";
+                            loadAll(data);
+                        }
+                    }
+                })
+            }
 
         </script>
     </div>
+</div>
 </body>
 
 

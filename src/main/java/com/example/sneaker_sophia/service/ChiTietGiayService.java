@@ -1,5 +1,6 @@
 package com.example.sneaker_sophia.service;
 
+import com.example.sneaker_sophia.dto.DTO_API_CTG;
 import com.example.sneaker_sophia.entity.*;
 import com.example.sneaker_sophia.repository.ChiTietGiayRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -143,5 +144,23 @@ public class ChiTietGiayService {
         sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
         Pageable pageable = PageRequest.of(pageNum - 1, PRODUCT_DETAIL_PER_PAGE, sort);
         return chiTietGiayRepository.findChiTietGiayByMultipleParams(giay,deGiay,hang,loaiGiay,mauSac,kichCo,giaMin,giaMax,pageable);
+    }
+
+    //28-10 hoanghh
+    public List<ChiTietGiay> findChiTietGiayByMultipleParamsAPI(DTO_API_CTG ctg){
+        System.out.println(ctg.getIdLoaigiay() +"test2");
+        UUID idGiay = !ctg.getIdGiay().equals("null")? UUID.fromString(ctg.getIdGiay()):null;
+        UUID idDeGiay = !ctg.getIdDe().equals("null")? UUID.fromString(ctg.getIdDe()):null;
+        UUID idHang = !ctg.getIdHang().equals("null")? UUID.fromString(ctg.getIdHang()):null;
+        UUID idLoaiGiay = !ctg.getIdLoaigiay().equals("null")? UUID.fromString(ctg.getIdLoaigiay()):null;
+        UUID idMau = !ctg.getIdMau().equals("null")? UUID.fromString(ctg.getIdMau()):null;
+        UUID idSize = !ctg.getIdSize().equals("null")? UUID.fromString(ctg.getIdSize()):null;
+        String textSearch =  ctg.getTextSearch() ==null||ctg.getTextSearch().trim().length() == 0 ? null : "%"+ctg.getTextSearch()+"%";
+        return chiTietGiayRepository.findChiTietGiayByMultipleParamsAPI(idGiay,idDeGiay,idHang,idLoaiGiay,idMau,idSize,textSearch);
+    }
+
+    // 28-10 cuongdv
+    public ChiTietGiay getChiTietGiayByIdctg(UUID idct){
+        return chiTietGiayRepository.findById(idct).orElse(null);
     }
 }

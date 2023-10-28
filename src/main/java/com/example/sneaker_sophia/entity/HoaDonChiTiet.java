@@ -28,6 +28,9 @@ public class HoaDonChiTiet {
     @Column(name = "soLuong")
     private Integer soLuong;
 
+    @Column(name = "donGia")
+    private Double donGia;
+
     @CreatedBy
     @Column(name = "nguoiTao")
     private String createdBy;

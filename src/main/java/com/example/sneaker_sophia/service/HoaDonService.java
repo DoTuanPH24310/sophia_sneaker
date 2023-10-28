@@ -44,4 +44,9 @@ public class HoaDonService {
     public void deleteHD(HoaDon hoaDon) {
         hoaDonRepository.delete(hoaDon);
     }
+
+    //28-10
+    public HoaDon findHDById(String idhd) {
+        return hoaDonRepository.findById(idhd).orElse(null);
+    }
 }

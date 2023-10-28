@@ -1,5 +1,6 @@
 package com.example.sneaker_sophia.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.stereotype.Component;
@@ -47,6 +48,7 @@ public class KichCo {
     @Column(name = "trangThai")
     private Integer trangThai;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "")
     private List<ChiTietGiay> listCTG = new ArrayList<>();
 
