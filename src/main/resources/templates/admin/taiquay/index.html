@@ -166,18 +166,24 @@
                             </a>
                         </td>
                     </tr>
-                    <tr th:if="${#lists.size(listhdct) > 0}">
-                        <td colspan="5" ><h5>Tổng tiền: </h5></td>
-                        <td > <h5 th:text="${#numbers.formatCurrency(tongTienHD)}"></h5></td>
-                    </tr>
-
-
+<!--                    <tr th:if="${#lists.size(listhdct) > 0}">-->
+<!--                        <td colspan="5" ><h5>Tổng tiền: </h5></td>-->
+<!--                        <td > <h5 th:text="${#numbers.formatCurrency(tongTienHD)}"></h5></td>-->
+<!--                    </tr>-->
                     </tbody>
-
                 </table>
+
             </div>
         </div>
+        <div class="row mb-3" th:if="${#lists.size(listhdct) > 0}">
+            <div class="col-9">
+                <h5 style="float: right" >Tổng tiền: </h5>
+            </div>
 
+            <div class="col-3">
+                <h5 style="float: left; color: red" th:text="${#numbers.formatCurrency(tongTienHD)}"></h5>
+            </div>
+        </div>
         <!-- Tài khoản khách hàng -->
         <div class="row mb-3">
             <div class="col-3">
@@ -187,7 +193,7 @@
             <div class="col-5"></div>
 
             <div class="col-4 ">
-                <a class="btn btn-primary float-right">
+                <a class="btn btn-primary float-right" th:href="@{/admin/tai-quay/chonTK}" >
                     <i style="font-size: 18px" class="fab fa-plus"></i> Chọn tài khoản
                 </a>
             </div>

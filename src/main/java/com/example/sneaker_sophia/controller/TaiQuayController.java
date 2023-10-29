@@ -235,6 +235,8 @@ public class TaiQuayController {
         return "forward:/admin/tai-quay/detail/" + tempIdHD;
     }
 
+
+
 // =================================================================
 //@GetMapping("/pdf")
 //public void pdf(HttpServletResponse response) throws IOException {

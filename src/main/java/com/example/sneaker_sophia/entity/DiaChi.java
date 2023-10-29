@@ -1,5 +1,6 @@
 package com.example.sneaker_sophia.entity;
 
+import com.example.sneaker_sophia.request.NhanVienRequest;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -69,4 +70,14 @@ public class DiaChi {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "IdTaiKhoan")
     private TaiKhoan taiKhoan;
+
+    public DiaChi(NhanVienRequest nhanVienRequest) {
+        this.setDiaChiCuThe(nhanVienRequest.getDiaChiCuThe());
+        this.setTinh(nhanVienRequest.getTinh());
+        this.setQuanHuyen(nhanVienRequest.getQuanHuyen());
+        this.setPhuongXa(nhanVienRequest.getPhuongXa());
+        this.setTaiKhoan(TaiKhoan.builder().id(nhanVienRequest.getIdTaiKhoan()).build());
+        this.setDiaChiMacDinh(1);
+        this.setTrangThai(1);
+    }
 }

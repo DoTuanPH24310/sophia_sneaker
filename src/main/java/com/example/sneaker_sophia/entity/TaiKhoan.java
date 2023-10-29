@@ -1,6 +1,7 @@
 package com.example.sneaker_sophia.entity;
 
 
+import com.example.sneaker_sophia.request.NhanVienRequest;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Table;
@@ -88,19 +89,19 @@ public class TaiKhoan {
     @Column(name = "ngaySua")
     private LocalDateTime updatedDate;
 
-//    @OneToMany(mappedBy = "taiKhoan", fetch = FetchType.LAZY)
-//    private List<DiaChi> diaChiList = new ArrayList<>();
-//
-//
-//    public TaiKhoan(NhanVienRequest nhanVienRequest) {
-//        this.setTen(nhanVienRequest.getTen());
-//        this.setEmail(nhanVienRequest.getEmail());
-//        this.setNgaySinh(nhanVienRequest.getNgaySinh());
-//        this.setGioiTinh(nhanVienRequest.getGioiTinh());
-//        this.setCanCuoc(nhanVienRequest.getCanCuoc());
-//        this.setSdt(nhanVienRequest.getSdt());
-//        this.setTrangThai(nhanVienRequest.getTrangThai());
-//        this.setAnhDaiDien(nhanVienRequest.getAnhDaiDien());
-//        this.setVaiTro(VaiTro.builder().id(nhanVienRequest.getIdVaiTro()).build());
-//    }
+    @OneToMany(mappedBy = "taiKhoan", fetch = FetchType.LAZY)
+    private List<DiaChi> diaChiList = new ArrayList<>();
+
+
+    public TaiKhoan(NhanVienRequest nhanVienRequest) {
+        this.setTen(nhanVienRequest.getTen());
+        this.setEmail(nhanVienRequest.getEmail());
+        this.setNgaySinh(nhanVienRequest.getNgaySinh());
+        this.setGioiTinh(nhanVienRequest.getGioiTinh());
+        this.setCanCuoc(nhanVienRequest.getCanCuoc());
+        this.setSdt(nhanVienRequest.getSdt());
+        this.setTrangThai(nhanVienRequest.getTrangThai());
+        this.setAnhDaiDien(nhanVienRequest.getAnhDaiDien());
+        this.setVaiTro(VaiTro.builder().id(nhanVienRequest.getIdVaiTro()).build());
+    }
 }
