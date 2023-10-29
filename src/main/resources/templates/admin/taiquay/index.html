@@ -465,7 +465,7 @@
                                 <input name="maCTG" class="form-control text-center" type="text" id="inputMaCTG" readonly>
                             </div>
                             <div class="col-5 d-flex justify-content-center">
-                                <input type="number" name="soLuong" min="1" value="1" class="form-control text-center">
+                                <input type="number" name="soLuong" min="1" value="1" class="form-control  text-center" id="inputSoLuong">
                             </div>
                             <div class="col-1"></div>
                         </div>
@@ -548,9 +548,7 @@
             const gia = row.insertCell().innerHTML = x.gia;
             const button = row.insertCell().innerHTML = btn;
         }
-
         // Thêm sự kiện click cho mỗi button
-
         function addEventButton() {
             for (let index = 0; index < buttons.length; index++) {
                 buttons[index].addEventListener("click", function () {
@@ -560,6 +558,7 @@
                     modalContent.style.opacity = '0.6';
                     maCTG = table.rows[row].cells[1].textContent;
                     document.getElementById("inputMaCTG").value = maCTG;
+                    document.getElementById("inputSoLuong").value = 1;
                 });
             }
         }
