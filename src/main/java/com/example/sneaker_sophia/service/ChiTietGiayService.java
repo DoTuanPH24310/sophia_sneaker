@@ -167,4 +167,9 @@ public class ChiTietGiayService {
     public UUID getIdCTGByMa(String maCTG){
         return chiTietGiayRepository.getIdCTGByMa(maCTG);
     }
+
+//    29/10 hoangnh
+    public Integer findSoLuongTon(String ma){
+        return chiTietGiayRepository.findSoLuongTon(ma);
+    }
 }

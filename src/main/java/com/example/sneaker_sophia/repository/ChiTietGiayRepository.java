@@ -93,4 +93,8 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
     // 29/10 cuongdv
     @Query(value = "select Id from ChiTietGiay where ma = ?1", nativeQuery = true)
     UUID getIdCTGByMa(String maCTG);
+
+
+    @Query(value = "select soLuong from ChiTietGiay where ma =?1", nativeQuery = true)
+    Integer findSoLuongTon(String ma);
 }

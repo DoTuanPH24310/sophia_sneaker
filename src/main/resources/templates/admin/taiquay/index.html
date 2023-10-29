@@ -166,10 +166,6 @@
                             </a>
                         </td>
                     </tr>
-<!--                    <tr th:if="${#lists.size(listhdct) > 0}">-->
-<!--                        <td colspan="5" ><h5>Tổng tiền: </h5></td>-->
-<!--                        <td > <h5 th:text="${#numbers.formatCurrency(tongTienHD)}"></h5></td>-->
-<!--                    </tr>-->
                     </tbody>
                 </table>
 
@@ -458,7 +454,7 @@
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Số lượng tồn: </h5>
+                    <h5 class="modal-title" id="soLuongTon" ></h5>
                     <a type="button" onclick="resetModal();" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </a>
@@ -471,7 +467,7 @@
                                 <input name="maCTG" class="form-control text-center" type="text" id="inputMaCTG" readonly>
                             </div>
                             <div class="col-5 d-flex justify-content-center">
-                                <input type="number" name="soLuong" min="1" value="1" class="form-control text-center">
+                                <input type="number" name="soLuong" min="1" value="1" class="form-control  text-center" id="inputSoLuong">
                             </div>
                             <div class="col-1"></div>
                         </div>
@@ -554,18 +550,23 @@
             const gia = row.insertCell().innerHTML = x.gia;
             const button = row.insertCell().innerHTML = btn;
         }
-
         // Thêm sự kiện click cho mỗi button
-
         function addEventButton() {
             for (let index = 0; index < buttons.length; index++) {
                 buttons[index].addEventListener("click", function () {
                     var row = index + 1;
-
                     // Điều chỉnh độ mờ của modalContent bằng thuộc tính CSS
                     modalContent.style.opacity = '0.6';
                     maCTG = table.rows[row].cells[1].textContent;
                     document.getElementById("inputMaCTG").value = maCTG;
+                    document.getElementById("inputSoLuong").value = 1;
+                    $.ajax({
+                        type: "POST",
+                        url: "http://localhost:9090/api/chi-tiet-giay/soLuongTon?value=" + maCTG,
+                        success: function (data) {
+                            document.getElementById('soLuongTon').innerHTML= 'Số lượng tồn: '+data;
+                        }
+                    })
                 });
             }
         }
