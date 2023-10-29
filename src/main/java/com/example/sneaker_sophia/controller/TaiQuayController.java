@@ -80,10 +80,10 @@ public class TaiQuayController {
 
     @GetMapping("/open-sanpham")
     public String showModal(Model model) {
-        if (tempIdHD.isEmpty()) {
-            model.addAttribute("errShowModal", "Phải chọn HĐ trước thằng ngu");
-            return "forward:/admin/tai-quay/hien-thi";
-        }
+//        if (tempIdHD.isEmpty()) {
+//            model.addAttribute("errShowModal", "Phải chọn HĐ trước thằng ngu");
+//            return "forward:/admin/tai-quay/hien-thi";
+//        }
 //        List<ChiTietGiay> listCTG = chiTietGiayService.findAllByTrangThaiEquals(0);
 //        model.addAttribute("loaiGiayList", loaiGiayService.findByTrangThaiEquals(0));
 //        model.addAttribute("mauSacList", mauSacService.findByTrangThaiEquals(0));
@@ -116,18 +116,20 @@ public class TaiQuayController {
     @GetMapping("addhdct")
     public String addhdct(
             @RequestParam("soLuong") Integer soLuong,
+            @RequestParam("maCTG") String maCTG,
             Model model
     ) {
         HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
-        HoaDonChiTiet hoaDonChiTietOld = hoaDonChiTietServive.getHDCTByIdCTSP(tempIdCTSP, tempIdHD);
-        ChiTietGiay chiTietGiay = chiTietGiayService.getChiTietGiayByIdctg(tempIdCTSP);
+        UUID idCTG = chiTietGiayService.getIdCTGByMa(maCTG);
+        HoaDonChiTiet hoaDonChiTietOld = hoaDonChiTietServive.getHDCTByIdCTSP(idCTG, tempIdHD);
+        ChiTietGiay chiTietGiay = chiTietGiayService.getChiTietGiayByIdctg(idCTG);
         if (hoaDonChiTietOld == null &&  soLuong > chiTietGiay.getSoLuong()) {
             model.addAttribute("errSLT", "Không đủ số lượng tồn");
-            return "forward:/admin/tai-quay/open-soluong/" + tempIdCTSP;
+            return "forward:/admin/tai-quay/open-soluong/" + idCTG;
         }
         if (hoaDonChiTietOld != null && hoaDonChiTietOld.getSoLuong() + soLuong > chiTietGiay.getSoLuong() + hoaDonChiTietOld.getSoLuong()) {
             model.addAttribute("errSLT", "Không đủ số lượng tồn");
-            return "forward:/admin/tai-quay/open-soluong/" + tempIdCTSP;
+            return "forward:/admin/tai-quay/open-soluong/" + idCTG;
 
         }
         if (hoaDonChiTietServive.getHDCTByIdCTSP(chiTietGiay.getId(), tempIdHD) != null) {

@@ -163,4 +163,8 @@ public class ChiTietGiayService {
     public ChiTietGiay getChiTietGiayByIdctg(UUID idct){
         return chiTietGiayRepository.findById(idct).orElse(null);
     }
+    // 29-10 cuongdv
+    public UUID getIdCTGByMa(String maCTG){
+        return chiTietGiayRepository.getIdCTGByMa(maCTG);
+    }
 }

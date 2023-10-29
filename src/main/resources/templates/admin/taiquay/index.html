@@ -37,8 +37,8 @@
 
 <div layout:fragment="content" class="container" style="background-color: white;">
     <!--        <form action="/admin/tai-quay/addHD" method="post">-->
-    <div class="row float-right">
-        <a th:href="@{/admin/tai-quay/addHD}" class="btn btn-primary mt-2 me-2">Tạo hóa đơn</a>
+    <div class="row float-right mr-1">
+        <a th:href="@{/admin/tai-quay/addHD}" class="btn btn-primary mt-2 ">Tạo hóa đơn</a>
     </div>
     <!--        </form>-->
 
@@ -111,6 +111,7 @@
                 <span th:text="${errAddHd}"></span>
                 <span th:text="${errShowModal}"></span>
                 <span th:text="${errHD}"></span>
+                <span th:text="${errSLT}"></span>
             </div>
 
         </div>
@@ -134,7 +135,7 @@
                     <tbody>
 
                     <tr style="line-height: 25px" th:each="hdct : ${listhdct}">
-                        <td th:text="${hdct.idHoaDonCT.chiTietGiay.giay.ma}"></td>
+                        <td th:text="${hdct.idHoaDonCT.chiTietGiay.ma}"></td>
                         <td th:text="${hdct.idHoaDonCT.chiTietGiay.giay.ten}"></td>
                         <td>
 
@@ -447,7 +448,9 @@
     <div class="modal fade" id="modalSoLuong" tabindex="-1" data-backdrop="static"
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" style="max-width: 500px;">
+            <form action="/admin/tai-quay/addhdct" method="get">
             <div class="modal-content">
+
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Số lượng tồn: </h5>
                     <a type="button" onclick="resetModal();" class="close" data-dismiss="modal" aria-label="Close">
@@ -456,26 +459,24 @@
                 </div>
                 <div class="modal-body">
                     <div class="container">
-
-
                         <div class="row">
                             <div class="col-1"></div>
-
                             <div class="col-5 d-flex justify-content-center">
-                                <input class="form-control text-center" type="text" id="inputMaCTG" readonly>
+                                <input name="maCTG" class="form-control text-center" type="text" id="inputMaCTG" readonly>
                             </div>
                             <div class="col-5 d-flex justify-content-center">
-                                <input type="number" min="1" value="1" class="form-control text-center">
+                                <input type="number" name="soLuong" min="1" value="1" class="form-control text-center">
                             </div>
                             <div class="col-1"></div>
-
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary">Xác nhận</button>
+                    <button type="submit" class="btn btn-primary">Xác nhận</button>
                 </div>
+
             </div>
+            </form>
         </div>
     </div>
 
@@ -536,7 +537,7 @@
         }
 
         function insertTr(x) {
-            var btn = '<button class="btn btn-warning" data-toggle="modal" data-target="#modalSoLuong">Thêm</button>';
+                var btn = '<button class="btn btn-warning" data-toggle="modal" data-target="#modalSoLuong">Thêm</button>';
             const row = tableBody.insertRow();
             const anh = row.insertCell().innerHTML = '';
             const ma = row.insertCell().innerHTML = x.ma;
