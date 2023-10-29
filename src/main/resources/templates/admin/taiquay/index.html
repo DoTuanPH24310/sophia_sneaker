@@ -521,10 +521,7 @@
                     document.getElementById('err').innerHTML = "";
                     document.getElementById('textSearch').value = "";
                     loadAll(data);
-                    buttons = document.querySelectorAll("#sinhvien  button");
                     loadAllSelect();
-                    addEventButton();
-
                 }
             })
         }
@@ -534,6 +531,8 @@
             for (let index = 0; index < data.length; index++) {
                 insertTr(data[index]);
             }
+            buttons = document.querySelectorAll("#sinhvien  button");
+            addEventButton();
         }
 
         function insertTr(x) {
@@ -661,7 +660,6 @@
                 success: function (data) {
                     if (data.length == 0) {
                         document.getElementById('err').innerHTML = "Không có dữ liệu phù hợp";
-                        loadAll(data);
                     } else {
                         document.getElementById('err').innerHTML = "";
                         loadAll(data);
@@ -671,7 +669,6 @@
         }
 
         function resetModal() {
-
             modalContent.style.opacity = '1';
         }
 
