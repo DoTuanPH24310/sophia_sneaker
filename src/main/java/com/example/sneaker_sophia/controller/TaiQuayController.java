@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
+// reset sesion khi thanh toán thành công
 
 @Controller
 @RequestMapping("/admin/tai-quay")
@@ -70,8 +70,10 @@ public class TaiQuayController {
     @GetMapping("/hien-thi")
     public String index(Model model) {
         tempIdHD = "";
+        session.setAttribute("checkBill",false);
         List<HoaDon> list = hoaDonService.getHoaDonByTrangThai();
         model.addAttribute("listHDC", list);
+        model.addAttribute("listhdct", new ArrayList<>());
         return "/admin/taiquay/index";
     }
 
@@ -101,6 +103,7 @@ public class TaiQuayController {
             @PathVariable("id") UUID idctsp
 
     ) {
+
         tempIdCTSP = idctsp;
         ChiTietGiay chiTietGiay = chiTietGiayService.getChiTietGiayByIdctg(idctsp);
         model.addAttribute("soLuongTon", chiTietGiay.getSoLuong());
@@ -165,12 +168,15 @@ public class TaiQuayController {
     ) {
         tempIdHD = id;
         session.setAttribute("idHoaDon", id);
+        session.setAttribute("checkBill",true);
         System.out.println(session.getAttribute("mySessionAttribute"));
         List<HoaDon> list = hoaDonService.getHoaDonByTrangThai();
         model.addAttribute("listHDC", list);
         model.addAttribute("maHD", id);
         List<HoaDonChiTiet> listhdct = hoaDonChiTietServive.getHDCTByIdHD(id);
         model.addAttribute("listhdct", listhdct);
+        Double tongTien = hoaDonChiTietServive.tongTienHD(tempIdHD);
+        model.addAttribute("tongTienHD", tongTien);
         return "/admin/taiquay/index";
     }
 

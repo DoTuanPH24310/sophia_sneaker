@@ -10,7 +10,6 @@
 
     <style>
 
-
         .modal-backdrop.fade.show {
             opacity: 0.6;
         }
@@ -18,7 +17,7 @@
 
         .my-custom-scrollbar {
             position: relative;
-            height: 400px;
+            height: 350px;
             overflow: auto;
         }
 
@@ -39,14 +38,14 @@
 <div layout:fragment="content" class="container" style="background-color: white;">
     <!--        <form action="/admin/tai-quay/addHD" method="post">-->
     <div class="row float-right">
-        <a th:href="@{/admin/tai-quay/addHD}" class="btn btn-primary mt-2">Tạo hóa đơn</a>
+        <a th:href="@{/admin/tai-quay/addHD}" class="btn btn-primary mt-2 me-2">Tạo hóa đơn</a>
     </div>
     <!--        </form>-->
 
     <br> <br> <br>
 
 
-    <div class="row mb-3">
+    <div class="row mb-2">
         <ul class="nav nav-tabs">
             <li class="nav-item" th:each="hdc : ${listHDC}">
 
@@ -85,56 +84,59 @@
             </li>
         </ul>
     </div>
+    <div th:if="${session.get('checkBill')}" class="bill-empty">
 
-    <div class="row mb-3">
-        <div class="col-3">
-            <a class="btn btn-primary float-left">
-                <i style="font-size: 18px" class="fab fa-plus"></i> Thêm
-            </a>
+
+        <div class="row mb-3">
+            <div class="col-3">
+                <a class="btn btn-primary float-left">
+                    <i style="font-size: 18px" class="fab fa-plus"></i> Thêm
+                </a>
+
+            </div>
+
+
+            <div class="col-9">
+                <a class="btn btn-primary  float-right" href="/admin/tai-quay/pdf">
+                    QR code sản phẩm
+                </a>
+
+                <a th:href="@{/admin/tai-quay/open-sanpham}" onclick="getAllList();"
+                   class="btn btn-primary  float-right mx-2" data-toggle="modal"
+                   data-target="#modalChiTietGiay">
+                    Thêm sản phẩm
+                </a>
+                <span th:text="${errupdateDownSLHDCT}"></span>
+                <span th:text="${errupdateUpSLHDCT}"></span>
+                <span th:text="${errAddHd}"></span>
+                <span th:text="${errShowModal}"></span>
+                <span th:text="${errHD}"></span>
+            </div>
 
         </div>
+        <!--  Đặt form ở đây -->
+        <!-- Danh sách sản phẩm -->
+        <div class="row">
+            <div class="table table-wrapper-scroll-y my-custom-scrollbar">
+                <table id="table" class="table  table-borderless">
+                    <thead>
+                    <tr class="bg-light">
+                        <th>Mã</th>
+                        <th>Tên</th>
+                        <th>Số lượng</th>
+                        <th>Size</th>
+                        <th>Màu sắc</th>
+                        <th>Thành tiền</th>
+                        <th>Thao tác</th>
 
+                    </tr>
+                    </thead>
+                    <tbody>
 
-        <div class="col-9">
-            <a class="btn btn-primary  float-right" href="/admin/tai-quay/pdf">
-                QR code sản phẩm
-            </a>
-
-            <a th:href="@{/admin/tai-quay/open-sanpham}" onclick="getAllList();"
-               class="btn btn-primary  float-right mx-2" data-toggle="modal"
-               data-target="#modalChiTietGiay">
-                Thêm sản phẩm
-            </a>
-            <span th:text="${errupdateDownSLHDCT}"></span>
-            <span th:text="${errupdateUpSLHDCT}"></span>
-            <span th:text="${errAddHd}"></span>
-            <span th:text="${errShowModal}"></span>
-            <span th:text="${errHD}"></span>
-        </div>
-
-    </div>
-    <!--  Đặt form ở đây -->
-    <!-- Danh sách sản phẩm -->
-    <div class="row">
-        <div class="table table-wrapper-scroll-y my-custom-scrollbar">
-            <table id="table" class="table  table-borderless">
-                <thead>
-                <tr class="bg-light">
-                    <th>Mã</th>
-                    <th>Tên</th>
-                    <th>Số lượng</th>
-                    <th>Size</th>
-                    <th>Màu sắc</th>
-                    <th>Thao tác</th>
-
-                </tr>
-                </thead>
-                <tbody>
-
-                <tr style="line-height: 25px" th:each="hdct : ${listhdct}">
-                    <td th:text="${hdct.idHoaDonCT.chiTietGiay.giay.ma}"></td>
-                    <td th:text="${hdct.idHoaDonCT.chiTietGiay.giay.ten}"></td>
-                    <td>
+                    <tr style="line-height: 25px" th:each="hdct : ${listhdct}">
+                        <td th:text="${hdct.idHoaDonCT.chiTietGiay.giay.ma}"></td>
+                        <td th:text="${hdct.idHoaDonCT.chiTietGiay.giay.ten}"></td>
+                        <td>
 
                                 <span class="input-group-btn">
 
@@ -142,174 +144,188 @@
                                                       class="" style="width: 10px"> <span
                                                            class="fa fa-minus"></span></a>
                                 </span>
-                        <!--                                <input style="width: 40px" type="text"-->
-                        <!--                                       th:value="${hdct.soLuong}" th:name="soLuong"/>-->
-                        <span th:text="${hdct.soLuong}" style="margin-left: 10px; margin-right: 10px"></span>
-                        <span class="input-group-btn">
+                            <!--                                <input style="width: 40px" type="text"-->
+                            <!--                                       th:value="${hdct.soLuong}" th:name="soLuong"/>-->
+                            <span th:text="${hdct.soLuong}" style="margin-left: 10px; margin-right: 10px"></span>
+                            <span class="input-group-btn">
                                                             <a th:href="@{/admin/tai-quay/update-up/{id}(id=${hdct.idHoaDonCT.chiTietGiay.id})}"
                                                                class="" style="width: 10px; text-align: center"><span
                                                                     class="fa fa-plus"></span></a>
                                 </span>
 
-                    </td>
-                    <td th:text="${hdct.idHoaDonCT.chiTietGiay.kichCo.ten}"></td>
-                    <td th:text="${hdct.idHoaDonCT.chiTietGiay.mauSac.ten}"></td>
-                    <td>
-                        <a class="delete" style="text-decoration: none"
-                           th:href="@{/admin/tai-quay/deletehdct/{id}(id=${hdct.idHoaDonCT.chiTietGiay.id})}"
-                           title="Xóa">
-                            <i class="fa fa-trash"></i>
-                        </a>
-                    </td>
-                </tr>
+                        </td>
+                        <td th:text="${hdct.idHoaDonCT.chiTietGiay.kichCo.ten}"></td>
+                        <td th:text="${hdct.idHoaDonCT.chiTietGiay.mauSac.ten}"></td>
+                        <td th:text="${#numbers.formatCurrency(hdct.soLuong * hdct.donGia)}"></td>
+                        <td>
+                            <a class="delete" style="text-decoration: none"
+                               th:href="@{/admin/tai-quay/deletehdct/{id}(id=${hdct.idHoaDonCT.chiTietGiay.id})}"
+                               title="Xóa">
+                                <i class="fa fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.size(listhdct) > 0}">
+                        <td colspan="5" ><h5>Tổng tiền: </h5></td>
+                        <td > <h5 th:text="${#numbers.formatCurrency(tongTienHD)}"></h5></td>
+                    </tr>
 
 
-                </tbody>
+                    </tbody>
 
-            </table>
+                </table>
+            </div>
         </div>
-    </div>
 
-    <!-- Tài khoản khách hàng -->
-    <div class="row mb-3">
-        <div class="col-3">
-            <h5 style="font-weight: bold;" class="mt-3">Tài khoản</h5>
+        <!-- Tài khoản khách hàng -->
+        <div class="row mb-3">
+            <div class="col-3">
+                <h5 style="font-weight: bold;" class="mt-3">Tài khoản</h5>
+
+            </div>
+            <div class="col-5"></div>
+
+            <div class="col-4 ">
+                <a class="btn btn-primary float-right">
+                    <i style="font-size: 18px" class="fab fa-plus"></i> Chọn tài khoản
+                </a>
+            </div>
+        </div>
+        <hr>
+
+        <div class="row">
+            <div class="col-3">
+                <span>Tên khách hàng: &nbsp;&nbsp;</span> <a href="" style="border-radius: 20px;"
+                                                               class="btn btn-secondary"> Khách lẻ</a>
+            </div>
+        </div>
+
+        <!-- Thông tin khách hàng -->
+        <div class="row">
+            <div class="col-3">
+                <h5 style="font-weight: bold;" class="mt-3">Khách hàng</h5>
+            </div>
+            <div class="col-5"></div>
 
         </div>
-        <div class="col-5"></div>
-
-        <div class="col-4 ">
-            <a class="btn btn-primary float-right">
-                <i style="font-size: 18px" class="fab fa-plus"></i> Chọn tài khoản
-            </a>
-        </div>
-    </div>
-    <hr>
-
-    <div class="row">
-        <div class="col-3">
-            <span>Tên khách hàng: &nbsp;&nbsp;</span> <a href="" style="border-radius: 20px;"
-                                                           class="btn btn-secondary"> Khách lẻ</a>
-        </div>
-    </div>
-
-    <!-- Thông tin khách hàng -->
-    <div class="row">
-        <div class="col-3">
-            <h5 style="font-weight: bold;" class="mt-3">Khách hàng</h5>
-        </div>
-        <div class="col-5"></div>
-
-    </div>
-    <hr>
+        <hr>
 
 
-    <div class="row mb-5">
-        <div class="col-6">
-            <div id="form" style="display: none;">
-                <div class="row mx-1 mb-4">
-                    <input type="text" placeholder="tên khách hàng" class="form-control">
+        <div class="row mb-5">
+            <div class="col-6">
+                <div id="form" style="display: none;">
+                    <div class="row mx-1 mb-4">
+                        <input type="text" placeholder="tên khách hàng" class="form-control">
+                    </div>
+                    <div class="row mx-1  mb-4">
+                        <input type="text" placeholder="số điện thoại" class="form-control">
+                    </div>
+                    <div class="row mx-1  mb-4">
+                        <input type="text" placeholder="địa chỉ cụ thể" class="form-control">
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-4">
+                            <input type="text" placeholder="Tỉnh" class="form-control">
+                        </div>
+                        <div class="col-4">
+                            <input type="text" placeholder="Quận" class="form-control">
+                        </div>
+                        <div class="col-4">
+                            <input type="text" placeholder="Xã" class="form-control">
+                        </div>
+                    </div>
+
+
+                    <div class="row mx-1  mb-4">
+                        <textarea rows="5" placeholder="Ghi chú" class="form-control"></textarea>
+
+                    </div>
                 </div>
-                <div class="row mx-1  mb-4">
-                    <input type="text" placeholder="số điện thoại" class="form-control">
-                </div>
-                <div class="row mx-1  mb-4">
-                    <input type="text" placeholder="địa chỉ cụ thể" class="form-control">
-                </div>
+            </div>
+            <!-- Form thông tin thanh toán -->
 
-                <div class="row mb-4">
+            <div class="col-5">
+
+                <h5 class="text-center">Thông tin thanh toán</h5> <br>
+                <div class="row">
                     <div class="col-4">
-                        <input type="text" placeholder="Tỉnh" class="form-control">
+                        <label for="">Hình thức: </label>
                     </div>
+                </div>
+
+                <div class="row mt-2">
                     <div class="col-4">
-                        <input type="text" placeholder="Quận" class="form-control">
+                        <label for="">Giao hàng: </label>
                     </div>
+
                     <div class="col-4">
-                        <input type="text" placeholder="Xã" class="form-control">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="customSwitches">
+                            <label class="custom-control-label" for="customSwitches"></label>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row mt-2">
+
+                    <div class="col-4">Tiền hàng</div>
+
+                    <div class="col-8 ">
+                        <span class="float-right">18.000.000 VNĐ</span>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+
+                    <div class="col-4">Phí vận chuyển:</div>
+
+                    <div class="col-8 ">
+                        <span class="float-right">0 VNĐ</span>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+
+                    <div class="col-4">Giảm giá:</div>
+
+                    <div class="col-8 ">
+                        <span class="float-right">0 VNĐ</span>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+
+                    <div class="col-4">
+                        <h6>Tổng tiền: </h6>
+                    </div>
+
+                    <div class="col-8 ">
+                        <span class="float-right">0 VNĐ</span>
+                    </div>
+                </div>
+
+                <div class="row mb-5">
+                    <div class="col-3"></div>
+                    <div class="col-9">
+                        <button class="btn btn-danger mt-5 float-right">Xác nhận đặt hàng</button>
                     </div>
                 </div>
 
 
-                <div class="row mx-1  mb-4">
-                    <textarea rows="5" placeholder="Ghi chú" class="form-control"></textarea>
-
-                </div>
             </div>
-        </div>
-        <!-- Form thông tin thanh toán -->
-
-        <div class="col-5">
-
-            <h5 class="text-center">Thông tin thanh toán</h5> <br>
-            <div class="row">
-                <div class="col-4">
-                    <label for="">Hình thức: </label>
-                </div>
-            </div>
-
-            <div class="row mt-2">
-                <div class="col-4">
-                    <label for="">Giao hàng: </label>
-                </div>
-
-                <div class="col-4">
-                    <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="customSwitches">
-                        <label class="custom-control-label" for="customSwitches"></label>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="row mt-2">
-
-                <div class="col-4">Tiền hàng</div>
-
-                <div class="col-8 ">
-                    <span class="float-right">18.000.000 VNĐ</span>
-                </div>
-            </div>
-
-            <div class="row mt-2">
-
-                <div class="col-4">Phí vận chuyển:</div>
-
-                <div class="col-8 ">
-                    <span class="float-right">0 VNĐ</span>
-                </div>
-            </div>
-
-            <div class="row mt-2">
-
-                <div class="col-4">Giảm giá:</div>
-
-                <div class="col-8 ">
-                    <span class="float-right">0 VNĐ</span>
-                </div>
-            </div>
-
-            <div class="row mt-3">
-
-                <div class="col-4">
-                    <h6>Tổng tiền: </h6>
-                </div>
-
-                <div class="col-8 ">
-                    <span class="float-right">0 VNĐ</span>
-                </div>
-            </div>
-
-            <div class="row mb-5">
-                <div class="col-3"></div>
-                <div class="col-9">
-                    <button class="btn btn-danger mt-5 float-right">Xác nhận đặt hàng</button>
-                </div>
-            </div>
-
-
         </div>
     </div>
 
+    <div th:unless="${session.get('checkBill')}" class="bill-empty">
+      <div class="row d-flex justify-content-center mb-2 mt-5">
+          <img class="d-flex align-items-center"  style="width: 300px; height: auto;" src="/img/bills-empty.png">
+      </div>
+        <div class="row d-flex justify-content-center">
+           <h5  class="text-center secondary">Chọn hóa đơn để bán hàng</h5>
+        </div>
+    </div>
     <!--    modal thêm sản phẩm-->
     <!-- Modal -->
     <div class="modal fade" id="modalChiTietGiay" tabindex="-1" data-backdrop="static" role="dialog">
@@ -317,7 +333,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalALabel">Chi tiết giày</h5>
-                    <button  type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -520,7 +536,7 @@
         }
 
         function insertTr(x) {
-            var btn = '<button class="btn btn-primary" data-toggle="modal" data-target="#modalSoLuong">Thêm</button>';
+            var btn = '<button class="btn btn-warning" data-toggle="modal" data-target="#modalSoLuong">Thêm</button>';
             const row = tableBody.insertRow();
             const anh = row.insertCell().innerHTML = '';
             const ma = row.insertCell().innerHTML = x.ma;

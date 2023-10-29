@@ -71,4 +71,8 @@ public class HoaDonChiTietServive {
     public HoaDonChiTiet getHDCTByIdCTSP(UUID idctsp, String idhd){
         return hoaDonCTRepository.getHDCTByIdCTSP(idctsp, idhd);
     }
+    public Double tongTienHD(String idhd){
+        return hoaDonCTRepository.tongTienHD(idhd);
+    }
+
 }
