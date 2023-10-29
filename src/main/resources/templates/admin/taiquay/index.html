@@ -166,10 +166,7 @@
                             </a>
                         </td>
                     </tr>
-                    <tr th:if="${#lists.size(listhdct) > 0}">
-                        <td colspan="5" ><h5>Tổng tiền: </h5></td>
-                        <td > <h5 th:text="${#numbers.formatCurrency(tongTienHD)}"></h5></td>
-                    </tr>
+
 
 
                     </tbody>
@@ -177,7 +174,15 @@
                 </table>
             </div>
         </div>
+        <div class="row mb-3" th:if="${#lists.size(listhdct) > 0}">
+            <div class="col-9">
+                <h5 style="float: right" >Tổng tiền: </h5>
+            </div>
 
+            <div class="col-3">
+                <h5 style="float: left; color: red" th:text="${#numbers.formatCurrency(tongTienHD)}"></h5>
+            </div>
+        </div>
         <!-- Tài khoản khách hàng -->
         <div class="row mb-3">
             <div class="col-3">
@@ -452,7 +457,7 @@
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Số lượng tồn: </h5>
+                    <h5 class="modal-title" id="soLuongTon" ></h5>
                     <a type="button" onclick="resetModal();" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </a>
@@ -553,12 +558,18 @@
             for (let index = 0; index < buttons.length; index++) {
                 buttons[index].addEventListener("click", function () {
                     var row = index + 1;
-
                     // Điều chỉnh độ mờ của modalContent bằng thuộc tính CSS
                     modalContent.style.opacity = '0.6';
                     maCTG = table.rows[row].cells[1].textContent;
                     document.getElementById("inputMaCTG").value = maCTG;
                     document.getElementById("inputSoLuong").value = 1;
+                    $.ajax({
+                        type: "POST",
+                        url: "http://localhost:9090/api/chi-tiet-giay/soLuongTon?value=" + maCTG,
+                        success: function (data) {
+                            document.getElementById('soLuongTon').innerHTML= 'Số lượng tồn: '+data;
+                        }
+                    })
                 });
             }
         }

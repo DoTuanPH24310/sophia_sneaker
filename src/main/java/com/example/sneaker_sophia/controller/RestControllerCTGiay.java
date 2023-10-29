@@ -75,4 +75,11 @@ public class RestControllerCTGiay {
 
         return ResponseEntity.ok(chiTietGiayService.findChiTietGiayByMultipleParamsAPI(idGiay));
     }
+
+
+    @PostMapping("/soLuongTon")
+    public ResponseEntity<?> getSoLuongTon(@RequestParam("value") String slt) {
+        System.out.println(slt +" :checkcheck");
+        return ResponseEntity.ok(chiTietGiayService.findSoLuongTon(slt));
+    }
 }

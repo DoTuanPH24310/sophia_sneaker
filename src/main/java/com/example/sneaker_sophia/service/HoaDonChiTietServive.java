@@ -51,7 +51,7 @@ public class HoaDonChiTietServive {
     public void updateUpSLHDCT(UUID idctsp, String idhd, Model model){
         HoaDonChiTiet hdct =  hoaDonCTRepository.getHDCTByIdCTSP(idctsp, idhd);
         ChiTietGiay chiTietGiay = chiTietGiayService.getChiTietGiayByIdctg(idctsp);
-        if(hdct.getSoLuong() >= hdct.getIdHoaDonCT().getChiTietGiay().getSoLuong()){
+        if(hdct.getSoLuong() >= hdct.getSoLuong() + chiTietGiay.getSoLuong()){
             hdct.setSoLuong(hdct.getSoLuong());
             model.addAttribute("errupdateUpSLHDCT", "Không thể tăng thêm nữa");
         }else{
