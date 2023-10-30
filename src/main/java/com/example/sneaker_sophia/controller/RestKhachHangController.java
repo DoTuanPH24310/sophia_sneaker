@@ -24,4 +24,9 @@ public class RestKhachHangController {
         System.out.println(taiKhoanService.findByText(value).size());
         return ResponseEntity.ok(taiKhoanService.findByText(value));
     }
+
+    @GetMapping("/findListDiaChi")
+    public ResponseEntity<?> findListDiaChi(@RequestParam("value") String idKh){
+        return ResponseEntity.ok(taiKhoanService.findListTKById(idKh));
+    }
 }

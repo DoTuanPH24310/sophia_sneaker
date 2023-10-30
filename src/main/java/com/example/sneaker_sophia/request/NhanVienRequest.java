@@ -43,6 +43,8 @@ public class NhanVienRequest {
 
     private String diaChiCuThe;
 
+    private String ghiChu;
+
     public NhanVienRequest(TaiKhoanDiaChi taiKhoanDiaChi) {
         this.setIdTaiKhoan(taiKhoanDiaChi.getTaiKhoan().getId());
         this.setTen(taiKhoanDiaChi.getTaiKhoan().getTen());

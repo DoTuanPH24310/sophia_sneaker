@@ -167,6 +167,9 @@ public class TaiQuayController {
         if (hoaDon.getTaiKhoan() != null) {
             NhanVienRequest nhanVienRequest = taiKhoanService.getTaiKhoanById(hoaDon.getTaiKhoan().getId());
             model.addAttribute("nhanVienRequest", nhanVienRequest);
+            session.setAttribute("tinh", nhanVienRequest.getTinh());
+            session.setAttribute("quan", nhanVienRequest.getQuanHuyen());
+            session.setAttribute("phuong", nhanVienRequest.getPhuongXa());
         } else {
             return "/admin/taiquay/index";
         }
@@ -230,10 +233,14 @@ public class TaiQuayController {
     @GetMapping("chonTK/{id}")
     public String chonTK(
             Model model, @PathVariable("id") String idkh
+            , HttpSession session
     ) {
-
+        session.setAttribute("idkh", idkh);
         NhanVienRequest nhanVienRequest = taiKhoanService.getTaiKhoanById(idkh);
         model.addAttribute("nhanVienRequest", nhanVienRequest);
+        session.setAttribute("tinh", nhanVienRequest.getTinh());
+        session.setAttribute("quan", nhanVienRequest.getQuanHuyen());
+        session.setAttribute("phuong", nhanVienRequest.getPhuongXa());
         HoaDon hoaDon = hoaDonService.getHoaDonById(tempIdHD);
         hoaDon.setTaiKhoan(TaiKhoan.builder().id(idkh).build());
         hoaDonService.savehd(hoaDon);
