@@ -219,6 +219,8 @@
                     <th:block th:unless="${nhanVienRequest != null}">
                         <a href="" style="border-radius: 20px;" class="btn btn-secondary"> Khách lẻ</a>
                     </th:block>
+
+                    <button>Xóa</button>
                 </div>
                 <div class="col-9">
                 </div>
@@ -226,7 +228,7 @@
             <!-- Thông tin khách hàng -->
             <div class="row">
                 <div class="col-3">
-                    <h5 style="font-weight: bold;" class="mt-3">Khách hàng</h5>
+                    <h5 style="font-weight: bold;" class="mt-3" id="labelKhachhang">Khách hàng</h5>
                 </div>
                 <div class="col-5">
 
@@ -646,7 +648,7 @@
 
     <!-- Modal đổi địa chỉ -->
     <div class="modal fade" id="modalDoiDiaChi" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" style="max-width: 1000px;">
+        <div class="modal-dialog" style="max-width: 1200px;">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Danh sách địa chỉ</h5>
@@ -660,7 +662,7 @@
                             <div class="col-6"></div>
                             <div class="col-6  ">
                                 <!-- Thêm địa chỉ theo id tai khoản -->
-                                <a href="#" class="btn btn-primary float-right ">Thêm</a>
+                                <a href="#" class="btn btn-primary float-right ">Thêm Đ/C</a>
                             </div>
 
 
@@ -761,7 +763,7 @@
 
         function insertTrCTG(x) {
             console.log("Vào");
-            var btn = '<button class="btn btn-warning" data-toggle="modal" data-target="#modalSoLuong">Thêm</button>';
+            var btn = '<button class="btn btn-warning" data-toggle="modal" data-target="#modalSoLuong">Chọn</button>';
             const row = tableBody.insertRow();
             const anh = row.insertCell().innerHTML = '';
             const ma = row.insertCell().innerHTML = x.ma;
@@ -934,7 +936,7 @@
             var id = x.id
             var button = document.createElement("a");
             button.href = "/admin/tai-quay/chonTK/" + id + "#labeltaiKhoan";
-            button.text = 'Thêm';
+            button.text = 'Chọn';
             button.classList.add("btn")
             button.classList.add("btn-warning")
 
@@ -1081,9 +1083,9 @@
             var checkbox = document.getElementById("customSwitches");
             if (checkbox.checked == true) {
                 // Nếu checkbox được chọn, gửi yêu cầu GET đến đường dẫn /admin/tai-quay/updatelhd
-                window.location.href = "/admin/tai-quay/updatelhd";
+                window.location.href = "/admin/tai-quay/updatelhd#labelKhachhang";
             } else if (checkbox.checked == false) {
-                window.location.href = "/admin/tai-quay/updatelhtq";
+                window.location.href = "/admin/tai-quay/updatelhtq#labelKhachhang";
             }
         }
 
