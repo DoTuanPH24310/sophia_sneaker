@@ -2,6 +2,7 @@ package com.example.sneaker_sophia.entity;
 
 
 import com.example.sneaker_sophia.request.NhanVienRequest;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Table;
@@ -40,6 +41,7 @@ public class TaiKhoan {
     @ManyToOne(fetch = FetchType.EAGER)
     private VaiTro vaiTro;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "taiKhoan", fetch = FetchType.LAZY)
     List<HoaDon> hoaDons = new ArrayList<>();
 
@@ -89,6 +91,7 @@ public class TaiKhoan {
     @Column(name = "ngaySua")
     private LocalDateTime updatedDate;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "taiKhoan", fetch = FetchType.LAZY)
     private List<DiaChi> diaChiList = new ArrayList<>();
 

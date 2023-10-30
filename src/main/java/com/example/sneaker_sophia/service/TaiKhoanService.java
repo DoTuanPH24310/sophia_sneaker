@@ -167,5 +167,19 @@ public class TaiKhoanService {
         return i == 0;
     }
 
+//30/10
+   public List<TaiKhoan> findAllKhachHang(){
+        return taiKhoanRepository.findAllKhachHang();
+    }
+
+    public List<TaiKhoan> findByText(String text){
+       text = text.trim().length() == 0 ?null: "%"+text+"%";
+        System.out.println(text==null);
+       return taiKhoanRepository.findByText(text);
+    }
+
+
+
+
 
 }

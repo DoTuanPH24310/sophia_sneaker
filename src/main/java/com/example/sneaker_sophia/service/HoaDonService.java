@@ -49,4 +49,10 @@ public class HoaDonService {
     public HoaDon findHDById(String idhd) {
         return hoaDonRepository.findById(idhd).orElse(null);
     }
+
+    // 30/10 cuongdv
+
+    public void savehd(HoaDon hoaDon){
+        hoaDonRepository.save(hoaDon);
+    }
 }

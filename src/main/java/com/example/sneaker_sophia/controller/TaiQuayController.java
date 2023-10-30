@@ -2,10 +2,8 @@ package com.example.sneaker_sophia.controller;
 
 
 import com.example.sneaker_sophia.dto.IdHoaDonCT;
-import com.example.sneaker_sophia.entity.ChiTietGiay;
-import com.example.sneaker_sophia.entity.DeGiay;
-import com.example.sneaker_sophia.entity.HoaDon;
-import com.example.sneaker_sophia.entity.HoaDonChiTiet;
+import com.example.sneaker_sophia.entity.*;
+import com.example.sneaker_sophia.request.NhanVienRequest;
 import com.example.sneaker_sophia.service.*;
 import com.lowagie.text.*;
 import com.lowagie.text.Font;
@@ -48,29 +46,14 @@ public class TaiQuayController {
     @Autowired
     private ChiTietGiayService chiTietGiayService;
 
-    @Autowired
-    private DeGiayService deGiayService;
-
-    @Autowired
-    private GiayService giayService;
-
-    @Autowired
-    private HangService hangService;
-
-    @Autowired
-    private KichCoService kichCoService;
-
-    @Autowired
-    private MauSacService mauSacService;
-
-    @Autowired
-    private LoaiGiayService loaiGiayService;
+    @Resource(name = "taiKhoanService")
+    TaiKhoanService taiKhoanService;
 
 
     @GetMapping("/hien-thi")
     public String index(Model model) {
         tempIdHD = "";
-        session.setAttribute("checkBill",false);
+        session.setAttribute("checkBill", false);
         List<HoaDon> list = hoaDonService.getHoaDonByTrangThai();
         model.addAttribute("listHDC", list);
         model.addAttribute("listhdct", new ArrayList<>());
@@ -123,7 +106,7 @@ public class TaiQuayController {
         UUID idCTG = chiTietGiayService.getIdCTGByMa(maCTG);
         HoaDonChiTiet hoaDonChiTietOld = hoaDonChiTietServive.getHDCTByIdCTSP(idCTG, tempIdHD);
         ChiTietGiay chiTietGiay = chiTietGiayService.getChiTietGiayByIdctg(idCTG);
-        if (hoaDonChiTietOld == null &&  soLuong > chiTietGiay.getSoLuong()) {
+        if (hoaDonChiTietOld == null && soLuong > chiTietGiay.getSoLuong()) {
             model.addAttribute("errSLT", "Không đủ số lượng tồn");
             return "forward:/admin/tai-quay/open-soluong/" + idCTG;
         }
@@ -170,7 +153,7 @@ public class TaiQuayController {
     ) {
         tempIdHD = id;
         session.setAttribute("idHoaDon", id);
-        session.setAttribute("checkBill",true);
+        session.setAttribute("checkBill", true);
         System.out.println(session.getAttribute("mySessionAttribute"));
         List<HoaDon> list = hoaDonService.getHoaDonByTrangThai();
         model.addAttribute("listHDC", list);
@@ -179,6 +162,14 @@ public class TaiQuayController {
         model.addAttribute("listhdct", listhdct);
         Double tongTien = hoaDonChiTietServive.tongTienHD(tempIdHD);
         model.addAttribute("tongTienHD", tongTien);
+        // 30/10
+        HoaDon hoaDon = hoaDonService.getHoaDonById(id);
+        if (hoaDon.getTaiKhoan() != null) {
+            NhanVienRequest nhanVienRequest = taiKhoanService.getTaiKhoanById(hoaDon.getTaiKhoan().getId());
+            model.addAttribute("nhanVienRequest", nhanVienRequest);
+        } else {
+            return "/admin/taiquay/index";
+        }
         return "/admin/taiquay/index";
     }
 
@@ -189,7 +180,7 @@ public class TaiQuayController {
             Model model
     ) {
         HoaDon hoaDon = hoaDonService.getHoaDonById(id);
-        if (hoaDon.getListHoaDonChiTiet().size() > 1){
+        if (hoaDon.getListHoaDonChiTiet().size() > 1) {
             tempIdHD = id;
             model.addAttribute("errHD", "Hóa đơn vẫn còn sản phẩm");
             return "forward:/admin/tai-quay/detail/" + tempIdHD;
@@ -235,6 +226,20 @@ public class TaiQuayController {
         return "forward:/admin/tai-quay/detail/" + tempIdHD;
     }
 
+    //    30/10
+    @GetMapping("chonTK/{id}")
+    public String chonTK(
+            Model model, @PathVariable("id") String idkh
+    ) {
+
+        NhanVienRequest nhanVienRequest = taiKhoanService.getTaiKhoanById(idkh);
+        model.addAttribute("nhanVienRequest", nhanVienRequest);
+        HoaDon hoaDon = hoaDonService.getHoaDonById(tempIdHD);
+        hoaDon.setTaiKhoan(TaiKhoan.builder().id(idkh).build());
+        hoaDonService.savehd(hoaDon);
+        return "forward:/admin/tai-quay/detail/" + tempIdHD;
+
+    }
 
 
 // =================================================================

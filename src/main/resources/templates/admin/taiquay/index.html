@@ -149,9 +149,9 @@
                             <!--                                       th:value="${hdct.soLuong}" th:name="soLuong"/>-->
                             <span th:text="${hdct.soLuong}" style="margin-left: 10px; margin-right: 10px"></span>
                             <span class="input-group-btn">
-                                                            <a th:href="@{/admin/tai-quay/update-up/{id}(id=${hdct.idHoaDonCT.chiTietGiay.id})}"
-                                                               class="" style="width: 10px; text-align: center"><span
-                                                                    class="fa fa-plus"></span></a>
+<a th:href="@{/admin/tai-quay/update-up/{id}(id=${hdct.idHoaDonCT.chiTietGiay.id})}"
+   class="" style="width: 10px; text-align: center"><span
+        class="fa fa-plus"></span></a>
                                 </span>
 
                         </td>
@@ -173,7 +173,7 @@
         </div>
         <div class="row mb-3" th:if="${#lists.size(listhdct) > 0}">
             <div class="col-9">
-                <h5 style="float: right" >Tổng tiền: </h5>
+                <h5 style="float: right">Tổng tiền: </h5>
             </div>
 
             <div class="col-3">
@@ -183,150 +183,164 @@
         <!-- Tài khoản khách hàng -->
         <div class="row mb-3">
             <div class="col-3">
-                <h5 style="font-weight: bold;" class="mt-3">Tài khoản</h5>
+                <h5 id="labeltaiKhoan" style="font-weight: bold;" class="mt-3">Tài khoản</h5>
 
             </div>
             <div class="col-5"></div>
 
             <div class="col-4 ">
-                <a class="btn btn-primary float-right" th:href="@{/admin/tai-quay/chonTK}" >
-                    <i style="font-size: 18px" class="fab fa-plus"></i> Chọn tài khoản
+
+
+                <a onclick="findAllKH();" type="button" class="btn btn-primary float-right" data-toggle="modal"
+                   data-target="#modalKhachHang">
+                    <i style="font-size: 18px" class="fab fa-plus"></i>
+                    Chọn tài khoản
                 </a>
             </div>
         </div>
         <hr>
+        <form action="" method="post" th:object="${nhanVienRequest}">
+            <div class="row">
+                <div class="col-3">
+                    <span>Tên khách hàng: &nbsp;&nbsp;</span>
 
-        <div class="row">
-            <div class="col-3">
-                <span>Tên khách hàng: &nbsp;&nbsp;</span> <a href="" style="border-radius: 20px;"
-                                                               class="btn btn-secondary"> Khách lẻ</a>
+                    <th:block th:if="${nhanVienRequest != null}">
+                        <span th:text="${nhanVienRequest.ten}"></span>
+                        <br>
+                        <span>Số điện thoại: &nbsp;&nbsp;</span>
+                        <span th:text="${nhanVienRequest.sdt}"></span>
+
+                        <!--                        <input id="tenNhanVien" type="text" class="form-control" th:field="*{ten}" placeholder="Tên nhân viên">-->
+                    </th:block>
+
+                    <th:block th:unless="${nhanVienRequest != null}">
+                        <a href="" style="border-radius: 20px;" class="btn btn-secondary"> Khách lẻ</a>
+                    </th:block>
+                </div>
             </div>
-        </div>
+            <!-- Thông tin khách hàng -->
+            <div class="row">
+                <div class="col-3">
+                    <h5 style="font-weight: bold;" class="mt-3">Khách hàng</h5>
+                </div>
+                <div class="col-5"></div>
 
-        <!-- Thông tin khách hàng -->
-        <div class="row">
-            <div class="col-3">
-                <h5 style="font-weight: bold;" class="mt-3">Khách hàng</h5>
             </div>
-            <div class="col-5"></div>
-
-        </div>
-        <hr>
+            <hr>
 
 
-        <div class="row mb-5">
-            <div class="col-6">
-                <div id="form" style="display: none;">
-                    <div class="row mx-1 mb-4">
-                        <input type="text" placeholder="tên khách hàng" class="form-control">
+            <div class="row mb-5">
+                <div class="col-6">
+                    <div id="form" style="display: none;">
+                        <div class="row mx-1 mb-4">
+                            <input type="text" placeholder="tên khách hàng" class="form-control">
+                        </div>
+                        <div class="row mx-1  mb-4">
+                            <input type="text" placeholder="số điện thoại" class="form-control">
+                        </div>
+                        <div class="row mx-1  mb-4">
+                            <input type="text" placeholder="địa chỉ cụ thể" class="form-control">
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-4">
+                                <input type="text" placeholder="Tỉnh" class="form-control">
+                            </div>
+                            <div class="col-4">
+                                <input type="text" placeholder="Quận" class="form-control">
+                            </div>
+                            <div class="col-4">
+                                <input type="text" placeholder="Xã" class="form-control">
+                            </div>
+                        </div>
+
+
+                        <div class="row mx-1  mb-4">
+                            <textarea rows="5" placeholder="Ghi chú" class="form-control"></textarea>
+
+                        </div>
                     </div>
-                    <div class="row mx-1  mb-4">
-                        <input type="text" placeholder="số điện thoại" class="form-control">
-                    </div>
-                    <div class="row mx-1  mb-4">
-                        <input type="text" placeholder="địa chỉ cụ thể" class="form-control">
-                    </div>
+                </div>
+                <!-- Form thông tin thanh toán -->
 
-                    <div class="row mb-4">
+                <div class="col-5">
+
+                    <h5 class="text-center">Thông tin thanh toán</h5> <br>
+                    <div class="row">
                         <div class="col-4">
-                            <input type="text" placeholder="Tỉnh" class="form-control">
-                        </div>
-                        <div class="col-4">
-                            <input type="text" placeholder="Quận" class="form-control">
-                        </div>
-                        <div class="col-4">
-                            <input type="text" placeholder="Xã" class="form-control">
+                            <label for="">Hình thức: </label>
                         </div>
                     </div>
 
+                    <div class="row mt-2">
+                        <div class="col-4">
+                            <label for="">Giao hàng: </label>
+                        </div>
 
-                    <div class="row mx-1  mb-4">
-                        <textarea rows="5" placeholder="Ghi chú" class="form-control"></textarea>
+                        <div class="col-4">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="customSwitches">
+                                <label class="custom-control-label" for="customSwitches"></label>
+                            </div>
+                        </div>
 
+                    </div>
+
+                    <div class="row mt-2">
+
+                        <div class="col-4">Tiền hàng</div>
+
+                        <div class="col-8 ">
+                            <span class="float-right">18.000.000 VNĐ</span>
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+
+                        <div class="col-4">Phí vận chuyển:</div>
+
+                        <div class="col-8 ">
+                            <span class="float-right">0 VNĐ</span>
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+
+                        <div class="col-4">Giảm giá:</div>
+
+                        <div class="col-8 ">
+                            <span class="float-right">0 VNĐ</span>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+
+                        <div class="col-4">
+                            <h6>Tổng tiền: </h6>
+                        </div>
+
+                        <div class="col-8 ">
+                            <span class="float-right">0 VNĐ</span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-5">
+                        <div class="col-3"></div>
+                        <div class="col-9">
+                            <button class="btn btn-danger mt-5 float-right">Xác nhận đặt hàng</button>
+                        </div>
                     </div>
                 </div>
             </div>
-            <!-- Form thông tin thanh toán -->
-
-            <div class="col-5">
-
-                <h5 class="text-center">Thông tin thanh toán</h5> <br>
-                <div class="row">
-                    <div class="col-4">
-                        <label for="">Hình thức: </label>
-                    </div>
-                </div>
-
-                <div class="row mt-2">
-                    <div class="col-4">
-                        <label for="">Giao hàng: </label>
-                    </div>
-
-                    <div class="col-4">
-                        <div class="custom-control custom-switch">
-                            <input type="checkbox" class="custom-control-input" id="customSwitches">
-                            <label class="custom-control-label" for="customSwitches"></label>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="row mt-2">
-
-                    <div class="col-4">Tiền hàng</div>
-
-                    <div class="col-8 ">
-                        <span class="float-right">18.000.000 VNĐ</span>
-                    </div>
-                </div>
-
-                <div class="row mt-2">
-
-                    <div class="col-4">Phí vận chuyển:</div>
-
-                    <div class="col-8 ">
-                        <span class="float-right">0 VNĐ</span>
-                    </div>
-                </div>
-
-                <div class="row mt-2">
-
-                    <div class="col-4">Giảm giá:</div>
-
-                    <div class="col-8 ">
-                        <span class="float-right">0 VNĐ</span>
-                    </div>
-                </div>
-
-                <div class="row mt-3">
-
-                    <div class="col-4">
-                        <h6>Tổng tiền: </h6>
-                    </div>
-
-                    <div class="col-8 ">
-                        <span class="float-right">0 VNĐ</span>
-                    </div>
-                </div>
-
-                <div class="row mb-5">
-                    <div class="col-3"></div>
-                    <div class="col-9">
-                        <button class="btn btn-danger mt-5 float-right">Xác nhận đặt hàng</button>
-                    </div>
-                </div>
-
-
-            </div>
-        </div>
+        </form>
     </div>
 
     <div th:unless="${session.get('checkBill')}" class="bill-empty">
-      <div class="row d-flex justify-content-center mb-2 mt-5">
-          <img class="d-flex align-items-center"  style="width: 300px; height: auto;" src="/img/bills-empty.png">
-      </div>
+        <div class="row d-flex justify-content-center mb-2 mt-5">
+            <img class="d-flex align-items-center" style="width: 300px; height: auto;" src="/img/bills-empty.png">
+        </div>
         <div class="row d-flex justify-content-center">
-           <h5  class="text-center secondary">Chọn hóa đơn để bán hàng</h5>
+            <h5 class="text-center secondary">Chọn hóa đơn để bán hàng</h5>
         </div>
     </div>
     <!--    modal thêm sản phẩm-->
@@ -451,39 +465,99 @@
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" style="max-width: 500px;">
             <form action="/admin/tai-quay/addhdct" method="get">
-            <div class="modal-content">
+                <div class="modal-content">
 
-                <div class="modal-header">
-                    <h5 class="modal-title" id="soLuongTon" ></h5>
-                    <a type="button" onclick="resetModal();" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </a>
-                </div>
-                <div class="modal-body">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-1"></div>
-                            <div class="col-5 d-flex justify-content-center">
-                                <input name="maCTG" class="form-control text-center" type="text" id="inputMaCTG" readonly>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="soLuongTon"></h5>
+                        <a type="button" onclick="resetModal();" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </a>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-1"></div>
+                                <div class="col-5 d-flex justify-content-center">
+                                    <input name="maCTG" class="form-control text-center" type="text" id="inputMaCTG"
+                                           readonly>
+                                </div>
+                                <div class="col-5 d-flex justify-content-center">
+                                    <input type="number" name="soLuong" min="1" value="1"
+                                           class="form-control  text-center" id="inputSoLuong">
+                                </div>
+                                <div class="col-1"></div>
                             </div>
-                            <div class="col-5 d-flex justify-content-center">
-                                <input type="number" name="soLuong" min="1" value="1" class="form-control  text-center" id="inputSoLuong">
-                            </div>
-                            <div class="col-1"></div>
                         </div>
                     </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Xác nhận</button>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Xác nhận</button>
-                </div>
-
-            </div>
             </form>
         </div>
     </div>
 
+    <!--Modal chọn khách hàng-->
 
-    <!--    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>-->
+
+    <!-- Modal -->
+    <div class="modal fade" data-backdrop="static" id="modalKhachHang" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" style="max-width: 1000px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Khách hàng</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row mb-4">
+
+                            <div class="col-1"></div>
+                            <div class="col-7">
+                                <input type="text" class="form-control" id="textSearchKH"
+                                       placeholder="Nhập tên hoặc số điện thoại...">
+                            </div>
+
+                            <siv class="col-4">
+                                <button class="btn btn-primary mx-2" onclick="findKH();">Tìm kiếm</button>
+                                <button href="" class="btn btn-primary" onclick="findAllKH();">Làm mới</button>
+                            </siv>
+                        </div>
+
+                        <div class="row">
+                            <div class="table table-wrapper-scroll-y my-custom-scrollbar">
+                                <table id="tableKhachHang" class="table  table-borderless  formTable">
+                                    <thead>
+                                    <tr class="bg-light">
+                                        <th width="20%">Ảnh</th>
+                                        <th width="25%">Tên</th>
+                                        <th width="25%">Email</th>
+                                        <th width="20%">Số điện thoai</th>
+                                        <th width="10%">Thao tác</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="khachHang">
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+
+
+    </div>
 
     <script th:inline="javascript">
         const customSwitches = document.getElementById("customSwitches");
@@ -538,7 +612,7 @@
         }
 
         function insertTr(x) {
-                var btn = '<button class="btn btn-warning" data-toggle="modal" data-target="#modalSoLuong">Thêm</button>';
+            var btn = '<button class="btn btn-warning" data-toggle="modal" data-target="#modalSoLuong">Thêm</button>';
             const row = tableBody.insertRow();
             const anh = row.insertCell().innerHTML = '';
             const ma = row.insertCell().innerHTML = x.ma;
@@ -550,6 +624,7 @@
             const gia = row.insertCell().innerHTML = x.gia;
             const button = row.insertCell().innerHTML = btn;
         }
+
         // Thêm sự kiện click cho mỗi button
         function addEventButton() {
             for (let index = 0; index < buttons.length; index++) {
@@ -564,7 +639,7 @@
                         type: "POST",
                         url: "http://localhost:9090/api/chi-tiet-giay/soLuongTon?value=" + maCTG,
                         success: function (data) {
-                            document.getElementById('soLuongTon').innerHTML= 'Số lượng tồn: '+data;
+                            document.getElementById('soLuongTon').innerHTML = 'Số lượng tồn: ' + data;
                         }
                     })
                 });
@@ -678,6 +753,60 @@
         function resetModal() {
             modalContent.style.opacity = '1';
         }
+
+
+        //    Chọn khách hàng
+        const tbody = document.getElementById('khachHang');
+        const textSearch = document.getElementById('textSearchKH');
+
+        function findAllKH() {
+            $.ajax({
+                type: 'get',
+                url: 'http://localhost:9090/api/khachHang/findAll',
+                success: function (data) {
+                    textSearch.value = '';
+                    loaAllKH(data);
+                }
+
+            })
+
+        }
+
+        function loaAllKH(data) {
+            tbody.innerHTML = '';
+            for (let index = 0; index < data.length; index++) {
+                insertTr(data[index]);
+            }
+
+        }
+
+
+        function insertTr(x) {
+            var id = x.id
+            var button = document.createElement("a");
+            button.href = "/admin/tai-quay/chonTK/" + id + "#labeltaiKhoan";
+            button.text = 'Thêm';
+            button.classList.add("btn")
+            button.classList.add("btn-warning")
+            console.log(button);
+            var tr = tbody.insertRow();
+            tr.insertCell().innerHTML = '';
+            tr.insertCell().innerHTML = x.ten;
+            tr.insertCell().innerHTML = x.email;
+            tr.insertCell().innerHTML = x.sdt;
+            tr.insertCell().appendChild(button);
+        }
+
+        function findKH() {
+            $.ajax({
+                type: 'get',
+                url: 'http://localhost:9090/api/khachHang/findByText?value=' + textSearch.value,
+                success: function (data) {
+                    loaAllKH(data);
+                }
+            })
+        }
+
 
     </script>
 </div>
