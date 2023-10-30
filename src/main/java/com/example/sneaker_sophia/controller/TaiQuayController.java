@@ -56,7 +56,7 @@ public class TaiQuayController {
         session.setAttribute("checkBill", false);
         List<HoaDon> list = hoaDonService.getHoaDonByTrangThai();
         model.addAttribute("listHDC", list);
-        model.addAttribute("listhdct", new ArrayList<>());
+        session.setAttribute("listhdct", new ArrayList<>());
         return "/admin/taiquay/index";
     }
 

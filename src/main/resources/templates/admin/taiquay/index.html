@@ -171,13 +171,15 @@
 
             </div>
         </div>
-        <div class="row mb-3" th:if="${#lists.size(listhdct) > 0}">
-            <div class="col-9">
-                <h5 style="float: right">Tổng tiền: </h5>
-            </div>
+        <div class="row mb-3" th:if="${listhdct != null}">
+            <div class="row mb-3" th:if="${#lists.size(listhdct) > 0}">
+                <div class="col-9">
+                    <h5 style="float: right">Tổng tiền: </h5>
+                </div>
 
-            <div class="col-3">
-                <h5 style="float: left; color: red" th:text="${#numbers.formatCurrency(tongTienHD)}"></h5>
+                <div class="col-3">
+                    <h5 style="float: left; color: red" th:text="${#numbers.formatCurrency(tongTienHD)}"></h5>
+                </div>
             </div>
         </div>
         <!-- Tài khoản khách hàng -->
@@ -220,7 +222,8 @@
                 </div>
                 <div class="col-9">
                     <th:block th:if="${nhanVienRequest != null}">
-                        <button onclick="loadAllDC();" type="button" class="btn btn-primary float-right" data-toggle="modal"
+                        <button onclick="loadAllDC();" type="button" class="btn btn-primary float-right"
+                                data-toggle="modal"
                                 data-target="#modalDoiDiaChi">
                             Đổi địa chỉ
                         </button>
@@ -660,7 +663,6 @@
                                     <tbody id="tbodyDDC">
 
 
-
                                     </tbody>
 
                                 </table>
@@ -736,15 +738,17 @@
         }
 
         function loadAll(data) {
+
             tableBody.innerHTML = '';
             for (let index = 0; index < data.length; index++) {
-                insertTr(data[index]);
+                insertTrCTG(data[index]);
             }
             buttons = document.querySelectorAll("#sinhvien  button");
             addEventButton();
         }
 
-        function insertTr(x) {
+        function insertTrCTG(x) {
+            console.log("Vào");
             var btn = '<button class="btn btn-warning" data-toggle="modal" data-target="#modalSoLuong">Thêm</button>';
             const row = tableBody.insertRow();
             const anh = row.insertCell().innerHTML = '';
@@ -908,13 +912,13 @@
         function loaAllKH(data) {
             tbody.innerHTML = '';
             for (let index = 0; index < data.length; index++) {
-                insertTr(data[index]);
+                insertTrCKH(data[index]);
             }
 
         }
 
 
-        function insertTr(x) {
+        function insertTrCKH(x) {
             var id = x.id
             var button = document.createElement("a");
             button.href = "/admin/tai-quay/chonTK/" + id + "#labeltaiKhoan";
@@ -1014,6 +1018,7 @@
         // Modal ĐỔI ĐỊA CHỈ
         const idKh = [[${session.idkh}]];
         const tbodyDDC = document.getElementById('tbodyDDC');
+
         function loadAllDC() {
             $.ajax({
                 type: 'get',
