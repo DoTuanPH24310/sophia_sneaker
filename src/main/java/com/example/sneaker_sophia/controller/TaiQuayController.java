@@ -165,6 +165,10 @@ public class TaiQuayController {
         model.addAttribute("tongTienHD", tongTien);
         // 30/10
         HoaDon hoaDon = hoaDonService.getHoaDonById(id);
+
+//        if(hoaDon.getTaiKhoan() != null){
+//            session.setAttribute("loaihdg", hoaDon.getLoaiHoaDon());
+//        }
         if (hoaDon.getTaiKhoan() != null) {
             session.setAttribute("idkh", hoaDon.getTaiKhoan().getId());
             NhanVienRequest nhanVienRequest = taiKhoanService.getTaiKhoanById(hoaDon.getTaiKhoan().getId());
@@ -172,7 +176,9 @@ public class TaiQuayController {
             session.setAttribute("tinh", nhanVienRequest.getTinh());
             session.setAttribute("quan", nhanVienRequest.getQuanHuyen());
             session.setAttribute("phuong", nhanVienRequest.getPhuongXa());
+            session.setAttribute("loaihdg", hoaDon.getLoaiHoaDon());
         } else {
+            session.setAttribute("loaihdg", hoaDon.getLoaiHoaDon());
             return "/admin/taiquay/index";
         }
         return "/admin/taiquay/index";
@@ -250,6 +256,28 @@ public class TaiQuayController {
 
     }
 
+
+    @GetMapping("updatelhd")
+    public String updateLoaiHDGH() {
+        HoaDon hoaDon = hoaDonService.getHoaDonById(tempIdHD);
+        if (hoaDon.getTaiKhoan() != null) {
+            hoaDon.setLoaiHoaDon(2);
+            hoaDonService.savehd(hoaDon);
+        }
+
+        return "forward:/admin/tai-quay/detail/" + tempIdHD;
+    }
+
+    @GetMapping("updatelhtq")
+    public String updateLoaiHDTQ() {
+        HoaDon hoaDon = hoaDonService.getHoaDonById(tempIdHD);
+
+        hoaDon.setLoaiHoaDon(1);
+        hoaDonService.savehd(hoaDon);
+
+
+        return "forward:/admin/tai-quay/detail/" + tempIdHD;
+    }
 
 // =================================================================
 //@GetMapping("/pdf")

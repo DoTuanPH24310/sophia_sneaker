@@ -221,13 +221,6 @@
                     </th:block>
                 </div>
                 <div class="col-9">
-                    <th:block th:if="${nhanVienRequest != null}">
-                        <button onclick="loadAllDC();" type="button" class="btn btn-primary float-right"
-                                data-toggle="modal"
-                                data-target="#modalDoiDiaChi">
-                            Đổi địa chỉ
-                        </button>
-                    </th:block>
                 </div>
             </div>
             <!-- Thông tin khách hàng -->
@@ -244,9 +237,21 @@
 
 
             <div class="row mb-5">
+
                 <th:block th:if="${nhanVienRequest != null}">
                     <div class="col-6">
                         <div id="form" style="display: none;">
+                            <div class="row mt-1 mx-1 mb-3">
+                                <div class="col-3">
+                                    <button onclick="loadAllDC();" type="button" class="btn btn-primary float-left"
+                                            data-toggle="modal"
+                                            data-target="#modalDoiDiaChi">
+                                        Đổi địa chỉ
+                                    </button>
+                                </div>
+
+                            </div>
+
                             <div class="row mx-1 mb-4">
                                 <input type="text" placeholder="tên khách hàng" disabled
                                        th:value="${nhanVienRequest.ten}"
@@ -348,11 +353,24 @@
                             <label for="">Giao hàng: </label>
                         </div>
 
+                        <!--                        <div class="col-4">-->
+                        <!--                            <form action="/admin/tai-quay/updatelhd" method="get">-->
+
+
+                        <!--                            <div class="custom-control custom-switch">-->
+                        <!--                                <input th:onchange="this.form.submit()" type="checkbox" class="custom-control-input" id="customSwitches">-->
+                        <!--                                <label class="custom-control-label" for="customSwitches"></label>-->
+                        <!--                            </div>-->
+                        <!--                            </form>-->
+                        <!--                        </div>-->
                         <div class="col-4">
-                            <div class="custom-control custom-switch">
-                                <input type="checkbox" class="custom-control-input" id="customSwitches">
-                                <label class="custom-control-label" for="customSwitches"></label>
-                            </div>
+                            <form action="/admin/tai-quay/updatelhd" method="get">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" class="custom-control-input" id="customSwitches"
+                                           onchange="submitForm()">
+                                    <label class="custom-control-label" for="customSwitches"></label>
+                                </div>
+                            </form>
                         </div>
 
                     </div>
@@ -653,11 +671,12 @@
                                 <table id="table" class="table  table-borderless  formTable">
                                     <thead>
                                     <tr class="bg-light">
-                                        <th>D/c cụ thể</th>
-                                        <th>Phường/xã</th>
-                                        <th>Quận/Huyện</th>
-                                        <th>Tỉnh/Thành Phố</th>
-                                        <th>Thao tác</th>
+                                        <th width="11%">D/c cụ thể</th>
+                                        <th width="21%">Phường/xã</th>
+                                        <th width="21%">Quận/Huyện</th>
+                                        <th width="21%">Tỉnh/Thành Phố</th>
+                                        <th width="19%">Trạng thái</th>
+                                        <th width="7%">Thao tác</th>
                                     </tr>
                                     </thead>
                                     <tbody id="tbodyDDC">
@@ -687,13 +706,6 @@
     <script th:inline="javascript">
         const customSwitches = document.getElementById("customSwitches");
         const form = document.getElementById("form");
-
-        // 30/10
-
-        const tinh = [[${session.tinh}]];
-        const quan = [[${session.quan}]];
-        let phuong = [[${session.phuong}]];
-
 
         const host = "https://provinces.open-api.vn/api/";
 
@@ -944,75 +956,75 @@
             })
         }
 
-        ///////////////////////////
-
-        var renderData = (array, select) => {
-            let row = ' <option disable value="">--Chọn Tỉnh/Thành phố--</option';
-            array.forEach(element => {
-                if (tinh === element.code) {
-                    renderDataDis(element.districts, "district");
-                    row = `<option selected value="${element.code}">${element.name}</option>`;
-                }
-            });
-            document.querySelector("#" + select).innerHTML = row;
-        }
-
-        var renderDataDis = (array, select) => {
-            let row = ' <option disable value="">--Chọn Quận/Huyện--</option>';
-            array.forEach(element => {
-                if (quan === element.code) {
-                    renderDataWar(element.wards, "ward");
-                    row = `<option selected value="${element.code}">${element.name}</option>`;
-                }
-            });
-
-            document.querySelector("#" + select).innerHTML = row;
-        }
-
-        var renderDataWar = (array, select) => {
-            let row = ' <option disable value="">--Chọn Phường/Xã--</option>';
-            array.forEach(element => {
-                if (phuong === element.code) {
-                    row = `<option selected value="${element.code}">${element.name}</option>`;
-                }
-
-
-            });
-            document.querySelector("#" + select).innerHTML = row;
-        }
-
-        var callAPI = (api) => {
-            return axios.get(api)
-                .then((response) => {
-                    renderData(response.data, "province");
+        function apiDiaChiGender(idTinh, idQuan, idXa, tinh, quan, phuong) {
+            var renderData = (array, select) => {
+                let row = ' <option disable value="">--Chọn Tỉnh/Thành phố--</option';
+                array.forEach(element => {
+                    if (tinh === element.code) {
+                        renderDataDis(element.districts, idQuan);
+                        row = `<option selected value="${element.code}">${element.name}</option>`;
+                    }
                 });
-        };
-        callAPI('https://provinces.open-api.vn/api/?depth=3');
-
-
-        var callApiDistrict = (api) => {
-            return axios.get(api)
-                .then((response) => {
-                    renderDataDis(response.data.districts, "district");
-                });
-        };
-        var callApiWard = (api) => {
-            return axios.get(api)
-                .then((response) => {
-                    renderDataWar(response.data.wards, "ward");
-                });
-        }
-
-
-        var printResult = () => {
-            if ($("#district").val() != "" && $("#province").val() != "" &&
-                $("#ward").val() != "") {
-                let result = $("#province option:selected").text() +
-                    " | " + $("#district option:selected").text() + " | " +
-                    $("#ward option:selected").text();
-                $("#result").text(result)
+                document.querySelector("#" + select).innerHTML = row;
             }
 
+            var renderDataDis = (array, select) => {
+                let row = ' <option disable value="">--Chọn Quận/Huyện--</option>';
+                array.forEach(element => {
+                    if (quan === element.code) {
+                        renderDataWar(element.wards, idXa);
+                        row = `<option selected value="${element.code}">${element.name}</option>`;
+                    }
+                });
+
+                document.querySelector("#" + select).innerHTML = row;
+            }
+
+            var renderDataWar = (array, select) => {
+                let row = ' <option disable value="">--Chọn Phường/Xã--</option>';
+                array.forEach(element => {
+                    if (phuong === element.code) {
+                        row = `<option selected value="${element.code}">${element.name}</option>`;
+                    }
+
+
+                });
+                document.querySelector("#" + select).innerHTML = row;
+            }
+
+            var callAPI = (api) => {
+                return axios.get(api)
+                    .then((response) => {
+                        renderData(response.data, idTinh);
+                    });
+            };
+            callAPI('https://provinces.open-api.vn/api/?depth=3');
+
+
+            var callApiDistrict = (api) => {
+                return axios.get(api)
+                    .then((response) => {
+                        renderDataDis(response.data.districts, idQuan);
+                    });
+            };
+            var callApiWard = (api) => {
+                return axios.get(api)
+                    .then((response) => {
+                        renderDataWar(response.data.wards, idXa);
+                    });
+            }
+
+            //
+            // var printResult = () => {
+            //     if ($("#district").val() != "" && $("#province").val() != "" &&
+            //         $("#ward").val() != "") {
+            //         let result = $("#province option:selected").text() +
+            //             " | " + $("#district option:selected").text() + " | " +
+            //             $("#ward option:selected").text();
+            //         $("#result").text(result)
+            //     }
+            //
+            // }
         }
 
         // Modal ĐỔI ĐỊA CHỈ
@@ -1025,13 +1037,13 @@
                 url: 'http://localhost:9090/api/khachHang/findListDiaChi?value=' + idKh,
                 success: function (data) {
 
-                    loadAllTable(data);
+                    loadAllTableDC(data);
                 }
 
             })
         }
 
-        function loadTr(x) {
+        function loadTrDDC(x, index) {
             // Update thành địa chỉ mặc định
             var button = document.createElement('a');
             button.href = '';
@@ -1039,19 +1051,55 @@
             button.classList.add('btn');
             button.classList.add('btn-warning');
             var row = tbodyDDC.insertRow();
+            var idHTML = index + 1;
+            var selectTinh = '<select disabled id="province' + idHTML + '" class="form-control text-center"></select>'
+            var selectQuan = '<select disabled id="district' + idHTML + '" class="form-control text-center"></select>'
+            var selectXa = '<select disabled id="ward' + idHTML + '" class="form-control text-center"></select>'
+            var checkBox='';
+
+            if (x.diaChiMacDinh == 1) {
+                checkBox = '  <button class="btn btn-success">Mặc định</button>';
+            }
             row.insertCell().innerHTML = x.diaChiCuThe;
-            row.insertCell().innerHTML = x.phuongXa;
-            row.insertCell().innerHTML = x.quanHuyen;
-            row.insertCell().innerHTML = x.tinh;
+            row.insertCell().innerHTML = selectXa;
+            row.insertCell().innerHTML = selectQuan;
+            row.insertCell().innerHTML = selectTinh;
+            row.insertCell().innerHTML = checkBox;
             row.insertCell().appendChild(button);
+            apiDiaChiGender('province' + idHTML, 'district' + idHTML, 'ward' + idHTML, x.tinh, x.quanHuyen, x.phuongXa);
         }
 
-        function loadAllTable(data) {
+        function loadAllTableDC(data) {
             tbodyDDC.innerHTML = '';
             for (let index = 0; index < data.length; index++) {
-                loadTr(data[index])
+                loadTrDDC(data[index], index);
             }
         }
+
+
+        function submitForm() {
+            var checkbox = document.getElementById("customSwitches");
+            if (checkbox.checked == true) {
+                // Nếu checkbox được chọn, gửi yêu cầu GET đến đường dẫn /admin/tai-quay/updatelhd
+                window.location.href = "/admin/tai-quay/updatelhd";
+            } else if (checkbox.checked == false) {
+                window.location.href = "/admin/tai-quay/updatelhtq";
+            }
+        }
+
+        const loaihdg = [[${session.loaihdg}]];
+
+        var checkbox = document.getElementById("customSwitches");
+        if (loaihdg == 2) {
+            checkbox.checked = true; // Đánh dấu checkbox là checked
+        } else if (loaihdg == 1) {
+            checkbox.checked = false; // Tắt checkbox
+        }
+
+        var tinh = [[${session.tinh}]];
+        var quan = [[${session.quan}]];
+        var phuong = [[${session.phuong}]];
+        apiDiaChiGender('province', 'district', 'ward', tinh, quan, phuong);
 
     </script>
 </div>

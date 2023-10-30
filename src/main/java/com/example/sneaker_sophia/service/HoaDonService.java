@@ -32,6 +32,7 @@ public class HoaDonService {
             int soHD = hoaDonRepository.soHD() + 1;
             hoaDon.setMaHoaDOn("HD" + soHD);
             hoaDon.setTrangThai(2);
+            hoaDon.setLoaiHoaDon(1);
             return hoaDonRepository.save(hoaDon);
         }
 
