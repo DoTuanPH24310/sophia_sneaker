@@ -24,4 +24,9 @@ public class DeGiayService {
     public DeGiay findByTen(String ten){
         return deGiayRepository.findDeGiayByTen(ten);
     }
+
+    public List<DeGiay> findDeGiaysByIdChiTietGiay(UUID uuid) {
+        return deGiayRepository.findDeGiaysByIdChiTietGiay(uuid);
+    }
+
 }

@@ -24,4 +24,8 @@ public class KichCoService {
     public KichCo findByTen(String ten){
         return kichCoRepository.findKichCoByTen(ten);
     }
+
+    public List<KichCo> findKichCosByIdChiTietGiay(UUID uuid) {
+        return kichCoRepository.findKichCosByIdChiTietGiay(uuid);
+    }
 }

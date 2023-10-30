@@ -867,10 +867,10 @@
                                     <!-- Start Product Default Single Item -->
                                     <div class="product-default-single-item product-color--pink swiper-slide" th:each="product : ${products}">
                                         <div class="image-box">
-                                            <a href="../product-details-default.html" class="image-link">
-                                                <img th:src="@{'/img/' + ${product.anhs.get(0).anhChinh}}"
+                                            <a th:href="@{'/sophia-store/detail/'+${product.getId()}}" class="image-link" th:if="${not #lists.isEmpty(product.getChiTietGiayList())}">
+                                                <img th:src="@{'/img/' + ${product.getChiTietGiayList().get(0).getAnhs().get(0).anhChinh}}"
                                                      style="width: 320px; height: 370px" class="img-fluid" alt=""/>
-                                                <img th:src="@{'/img/' + ${product.anhs.get(0).anhChinh}}"
+                                                <img th:src="@{'/img/' + ${product.getChiTietGiayList().get(0).getAnhs().get(1).anhChinh}}"
                                                      style="width: 320px; height: 370px" class="img-fluid" alt=""/>
                                             </a>
                                             <div class="tag">
@@ -892,7 +892,7 @@
                                         </div>
                                         <div class="content">
                                             <div class="content-left">
-                                                <h6 class="title"><a href="../product-details-default.html" th:text="${product.getGiay().getTen()}"></a></h6>
+                                                <h6 class="title"><a th:href="@{'/sophia-store/detail/'+${product.getId()}}" th:text="${product.getChiTietGiayList().get(0).getHang().getTen()+' '+product.getTen()}"></a></h6>
                                                 <ul class="review-star">
                                                     <li class="fill"><i class="ion-android-star"></i></li>
                                                     <li class="fill"><i class="ion-android-star"></i></li>
@@ -902,7 +902,7 @@
                                                 </ul>
                                             </div>
                                             <div class="content-right">
-                                                <span class="price" th:text="${#numbers.formatDecimal(product.gia, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span>
+                                                <span class="price" th:text="${#numbers.formatDecimal(product.getChiTietGiayList().get(0).getGia(), 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span>
                                             </div>
 
                                         </div>

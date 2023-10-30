@@ -25,4 +25,8 @@ public class MauSacService {
     public MauSac findByTen(String ten){
         return mauSacRepository.findMauSacByTen(ten);
     }
+
+    public List<MauSac> findMauSacsByIdChiTietGiay(UUID uuid) {
+        return mauSacRepository.findMauSacsByIdChiTietGiay(uuid);
+    }
 }

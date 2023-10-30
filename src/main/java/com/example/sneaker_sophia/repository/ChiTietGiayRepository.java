@@ -70,5 +70,6 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
         @Query("SELECT MAX(c.ma) FROM ChiTietGiay c")
         Integer findMaxMa();
 
+
 }
 
