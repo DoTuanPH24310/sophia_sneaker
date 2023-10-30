@@ -33,6 +33,7 @@ import java.util.UUID;
 public class TaiQuayController {
     public static String tempIdHD = "";
     public static UUID tempIdCTSP;
+    public static String tempIdKH = "";
     // trạnh thái = 2 (chờ)tai-quay
     @Resource(name = "hoaDonService")
     HoaDonService hoaDonService;
@@ -165,6 +166,7 @@ public class TaiQuayController {
         // 30/10
         HoaDon hoaDon = hoaDonService.getHoaDonById(id);
         if (hoaDon.getTaiKhoan() != null) {
+            session.setAttribute("idkh", hoaDon.getTaiKhoan().getId());
             NhanVienRequest nhanVienRequest = taiKhoanService.getTaiKhoanById(hoaDon.getTaiKhoan().getId());
             model.addAttribute("nhanVienRequest", nhanVienRequest);
             session.setAttribute("tinh", nhanVienRequest.getTinh());
@@ -235,7 +237,7 @@ public class TaiQuayController {
             Model model, @PathVariable("id") String idkh
             , HttpSession session
     ) {
-        session.setAttribute("idkh", idkh);
+//        session.setAttribute("idkh", idkh);
         NhanVienRequest nhanVienRequest = taiKhoanService.getTaiKhoanById(idkh);
         model.addAttribute("nhanVienRequest", nhanVienRequest);
         session.setAttribute("tinh", nhanVienRequest.getTinh());
