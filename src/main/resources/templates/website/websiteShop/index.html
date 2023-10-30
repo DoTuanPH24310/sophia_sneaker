@@ -867,7 +867,7 @@
                                     <!-- Start Product Default Single Item -->
                                     <div class="product-default-single-item product-color--pink swiper-slide" th:each="product : ${products}">
                                         <div class="image-box">
-                                            <a th:href="@{'/sophia-store/detail/'+${product.getId()}}" class="image-link" th:if="${not #lists.isEmpty(product.getChiTietGiayList())}">
+                                            <a th:href="@{'/sophia-store/detail/'+${product.getChiTietGiayList().get(0).getId()}}" class="image-link" th:if="${not #lists.isEmpty(product.getChiTietGiayList())}">
                                                 <img th:src="@{'/img/' + ${product.getChiTietGiayList().get(0).getAnhs().get(0).anhChinh}}"
                                                      style="width: 320px; height: 370px" class="img-fluid" alt=""/>
                                                 <img th:src="@{'/img/' + ${product.getChiTietGiayList().get(0).getAnhs().get(1).anhChinh}}"
@@ -892,7 +892,7 @@
                                         </div>
                                         <div class="content">
                                             <div class="content-left">
-                                                <h6 class="title"><a th:href="@{'/sophia-store/detail/'+${product.getId()}}" th:text="${product.getChiTietGiayList().get(0).getHang().getTen()+' '+product.getTen()}"></a></h6>
+                                                <h6 class="title"><a th:href="@{'/sophia-store/detail/'+${product.getChiTietGiayList().get(0).getId()}}" th:text="${product.getChiTietGiayList().get(0).getHang().getTen()+' '+product.getTen()}"></a></h6>
                                                 <ul class="review-star">
                                                     <li class="fill"><i class="ion-android-star"></i></li>
                                                     <li class="fill"><i class="ion-android-star"></i></li>

@@ -165,10 +165,9 @@ public class GiayService {
         return giayRepository.findGiayByTen(ten);
     }
 
-    public List<Giay> findGiaysByIdChiTietGiay(UUID uuid) {
-        return giayRepository.findGiaysByIdChiTietGiay(uuid);
-    }
     public List<ChiTietGiay> findChiTietGiaysById(UUID uuid) {
         return giayRepository.findChiTietGiaysById(uuid);
     }
 }
+
+

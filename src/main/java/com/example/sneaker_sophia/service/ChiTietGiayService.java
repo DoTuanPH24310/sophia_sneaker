@@ -145,4 +145,11 @@ public class ChiTietGiayService {
         return chiTietGiayRepository.findChiTietGiayByMultipleParams(giay,deGiay,hang,loaiGiay,mauSac,kichCo,giaMin,giaMax,pageable);
     }
 
+    public List<ChiTietGiay> findChiTietGiaysById(UUID uuid){
+        return chiTietGiayRepository.findChiTietGiaysById(uuid);
+    }
+
+    public ChiTietGiay findChiTietGiayByIdKichCo(UUID uuid){
+        return chiTietGiayRepository.findChiTietGiayByIdKichCo(uuid);
+    }
 }

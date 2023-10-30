@@ -33,11 +33,6 @@ public interface GiayRepository extends JpaRepository<Giay, UUID> {
 
     Giay findGiayByTen(String ten);
 
-    @Query(value = "select Giay.* from Giay\n" +
-            "         join dbo.ChiTietGiay CTG on Giay.Id = CTG.IdGiay\n" +
-            "         where Giay.Id = ?",nativeQuery = true)
-    List<Giay> findGiaysByIdChiTietGiay(UUID uuid);
-
     @Query(value = "SELECT ChiTietGiay.*\n" +
             "FROM ChiTietGiay\n" +
             "         JOIN Giay ON ChiTietGiay.IdGiay = Giay.Id\n" +

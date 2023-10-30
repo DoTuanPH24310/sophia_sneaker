@@ -45,10 +45,18 @@ public class WebsiteshopController {
     @GetMapping("/detail/{id}")
     public String Detail(Model model, @PathVariable("id") UUID id){
 
-        model.addAttribute("giay",giayService.getOne(id));
-        model.addAttribute("kichCo",kichCoService.findKichCosByIdChiTietGiay(id));
-        model.addAttribute("tenGiay",giayService.findGiaysByIdChiTietGiay(id));
-//        model.addAttribute("mauSac",mauSacService.findMauSacsByIdChiTietGiay(id));
+        model.addAttribute("giay",chiTietGiayService.getOne(id));
+        model.addAttribute("kichCo",kichCoService.getAll());
+        model.addAttribute("chiTietGiayById",chiTietGiayService.findChiTietGiaysById(id));
+
+        return "website/websiteShop/product-details-default";
+    }
+    @GetMapping("/detail-giay/{id}")
+    public String DetailGiay(Model model, @PathVariable("id") UUID id){
+
+        model.addAttribute("giay",chiTietGiayService.findChiTietGiayByIdKichCo(id));
+        model.addAttribute("kichCo",kichCoService.getAll());
+        model.addAttribute("chiTietGiayById",chiTietGiayService.findChiTietGiaysById(id));
 
         return "website/websiteShop/product-details-default";
     }
