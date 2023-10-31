@@ -86,6 +86,8 @@ public class TaiKhoan {
     private List<DiaChi> diaChiList = new ArrayList<>();
 
 
+
+
     public TaiKhoan(NhanVienRequest nhanVienRequest) {
         this.setTen(nhanVienRequest.getTen());
         this.setEmail(nhanVienRequest.getEmail());
@@ -97,4 +99,5 @@ public class TaiKhoan {
         this.setAnhDaiDien(nhanVienRequest.getAnhDaiDien());
         this.setVaiTro(VaiTro.builder().id(nhanVienRequest.getIdVaiTro()).build());
     }
+
 }
