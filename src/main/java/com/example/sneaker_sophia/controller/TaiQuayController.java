@@ -54,6 +54,7 @@ public class TaiQuayController {
     @Resource(name = "diaChiService")
     DiaChiService diaChiService;
 
+//    alo ôla
     @GetMapping("/hien-thi")
     public String index(Model model) {
         tempIdHD = "";
