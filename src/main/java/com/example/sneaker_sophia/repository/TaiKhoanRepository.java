@@ -44,4 +44,5 @@ public interface TaiKhoanRepository extends JpaRepository<TaiKhoan, String> {
             "(?1 is null or tk.sdt like ?1)"
             ,nativeQuery = true)
     List<TaiKhoan> findByText(String text);
+
 }

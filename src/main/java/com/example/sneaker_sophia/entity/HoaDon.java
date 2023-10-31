@@ -92,4 +92,7 @@ public class HoaDon {
 
     @OneToMany(mappedBy = "idHoaDonCT.hoaDon", fetch = FetchType.LAZY)
     private List<HoaDonChiTiet> listHoaDonChiTiet = new ArrayList<>();
+
+    @OneToMany(mappedBy = "hoaDon", fetch = FetchType.LAZY)
+    private List<HinhThucThanhToan> hinhThucThanhToanList = new ArrayList<>();
 }
