@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
@@ -41,6 +43,7 @@ public class MauSac {
     @Column(name = "trangThai")
     private Integer trangThai;
 
-
+    @OneToMany(mappedBy = "mauSac")
+    private List<ChiTietGiay> listCTG = new ArrayList<>();
 
 }

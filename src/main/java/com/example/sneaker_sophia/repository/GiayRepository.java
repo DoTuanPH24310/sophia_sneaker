@@ -1,5 +1,7 @@
 package com.example.sneaker_sophia.repository;
 
+import com.example.sneaker_sophia.entity.ChiTietGiay;
+import com.example.sneaker_sophia.entity.DeGiay;
 import com.example.sneaker_sophia.entity.Giay;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +33,16 @@ public interface GiayRepository extends JpaRepository<Giay, UUID> {
 
     Giay findGiayByTen(String ten);
 
+    @Query(value = "SELECT ChiTietGiay.*\n" +
+            "FROM ChiTietGiay\n" +
+            "         JOIN Giay ON ChiTietGiay.IdGiay = Giay.Id\n" +
+            "WHERE Giay.Id = ?",nativeQuery = true)
+    List<ChiTietGiay> findChiTietGiaysById(UUID uuid);
+
+    @Query(value = "select Giay.* from Giay\n" +
+            "join ChiTietGiay on Giay.Id = ChiTietGiay.IdGiay\n" +
+            "where ChiTietGiay.id =? ", nativeQuery = true)
+    Giay findGiaysByIdChiTietGiay(UUID uuid);
 }
 
 

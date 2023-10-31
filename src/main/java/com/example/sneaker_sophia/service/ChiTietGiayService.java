@@ -144,4 +144,16 @@ public class ChiTietGiayService {
         Pageable pageable = PageRequest.of(pageNum - 1, PRODUCT_DETAIL_PER_PAGE, sort);
         return chiTietGiayRepository.findChiTietGiayByMultipleParams(giay,deGiay,hang,loaiGiay,mauSac,kichCo,giaMin,giaMax,pageable);
     }
+
+    public List<ChiTietGiay> findChiTietGiaysById(UUID uuid){
+        return chiTietGiayRepository.findChiTietGiaysById(uuid);
+    }
+
+    public ChiTietGiay findChiTietGiayByIdKichCo(UUID uuid){
+        return chiTietGiayRepository.findChiTietGiayByIdKichCo(uuid);
+    }
+
+    public List<ChiTietGiay> getChiTietGiaysByIdChiTietGiay(Giay giay, DeGiay deGiay, Hang hang, LoaiGiay loaiGiay, MauSac mauSac){
+        return chiTietGiayRepository.getChiTietGiaysByIdChiTietGiay(giay,deGiay,hang,loaiGiay,mauSac);
+    }
 }

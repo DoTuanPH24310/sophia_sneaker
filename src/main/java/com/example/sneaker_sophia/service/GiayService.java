@@ -164,4 +164,14 @@ public class GiayService {
     public Giay findByTen(String ten){
         return giayRepository.findGiayByTen(ten);
     }
+
+    public List<ChiTietGiay> findChiTietGiaysById(UUID uuid) {
+        return giayRepository.findChiTietGiaysById(uuid);
+    }
+
+    public Giay findGiaysByIdChiTietGiay(UUID uuid){
+        return giayRepository.findGiaysByIdChiTietGiay(uuid);
+    }
 }
+
+
