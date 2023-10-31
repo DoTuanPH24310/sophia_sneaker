@@ -31,5 +31,4 @@ public interface TaiKhoanRepository extends JpaRepository<TaiKhoan, String> {
 
     @Query(value = "select anhDaiDien from TaiKhoan where Id = ?1", nativeQuery = true)
     String getAnhById(String id);
-
 }

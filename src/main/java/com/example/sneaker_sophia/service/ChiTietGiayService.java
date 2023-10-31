@@ -144,8 +144,4 @@ public class ChiTietGiayService {
         Pageable pageable = PageRequest.of(pageNum - 1, PRODUCT_DETAIL_PER_PAGE, sort);
         return chiTietGiayRepository.findChiTietGiayByMultipleParams(giay,deGiay,hang,loaiGiay,mauSac,kichCo,giaMin,giaMax,pageable);
     }
-
-    public ChiTietGiay findById(UUID id) {
-        return this.chiTietGiayRepository.findById(id).orElse(null);
-    }
 }

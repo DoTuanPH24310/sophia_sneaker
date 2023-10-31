@@ -1,6 +1,5 @@
 package com.example.sneaker_sophia.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,31 +18,30 @@ public class ChiTietGiay {
     @Column(name = "Id")
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    @JsonIgnore
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "IdGiay", referencedColumnName = "Id")
     private Giay giay;
-    @JsonIgnore
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "IdKichCo")
     private KichCo kichCo;
-    @JsonIgnore
+
     @OneToMany(mappedBy = "id.chiTietGiay")
     private List<CTG_KhuyenMai> listCTG_KM;
-    @JsonIgnore
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "IdDeGiay", referencedColumnName = "Id")
     private DeGiay deGiay;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "IdHang", referencedColumnName = "Id")
-    @JsonIgnore
     private Hang hang;
-    @JsonIgnore
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "IdLoaiGiay", referencedColumnName = "Id")
     private LoaiGiay loaiGiay;
-    @JsonIgnore
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "IdMauSac", referencedColumnName = "Id")
     private MauSac mauSac;
