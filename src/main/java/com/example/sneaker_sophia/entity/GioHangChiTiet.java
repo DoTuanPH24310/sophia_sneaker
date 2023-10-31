@@ -1,27 +1,18 @@
 package com.example.sneaker_sophia.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
-import java.util.UUID;
+
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter @Setter
 @Entity
-@Getter
-@Setter
 @Table(name = "GioHangChiTiet")
 public class GioHangChiTiet {
-    @Id
-    @Column(name = "IdGioHang")
-    private UUID idGioHang;
-
-    @Id
-    @Column(name = "IdChiTietGiay")
-    private UUID idChiTietGiay;
+    @EmbeddedId
+    private IdGioHangChiTiet id;
 
     @Column(name = "soLuong")
     private Integer soLuong;
@@ -38,4 +29,8 @@ public class GioHangChiTiet {
     @Column(name = "nguoiSua")
     private String nguoiSua;
 
+    public GioHangChiTiet(IdGioHangChiTiet id, Integer soLuong) {
+        this.id = id;
+        this.soLuong = soLuong;
+    }
 }

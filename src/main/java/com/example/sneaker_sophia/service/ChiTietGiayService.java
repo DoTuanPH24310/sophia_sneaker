@@ -156,4 +156,5 @@ public class ChiTietGiayService {
     public List<ChiTietGiay> getChiTietGiaysByIdChiTietGiay(Giay giay, DeGiay deGiay, Hang hang, LoaiGiay loaiGiay, MauSac mauSac){
         return chiTietGiayRepository.getChiTietGiaysByIdChiTietGiay(giay,deGiay,hang,loaiGiay,mauSac);
     }
+
 }

@@ -10,17 +10,18 @@ import java.time.LocalDate;
 import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter @Setter
 @Entity
-@Getter
-@Setter
 @Table(name = "GioHang")
 public class GioHang {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "Id")
     private UUID id;
 
-    @Column(name = "IdTaiKhoan")
-    private UUID idTaiKhoan;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "IdTaiKhoan")
+    private TaiKhoan taiKhoan;
 
     @Column(name = "ngayTao")
     private LocalDate ngayTao;
