@@ -20,4 +20,8 @@ public interface MauSacRepository extends JpaRepository<MauSac, UUID> {
             "WHERE Giay.Id = ?", nativeQuery = true)
     List<MauSac> findMauSacsByIdChiTietGiay(UUID uuid);
 
+    @Query(value = "select MauSac.* from MauSac\n" +
+            "join ChiTietGiay on MauSac.Id = ChiTietGiay.IdMauSac\n" +
+            "where ChiTietGiay.id =? ", nativeQuery = true)
+    MauSac findMauSacsByIdChiTiet(UUID uuid);
 }

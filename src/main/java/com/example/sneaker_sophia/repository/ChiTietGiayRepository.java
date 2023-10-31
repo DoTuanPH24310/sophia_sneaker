@@ -69,7 +69,26 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
 
         @Query("SELECT MAX(c.ma) FROM ChiTietGiay c")
         Integer findMaxMa();
+        @Query(value = "SELECT ChiTietGiay.* FROM dbo.ChiTietGiay WHERE ChiTietGiay.IdGiay = (SELECT IdGiay FROM dbo.ChiTietGiay WHERE Id = ?)", nativeQuery = true)
+        List<ChiTietGiay> findChiTietGiaysById(UUID uuid);
 
+    @Query("SELECT cg1 FROM ChiTietGiay cg1 WHERE cg1.kichCo = :idKichCo AND EXISTS ("
+            + "SELECT 1 FROM ChiTietGiay cg2 WHERE cg1.giay = cg2.giay AND cg1.id <> cg2.id AND cg1.kichCo <> cg2.kichCo)")
+    ChiTietGiay findChiTietGiayByIdKichCo(@Param("idKichCo") UUID idKichCo);
+
+    @Query("SELECT c FROM ChiTietGiay c WHERE " +
+            "(c.giay = :giay) AND " +
+            "(c.deGiay = :deGiay) AND " +
+            "(c.hang = :hang) AND " +
+            "(c.loaiGiay = :loaiGiay) AND " +
+            "(c.mauSac = :mauSac)")
+
+    List<ChiTietGiay> getChiTietGiaysByIdChiTietGiay(
+            @Param("giay") Giay giay,
+            @Param("deGiay") DeGiay deGiay,
+            @Param("hang") Hang hang,
+            @Param("loaiGiay") LoaiGiay loaiGiay,
+            @Param("mauSac") MauSac mauSac);
 
 }
 

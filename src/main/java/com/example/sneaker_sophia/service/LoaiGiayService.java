@@ -1,6 +1,7 @@
 package com.example.sneaker_sophia.service;
 
 import com.example.sneaker_sophia.entity.DeGiay;
+import com.example.sneaker_sophia.entity.Hang;
 import com.example.sneaker_sophia.entity.KichCo;
 import com.example.sneaker_sophia.entity.LoaiGiay;
 import com.example.sneaker_sophia.repository.LoaiGiayRepository;
@@ -25,5 +26,9 @@ public class LoaiGiayService {
 
     public LoaiGiay findByTen(String ten){
         return loaiGiayRepository.findLoaiGiayByTen(ten);
+    }
+
+    public LoaiGiay findHangsByIdChiTietGiay(UUID uuid){
+        return loaiGiayRepository.findLoaiGiaysByIdChiTietGiay(uuid);
     }
 }

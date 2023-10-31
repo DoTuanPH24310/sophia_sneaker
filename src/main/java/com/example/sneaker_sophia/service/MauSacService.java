@@ -29,4 +29,8 @@ public class MauSacService {
     public List<MauSac> findMauSacsByIdChiTietGiay(UUID uuid) {
         return mauSacRepository.findMauSacsByIdChiTietGiay(uuid);
     }
+
+    public MauSac findMauSacsByIdChiTiet(UUID uuid){
+        return mauSacRepository.findMauSacsByIdChiTiet(uuid);
+    }
 }

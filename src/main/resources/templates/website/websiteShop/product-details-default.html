@@ -657,10 +657,9 @@
                     <div class="product-large-image product-large-image-horaizontal swiper-container">
                         <div class="swiper-wrapper">
                             <div class="product-image-large-image swiper-slide zoom-image-hover img-responsive"
-                                 th:each="anh : ${tenGiay.get(2).getChiTietGiayList().get(0).getAnhs()}">
+                                 th:each="anh : ${giay.getAnhs()}">
                                 <img class="img-fluid"
-                                     th:src="@{'/img/' + ${anh.getAnhChinh()}}"+
-                                     alt=""/>
+                                     th:src="@{'/img/' + ${anh.getAnhChinh()}}" alt=""/>
                             </div>
                         </div>
                     </div>
@@ -669,7 +668,7 @@
                     <div class="product-image-thumb product-image-thumb-horizontal swiper-container pos-relative mt-5">
                         <div class="swiper-wrapper">
                             <div class="product-image-thumb-single swiper-slide"
-                                 th:each="anh : ${tenGiay.get(2).getChiTietGiayList().get(0).getAnhs()}">
+                                 th:each="anh : ${giay.getAnhs()}">
                                 <ul class="color-list">
                                     <img class="img-fluid"
                                          th:src="@{'/img/' + ${anh.getAnhChinh()}}" alt=""/>
@@ -689,7 +688,7 @@
                     <!-- Start  Product Details Text Area-->
                     <div class="product-details-text">
                         <h4 class="title"
-                            th:text="${giay.getChiTietGiayList().get(0).getHang().getTen()+' '+giay.getTen()}"></h4>
+                            th:text="${giay.getHang().getTen()+' '+giay.getGiay().getTen()}"></h4>
                         <div class="d-flex align-items-center">
                             <ul class="review-star">
                                 <li class="fill"><i class="ion-android-star"></i></li>
@@ -701,7 +700,7 @@
                             <a href="#" class="customer-review ml-2">(customer review )</a>
                         </div>
                         <div class="price"
-                             th:text="${#numbers.formatDecimal(giay.getChiTietGiayList().get(0).getGia(), 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></div>
+                             th:text="${#numbers.formatDecimal(giay.getGia(), 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></div>
 
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam fringilla augue nec est
                             critique auctor. Donec non est at libero vulputate rutrum. Morbi ornare lectus quis
@@ -714,11 +713,11 @@
                         <div class="variable-single-item">
                             <h4 class="title">Available Options</h4>
                             <ul class="color-list">
-                                <li th:each="giay, giayIndex : ${tenGiay}">
-                                    <a th:if="${giay.getChiTietGiayList() != null and giay.getChiTietGiayList().size() > giayIndex.index}"
-                                       th:href="@{'/sophia-store/detail/' + ${giay.getId()}}" class="image-link">
+                                <li th:each="chiTietGiay : ${chiTietGiayById}">
+                                    <a
+                                       th:href="@{'/sophia-store/detail/' + ${chiTietGiay.getId()}}" class="image-link">
                                         <img class="img-fluid"
-                                             th:src="@{'/img/' + ${giay.getChiTietGiayList().get(giayIndex.index).getAnhs().get(0).getAnhChinh()}}"
+                                             th:src="@{'/img/' + ${chiTietGiay.getAnhs().get(0).getAnhChinh()}}"
                                              style="width: 70px; height: 80px" alt=""/>
                                     </a>
                                 </li>
@@ -727,9 +726,10 @@
                         <div class="variable-single-item">
                             <span>Size</span>
                             <select class="product-variable-size">
-                                <option value="null" th:selected="${kichCo == null}">Chọn size</option>
-                                <option th:each="kich : ${kichCo}" th:value="${kich.id}"
-                                        th:text="${kich.ten}"></option>
+                                <option value="null" th:selected="${size == null}">Chọn size</option>
+                                <!--/*@thymesVar id="getKichCo" type=""*/-->
+                                <option th:each="kich : ${size}" th:value="${kich.getKichCo().getId()}"
+                                        th:text="${kich.getKichCo().getTen()}"></option>
                             </select>
                         </div>
                         <!-- Product Variable Single Item -->
@@ -738,7 +738,7 @@
                                 <i class="ion-checkmark-circled product-stock-in"></i>
                                 Còn
                                 <span class="product-stock-in"
-                                      th:text="${giay.getChiTietGiayList().get(0).getSoLuong()+' '}">
+                                      th:text="${giay.getSoLuong()+' '}">
                                 </span>Sản phẩm
                             </div>
                         </div>
