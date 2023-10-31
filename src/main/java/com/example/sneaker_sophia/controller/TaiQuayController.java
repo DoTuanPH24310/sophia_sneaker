@@ -51,6 +51,8 @@ public class TaiQuayController {
     @Resource(name = "taiKhoanService")
     TaiKhoanService taiKhoanService;
 
+    @Resource(name = "diaChiService")
+    DiaChiService diaChiService;
 
     @GetMapping("/hien-thi")
     public String index(Model model) {
@@ -172,6 +174,7 @@ public class TaiQuayController {
 //        }
         if (hoaDon.getTaiKhoan() != null) {
             session.setAttribute("idkh", hoaDon.getTaiKhoan().getId());
+            tempIdKH = hoaDon.getTaiKhoan().getId();
             NhanVienRequest nhanVienRequest = taiKhoanService.getTaiKhoanById(hoaDon.getTaiKhoan().getId());
             model.addAttribute("nhanVienRequest", nhanVienRequest);
             session.setAttribute("tinh", nhanVienRequest.getTinh());
@@ -179,6 +182,7 @@ public class TaiQuayController {
             session.setAttribute("phuong", nhanVienRequest.getPhuongXa());
             session.setAttribute("loaihdg", hoaDon.getLoaiHoaDon());
         } else {
+            session.setAttribute("idkh", null);
             session.setAttribute("loaihdg", hoaDon.getLoaiHoaDon());
             return "/admin/taiquay/index";
         }
@@ -279,7 +283,23 @@ public class TaiQuayController {
 
         return "forward:/admin/tai-quay/detail/" + tempIdHD;
     }
-
+    // 31/10
+    @GetMapping("updateDCMD/{id}")
+    public String updateDCMD(
+            @PathVariable("id") String iddc
+    ){
+        DiaChi diaChiThuong = diaChiService.getDiaChiById(iddc);
+        DiaChi diaChiMD = diaChiService.getDiaChiByIdTaiKhoan(tempIdKH);
+        if(diaChiMD.getDiaChiMacDinh() == 1){
+            diaChiMD.setDiaChiMacDinh(0);
+            diaChiService.saveDC(diaChiMD);
+        }
+        if(diaChiThuong.getDiaChiMacDinh() == 0){
+            diaChiThuong.setDiaChiMacDinh(1);
+            diaChiService.saveDC(diaChiThuong);
+        }
+        return "forward:/admin/tai-quay/detail/" + tempIdHD;
+    }
 // =================================================================
 //@GetMapping("/pdf")
 //public void pdf(HttpServletResponse response) throws IOException {

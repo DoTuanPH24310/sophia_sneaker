@@ -271,9 +271,8 @@
 
                             <div class="row mb-4">
                                 <div class="col-4">
-                                    <select th:value="${nhanVienRequest.tinh}" disabled id="province"
-                                            class="form-control">
-                                        <option value="">Chọn</option>
+                                    <select th:value="*{phuongXa}" disabled id="ward" class="form-control">
+                                        <option value="">--Chọn Phường/Xã--</option>
                                     </select>
                                 </div>
                                 <div class="col-4">
@@ -282,8 +281,9 @@
                                     </select>
                                 </div>
                                 <div class="col-4">
-                                    <select th:value="*{phuongXa}" disabled id="ward" class="form-control">
-                                        <option value="">--Chọn Phường/Xã--</option>
+                                    <select th:value="${nhanVienRequest.tinh}" disabled id="province"
+                                            class="form-control">
+                                        <option value="">Chọn</option>
                                     </select>
                                 </div>
                             </div>
@@ -706,12 +706,12 @@
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script th:inline="javascript">
-        const customSwitches = document.getElementById("customSwitches");
+
         const form = document.getElementById("form");
 
         const host = "https://provinces.open-api.vn/api/";
 
-
+        const customSwitches = document.getElementById("customSwitches");
         function loadding() {
             if (customSwitches.checked) {
                 form.style.display = "block";
@@ -720,8 +720,7 @@
             }
         }
 
-        customSwitches.addEventListener("change", loadding);
-        window.addEventListener("load", loadding);
+
 
         // load modal
         var modal = document.getElementById('modalChiTietGiay');
@@ -874,7 +873,6 @@
             row.style.textAlign = 'center';
             select.add(row);
         }
-
         function test() {
             var params = {
                 idGiay: selectGiay.value,
@@ -893,6 +891,7 @@
                 success: function (data) {
                     if (data.length == 0) {
                         document.getElementById('err').innerHTML = "Không có dữ liệu phù hợp";
+                        loadAll(data);
                     } else {
                         document.getElementById('err').innerHTML = "";
                         loadAll(data);
@@ -1048,7 +1047,7 @@
         function loadTrDDC(x, index) {
             // Update thành địa chỉ mặc định
             var button = document.createElement('a');
-            button.href = '';
+            button.href = '/admin/tai-quay/updateDCMD/'+x.id+'#labelKhachHang';
             button.text = 'Chọn'
             button.classList.add('btn');
             button.classList.add('btn-warning');
@@ -1061,6 +1060,8 @@
 
             if (x.diaChiMacDinh == 1) {
                 checkBox = '  <button class="btn btn-success">Mặc định</button>';
+
+
             }
             row.insertCell().innerHTML = x.diaChiCuThe;
             row.insertCell().innerHTML = selectXa;
@@ -1078,25 +1079,37 @@
             }
         }
 
+        var checkbox = document.getElementById("customSwitches");
 
         function submitForm() {
             var checkbox = document.getElementById("customSwitches");
+            if (idKh == null){
+                checkbox.checked = false;
+                alert("Chưa chọn khách hàng");
+                return;
+            }
             if (checkbox.checked == true) {
                 // Nếu checkbox được chọn, gửi yêu cầu GET đến đường dẫn /admin/tai-quay/updatelhd
                 window.location.href = "/admin/tai-quay/updatelhd#labelKhachhang";
-            } else if (checkbox.checked == false) {
+            } else {
                 window.location.href = "/admin/tai-quay/updatelhtq#labelKhachhang";
             }
+            console.log(idKh +' :abc');
         }
 
         const loaihdg = [[${session.loaihdg}]];
 
-        var checkbox = document.getElementById("customSwitches");
-        if (loaihdg == 2) {
-            checkbox.checked = true; // Đánh dấu checkbox là checked
-        } else if (loaihdg == 1) {
-            checkbox.checked = false; // Tắt checkbox
+        if (idKh != null) {
+            if (loaihdg == 2) {
+                checkbox.checked = true; // Đánh dấu checkbox là checked
+            } else if (loaihdg == 1) {
+                checkbox.checked = false; // Tắt checkbox
+            }
+            customSwitches.addEventListener("change", loadding);
+            window.addEventListener("load", loadding);
         }
+
+
 
         var tinh = [[${session.tinh}]];
         var quan = [[${session.quan}]];
@@ -1104,6 +1117,7 @@
         apiDiaChiGender('province', 'district', 'ward', tinh, quan, phuong);
 
     </script>
+
 </div>
 </body>
 
