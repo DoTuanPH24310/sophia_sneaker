@@ -761,14 +761,14 @@
                         <div class="row">
                             <label for="districttdc">Quận/Huyện</label>
                             <select name="" class="form-control" id="districttdc">
-                                <option value="">---Chọn-----</option>
+                                <option value="">---Chọn Quận/Huyện----</option>
                             </select>
                         </div>
 
                         <div class="row">
                             <label for="wardtdc">Xã/Phường</label>
                             <select name="" class="form-control" id="wardtdc">
-                                <option value="">---Chọn-----</option>
+                                <option value="">---Chọn Xã/Phường----</option>
                             </select>
                         </div>
 
@@ -794,7 +794,7 @@
             integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script th:inline="javascript">
+    <script th:inline="javascript" >
 
         const form = document.getElementById("form");
 
@@ -1124,7 +1124,7 @@
             }
 
             var renderData = (array, select) => {
-                let row = ' <option disable value="">chọn thành phố</option>';
+                let row = ' <option disable value="">--Chọn Thành Phố--</option>';
                 array.forEach(element => {
                     row += `<option value="${element.code}">${element.name}</option>`
                 });
@@ -1226,7 +1226,6 @@
         var quan = [[${session.quan}]];
         var phuong = [[${session.phuong}]];
         apiDiaChiGender('province', 'district', 'ward', tinh, quan, phuong);
-
     </script>
 
 </div>

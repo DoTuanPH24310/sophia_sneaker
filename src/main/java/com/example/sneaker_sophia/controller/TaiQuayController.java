@@ -200,7 +200,7 @@ public class TaiQuayController {
             Model model
     ) {
         HoaDon hoaDon = hoaDonService.getHoaDonById(id);
-        if (hoaDon.getListHoaDonChiTiet().size() > 1) {
+        if (hoaDon.getListHoaDonChiTiet().size() > 0) {
             tempIdHD = id;
             model.addAttribute("errHD", "Hóa đơn vẫn còn sản phẩm");
             return "forward:/admin/tai-quay/detail/" + tempIdHD;
