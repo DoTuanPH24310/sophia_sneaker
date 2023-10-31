@@ -726,9 +726,10 @@
                         <div class="variable-single-item">
                             <span>Size</span>
                             <select class="product-variable-size">
-                                <option value="null" th:selected="${kichCo == null}">Chọn size</option>
-                                <option th:each="kich : ${kichCo}" th:value="${kich.getId()}"
-                                        th:text="${kich.getTen()}" th:href="@{'/sophia-store/detail/' + ${kich.getId()}}"></option>
+                                <option value="null" th:selected="${size == null}">Chọn size</option>
+                                <!--/*@thymesVar id="getKichCo" type=""*/-->
+                                <option th:each="kich : ${size}" th:value="${kich.getKichCo().getId()}"
+                                        th:text="${kich.getKichCo().getTen()}"></option>
                             </select>
                         </div>
                         <!-- Product Variable Single Item -->

@@ -29,4 +29,7 @@ public class DeGiayService {
         return deGiayRepository.findDeGiaysByIdChiTietGiay(uuid);
     }
 
+    public DeGiay findDeGiaysByIdChiTiet(UUID uuid){
+        return deGiayRepository.findDeGiaysByIdChiTiet(uuid);
+    }
 }

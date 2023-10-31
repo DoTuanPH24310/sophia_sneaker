@@ -168,6 +168,10 @@ public class GiayService {
     public List<ChiTietGiay> findChiTietGiaysById(UUID uuid) {
         return giayRepository.findChiTietGiaysById(uuid);
     }
+
+    public Giay findGiaysByIdChiTietGiay(UUID uuid){
+        return giayRepository.findGiaysByIdChiTietGiay(uuid);
+    }
 }
 
 

@@ -48,16 +48,13 @@ public class WebsiteshopController {
         model.addAttribute("giay",chiTietGiayService.getOne(id));
         model.addAttribute("kichCo",kichCoService.getAll());
         model.addAttribute("chiTietGiayById",chiTietGiayService.findChiTietGiaysById(id));
-
-        return "website/websiteShop/product-details-default";
-    }
-    @GetMapping("/detail-giay/{id}")
-    public String DetailGiay(Model model, @PathVariable("id") UUID id){
-
-        model.addAttribute("giay",chiTietGiayService.findChiTietGiayByIdKichCo(id));
-        model.addAttribute("kichCo",kichCoService.getAll());
-        model.addAttribute("chiTietGiayById",chiTietGiayService.findChiTietGiaysById(id));
-
+        model.addAttribute("size",chiTietGiayService.getChiTietGiaysByIdChiTietGiay(
+                giayService.findGiaysByIdChiTietGiay(id),
+                deGiayService.findDeGiaysByIdChiTiet(id),
+                hangService.findHangsByIdChiTietGiay(id),
+                loaiGiayService.findHangsByIdChiTietGiay(id),
+                mauSacService.findMauSacsByIdChiTiet(id)
+        ));
         return "website/websiteShop/product-details-default";
     }
 

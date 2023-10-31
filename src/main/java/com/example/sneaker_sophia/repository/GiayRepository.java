@@ -38,6 +38,11 @@ public interface GiayRepository extends JpaRepository<Giay, UUID> {
             "         JOIN Giay ON ChiTietGiay.IdGiay = Giay.Id\n" +
             "WHERE Giay.Id = ?",nativeQuery = true)
     List<ChiTietGiay> findChiTietGiaysById(UUID uuid);
+
+    @Query(value = "select Giay.* from Giay\n" +
+            "join ChiTietGiay on Giay.Id = ChiTietGiay.IdGiay\n" +
+            "where ChiTietGiay.id =? ", nativeQuery = true)
+    Giay findGiaysByIdChiTietGiay(UUID uuid);
 }
 
 

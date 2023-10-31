@@ -1,6 +1,7 @@
 package com.example.sneaker_sophia.repository;
 
 import com.example.sneaker_sophia.entity.DeGiay;
+import com.example.sneaker_sophia.entity.Giay;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -17,4 +18,9 @@ public interface DeGiayRepository extends JpaRepository<DeGiay, UUID> {
             "         JOIN Giay ON ChiTietGiay.IdGiay = Giay.Id\n" +
             "WHERE Giay.Id = ?", nativeQuery = true)
     List<DeGiay> findDeGiaysByIdChiTietGiay(UUID uuid);
+
+    @Query(value = "select DeGiay.* from DeGiay\n" +
+            "join ChiTietGiay on DeGiay.Id = ChiTietGiay.IdDeGiay\n" +
+            "where ChiTietGiay.id =? ", nativeQuery = true)
+    DeGiay findDeGiaysByIdChiTiet(UUID uuid);
 }

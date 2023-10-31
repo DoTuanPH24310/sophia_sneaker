@@ -1,6 +1,7 @@
 package com.example.sneaker_sophia.service;
 
 import com.example.sneaker_sophia.entity.DeGiay;
+import com.example.sneaker_sophia.entity.Giay;
 import com.example.sneaker_sophia.entity.Hang;
 import com.example.sneaker_sophia.repository.HangRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,5 +25,9 @@ public class HangService {
 
     public Hang findByTen(String ten){
         return hangRepository.findHangByTen(ten);
+    }
+
+    public Hang findHangsByIdChiTietGiay(UUID uuid){
+        return hangRepository.findHangsByIdChiTietGiay(uuid);
     }
 }
