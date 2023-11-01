@@ -18,7 +18,8 @@ import java.util.UUID;
 
 @Controller
 @RequestMapping("sophia-store")
-public class WebsiteshopController {
+public class
+WebsiteshopController {
     @Autowired
     ChiTietGiayService chiTietGiayService;
     @Autowired
@@ -43,7 +44,7 @@ public class WebsiteshopController {
         model.addAttribute("products", top16Products);
 
         // cart
-        String userEmail = "tuandv@gmail.com";
+        String userEmail = "namdc@gmail.com";
         List<GioHangChiTiet> cartItems = cartService.getCartItems(userEmail);
         double totalCartPrice = cartItems.stream()
                 .mapToDouble(item -> item.getId().getChiTietGiay().getGia() * item.getSoLuong())
