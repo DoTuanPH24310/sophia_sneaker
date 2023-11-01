@@ -883,8 +883,8 @@
                                         </div>
                                         <div class="action-link">
                                             <div class="action-link-left">
-                                                <a href="#" data-bs-toggle="modal"
-                                                   data-bs-target="#modalAddcart">Add to Cart</a>
+                                                <a class="add-to-cart" th:attr="data-product-id=${product.getChiTietGiayList().get(0).getId()}"
+                                                   data-bs-toggle="modal" data-bs-target="#modalAddcart" href="#">Add to Cart</a>
                                             </div>
                                             <div class="action-link-right">
                                                 <a href="#" data-bs-toggle="modal"
@@ -1774,10 +1774,10 @@
                     <div class="row">
                         <div class="col-md-7">
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-4"  >
                                     <div class="modal-add-cart-product-img">
-                                        <img class="img-fluid"
-                                             src="/assets/images/product/default/home-1/default-1.jpg" alt="">
+                                        <img th:src="@{'/img/' + ${products.get(0).getChiTietGiayList().get(0).getAnhs().get(0).getAnhChinh()}}"
+                                             style="width: 90px; height: 135px" class="img-fluid" alt=""/>
                                     </div>
                                 </div>
                                 <div class="col-md-8">
@@ -1785,7 +1785,7 @@
                                         successfully!
                                     </div>
                                     <div class="modal-add-cart-product-cart-buttons">
-                                        <a href="../cart.html">View Cart</a>
+                                        <a href="/cart/hien-thi">View Cart</a>
                                         <a href="../checkout.html">Checkout</a>
                                     </div>
                                 </div>
@@ -1793,9 +1793,9 @@
                         </div>
                         <div class="col-md-5 modal-border">
                             <ul class="modal-add-cart-product-shipping-info">
-                                <li><strong><i class="icon-shopping-cart"></i> There Are 5 Items In Your
+                                <li><strong><i class="icon-shopping-cart"></i> There Are <strong th:text="${cartItems.size()+1}"></strong> Items In Your
                                     Cart.</strong></li>
-                                <li><strong>TOTAL PRICE: </strong> <span>$187.00</span></li>
+                                <li><strong>TOTAL PRICE: </strong> <span th:text="${#numbers.formatCurrency(totalCartPrice)}"></span></li>
                                 <li class="modal-continue-button"><a href="#" data-bs-dismiss="modal">CONTINUE
                                     SHOPPING</a></li>
                             </ul>
@@ -1805,7 +1805,8 @@
             </div>
         </div>
     </div>
-</div> <!-- End Modal Add cart -->
+</div>
+<!-- End Modal Add cart -->
 
 <!-- Start Modal Quickview cart -->
 <div class="modal fade" id="modalQuickview" tabindex="-1" role="dialog" aria-hidden="true">

@@ -2,6 +2,7 @@ package com.example.sneaker_sophia.controller.websiteshop;
 
 import com.example.sneaker_sophia.entity.ChiTietGiay;
 import com.example.sneaker_sophia.entity.Giay;
+import com.example.sneaker_sophia.entity.GioHangChiTiet;
 import com.example.sneaker_sophia.entity.Hang;
 import com.example.sneaker_sophia.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,12 +33,25 @@ public class WebsiteshopController {
     MauSacService mauSacService;
     @Autowired
     LoaiGiayService loaiGiayService;
+    @Autowired
+    private CartService cartService;
     @GetMapping("/home")
     public String home(Model model){
         List<Giay> productList = giayService.getAll();
         productList.sort(Comparator.comparing(Giay::getId));
         List<Giay> top16Products = productList.subList(0, Math.min(productList.size(), 16));
         model.addAttribute("products", top16Products);
+
+        // cart
+        String userEmail = "tuandv@gmail.com";
+        List<GioHangChiTiet> cartItems = cartService.getCartItems(userEmail);
+        double totalCartPrice = cartItems.stream()
+                .mapToDouble(item -> item.getId().getChiTietGiay().getGia() * item.getSoLuong())
+                .sum();
+        Long soLuong = this.cartService.countCartItems(userEmail);
+        model.addAttribute("soLuong", soLuong);
+        model.addAttribute("totalCartPrice", totalCartPrice);
+        model.addAttribute("cartItems", cartItems);
 
         return "website/websiteShop/index";
     }

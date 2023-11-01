@@ -34,7 +34,7 @@ public class CartController {
 
     @GetMapping("hien-thi")
     public String viewCart(Model model) {
-        String userEmail = "namdc@gmail.com";
+        String userEmail = "tuandv@gmail.com";
         List<GioHangChiTiet> cartItems = cartService.getCartItems(userEmail);
         double totalCartPrice = cartItems.stream()
                 .mapToDouble(item -> item.getId().getChiTietGiay().getGia() * item.getSoLuong())
@@ -49,7 +49,7 @@ public class CartController {
     @GetMapping("/add-to-cart/{id}")
     public String addToCart(@PathVariable("id") UUID chiTietGiayId, Model model) {
         try {
-            String userEmail = "namdc@gmail.com";
+            String userEmail = "tuandv@gmail.com";
 
             TaiKhoan taiKhoan = loginRepository.findByEmail(userEmail);
 
