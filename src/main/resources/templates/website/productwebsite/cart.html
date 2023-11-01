@@ -61,7 +61,7 @@
                         <div class="header-logo">
                             <div class="logo">
                                 <a th:href="@{/sophia-store/product}"><img src="/assets/images/logo/logo_black.png"
-                                                                      alt=""></a>
+                                                                           alt=""></a>
                             </div>
                         </div>
                         <!-- End Header Logo -->
@@ -649,12 +649,14 @@
                                             <i class="fa fa-trash-o"></i>
                                         </a>
                                     </td>
-                                    <td class="product_thumb"><a href="product-details-default.html">
-                                        <img class="offcanvas-cart-image"
-                                             th:src="@{'/img/' + ${cart.id.chiTietGiay.anhs.get(0).anhChinh}}"
-                                             style="width: 92px; height: 92px"
-                                             alt="">
-                                    </a></td>
+                                    <td class="product_thumb">
+                                        <a href="product-details-default.html">
+                                            <img class="offcanvas-cart-image"
+                                                 th:src="@{'/img/' + ${cart.id.chiTietGiay.anhs.get(0).anhChinh}}"
+                                                 style="width: 92px; height: 92px"
+                                                 alt="">
+                                        </a>
+                                    </td>
                                     <td class="product_name"><a href="product-details-default.html"
                                                                 th:text="${cart.id.chiTietGiay.hang.ten + ' ' + cart.id.chiTietGiay.giay.ten + ' ' + cart.id.chiTietGiay.loaiGiay.ten + ' ' + cart.id.chiTietGiay.mauSac.ten}"></a>
                                     </td>
@@ -729,7 +731,7 @@
                                 <p class="cart_amount">$215.00</p>
                             </div>
                             <div class="checkout_btn">
-                                <a href="#" class="btn btn-md btn-golden">Proceed to Checkout</a>
+                                <a th:href="@{/check-out/home}" class="btn btn-md btn-golden">Proceed to Checkout</a>
                             </div>
                         </div>
                     </div>
