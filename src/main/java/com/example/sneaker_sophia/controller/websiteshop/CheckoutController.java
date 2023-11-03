@@ -28,25 +28,28 @@ public class CheckoutController {
         GioHang gioHang = this.gioHangService.getCartByEmail(email);
 //        if (principal != null) {
 //            String email = principal.getName();
+
         if (gioHang != null) {
             List<GioHangChiTiet> cartItems = gioHangService.getCartItems(gioHang.getId());
+            if(cartItems == null || cartItems.isEmpty()){
+                return "redirect:/cart/hien-thi";
+            }else {
+                for (GioHangChiTiet item : cartItems) {
+                    ChiTietGiay chiTietGiay = item.getId().getChiTietGiay();
 
-            for (GioHangChiTiet item : cartItems) {
-                // Lấy thông tin ChiTietGiay từ item
-                ChiTietGiay chiTietGiay = item.getId().getChiTietGiay();
+                    double subtotal = chiTietGiay.getGia() * item.getSoLuong();
 
-                // Tính tổng giá cho mục hiện tại
-                double subtotal = chiTietGiay.getGia() * item.getSoLuong();
+                    total += subtotal;
+                }
 
-                // Cộng tổng giá vào biến total
-                total += subtotal;
+                model.addAttribute("cartItems", cartItems);
+                model.addAttribute("total", total);
+                return "website/productwebsite/checkout";
             }
-
-            model.addAttribute("cartItems", cartItems);
-            model.addAttribute("total", total);
         }
 //        }
-        return "website/productwebsite/checkout";
+        return "website/productwebsite/cart";
+
     }
 
 
