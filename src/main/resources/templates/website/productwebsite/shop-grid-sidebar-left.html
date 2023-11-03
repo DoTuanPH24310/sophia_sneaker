@@ -491,7 +491,8 @@
                     </div>
                 </div>
                 <div class="offcanvas-cart-item-delete text-right">
-                    <a href="#" class="offcanvas-cart-item-delete"><i class="fa fa-trash-o"></i></a>
+                    <a th:href="@{'/cart/removeProductCart?gioHangId=' + ${cart.id.gioHang.id} + '&chiTietGiayId=' + ${cart.id.chiTietGiay.id}}"
+                       class="offcanvas-cart-item-delete"><i class="fa fa-trash-o"></i></a>
                 </div>
             </li>
         </ul>

@@ -701,80 +701,14 @@
             <div class="row">
                 <div class="col-lg-6 col-md-6">
                     <form action="#">
-                        <h3>Billing Details</h3>
+                        <h3>Thông tin địa chỉ</h3>
                         <div class="row">
-                            <div class="col-lg-6">
-                                <div class="default-form-box">
-                                    <label>First Name <span>*</span></label>
-                                    <input type="text">
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="default-form-box">
-                                    <label>Last Name <span>*</span></label>
-                                    <input type="text">
-                                </div>
-                            </div>
                             <div class="col-12">
                                 <div class="default-form-box">
                                     <label>Họ tên người nhận hàng</label>
                                     <input type="text">
                                 </div>
                             </div>
-                            <div class="col-4">
-                                <div class="default-form-box">
-                                    <label for="country">Tỉnh<span>*</span></label>
-                                    <select class="country_option nice-select wide" name="country" id="country">
-                                        <option value="2">Bangladesh</option>
-                                        <option value="3">Algeria</option>
-                                        <option value="4">Afghanistan</option>
-                                        <option value="5">Ghana</option>
-                                        <option value="6">Albania</option>
-                                        <option value="7">Bahrain</option>
-                                        <option value="8">Colombia</option>
-                                        <option value="9">Dominican Republic</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="default-form-box">
-                                    <label for="country">Huyện <span>*</span></label>
-                                    <select class="country_option nice-select wide" name="country" id="country">
-                                        <option value="2">Bangladesh</option>
-                                        <option value="3">Algeria</option>
-                                        <option value="4">Afghanistan</option>
-                                        <option value="5">Ghana</option>
-                                        <option value="6">Albania</option>
-                                        <option value="7">Bahrain</option>
-                                        <option value="8">Colombia</option>
-                                        <option value="9">Dominican Republic</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="default-form-box">
-                                    <label for="country">Xã <span>*</span></label>
-                                    <select class="country_option nice-select wide" name="country" id="country">
-                                        <option value="2">Bangladesh</option>
-                                        <option value="3">Algeria</option>
-                                        <option value="4">Afghanistan</option>
-                                        <option value="5">Ghana</option>
-                                        <option value="6">Albania</option>
-                                        <option value="7">Bahrain</option>
-                                        <option value="8">Colombia</option>
-                                        <option value="9">Dominican Republic</option>
-                                    </select>
-                                </div>
-                            </div>
-
-
-                            <div class="col-12">
-                                <div class="default-form-box">
-                                    <label>Địa chỉ cụ thể <span>*</span></label>
-                                    <input placeholder="House number and street name" type="text">
-                                </div>
-                            </div>
-
                             <div class="col-lg-6">
                                 <div class="default-form-box">
                                     <label>Số điện thoại <span>*</span></label>
@@ -787,6 +721,39 @@
                                     <input type="text">
                                 </div>
                             </div>
+                            <div class="col-4">
+                                <div class="default-form-box">
+                                    <label for="province">Tỉnh<span>*</span></label>
+                                    <select class="country_option nice-select wide" name="province" id="province">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="default-form-box">
+                                    <label for="district">Huyện <span>*</span></label>
+                                    <select class="country_option nice-select wide" name="district" id="district">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="default-form-box">
+                                    <label for="ward">Xã <span>*</span></label>
+                                    <select class="country_option nice-select wide" name="ward" id="ward">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="default-form-box">
+                                    <label>Địa chỉ cụ thể <span>*</span></label>
+                                    <input placeholder="House number and street name" type="text">
+                                </div>
+                            </div>
+
+
                             <div class="col-12">
                                 <label class="checkbox-default" for="newAccount" data-bs-toggle="collapse"
                                        data-bs-target="#newAccountPassword">
@@ -801,102 +768,83 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12">
-                                <label class="checkbox-default" for="newShipping" data-bs-toggle="collapse"
-                                       data-bs-target="#anotherShipping">
-                                    <input type="checkbox" id="newShipping">
-                                    <span>Ship to a different address?</span>
-                                </label>
+<!--                            <div class="col-12">-->
+<!--                                <label class="checkbox-default" for="newShipping" data-bs-toggle="collapse"-->
+<!--                                       data-bs-target="#anotherShipping">-->
+<!--                                    <input type="checkbox" id="newShipping">-->
+<!--                                    <span>Ship to a different address?</span>-->
+<!--                                </label>-->
 
-                                <div id="anotherShipping" class="collapse mt-3" data-parent="#anotherShipping">
-                                    <div class="row">
-                                        <div class="col-lg-6">
-                                            <div class="default-form-box">
-                                                <label>First Name <span>*</span></label>
-                                                <input type="text">
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="default-form-box">
-                                                <label>Last Name <span>*</span></label>
-                                                <input type="text">
-                                            </div>
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="default-form-box">
-                                                <label>Company Name</label>
-                                                <input type="text">
-                                            </div>
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="select_form_select default-form-box">
-                                                <label for="countru_name">country <span>*</span></label>
-                                                <select class="niceselect_option wide" name="cuntry"
-                                                        id="countru_name">
-                                                    <option value="2">Bangladesh</option>
-                                                    <option value="3">Algeria</option>
-                                                    <option value="4">Afghanistan</option>
-                                                    <option value="5">Ghana</option>
-                                                    <option value="6">Albania</option>
-                                                    <option value="7">Bahrain</option>
-                                                    <option value="8">Colombia</option>
-                                                    <option value="9">Dominican Republic</option>
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-12">
-                                            <div class="default-form-box">
-                                                <label>Street address <span>*</span></label>
-                                                <input placeholder="House number and street name" type="text">
-                                            </div>
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="default-form-box">
-                                                <input placeholder="Apartment, suite, unit etc. (optional)"
-                                                       type="text">
-                                            </div>
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="default-form-box">
-                                                <label>Town / City <span>*</span></label>
-                                                <input type="text">
-                                            </div>
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="default-form-box">
-                                                <label>State / County <span>*</span></label>
-                                                <input type="text">
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="default-form-box">
-                                                <label>Phone<span>*</span></label>
-                                                <input type="text">
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="default-form-box">
-                                                <label> Email Address <span>*</span></label>
-                                                <input type="text">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+<!--                                <div id="anotherShipping" class="collapse mt-3" data-parent="#anotherShipping">-->
+<!--                                    <div class="row">-->
+<!--                                        <div class="col-12">-->
+<!--                                            <div class="default-form-box">-->
+<!--                                                <label>Họ tên người nhận hàng</label>-->
+<!--                                                <input type="text">-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="col-lg-6">-->
+<!--                                            <div class="default-form-box">-->
+<!--                                                <label>Số điện thoại <span>*</span></label>-->
+<!--                                                <input type="text">-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="col-lg-6">-->
+<!--                                            <div class="default-form-box">-->
+<!--                                                <label> Địa chỉ email <span>*</span></label>-->
+<!--                                                <input type="text">-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="col-4">-->
+<!--                                            <div class="default-form-box">-->
+<!--                                                <label for="province">Tỉnh<span>*</span></label>-->
+<!--                                                <select class="province nice-select wide" name="country"-->
+<!--                                                        id="province">-->
+<!--                                                    <option value="2"></option>-->
+<!--                                                </select>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="col-4">-->
+<!--                                            <div class="default-form-box">-->
+<!--                                                <label for="district">Huyện <span>*</span></label>-->
+<!--                                                <select class="country_option nice-select wide" name="country"-->
+<!--                                                        id="district">-->
+<!--                                                    <option value="9"></option>-->
+<!--                                                </select>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="col-4">-->
+<!--                                            <div class="default-form-box">-->
+<!--                                                <label for="ward">Xã <span>*</span></label>-->
+<!--                                                <select class="country_option nice-select wide" name="country"-->
+<!--                                                        id="ward">-->
+<!--                                                    <option value="2"></option>-->
+<!--                                                </select>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        <div class="col-12">-->
+<!--                                            <div class="default-form-box">-->
+<!--                                                <label>Địa chỉ cụ thể <span>*</span></label>-->
+<!--                                                <input placeholder="House number and street name" type="text">-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
                             <div class="col-12 mt-3">
                                 <div class="order-notes">
-                                    <label for="order_note">Order Notes</label>
+                                    <label for="order_note">Ghi chú</label>
                                     <textarea id="order_note"
                                               placeholder="Notes about your order, e.g. special notes for delivery."></textarea>
                                 </div>
                             </div>
                         </div>
                     </form>
+<!--                    <h2 id="result"></h2>-->
                 </div>
                 <div class="col-lg-6 col-md-6">
                     <form action="#">
-                        <h3>Your order</h3>
+                        <h3>Đơn hàng của bạn</h3>
                         <div class="order_table table-responsive">
                             <table>
                                 <thead>
@@ -914,7 +862,8 @@
                                              style="width: 92px; height: 92px"
                                              alt="">
                                     </td>
-                                    <td th:text="${item.id.chiTietGiay.hang.ten + ' ' + item.id.chiTietGiay.giay.ten + ' ' + item.id.chiTietGiay.loaiGiay.ten + ' ' + item.id.chiTietGiay.mauSac.ten}"><p th:text="'x  '${item.soLuong}"></p></td>
+                                    <td th:text="${item.id.chiTietGiay.hang.ten + ' ' + item.id.chiTietGiay.giay.ten + ' ' + item.id.chiTietGiay.loaiGiay.ten + ' ' + item.id.chiTietGiay.mauSac.ten}">
+                                        <p th:text="'x  '${item.soLuong}"></p></td>
                                     <td th:text="${#numbers.formatCurrency(item.id.chiTietGiay.gia * item.soLuong)}"></td>
                                 </tr>
                                 </tbody>
@@ -939,13 +888,12 @@
                                 <label class="checkbox-default" for="currencyCod" data-bs-toggle="collapse"
                                        data-bs-target="#methodCod">
                                     <input type="checkbox" id="currencyCod">
-                                    <span>Cash on Delivery</span>
+                                    <span>Thanh toán khi nhận hàng</span>
                                 </label>
 
                                 <div id="methodCod" class="collapse" data-parent="#methodCod">
                                     <div class="card-body1">
-                                        <p>Please send a check to Store Name, Store Street, Store Town, Store State
-                                            / County, Store Postcode.</p>
+                                        <p>Vui lòng nhập địa chỉ giao và kiểm tra đúng nơi nhận hàng.</p>
                                     </div>
                                 </div>
                             </div>
@@ -1355,52 +1303,124 @@
 <script src="assets/js/plugins/ajax-mail.js"></script> -->
 
 <!-- Use the minified version files listed below for better performance and remove the files listed above -->
+
 <script src="/assets/js/vendor/vendor.min.js"></script>
 <script src="/assets/js/plugins/plugins.min.js"></script>
-
 <!-- Main JS -->
 <script src="/assets/js/main.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js" integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 <script>
-    function calculateShippingFee(orderDetails) {
-        // Định nghĩa các thông số cần thiết cho yêu cầu tính phí vận chuyển
-        const weight = orderDetails.weight; // Trọng lượng
-        const dimensions = orderDetails.dimensions; // Kích thước
-        const senderAddress = orderDetails.senderAddress; // Địa chỉ người gửi
-        const receiverAddress = orderDetails.receiverAddress; // Địa chỉ người nhận
+    const host = "https://provinces.open-api.vn/api/";
 
-        // Tạo một đối tượng chứa thông tin đơn hàng để gửi đi
-        const orderData = {
-            weight: weight,
-            dimensions: dimensions,
-            senderAddress: senderAddress,
-            receiverAddress: receiverAddress
-        };
-
-        // Gửi yêu cầu tính phí vận chuyển đến API của hãng vận chuyển (sử dụng thư viện như Axios)
-        axios.post('/calculate-shipping-fee', orderData)
-            .then(response => {
-                // Xử lý phản hồi từ API để lấy phí vận chuyển
-                const shippingFee = response.data.shippingFee;
-
-                // Sau khi nhận được phí vận chuyển, cập nhật nó lên trang thanh toán
-                const shippingFeeElement = document.getElementById("shippingFee");
-                shippingFeeElement.innerHTML = `$${shippingFee}`;
+    var callAPI = (api) => {
+        return axios.get(api)
+            .then((response) => {
+                console.log(response.data);
+                renderData(response.data, "province");
             })
-            .catch(error => {
-                // Xử lý lỗi nếu có
-                console.error('Error calculating shipping fee:', error);
+            .catch((error) => {
+                console.error("Error calling API:", error);
             });
     }
 
-    // Sử dụng hàm để tính phí vận chuyển và cập nhật trên trang thanh toán
-    const orderDetails = {
-        weight: 2.5, // Điền thông tin trọng lượng, kích thước, địa chỉ, v.v. dựa trên thông tin đơn hàng của bạn.
-        dimensions: '20x30x10',
-        senderAddress: '123 Sender St, Sender City',
-        receiverAddress: '456 Receiver St, Receiver City'
-    };
+    callAPI('https://provinces.open-api.vn/api/?depth=1');
 
-    calculateShippingFee(orderDetails);
+    var callApiDistrict = (api) => {
+        return axios.get(api)
+            .then((response) => {
+                console.log(response.data.districts);
+                renderData(response.data.districts, "district");
+                printResult();
+            })
+            .catch((error) => {
+                console.error("Error calling API:", error);
+            });
+    }
+
+    var callApiWard = (api) => {
+        return axios.get(api)
+            .then((response) => {
+                renderData(response.data.wards, "ward");
+                printResult();
+            })
+            .catch((error) => {
+                console.error("Error calling API:", error);
+            });
+    }
+
+    var renderData = (array, select) => {
+        let row = ' <option disable value="">chọn</option>';
+        array.forEach(element => {
+            row += `<option value="${element.code}">${element.name}</option>`
+        });
+        document.querySelector("#" + select).innerHTML = row
+    }
+
+    $("#province").change(() => {
+        callApiDistrict(host + "p/" + $("#province").val() + "?depth=2");
+    });
+
+    $("#district").change(() => {
+        callApiWard(host + "d/" + $("#district").val() + "?depth=2");
+    });
+
+    $("#ward").change(() => {
+        printResult();
+    })
+
+    var printResult = () => {
+        if ($("#district").val() != "" && $("#province").val() != "" &&
+            $("#ward").val() != "") {
+            let result = $("#province option:selected").text() +
+                " | " + $("#district option:selected").text() + " | " +
+                $("#ward option:selected").text();
+            $("#result").text(result)
+        }
+    }
+
+    // function calculateShippingFee(orderDetails) {
+    //     // Định nghĩa các thông số cần thiết cho yêu cầu tính phí vận chuyển
+    //     const weight = orderDetails.weight; // Trọng lượng
+    //     const dimensions = orderDetails.dimensions; // Kích thước
+    //     const senderAddress = orderDetails.senderAddress; // Địa chỉ người gửi
+    //     const receiverAddress = orderDetails.receiverAddress; // Địa chỉ người nhận
+    //
+    //     // Tạo một đối tượng chứa thông tin đơn hàng để gửi đi
+    //     const orderData = {
+    //         weight: weight,
+    //         dimensions: dimensions,
+    //         senderAddress: senderAddress,
+    //         receiverAddress: receiverAddress
+    //     };
+    //
+    //     // Gửi yêu cầu tính phí vận chuyển đến API của hãng vận chuyển (sử dụng thư viện như Axios)
+    //     axios.post('/calculate-shipping-fee', orderData)
+    //         .then(response => {
+    //             // Xử lý phản hồi từ API để lấy phí vận chuyển
+    //             const shippingFee = response.data.shippingFee;
+    //
+    //             // Sau khi nhận được phí vận chuyển, cập nhật nó lên trang thanh toán
+    //             const shippingFeeElement = document.getElementById("shippingFee");
+    //             shippingFeeElement.innerHTML = `$${shippingFee}`;
+    //         })
+    //         .catch(error => {
+    //             // Xử lý lỗi nếu có
+    //             console.error('Error calculating shipping fee:', error);
+    //         });
+    // }
+    //
+    // // Sử dụng hàm để tính phí vận chuyển và cập nhật trên trang thanh toán
+    // const orderDetails = {
+    //     weight: 2.5, // Điền thông tin trọng lượng, kích thước, địa chỉ, v.v. dựa trên thông tin đơn hàng của bạn.
+    //     dimensions: '20x30x10',
+    //     senderAddress: '123 Sender St, Sender City',
+    //     receiverAddress: '456 Receiver St, Receiver City'
+    // };
+    //
+    // calculateShippingFee(orderDetails);
+
 
 </script>
 </body>

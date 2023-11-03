@@ -644,7 +644,7 @@
                                 <!-- Start Cart Single Item-->
                                 <tr th:each="cart : ${cartItems}">
                                     <td class="product_remove">
-                                        <a id="xoa"
+                                        <a
                                            th:href="@{'/cart/removeProductCart?gioHangId=' + ${cart.id.gioHang.id} + '&chiTietGiayId=' + ${cart.id.chiTietGiay.id}}">
                                             <i class="fa fa-trash-o"></i>
                                         </a>
