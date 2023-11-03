@@ -90,24 +90,6 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
             @Param("loaiGiay") LoaiGiay loaiGiay,
             @Param("mauSac") MauSac mauSac);
 
-    @Query("SELECT c FROM ChiTietGiay c WHERE " +
-            "(:giayList IS EMPTY OR c.giay IN :giayList) AND " +
-            "(:deGiayList IS EMPTY OR c.deGiay IN :deGiayList) AND " +
-            "(:hangList IS EMPTY OR c.hang IN :hangList) AND " +
-            "(:loaiGiayList IS EMPTY OR c.loaiGiay IN :loaiGiayList) AND " +
-            "(:mauSacList IS EMPTY OR c.mauSac IN :mauSacList) AND " +
-            "(:kichCoList IS EMPTY OR c.kichCo IN :kichCoList) AND " +
-            "(:giaMin IS NULL OR c.gia >= :giaMin) AND " +
-            "(:giaMax IS NULL OR c.gia <= :giaMax)")
-    List<ChiTietGiay> findChiTietGiayByFilter(
-            @Param("giayList") List<Giay> giayList,
-            @Param("deGiayList") List<DeGiay> deGiayList,
-            @Param("hangList") List<Hang> hangList,
-            @Param("loaiGiayList") List<LoaiGiay> loaiGiayList,
-            @Param("mauSacList") List<MauSac> mauSacList,
-            @Param("kichCoList") List<KichCo> kichCoList,
-            @Param("giaMin") Double giaMin,
-            @Param("giaMax") Double giaMax);
 
 
 }
