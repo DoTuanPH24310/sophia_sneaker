@@ -623,15 +623,19 @@
             <div class="col-lg-3">
                 <!-- Start Sidebar Area -->
                 <div class="siderbar-section" data-aos="fade-up" data-aos-delay="0">
+                    <form th:action="@{/sophia-store/product}">
+                        <button type="submit" class="btn btn-pink">Tìm</button>
                     <!-- Start Single Sidebar Widget -->
                     <div class="sidebar-single-widget">
                         <h6 class="sidebar-title">HÃNG</h6>
                         <div class="sidebar-content">
                             <ul class="sidebar-menu">
                                 <li th:each="hang : ${danhSachHang}">
-                                    <!--                                    th:href="@{'/sophia-store/products?hang=' + ${hang.ten}}"-->
-                                    <a onchange="test();"
-                                       th:text="${hang.ten}"></a>
+                                    <label class="checkbox-default" th:id="'checkbox-' + ${hang.ten}">
+                                        <input type="checkbox"  data-name="hangIds" name="hang"
+                                               th:value="${hang.getTen()}" onchange="test();">
+                                        <span th:text="${hang.ten}"></span>
+                                    </label>
                                 </li>
                             </ul>
                         </div>
@@ -640,13 +644,13 @@
                     <!-- Start Single Sidebar Widget -->
                     <div class="sidebar-single-widget">
                         <h6 class="sidebar-title">LỌC THEO GIÁ</h6>
-                        <div class="sidebarcontent">
-                            <div id="sliderr"></div>
-                            <div class="filter-type-price">
-                                <label for="amount">Phạm vi giá:</label>
-                                <input type="text" onchange="test();" id="amount">
+                            <div class="sidebar-content">
+                                <div id="slider-range"></div>
+                                <div class="filter-type-price">
+                                    <label for="amount">Price range:</label>
+                                    <input type="text" id="amount">
+                                </div>
                             </div>
-                        </div>
                     </div> <!-- End Single Sidebar Widget -->
 
                     <div class="sidebar-single-widget">
@@ -655,9 +659,10 @@
                             <div class="filter-type-select">
                                 <ul>
                                     <li th:each="giay : ${danhSachGiay}">
-                                        <label class="checkbox-default" for="checkboxGiay">
-                                            <input type="checkbox" onchange="test();" data-name="loai" id="checkboxGiay"
-                                                   th:value="${giay.ten}">
+                                        <label class="checkbox-default"  th:id="'checkbox-' + ${giay.ten}">
+                                            <input type="checkbox" data-name="giayIds" name="giay"
+                                                   th:value="${giay.getTen()}"
+                                                   id="checkbox-giay" onchange="test();">
                                             <span th:text="${giay.ten}"></span>
                                         </label>
                                     </li>
@@ -672,10 +677,10 @@
                             <div class="filter-type-select">
                                 <ul>
                                     <li th:each="loai : ${danhSachLoaiGiay}">
-                                        <label class="checkbox-default" th:id="'checkbox-' + ${loai.id}">
-                                            <input type="checkbox" onchange="test();" data-name="loai"
+                                        <label class="checkbox-default" th:id="'checkbox-' + ${loai.ten}">
+                                            <input type="checkbox" data-name="loaiIds" name="loaiGiay"
                                                    id="checkboxLoaiGiay"
-                                                   th:value="${loai.ten}">
+                                                   th:value="${loai.getTen()}" onchange="test();">
                                             <span th:text="${loai.ten}"></span>
                                         </label>
                                     </li>
@@ -691,10 +696,10 @@
                             <div class="filter-type-select">
                                 <ul>
                                     <li th:each="de : ${danhSachDeGiay}">
-                                        <label class="checkbox-default" th:id="'checkbox-' + ${de.id}">
-                                            <input type="checkbox" onchange="test();" data-name="deGiay"
+                                        <label class="checkbox-default" th:id="'checkbox-' + ${de.ten}">
+                                            <input type="checkbox" data-name="deGiayIds" name="deGiay"
                                                    id="checkboxDeGiay"
-                                                   th:value="${de.ten}">
+                                                   th:value="${de.getTen}" onchange="test();">
                                             <span th:text="${de.ten}"></span>
                                         </label>
                                     </li>
@@ -709,10 +714,10 @@
                             <div class="filter-type-select">
                                 <ul>
                                     <li th:each="size : ${danhSachKichCo}">
-                                        <label class="checkbox-default" th:id="'checkbox-' + ${size.id}">
-                                            <input type="checkbox" onchange="test();" data-name="kickCo"
+                                        <label class="checkbox-default" th:id="'checkbox-' + ${size.ten}">
+                                            <input type="checkbox" data-name="kichCoIds" name="kichCo"
                                                    id="checkboxKichCo"
-                                                   th:value="${size.ten}">
+                                                   th:value="${size.getTen}" onclick="test();">
                                             <span th:text="${size.ten}"></span>
                                         </label>
                                     </li>
@@ -728,18 +733,24 @@
                             <div class="filter-type-select">
                                 <ul>
                                     <li th:each="mau : ${danhSachMauSac}">
-                                        <label class="checkbox-default" th:id="'checkbox-' + ${mau.id}">
-                                            <input type="checkbox" onchange="test();" data-name="mauSac"
+                                        <label class="checkbox-default" th:id="'checkbox-' + ${mau.getTen()}">
+                                            <input type="checkbox" data-name="mauSacIds" name="mauSac"
                                                    id="checkboxMauSac"
-                                                   th:value="${mau.ten}">
-                                            <span th:text="${mau.ten}"></span>
+                                                   th:value="${mau.getTen()}" onchange="test();">
+                                            <span  th:text="${mau.getTen()}"></span>
                                         </label>
                                     </li>
                                 </ul>
                             </div>
                         </div>
                     </div> <!-- End Single Sidebar Widget -->
-
+                        <div class="product-list">
+                            <div th:each="product : ${danhSachProduct}">
+                                <p th:text="${product.id}"></p>
+                                <p th:text="${product.kichCo}"></p>
+                                <p th:text="${product.ma}"></p>
+                            </div>
+                        </div>
                     <!-- Start Single Sidebar Widget -->
                     <div class="sidebar-single-widget">
                         <div class="sidebar-content">
@@ -748,7 +759,7 @@
                             </a>
                         </div>
                     </div> <!-- End Single Sidebar Widget -->
-
+                    </form>
                 </div> <!-- End Sidebar Area -->
             </div>
             <div class="col-lg-9">
@@ -806,7 +817,7 @@
                                 <div class="tab-content tab-animate-zoom">
                                     <!-- Start Grid View Product -->
                                     <div class="tab-pane active show sort-layout-single" id="layout-3-grid">
-                                        <div class="row">
+                                        <div class="row" id="result-list">
                                             <div class="col-xl-4 col-sm-6 col-12"
                                                  th:each="product : ${danhSachProduct}" id="product-container">
                                                 <!-- Start Product Default Single Item -->
@@ -825,10 +836,8 @@
                                                         </a>
                                                         <div class="action-link">
                                                             <div class="action-link-left">
-                                                                <a th:href="@{/cart/add-to-cart/{id}(id=${product.id})}">Thêm
-                                                                    vào giỏ</a>
-                                                                <!--                                                                data-bs-toggle="modal"-->
-                                                                <!--                                                                data-bs-target="#modalAddcart"-->
+                                                                <a class="add-to-cart" th:attr="data-product-id=${product.getId()}"
+                                                                   data-bs-toggle="modal" data-bs-target="#modalAddcart" href="#">Add to Cart</a>
                                                             </div>
                                                             <div class="action-link-right">
                                                                 <a href="#" data-bs-toggle="modal"
@@ -1105,11 +1114,8 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="modal-add-cart-product-img">
-                                            <img class="img-fluid"
-                                                 src="/assets/images/product/default/home-1/default-1.jpg"
-                                                 style="width: 134px; height: 155px"
-                                                 alt="">
-                                            <!--                                            th:src="@{'/img/' + ${product.anhs.get(0).anhChinh}}"-->
+<!--                                            <img th:src="@{'/img/' + ${products.get(0).getChiTietGiayList().get(0).getAnhs().get(0).getAnhChinh()}}"-->
+<!--                                                 style="width: 90px; height: 135px" class="img-fluid" alt=""/>-->
                                         </div>
                                     </div>
                                     <div class="col-md-8">
@@ -1125,9 +1131,9 @@
                             </div>
                             <div class="col-md-5 modal-border">
                                 <ul class="modal-add-cart-product-shipping-info">
-                                    <li><strong><i class="icon-shopping-cart"></i> There Are 5 Items In Your
+                                    <li><strong><i class="icon-shopping-cart"></i> There Are <strong th:text="${cartItems.size()+1}"></strong> Items In Your
                                         Cart.</strong></li>
-                                    <li><strong>TOTAL PRICE: </strong> <span>$187.00</span></li>
+                                    <li><strong>TOTAL PRICE: </strong> <span th:text="${#numbers.formatCurrency(totalCartPrice)}"></span></li>
                                     <li class="modal-continue-button"><a href="#" data-bs-dismiss="modal">CONTINUE
                                         SHOPPING</a></li>
                                 </ul>
@@ -1331,208 +1337,15 @@
 <script src="assets/js/plugins/ajax-mail.js"></script> -->
 
 <!-- Use the minified version files listed below for better performance and remove the files listed above -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    var $jq360 = jQuery.noConflict();
+</script>
 <script src="/assets/js/vendor/vendor.min.js"></script>
 <script src="/assets/js/plugins/plugins.min.js"></script>
 
 <!-- Main JS -->
 <script src="/assets/js/main.js"></script>
-<script>
-    // Hàm này sẽ định dạng giá tiền
-    function formatCurrency(price) {
-        return price.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'});
-    }
-
-    // Sử dụng hàm formatCurrency để định dạng giá và hiển thị trong ô input
-    function updatePriceRange() {
-        var slider = $("#sliderr").slider("values");
-        var minPrice = slider[0];
-        var maxPrice = slider[1];
-        var formattedMinPrice = formatCurrency(minPrice);
-        var formattedMaxPrice = formatCurrency(maxPrice);
-        $("#amount").val(formattedMinPrice + " - " + formattedMaxPrice);
-    }
-
-    $(function () {
-        $("#sliderr").slider({
-            range: true,
-            min: 100000,
-            max: 10000000, // Thay đổi giới hạn tối đa theo nhu cầu của bạn
-            values: [100000, 10000000], // Giá trị mặc định của slider
-            slide: updatePriceRange,
-            change: updatePriceRange
-        });
-
-        updatePriceRange(); // Gọi hàm này để cập nhật giá ban đầu
-    });
-
-    // Lắng nghe sự kiện thay đổi của các checkbox
-    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function () {
-            filterProducts();
-        });
-    });
-
-    function filterProducts() {
-        const selectedCheckboxes = document.querySelectorAll('input[type="checkbox"]:checked');
-        const selectedValues = Array.from(selectedCheckboxes).map(checkbox => checkbox.value);
-
-        // Ẩn tất cả sản phẩm
-        const allProducts = document.querySelectorAll('.product'); // Điều này đòi hỏi bạn phải đặt class "product" cho mỗi sản phẩm
-
-        allProducts.forEach(product => {
-            product.style.display = 'none';
-        });
-
-        // Hiển thị sản phẩm dựa trên các giá trị đã chọn
-        const productsToDisplay = document.querySelectorAll('.product'); // Điều này cũng đòi hỏi bạn phải đặt class "product" cho mỗi sản phẩm
-
-        productsToDisplay.forEach(product => {
-            const productAttributes = product.getAttribute('data-attributes').split(','); // Điều này đòi hỏi bạn đặt một thuộc tính data-attributes cho mỗi sản phẩm để chứa các giá trị loại sản phẩm
-            const productMatches = selectedValues.every(value => productAttributes.includes(value.trim()));
-
-            if (productMatches) {
-                product.style.display = 'block';
-            }
-        });
-    }
-
-    // Thêm sự kiện click vào các checkbox (sử dụng jQuery)
-    function test() {
-        var selectedFilters = {
-            idGiay: getSelectedValues('checkboxGiay'),
-            idHang: document.getElementById('selectHang').value,
-            idDe: getSelectedValues('checkboxDeGiay'),
-            idLoaigiay: getSelectedValues('checkboxLoaiGiay'),
-            idSize: getSelectedValues('checkboxKichCo'),
-            idMau: getSelectedValues('checkboxMauSac'),
-            textSearch: document.getElementById('textSearch').value,
-        };
-        console.log(selectedFilters)
-
-        // Xây dựng URL truy vấn API dựa trên selectedFilters
-        var apiUrl = '/api/products/filter?';
-
-        for (var filter in selectedFilters) {
-            if (selectedFilters[filter] !== '') {
-                apiUrl += filter + '=' + selectedFilters[filter] + '&';
-            }
-        }
-
-        // Loại bỏ ký tự '&' cuối cùng nếu có
-        if (apiUrl.endsWith('&')) {
-            apiUrl = apiUrl.slice(0, -1);
-        }
-
-        // Gọi API và xử lý dữ liệu trả về
-        fetch(apiUrl)
-            .then(response => response.json())
-            .then(data => {
-                // Xử lý dữ liệu sản phẩm trả về từ API và cập nhật giao diện người dùng
-                // Ví dụ: hiển thị sản phẩm trên trang web
-                updateProductList(data);
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    }
-    function updateProductList(products) {
-        // Xóa danh sách sản phẩm hiện tại trên trang web
-        var productList = document.getElementById('productList');
-        while (productList.firstChild) {
-            productList.removeChild(productList.firstChild);
-        }
-
-        // Thêm sản phẩm mới từ dữ liệu trả về từ API
-        products.forEach(product => {
-            var productItem = document.createElement('div');
-            productItem.textContent = product.name; // Thay 'name' bằng tên trường chứa tên sản phẩm trong dữ liệu của bạn
-            productList.appendChild(productItem);
-        });
-    }
-
-
-    function getSelectedValues(id) {
-        var selectedValues = [];
-        var checkboxes = document.querySelectorAll(`input[id="${id}"]:checked`);
-        checkboxes.forEach(checkbox => {
-            selectedValues.push(checkbox.value);
-        });
-        return selectedValues.join(',');
-    }
-
-
-
-    // var selectedAttributes = {};
-    //
-    // // Lắng nghe sự kiện thay đổi trên các ô checkbox
-    // document.querySelectorAll('input[type=checkbox]').forEach(function (checkbox) {
-    //     checkbox.addEventListener('change', function () {
-    //         var attribute = checkbox.getAttribute('data-name');
-    //         var value = checkbox.value;
-    //         if (checkbox.checked) {
-    //             // Nếu ô checkbox được chọn, thêm nó vào danh sách
-    //             if (!selectedAttributes[attribute]) {
-    //                 selectedAttributes[attribute] = [];
-    //             }
-    //             selectedAttributes[attribute].push(value);
-    //         } else {
-    //             // Nếu ô checkbox bị bỏ chọn, loại bỏ nó khỏi danh sách
-    //             if (selectedAttributes[attribute]) {
-    //                 var index = selectedAttributes[attribute].indexOf(value);
-    //                 if (index !== -1) {
-    //                     selectedAttributes[attribute].splice(index, 1);
-    //                 }
-    //             }
-    //         }
-    //         // Gọi hàm cập nhật URL
-    //         updateFilterURL();
-    //     });
-    // });
-    //
-    // // Lắng nghe sự kiện thay đổi trên thanh trượt giá
-    // document.getElementById('sliderr').addEventListener('slide', function () {
-    //     updateFilterURL();
-    // });
-    //
-    // // Hàm cập nhật URL dựa trên các thuộc tính đã chọn
-    // // Hàm cập nhật URL dựa trên các thuộc tính đã chọn
-    // function updateFilterURL() {
-    //     var filterURL = '/sophia-store/products?';
-    //
-    //     // Xây dựng URL cho từng thuộc tính riêng biệt
-    //     var hasSelectedAttributes = false;
-    //     for (var attribute in selectedAttributes) {
-    //         if (selectedAttributes[attribute].length > 0) {
-    //             var attributeValue = selectedAttributes[attribute].join(',');
-    //             filterURL += attribute + '=' + attributeValue + '&';
-    //             hasSelectedAttributes = true;
-    //         }
-    //     }
-    //
-    //     if (hasSelectedAttributes) {
-    //         // Xóa dấu & cuối cùng nếu có
-    //         if (filterURL.endsWith('&')) {
-    //             filterURL = filterURL.slice(0, -1);
-    //         }
-    //     }
-    //
-    //     // Ghi đè đường dẫn URL của thanh trượt giá (nếu có)
-    //     var priceRange = document.getElementById('sliderr').value;
-    //     if (priceRange) {
-    //         if (hasSelectedAttributes) {
-    //             filterURL += '&';
-    //         }
-    //         filterURL += 'gia=' + priceRange;
-    //     }
-    //
-    //     // Đặt đường dẫn URL mới
-    //     window.history.replaceState(null, null, filterURL);
-    // }
-
-
-</script>
 </body>
 
 

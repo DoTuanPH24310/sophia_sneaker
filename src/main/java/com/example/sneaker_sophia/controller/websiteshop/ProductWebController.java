@@ -51,7 +51,7 @@ public class ProductWebController {
         model.addAttribute("danhSachKichCo", this.kichCoRepository.findAll());
         model.addAttribute("danhSachDeGiay", this.deGiayRepository.findAll());
         model.addAttribute("danhSachLoaiGiay", this.loaiGiayRepository.findAll());
-        model.addAttribute("danhSachGiay", this.loaiGiayRepository.findAll());
+        model.addAttribute("danhSachGiay", this.giayRepository.findAll());
         model.addAttribute("cartItems", cartItems);
         return "website/productwebsite/shop-grid-sidebar-left";
     }

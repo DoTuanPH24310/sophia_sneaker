@@ -5,6 +5,7 @@ import com.example.sneaker_sophia.repository.ChiTietGiayRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.data.domain.Page;
@@ -157,4 +158,10 @@ public class ChiTietGiayService {
         return chiTietGiayRepository.getChiTietGiaysByIdChiTietGiay(giay,deGiay,hang,loaiGiay,mauSac);
     }
 
+    public List<ChiTietGiay> filterChiTietGiay(List<String> giayIds, List<String> kichCoIds, List<String> deGiayIds, List<String> hangIds, List<String> loaiGiayIds, List<String> mauSacIds) {
+
+        List<ChiTietGiay> filteredChiTietGiay = chiTietGiayRepository.filterChiTietGiay(giayIds, kichCoIds, deGiayIds, hangIds, loaiGiayIds, mauSacIds);
+
+        return filteredChiTietGiay;
+    }
 }

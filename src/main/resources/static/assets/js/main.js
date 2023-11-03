@@ -485,3 +485,67 @@ document.querySelectorAll(".add-to-cart").forEach(function(addToCartButton) {
         });
     });
 });
+
+//search shop product
+function test() {
+    var giayIds = [];
+    var kichCoIds = [];
+    var deGiayIds = [];
+    var hangIds = [];
+    var loaiGiayIds = [];
+    var mauSacIds = [];
+
+    // Lấy giá trị của các checkbox đã chọn
+    $('input[type=checkbox]:checked').each(function () {
+        var name = $(this).data('name');
+        var value = $(this).val();
+
+        if (name === "giayIds") {
+            giayIds.push(value);
+        } else if (name === "kichCoIds") {
+            kichCoIds.push(value);
+        } else if (name === "deGiayIds") {
+            deGiayIds.push(value);
+        } else if (name === "hangIds") {
+            hangIds.push(value);
+        } else if (name === "loaiIds") {
+            loaiGiayIds.push(value);
+        } else if (name === "mauSacIds") {
+            mauSacIds.push(value);
+        }
+    });
+
+    // Gọi Ajax để gửi yêu cầu tới controller
+    $.ajax({
+        type: "GET",
+        url: "/filterChiTietGiay",
+        data: {
+            giayIds: giayIds,
+            kichCoIds: kichCoIds,
+            deGiayIds: deGiayIds,
+            hangIds: hangIds,
+            loaiGiayIds: loaiGiayIds,
+            mauSacIds: mauSacIds
+        },
+        success: function (data) {
+            // Dữ liệu đã được lọc trả về từ controller
+            // Cập nhật giao diện với danh sách đã lọc
+            updateProductList(data);
+        }
+    });
+    console.log(giayIds,kichCoIds,deGiayIds,hangIds,loaiGiayIds,mauSacIds)
+}
+
+// Hàm cập nhật giao diện với danh sách sản phẩm mới
+function updateProductList(products) {
+    var productListDiv = $(".product-list");
+    productListDiv.empty();
+
+    products.forEach(function (product) {
+        var productDiv = $("<div>");
+        productDiv.append("<p>" + product.id + "</p>");
+        productDiv.append("<p>" + product.kichCo + "</p>");
+        productDiv.append("<p>" + product.ma + "</p>");
+        productListDiv.append(productDiv);
+    });
+}
