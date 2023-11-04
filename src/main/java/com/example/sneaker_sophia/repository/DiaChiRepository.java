@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository("diaChiRepository")
 public interface DiaChiRepository extends JpaRepository<DiaChi, String> {
-    @Query(value = "select * from DiaChi where IdTaiKhoan = ?1", nativeQuery = true)
+    @Query(value = "select * from DiaChi where IdTaiKhoan = ?1 and diaChiMacDinh = 1", nativeQuery = true)
     DiaChi getDiaChiByIdTaiKhoan(String idTaiKhoan);
 
     @Query(value = "select tk, dc from TaiKhoan tk join DiaChi dc on dc.taiKhoan.id = tk.id where tk.id = ?1")
