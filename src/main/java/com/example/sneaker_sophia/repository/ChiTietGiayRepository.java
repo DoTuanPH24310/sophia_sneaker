@@ -88,6 +88,7 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
             @Param("textSearch") String textSearch
     );
 
+
     @Query("SELECT MAX(c.ma) FROM ChiTietGiay c")
     Integer findMaxMa();
     // 29/10 cuongdv
@@ -98,3 +99,6 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
     @Query(value = "select soLuong from ChiTietGiay where ma =?1", nativeQuery = true)
     Integer findSoLuongTon(String ma);
 }
+//         OR UPPER(ctsp.kichCo.ten) LIKE %?1%
+//(:kichCo IS NULL OR c.kichCo = :kichCo) AND
+//(:kichCo IS NULL OR c.kichCo.id = :kichCo) AND

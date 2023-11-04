@@ -135,13 +135,13 @@
                     <tbody>
 
                     <tr style="line-height: 25px" th:each="hdct : ${listhdct}">
-                        <td th:text="${hdct.idHoaDonCT.chiTietGiay.ma}"></td>
-                        <td th:text="${hdct.idHoaDonCT.chiTietGiay.giay.ten}"></td>
+                        <td th:text="${hdct.chiTietGiay.ma}"></td>
+                        <td th:text="${hdct.chiTietGiay.giay.ten}"></td>
                         <td>
 
                                 <span class="input-group-btn">
 
-                                                   <a th:href="@{/admin/tai-quay/update-down/{id}(id=${hdct.idHoaDonCT.chiTietGiay.id})}"
+                                                   <a th:href="@{/admin/tai-quay/update-down/{id}(id=${hdct.chiTietGiay.id})}"
                                                       class="" style="width: 10px"> <span
                                                            class="fa fa-minus"></span></a>
                                 </span>
@@ -149,18 +149,18 @@
                             <!--                                       th:value="${hdct.soLuong}" th:name="soLuong"/>-->
                             <span th:text="${hdct.soLuong}" style="margin-left: 10px; margin-right: 10px"></span>
                             <span class="input-group-btn">
-                                                    <a th:href="@{/admin/tai-quay/update-up/{id}(id=${hdct.idHoaDonCT.chiTietGiay.id})}"
+                                                    <a th:href="@{/admin/tai-quay/update-up/{id}(id=${hdct.chiTietGiay.id})}"
                                                        class="" style="width: 10px; text-align: center"><span
                                                             class="fa fa-plus"></span></a>
                                 </span>
 
                         </td>
-                        <td th:text="${hdct.idHoaDonCT.chiTietGiay.kichCo.ten}"></td>
-                        <td th:text="${hdct.idHoaDonCT.chiTietGiay.mauSac.ten}"></td>
+                        <td th:text="${hdct.chiTietGiay.kichCo.ten}"></td>
+                        <td th:text="${hdct.chiTietGiay.mauSac.ten}"></td>
                         <td th:text="${#numbers.formatCurrency(hdct.soLuong * hdct.donGia)}"></td>
                         <td>
                             <a class="delete" style="text-decoration: none"
-                               th:href="@{/admin/tai-quay/deletehdct/{id}(id=${hdct.idHoaDonCT.chiTietGiay.id})}"
+                               th:href="@{/admin/tai-quay/deletehdct/{id}(id=${hdct.chiTietGiay.id})}"
                                title="Xóa">
                                 <i class="fa fa-trash"></i>
                             </a>
@@ -255,18 +255,18 @@
                             </div>
 
                             <div class="row mx-1 mb-4">
-                                <input type="text" placeholder="tên khách hàng"  readonly
-                                       th:value="${nhanVienRequest.ten}"
+                                <input type="text" placeholder="tên khách hàng" readonly
+                                       th:value="${diaChiGH.ten}"
                                        class="form-control">
                             </div>
                             <div class="row mx-1  mb-4">
-                                <input type="text" placeholder="số điện thoại"  readonly
-                                       th:value="${nhanVienRequest.sdt}"
+                                <input type="text" placeholder="số điện thoại" readonly
+                                       th:value="${diaChiGH.sdt}"
                                        class="form-control">
                             </div>
                             <div class="row mx-1  mb-4">
                                 <input type="text" placeholder="địa chỉ cụ thể" readonly
-                                       th:value="${nhanVienRequest.diaChiCuThe}" class="form-control">
+                                       th:value="${diaChiGH.diaChiCuThe}" class="form-control">
                             </div>
 
                             <div class="row mb-4">
@@ -277,13 +277,13 @@
                                     </select>
                                 </div>
                                 <div class="col-4">
-                                    <select  id="district"  readonly name="quan"
+                                    <select id="district" readonly name="quan"
                                             class="form-control">
                                         <option value="">--Chọn Quận/Huyện--</option>
                                     </select>
                                 </div>
                                 <div class="col-4">
-                                    <select  readonly id="province" name="tinh"
+                                    <select readonly id="province" name="tinh"
                                             class="form-control">
                                         <option value="">Chọn</option>
                                     </select>
@@ -292,9 +292,9 @@
 
 
                             <div class="row mx-1  mb-4">
-                            <textarea rows="5" placeholder="Ghi chú" name="ghiChu" th:value="${nhanVienRequest.ghiChu}"
+                            <textarea rows="5" placeholder="Ghi chú" name="ghiChu"
                                       class="form-control"></textarea>
-
+                                <!--                                th:value="${nhanVienRequest.ghiChu}"-->
                             </div>
                         </div>
                     </div>
@@ -403,17 +403,23 @@
                     </div>
 
                     <div class="row mt-3">
-
-                        <div class="col-4"><h6> Phí vận chuyển:</h6></div>
-
-                        <div class="col-8 ">
-                            <input class="float-right" name="phiVanChuyen" value="0" >
+                        <div class="col-4">
+                            <label for=""><h6>Phí vận chuyển:</h6></label>
                         </div>
+
+                        <div class="col-5"></div>
+
+                        <div class="col-3">
+                            <input class="float-right form-control text-right" type="text"
+                                   name="phiVanChuyen">
+                            <!--                            <span th:text="${}"></span>-->
+                        </div>
+
                     </div>
 
                     <div class="row mt-3">
 
-                        <div class="col-4"> <h6>Giảm giá:</h6> </div>
+                        <div class="col-4"><h6>Giảm giá:</h6></div>
 
                         <div class="col-8 ">
                             <span class="float-right">0 VNĐ</span>
@@ -432,7 +438,7 @@
                     </div>
                     <div class="row mt-3">
                         <div class="col-4">
-                            <label for="" > <h6>Tiền khách đưa:</h6></label>
+                            <label for=""><h6>Tiền khách đưa:</h6></label>
                         </div>
 
                         <div class="col-5"></div>
@@ -741,52 +747,67 @@
     <div class="modal fade" id="modalThemDiaChi" tabindex="-1" data-backdrop="static"
          aria-labelledby="exampleModalLabel"
          aria-hidden="true">
-        <div class="modal-dialog" style="max-width: 500px;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Thêm địa chỉ</h5>
-                    <a type="button" class="close" onclick="resetModalTDC();" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </a>
-                </div>
-                <div class="modal-body">
-                    <div class="container">
-                        <div class="row">
-                            <label for="provincetdc">Tỉnh/Thành phố</label>
-                            <select id="provincetdc" name="" class="form-control">
+        <form action="/admin/tai-quay/adddc" method="post">
+            <div class="modal-dialog" style="max-width: 500px;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Thêm địa chỉ</h5>
+                        <a type="button" class="close" onclick="resetModalTDC();" data-dismiss="modal"
+                           aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </a>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-6">
+                                    <label>Họ và Tên</label>
+                                    <input type="text" name="hoTen"
+                                           class="form-control">
+                                </div>
+                                <div class="col-6">
+                                    <label>Số điện thoại</label>
+                                    <input type="text" name="sdt"
+                                           class="form-control  ">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label for="provincetdc">Tỉnh/Thành phố</label>
+                                <select id="provincetdc" name="tinh" class="form-control">
+                                    <option value="">---Chọn Tỉnh/Thành Phố----</option>
+                                </select>
+                            </div>
 
-                            </select>
-                        </div>
+                            <div class="row">
+                                <label for="districttdc">Quận/Huyện</label>
+                                <select name="quan" class="form-control" id="districttdc">
+                                    <option value="">---Chọn----</option>
+                                </select>
+                            </div>
 
-                        <div class="row">
-                            <label for="districttdc">Quận/Huyện</label>
-                            <select name="" class="form-control" id="districttdc">
-                                <option value="">---Chọn Quận/Huyện----</option>
-                            </select>
-                        </div>
+                            <div class="row">
+                                <label for="wardtdc">Xã/Phường</label>
+                                <select name="xa" class="form-control" id="wardtdc">
+                                    <option value="">---Chọn----</option>
+                                </select>
+                            </div>
 
-                        <div class="row">
-                            <label for="wardtdc">Xã/Phường</label>
-                            <select name="" class="form-control" id="wardtdc">
-                                <option value="">---Chọn Xã/Phường----</option>
-                            </select>
-                        </div>
-
-                        <div class="row">
-                            <label>Đ/C chi tiết</label>
-                            <input class="form-control" type="text">
+                            <div class="row">
+                                <label>Đ/C chi tiết</label>
+                                <input name="dcCuThe" class="form-control" type="text">
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <!--                    ?link day nha thang ngiu-->
-                    <button type="button" class="btn btn-primary">Xác nhận</button>
+                    <div class="modal-footer">
+                        <!--                    ?link day nha thang ngiu-->
+                        <button type="submit" class="btn btn-primary">Xác nhận</button>
+                    </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
 
-<!--    alo ô la-->
+    <!--    alo ô la-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
             integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -794,7 +815,7 @@
             integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script th:inline="javascript" >
+    <script th:inline="javascript">
 
         const form = document.getElementById("form");
 
@@ -1067,7 +1088,7 @@
             }
 
             var renderDataDis = (array, select) => {
-                let row = `<option disable value="">--Chọn Quận/Huyện--</option>`;
+                let row = `<option disable value="">--Chọn--</option>`;
                 array.forEach(element => {
                     if (quan === element.code) {
                         renderDataWar(element.wards, idXa);
@@ -1079,7 +1100,7 @@
             }
 
             var renderDataWar = (array, select) => {
-                let row = `<option disable value="">--Chọn Phường/Xã--</option>`;
+                let row = `<option disable value="">--Chọn--</option>`;
                 array.forEach(element => {
                     if (phuong === element.code) {
                         row = `<option selected value="${element.name}">${element.name}</option>`;
@@ -1124,7 +1145,7 @@
             }
 
             var renderData = (array, select) => {
-                let row = ' <option disable value="">--Chọn Thành Phố--</option>';
+                let row = ' <option disable value="">--Chọn--</option>';
                 array.forEach(element => {
                     row += `<option value="${element.code}">${element.name}</option>`
                 });

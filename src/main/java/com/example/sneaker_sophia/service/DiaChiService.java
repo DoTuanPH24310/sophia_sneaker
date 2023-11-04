@@ -5,6 +5,9 @@ import com.example.sneaker_sophia.repository.DiaChiRepository;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.UUID;
+
 @Service("diaChiService")
 public class DiaChiService {
     @Resource(name = "diaChiRepository")
@@ -26,5 +29,19 @@ public class DiaChiService {
 
     public void saveDC(DiaChi diaChi){
         diaChiRepository.save(diaChi);
+    }
+
+    public List<DiaChi> findListTKById(String idkh){
+        return diaChiRepository.findListTKByIdKH(idkh);
+    }
+
+    // 3-11
+
+    public DiaChi findDcByIdDc(String iddc){
+        return diaChiRepository.findById(iddc).orElse(null);
+    }
+
+    public DiaChi findListTKByIdKHAndDCMD(String idkh){
+        return diaChiRepository.findListTKByIdKHAndDCMD(idkh);
     }
 }

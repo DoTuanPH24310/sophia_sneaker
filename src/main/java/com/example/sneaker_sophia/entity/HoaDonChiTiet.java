@@ -1,29 +1,31 @@
 package com.example.sneaker_sophia.entity;
 
-import com.example.sneaker_sophia.dto.IdHoaDonCT;
-import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "HoaDonChiTiet")
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
 public class HoaDonChiTiet {
-    @EmbeddedId
-    private IdHoaDonCT idHoaDonCT;
+    @Id
+    @GenericGenerator(name = "generator", strategy = "guid", parameters = {})
+    @GeneratedValue(generator = "generator")
+    @Column(name = "Id", columnDefinition = "uniqueidentifier")
+    private String id;
 
     @Column(name = "soLuong")
     private Integer soLuong;
@@ -50,5 +52,11 @@ public class HoaDonChiTiet {
     @Column(name = "trangThai")
     private Integer trangThai;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "IdChiTietGiay")
+    private ChiTietGiay chiTietGiay;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "IdHoaDon")
+    private HoaDon hoaDon;
 }

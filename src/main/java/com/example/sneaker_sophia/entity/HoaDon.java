@@ -59,8 +59,6 @@ public class HoaDon {
     @Column(name = "tongTien")
     private Double tongTien;
 
-    @Column(name = "ngayChuyenKhoan")
-    private LocalDate ngayChuyenKhoan;
 
     @Column(name = "ngayShip")
     private LocalDate ngayShip;
@@ -90,7 +88,7 @@ public class HoaDon {
     @Column(name = "trangThai")
     private Integer trangThai;
 
-    @OneToMany(mappedBy = "idHoaDonCT.hoaDon", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "hoaDon", fetch = FetchType.LAZY)
     private List<HoaDonChiTiet> listHoaDonChiTiet = new ArrayList<>();
 
     @OneToMany(mappedBy = "hoaDon", fetch = FetchType.LAZY)

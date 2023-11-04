@@ -67,6 +67,6 @@ public class ChiTietGiay {
     private List<Anh> anhs;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "idHoaDonCT.chiTietGiay", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "chiTietGiay", fetch = FetchType.LAZY)
     private List<HoaDonChiTiet> chiTietGiayList = new ArrayList<>();
 }

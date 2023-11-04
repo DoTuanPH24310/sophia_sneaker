@@ -45,8 +45,6 @@ public class TaiKhoan {
     @OneToMany(mappedBy = "taiKhoan", fetch = FetchType.LAZY)
     List<HoaDon> hoaDons = new ArrayList<>();
 
-    @Column(name = "taiKhoan")
-    private String taiKhoan;
 
     @Column(name = "ten")
     private String ten;

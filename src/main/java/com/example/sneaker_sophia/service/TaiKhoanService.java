@@ -183,6 +183,10 @@ public class TaiKhoanService {
         return diaChiRepository.findListTKById(UUID.fromString(id));
     }
 
+    // 31-10
 
+    public TaiKhoan getTaiKhoanByIdKH(String idkh){
+        return taiKhoanRepository.findById(idkh).orElse(null);
+    }
 
 }

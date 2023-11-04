@@ -154,9 +154,9 @@ public class ChiTietGiayService {
         UUID idHang = !ctg.getIdHang().equals("null")? UUID.fromString(ctg.getIdHang()):null;
         UUID idLoaiGiay = !ctg.getIdLoaigiay().equals("null")? UUID.fromString(ctg.getIdLoaigiay()):null;
         UUID idMau = !ctg.getIdMau().equals("null")? UUID.fromString(ctg.getIdMau()):null;
-        UUID idSize = !ctg.getIdSize().equals("null")? UUID.fromString(ctg.getIdSize()):null;
+        UUID idKichCo = !ctg.getIdSize().equals("null")? UUID.fromString(ctg.getIdSize()):null;
         String textSearch =  ctg.getTextSearch() ==null||ctg.getTextSearch().trim().length() == 0 ? null : "%"+ctg.getTextSearch()+"%";
-        return chiTietGiayRepository.findChiTietGiayByMultipleParamsAPI(idGiay,idDeGiay,idHang,idLoaiGiay,idMau,idSize,textSearch);
+        return chiTietGiayRepository.findChiTietGiayByMultipleParamsAPI(idGiay,idDeGiay,idHang,idLoaiGiay,idMau,idKichCo,textSearch);
     }
 
     // 28-10 cuongdv

@@ -49,7 +49,7 @@ public class KichCo {
     private Integer trangThai;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "")
+    @OneToMany(mappedBy = "kichCo")
     private List<ChiTietGiay> listCTG = new ArrayList<>();
 
 
