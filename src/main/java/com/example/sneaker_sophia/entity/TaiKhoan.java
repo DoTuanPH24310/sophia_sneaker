@@ -36,10 +36,7 @@ public class TaiKhoan {
 
     @JoinColumn(name = "IdVaiTro")
     @ManyToOne(fetch = FetchType.EAGER)
-    private VaiTro idVaiTro;
-
-    @Column(name = "taiKhoan")
-    private String taiKhoan;
+    private VaiTro vaiTro;
 
     @Column(name = "ten")
     private String ten;
@@ -97,6 +94,6 @@ public class TaiKhoan {
         this.setSdt(nhanVienRequest.getSdt());
         this.setTrangThai(nhanVienRequest.getTrangThai());
         this.setAnhDaiDien(nhanVienRequest.getAnhDaiDien());
-        this.setIdVaiTro(VaiTro.builder().id(nhanVienRequest.getIdVaiTro()).build());
+        this.setVaiTro(VaiTro.builder().id(nhanVienRequest.getIdVaiTro()).build());
     }
 }

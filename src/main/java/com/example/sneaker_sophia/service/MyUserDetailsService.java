@@ -25,7 +25,7 @@ public class MyUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("User name not found");
         } else {
             List<GrantedAuthority> authorities = new ArrayList<>();
-            authorities.add(new SimpleGrantedAuthority(taiKhoan.getIdVaiTro().getTen()));
+            authorities.add(new SimpleGrantedAuthority(taiKhoan.getVaiTro().getTen()));
             return new org.springframework.security.core.userdetails.User(
                     taiKhoan.getEmail(), taiKhoan.getMatKhau(), authorities);
         }

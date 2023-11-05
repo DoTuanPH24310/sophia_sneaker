@@ -19,7 +19,7 @@ public class CustomUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(taiKhoan.getIdVaiTro().getTen());
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(taiKhoan.getVaiTro().getTen());
         return Arrays.asList(authority);
     }
 

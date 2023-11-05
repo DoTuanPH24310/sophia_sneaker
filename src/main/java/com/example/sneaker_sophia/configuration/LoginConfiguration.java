@@ -38,9 +38,10 @@ public class LoginConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(req -> req
-                        .requestMatchers("/admin/**").hasAuthority("ADMIN")
+                        .requestMatchers("/user/**").hasAuthority("ADMIN")
 //                        .requestMatchers("/user/**").hasAuthority("USER")
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
+//                                .authenticated()
                 )
                 .formLogin(login -> login
                         .loginPage("/login/home")

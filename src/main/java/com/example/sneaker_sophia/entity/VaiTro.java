@@ -28,9 +28,10 @@ public class VaiTro {
     @GenericGenerator(name = "generator", strategy = "guid", parameters = {})
     @GeneratedValue(generator = "generator")
     @Column(name = "Id", columnDefinition = "uniqueidentifier")
-//    @Column(name = "Id")
-//    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+
+    @Column(name = "ma")
+    private String ma;
 
     @Column(name = "ten")
     private String ten;
@@ -39,22 +40,22 @@ public class VaiTro {
     @Column(name = "trangThai")
     private Integer trangThai;
 
-//    @CreatedBy
-//    @Column(name = "nguoiTao")
-//    private String createdBy;
-//
-//    @CreatedDate
-//    @Column(name = "ngayTao")
-//    private LocalDateTime createdDate;
-//
-//    @LastModifiedBy
-//    @Column(name = "nguoiSua")
-//    private String updatedBy;
-//
-//    @LastModifiedDate
-//    @Column(name = "ngaySua")
-//    private LocalDateTime updatedDate;
+    @CreatedBy
+    @Column(name = "nguoiTao")
+    private String createdBy;
 
-    @OneToMany(mappedBy = "idVaiTro", fetch = FetchType.LAZY)
+    @CreatedDate
+    @Column(name = "ngayTao")
+    private LocalDateTime createdDate;
+
+    @LastModifiedBy
+    @Column(name = "nguoiSua")
+    private String updatedBy;
+
+    @LastModifiedDate
+    @Column(name = "ngaySua")
+    private LocalDateTime updatedDate;
+
+    @OneToMany(mappedBy = "vaiTro", fetch = FetchType.LAZY)
     private List<TaiKhoan> taiKhoans = new ArrayList<>();
 }

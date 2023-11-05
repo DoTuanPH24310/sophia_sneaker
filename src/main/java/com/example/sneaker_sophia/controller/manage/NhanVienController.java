@@ -6,10 +6,12 @@ import com.example.sneaker_sophia.entity.TaiKhoan;
 import com.example.sneaker_sophia.repository.VaiTroRepository;
 import com.example.sneaker_sophia.request.NhanVienRequest;
 import com.example.sneaker_sophia.service.DiaChiService;
+import com.example.sneaker_sophia.service.FileUpload;
 import com.example.sneaker_sophia.service.TaiKhoanService;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,12 +19,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 @RequestMapping("/admin/nhanvien")
+@RequiredArgsConstructor
 public class NhanVienController {
 
     @Resource(name = "taiKhoanService")
@@ -82,13 +87,17 @@ public class NhanVienController {
 
         return "admin/nhanvien/editnv";
     }
+    private final FileUpload fileUpload;
 
     @PostMapping("/store")
     public String create(
             Model model,
+            @RequestParam("image") MultipartFile multipartFile,
             @ModelAttribute(value = "nhanVienRequest") NhanVienRequest nv_rq, HttpSession session
-    ) {
+    ) throws IOException {
         nv_rq.setIdVaiTro(vaiTroRepository.getIdByTen());
+        String imageURL = fileUpload.uploadFile(multipartFile);
+        nv_rq.setAnhDaiDien(imageURL);
         if (taiKhoanService.save(nv_rq, model)) {
             if (nv_rq.getTinh() == null){
                 session.setAttribute("tinh", "-1");
@@ -111,11 +120,19 @@ public class NhanVienController {
     public String update(
             Model model,
             @PathVariable("id") String idTaiKhoan,
+            @RequestParam("image") MultipartFile multipartFile,
             @ModelAttribute("nhanVien") NhanVienRequest nv_rq
-    ) {
+    ) throws IOException {
+        NhanVienRequest taiKhoan = taiKhoanService.getTaiKhoanById(idTaiKhoan);
         nv_rq.setIdTaiKhoan(idTaiKhoan);
+        String imageURL = null;
+        if(multipartFile.isEmpty()){
+            nv_rq.setAnhDaiDien(taiKhoan.getAnhDaiDien());
+        }else {
+            imageURL = fileUpload.uploadFile(multipartFile);
+        }
+        nv_rq.setAnhDaiDien(imageURL);
         nv_rq.setIdVaiTro(vaiTroRepository.getIdByTen());
-        BeanUtils.copyProperties(nv_rq, new TaiKhoan());
         taiKhoanService.update(idTaiKhoan, nv_rq, model);
         return "redirect:/admin/nhanvien/hienthi";
     }

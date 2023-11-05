@@ -30,7 +30,7 @@ public class TaiKhoanService {
     DiaChiRepository diaChiRepository;
 
     public Page<NhanVienDTO> getAllNhanVien(String search, Integer trangThai, Pageable pageable) {
-        Page<TaiKhoan> taiKhoanPage = taiKhoanRepository.getALlNhanVien(search, trangThai, pageable);
+        Page<TaiKhoan> taiKhoanPage = taiKhoanRepository.getALlNhanVienTT(search, trangThai, pageable);
         List<NhanVienDTO> nhanVienDTOS = taiKhoanPage.getContent().stream().map(NhanVienDTO::new).collect(Collectors.toList());
         Page<NhanVienDTO> nhanVienPage = new PageImpl<>(nhanVienDTOS, pageable, taiKhoanPage.getTotalElements());
         return nhanVienPage;
@@ -56,6 +56,7 @@ public class TaiKhoanService {
         String rawPassword = "123456";
         String encodedPassword = passwordEncoder.encode(rawPassword);
         taiKhoan.setMatKhau(encodedPassword);
+        taiKhoan.setAnhDaiDien(nhanVienRequest.getAnhDaiDien());
         DiaChi diaChi = new DiaChi(nhanVienRequest);
         diaChi.setTaiKhoan(taiKhoan);
         if (validate(nhanVienRequest, model)) {
@@ -81,7 +82,7 @@ public class TaiKhoanService {
             taiKhoan.setSdt(nhanVienRequest.getSdt());
             taiKhoan.setTrangThai(nhanVienRequest.getTrangThai());
             taiKhoan.setAnhDaiDien(nhanVienRequest.getAnhDaiDien());
-            taiKhoan.setIdVaiTro(VaiTro.builder().id(nhanVienRequest.getIdVaiTro()).build());
+            taiKhoan.setVaiTro(VaiTro.builder().id(nhanVienRequest.getIdVaiTro()).build());
 
             diaChi.setDiaChiCuThe(nhanVienRequest.getDiaChiCuThe());
             diaChi.setTinh(nhanVienRequest.getTinh());
@@ -90,7 +91,7 @@ public class TaiKhoanService {
             diaChi.setTaiKhoan(TaiKhoan.builder().id(nhanVienRequest.getIdTaiKhoan()).build());
             diaChi.setDiaChiMacDinh(1);
             diaChi.setTrangThai(1);
-            if (nhanVienRequest.getAnhDaiDien().isEmpty()) {
+            if (nhanVienRequest.getAnhDaiDien() == null) {
                 taiKhoan.setAnhDaiDien(taiKhoanRepository.getAnhById(id));
             }
             if (validate(nhanVienRequest, model)) {

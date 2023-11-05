@@ -76,7 +76,7 @@
                                 </option>
                                 <option th:selected="${trangThai} == 1 ? true:false" value="1"> Hoạt động
                                 </option>
-                                <option th:selected="${trangThai} == 0 ? true:false" value="0">Không hoạt động
+                                <option th:selected="${trangThai} == 0 ? true:false" value="0">Ngưng hoạt động
                                 </option>
                             </div>
                         </select>
@@ -116,8 +116,8 @@
 
                 <tr th:each="nv : ${listNV.content}" style="line-height: 25px; text-align: center">
                     <td th:width="80">
-                        <img th:src="@{'/getimage/' + ${nv.anhDaiDien}}" alt="" width="80" height="70"
-                             style="vertical-align: middle;">
+                        <img th:src="@{${nv.anhDaiDien}}" alt="" width="80" height="70"
+                             style="vertical-align: middle; border-radius: 50px">
                     </td>
                     <td th:text="${nv.ten}"></td>
                     <td th:text="${nv.email}"></td>
@@ -226,7 +226,7 @@
                             <div class="col-2">
                                 <div th:width="80">
                                     <b>Ảnh đại diện</b>
-                                    <img th:src="@{'/getimage/' + ${nv.anhDaiDien}}" alt="" width="100" height="100"
+                                    <img th:src="@{${nv.anhDaiDien}}" alt="" width="100" height="100"
                                          style="vertical-align: middle;">
                                 </div>
                             </div>
