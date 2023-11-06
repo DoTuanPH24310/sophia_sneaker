@@ -5,23 +5,31 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
-import java.util.UUID;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Getter @Setter
+@EntityListeners(AuditingEntityListener.class)
+@Table(name = "HoaDon")
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "HoaDon")
 public class HoaDon {
     @Id
-    @Column(name = "Id")
-    private UUID id;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "IdVoucher")
-    private Voucher voucher;
+    @GenericGenerator(name = "generator", strategy = "guid", parameters = {})
+    @GeneratedValue(generator = "generator")
+    @Column(name = "Id", columnDefinition = "uniqueidentifier")
+    private String id;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "IdTaiKhoan")
@@ -51,11 +59,6 @@ public class HoaDon {
     @Column(name = "tongTien")
     private Double tongTien;
 
-    @Column(name = "ngayTao")
-    private LocalDate ngayTao;
-
-    @Column(name = "ngayChuyenKhoan")
-    private LocalDate ngayChuyenKhoan;
 
     @Column(name = "ngayShip")
     private LocalDate ngayShip;
@@ -66,17 +69,28 @@ public class HoaDon {
     @Column(name = "NgayNhan")
     private LocalDate ngayNhan;
 
-    @Column(name = "ngaySua")
-    private LocalDate ngaySua;
-
+    @CreatedBy
     @Column(name = "nguoiTao")
-    private UUID nguoiTao;
+    private String createdBy;
 
+    @CreatedDate
+    @Column(name = "ngayTao")
+    private LocalDateTime createdDate;
+
+    @LastModifiedBy
     @Column(name = "nguoiSua")
-    private UUID nguoiSua;
+    private String updatedBy;
+
+    @LastModifiedDate
+    @Column(name = "ngaySua")
+    private LocalDateTime updatedDate;
 
     @Column(name = "trangThai")
     private Integer trangThai;
 
+    @OneToMany(mappedBy = "hoaDon", fetch = FetchType.LAZY)
+    private List<HoaDonChiTiet> listHoaDonChiTiet = new ArrayList<>();
 
+    @OneToMany(mappedBy = "hoaDon", fetch = FetchType.LAZY)
+    private List<HinhThucThanhToan> hinhThucThanhToanList = new ArrayList<>();
 }

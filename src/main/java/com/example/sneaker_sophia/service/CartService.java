@@ -28,6 +28,7 @@ public class CartService {
     private GioHangChiTietRepository gioHangChiTietRepository;
     @Autowired
     private ChiTietGiayRepository chiTietGiayRepository;
+
     @Autowired
     public CartService(LoginRepository loginRepository, GioHangRepository gioHangRepository) {
         this.loginRepository = loginRepository;
@@ -54,8 +55,12 @@ public class CartService {
         if (cartItem == null) {
             cartItem = new GioHangChiTiet(new IdGioHangChiTiet(gioHang, chiTietGiay), 1);
             cartItem.setNgayTao(LocalDate.now());
-        } else {
-            cartItem.setSoLuong(cartItem.getSoLuong() + 1);
+        } else if (cartItem != null) {
+            if (cartItem.getSoLuong() >= chiTietGiay.getSoLuong()) {
+                cartItem.setSoLuong(chiTietGiay.getSoLuong());
+            } else {
+                cartItem.setSoLuong(cartItem.getSoLuong() + 1);
+            }
             cartItem.setNgaySua(LocalDate.now());
         }
         gioHangChiTietRepository.save(cartItem);
@@ -86,29 +91,6 @@ public class CartService {
 
     public long countCartItems(String userEmail) {
         return gioHangChiTietRepository.countProduct(userEmail);
-    }
-
-    public void updateCartItemQuantity(UUID gioHangId, UUID chiTietGiayId, Integer newQuantity) {
-        // Truy vấn GioHang từ gioHangId
-        GioHang gioHang = gioHangRepository.findById(gioHangId)
-                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy Giỏ hàng với ID: " + gioHangId));
-
-        // Truy vấn ChiTietGiay từ chiTietGiayId
-        ChiTietGiay chiTietGiay = chiTietGiayRepository.findById(chiTietGiayId)
-                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy Chi tiết giày với ID: " + chiTietGiayId));
-
-        // Tạo đối tượng IdGioHangChiTiet
-        IdGioHangChiTiet id = new IdGioHangChiTiet(gioHang, chiTietGiay);
-
-        Optional<GioHangChiTiet> cartItemOptional = gioHangChiTietRepository.findById(id);
-        if (cartItemOptional.isPresent()) {
-            GioHangChiTiet cartItem = cartItemOptional.get();
-            cartItem.setSoLuong(newQuantity);
-            gioHangChiTietRepository.save(cartItem);
-        } else {
-            // Xử lý khi không tìm thấy sản phẩm trong giỏ hàng chi tiết
-            throw new EntityNotFoundException("Không tìm thấy sản phẩm trong giỏ hàng chi tiết với ID: " + id);
-        }
     }
 
 

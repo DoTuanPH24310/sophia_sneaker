@@ -97,8 +97,18 @@ public class SoluongService {
         GioHangChiTiet gioHangChiTiet = gioHangChiTietRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy GioHangChiTiet với ID: " + id));
 
-        // Cập nhật số lượng trong GioHangChiTiet
-        gioHangChiTiet.setSoLuong(newQuantity);
-        gioHangChiTietRepository.save(gioHangChiTiet);
+        if (gioHangChiTiet != null) {
+            int chiTietGiayQuantity = chiTietGiay.getSoLuong();
+
+            if (newQuantity > chiTietGiayQuantity) {
+                gioHangChiTiet.setSoLuong(chiTietGiayQuantity);
+            } else {
+                gioHangChiTiet.setSoLuong(newQuantity);
+                gioHangChiTietRepository.save(gioHangChiTiet);
+            }
+        }
     }
+
+
+
 }
