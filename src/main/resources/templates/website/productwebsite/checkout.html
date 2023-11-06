@@ -700,7 +700,7 @@
         <div class="checkout_form" data-aos="fade-up" data-aos-delay="400">
             <div class="row">
                 <div class="col-lg-6 col-md-6">
-                    <form th:object="${diaChi}" method="">
+                    <form th:object="${diaChi}" method="post">
                         <h3>Thông tin địa chỉ</h3>
                         <div class="row">
                             <div class="col-12">
@@ -757,71 +757,6 @@
                         </div>
                     </form>
 
-
-                    <!--                            <div class="col-12">-->
-                    <!--                                <label class="checkbox-default" for="newShipping" data-bs-toggle="collapse"-->
-                    <!--                                       data-bs-target="#anotherShipping">-->
-                    <!--                                    <input type="checkbox" id="newShipping">-->
-                    <!--                                    <span>Ship to a different address?</span>-->
-                    <!--                                </label>-->
-
-                    <!--                                <div id="anotherShipping" class="collapse mt-3" data-parent="#anotherShipping">-->
-                    <!--                                    <div class="row">-->
-                    <!--                                        <div class="col-12">-->
-                    <!--                                            <div class="default-form-box">-->
-                    <!--                                                <label>Họ tên người nhận hàng</label>-->
-                    <!--                                                <input type="text">-->
-                    <!--                                            </div>-->
-                    <!--                                        </div>-->
-                    <!--                                        <div class="col-lg-6">-->
-                    <!--                                            <div class="default-form-box">-->
-                    <!--                                                <label>Số điện thoại <span>*</span></label>-->
-                    <!--                                                <input type="text">-->
-                    <!--                                            </div>-->
-                    <!--                                        </div>-->
-                    <!--                                        <div class="col-lg-6">-->
-                    <!--                                            <div class="default-form-box">-->
-                    <!--                                                <label> Địa chỉ email <span>*</span></label>-->
-                    <!--                                                <input type="text">-->
-                    <!--                                            </div>-->
-                    <!--                                        </div>-->
-                    <!--                                        <div class="col-4">-->
-                    <!--                                            <div class="default-form-box">-->
-                    <!--                                                <label for="province">Tỉnh<span>*</span></label>-->
-                    <!--                                                <select class="province nice-select wide" name="country"-->
-                    <!--                                                        id="province">-->
-                    <!--                                                    <option value="2"></option>-->
-                    <!--                                                </select>-->
-                    <!--                                            </div>-->
-                    <!--                                        </div>-->
-                    <!--                                        <div class="col-4">-->
-                    <!--                                            <div class="default-form-box">-->
-                    <!--                                                <label for="district">Huyện <span>*</span></label>-->
-                    <!--                                                <select class="country_option nice-select wide" name="country"-->
-                    <!--                                                        id="district">-->
-                    <!--                                                    <option value="9"></option>-->
-                    <!--                                                </select>-->
-                    <!--                                            </div>-->
-                    <!--                                        </div>-->
-                    <!--                                        <div class="col-4">-->
-                    <!--                                            <div class="default-form-box">-->
-                    <!--                                                <label for="ward">Xã <span>*</span></label>-->
-                    <!--                                                <select class="country_option nice-select wide" name="country"-->
-                    <!--                                                        id="ward">-->
-                    <!--                                                    <option value="2"></option>-->
-                    <!--                                                </select>-->
-                    <!--                                            </div>-->
-                    <!--                                        </div>-->
-                    <!--                                        <div class="col-12">-->
-                    <!--                                            <div class="default-form-box">-->
-                    <!--                                                <label>Địa chỉ cụ thể <span>*</span></label>-->
-                    <!--                                                <input placeholder="House number and street name" type="text">-->
-                    <!--                                            </div>-->
-                    <!--                                        </div>-->
-                    <!--                                    </div>-->
-                    <!--                                </div>-->
-                    <!--                            </div>-->
-                    <!--                    <h2 id="result"></h2>-->
                 </div>
                 <div class="col-lg-6 col-md-6">
                     <form action="#">
@@ -1297,60 +1232,87 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script>
+    const tinh = [[${session.tinh}]];
+    const quan = [[${session.quan}]];
+    let phuong = [[${session.phuong}]];
     const host = "https://provinces.open-api.vn/api/";
+
+    var renderData = (array, select) => {
+        let row = ' <option disable value="">--Chọn Tỉnh/Thành phố--</option';
+        array.forEach(element => {
+            if (tinh === element.code) {
+                renderDataDis(element.districts, "district");
+                row = `<option selected value="${element.code}">${element.name}</option>`;
+            } else {
+                row += `<option value="${element.code}">${element.name}</option>`;
+            }
+        });
+        document.querySelector("#" + select).innerHTML = row;
+    }
+
+    var renderDataDis = (array, select) => {
+        let row = ' <option disable value="">--Chọn Quận/Huyện--</option>';
+        array.forEach(element => {
+            if (quan === element.code) {
+                renderDataWar(element.wards, "ward");
+                row = `<option selected value="${element.code}">${element.name}</option>`;
+            } else {
+                row += `<option value="${element.code}">${element.name}</option>`;
+            }
+
+        });
+
+        document.querySelector("#" + select).innerHTML = row;
+    }
+
+    var renderDataWar = (array, select) => {
+        let row = ' <option disable value="">--Chọn Phường/Xã--</option>';
+        array.forEach(element => {
+            if (phuong === element.code) {
+                row = `<option selected value="${element.code}">${element.name}</option>`;
+                console.log(element);
+            } else {
+                row += `<option value="${element.code}">${element.name}</option>`;
+            }
+
+        });
+        document.querySelector("#" + select).innerHTML = row;
+    }
 
     var callAPI = (api) => {
         return axios.get(api)
             .then((response) => {
-                console.log(response.data);
                 renderData(response.data, "province");
-            })
-            .catch((error) => {
-                console.error("Error calling API:", error);
             });
-    }
+    };
+    callAPI('https://provinces.open-api.vn/api/?depth=3');
 
-    callAPI('https://provinces.open-api.vn/api/?depth=1');
 
     var callApiDistrict = (api) => {
         return axios.get(api)
             .then((response) => {
-                console.log(response.data.districts);
-                renderData(response.data.districts, "district");
-                printResult();
-            })
-            .catch((error) => {
-                console.error("Error calling API:", error);
+                renderDataDis(response.data.districts, "district");
             });
-    }
-
+    };
     var callApiWard = (api) => {
         return axios.get(api)
             .then((response) => {
-                renderData(response.data.wards, "ward");
-                printResult();
-            })
-            .catch((error) => {
-                console.error("Error calling API:", error);
+                renderDataWar(response.data.wards, "ward");
             });
     }
 
-    var renderData = (array, select) => {
-        let row = ' <option disable value="">chọn</option>';
-        array.forEach(element => {
-            row += `<option value="${element.code}">${element.name}</option>`
-        });
-        document.querySelector("#" + select).innerHTML = row
-    }
-
     $("#province").change(() => {
-        callApiDistrict(host + "p/" + $("#province").val() + "?depth=2");
+        phuong = 0;
+        callApiDistrict(host + "p/" + $("#province").val() + "?depth=2")
+        callApiWard(host + "d/" + $("#district").val() + "?depth=2");
+        printResult();
     });
+
 
     $("#district").change(() => {
         callApiWard(host + "d/" + $("#district").val() + "?depth=2");
+        printResult();
     });
-
     $("#ward").change(() => {
         printResult();
     })
@@ -1363,63 +1325,74 @@
                 $("#ward option:selected").text();
             $("#result").text(result)
         }
+
     }
 
-    const loadAllData = () => {
-        axios.get(`${host}?depth=3`)
-            .then((response) => {
-                const data = response.data;
-
-                // Lấy danh sách tỉnh
-                const provinces = data;
-
-                // Lấy danh sách huyện
-                const districts = data.map(province => province.districts).flat();
-
-                // Lấy danh sách xã
-                const wards = data.map(province => province.districts.map(district => district.wards)).flat().flat();
-
-                // Hiển thị dữ liệu lên các dropdown
-                renderData(provinces, "province");
-                renderData(districts, "district");
-                renderData(wards, "ward");
-            })
-            .catch((error) => {
-                console.error("Error calling API:", error);
-            });
-    }
-    loadAllData();
+    // var printResult = () => {
+    //     if ($("#district").val() != "" && $("#province").val() != "" &&
+    //         $("#ward").val() != "") {
+    //         let result = $("#province option:selected").text() +
+    //             " | " + $("#district option:selected").text() + " | " +
+    //             $("#ward option:selected").text();
+    //         $("#result").text(result)
+    //     }
+    // }
+    //
+    // const loadAllData = () => {
+    //     axios.get(`${host}?depth=3`)
+    //         .then((response) => {
+    //             const data = response.data;
+    //
+    //             // Lấy danh sách tỉnh
+    //             const provinces = data;
+    //
+    //             // Lấy danh sách huyện
+    //             const districts = data.map(province => province.districts).flat();
+    //
+    //             // Lấy danh sách xã
+    //             const wards = data.map(province => province.districts.map(district => district.wards)).flat().flat();
+    //
+    //             // Hiển thị dữ liệu lên các dropdown
+    //             renderData(provinces, "province");
+    //             renderData(districts, "district");
+    //             renderData(wards, "ward");
+    //         })
+    //         .catch((error) => {
+    //             console.error("Error calling API:", error);
+    //         });
+    // }
+    // loadAllData();
 
     // JavaScript hoàn thiện
-    const axios = require('axios');
-
-    // Thông tin địa chỉ gửi cố định
-    const senderAddress = 'Phường Xuân Phương - Quận Nam Từ Liêm - Thành Phố Hà Nội';
-
-    // Lấy thông tin địa chỉ nhận từ form
-    const receiverAddress = {
-        tinh: document.getElementById('tinh').value,
-        quanHuyen: document.getElementById('quanHuyen').value,
-        phuongXa: document.getElementById('phuongXa').value,
-        diaChiCuThe: document.getElementById('diaChiCuThe').value,
-    };
-
-    // Gửi thông tin địa chỉ đến API của dịch vụ vận chuyển
-    axios.post('https://api.shipping-service.com/calculate-shipping', {
-        sender: senderAddress,
-        receiver: receiverAddress,
-    })
-        .then((response) => {
-            // Xử lý kết quả tính toán tiền vận chuyển từ response.data
-            const shippingCost = response.data.shippingCost;
-
-            // Hiển thị giá vận chuyển trong phần tử có ID "shipping-cost"
-            const shippingCostElement = document.getElementById('shipping-cost');
-            shippingCostElement.textContent = `Tiền vận chuyển: ${shippingCost} VNĐ`;
-        })
-        .catch((error) => {
-            console.error('Lỗi khi gọi API vận chuyển:', error);
-        });
+    // const axios = require('axios');
+    //
+    // // Thông tin địa chỉ gửi cố định
+    // const senderAddress = 'Phường Xuân Phương - Quận Nam Từ Liêm - Thành Phố Hà Nội';
+    //
+    // // Lấy thông tin địa chỉ nhận từ form
+    // const receiverAddress = {
+    //     tinh: document.getElementById('tinh').value,
+    //     quanHuyen: document.getElementById('quanHuyen').value,
+    //     phuongXa: document.getElementById('phuongXa').value,
+    //     diaChiCuThe: document.getElementById('diaChiCuThe').value,
+    // };
+    //
+    // // Gửi thông tin địa chỉ đến API của dịch vụ vận chuyển
+    // axios.post('https://api.shipping-service.com/calculate-shipping', {
+    //     sender: senderAddress,
+    //     receiver: receiverAddress,
+    // })
+    //     .then((response) => {
+    //         // Xử lý kết quả tính toán tiền vận chuyển từ response.data
+    //         const shippingCost = response.data.shippingCost;
+    //
+    //         // Hiển thị giá vận chuyển trong phần tử có ID "shipping-cost"
+    //         const shippingCostElement = document.getElementById('shipping-cost');
+    //         shippingCostElement.textContent = `Tiền vận chuyển: ${shippingCost} VNĐ`;
+    //     })
+    //     .catch((error) => {
+    //         console.error('Lỗi khi gọi API vận chuyển:', error);
+    //     });
 
 
 </script>

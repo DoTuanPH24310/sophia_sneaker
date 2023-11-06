@@ -7,6 +7,7 @@ import com.example.sneaker_sophia.entity.GioHangChiTiet;
 import com.example.sneaker_sophia.service.CartService;
 import com.example.sneaker_sophia.service.DiaChiCheckoutService;
 import com.example.sneaker_sophia.service.GioHangService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,7 +29,7 @@ public class CheckoutController {
     private GioHangService gioHangService;
 
     @GetMapping("home")
-    public String showCheckoutPage(Model model, Principal principal) {
+    public String showCheckoutPage(Model model, Principal principal, HttpSession session) {
         double total = 0.0;
         DiaChi diaChi = diaChiService.getDiaChiOfLoggedInUser();
 
@@ -36,7 +37,7 @@ public class CheckoutController {
         GioHang gioHang = this.gioHangService.getCartByEmail(authentication.getName());
 
         if (principal != null) {
-            if (gioHang == null) {
+            if (gioHang != null) {
                 List<GioHangChiTiet> cartItems = gioHangService.getCartItems(gioHang.getId());
                 if (cartItems == null || cartItems.isEmpty()) {
                     return "redirect:/cart/hien-thi";
@@ -48,7 +49,9 @@ public class CheckoutController {
                         total += subtotal;
                     }
                     model.addAttribute("diaChi", diaChi);
-
+                    session.setAttribute("tinh", diaChi.getTinh());
+                    session.setAttribute("quan", diaChi.getQuanHuyen());
+                    session.setAttribute("phuong", diaChi.getPhuongXa());
                     model.addAttribute("cartItems", cartItems);
                     model.addAttribute("total", total);
                     return "website/productwebsite/checkout";
