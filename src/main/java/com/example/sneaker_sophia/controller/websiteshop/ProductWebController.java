@@ -42,15 +42,17 @@ public class ProductWebController {
                        @RequestParam(value = "deGiayIds", required = false) List<String> deGiayTen,
                        @RequestParam(value = "hangIds", required = false) List<String> hangTen,
                        @RequestParam(value = "loaiGiayIds", required = false) List<String> loaiGiayTen,
-                       @RequestParam(value = "mauSacIds", required = false) List<String> mauSacTen
-                       ){
+                       @RequestParam(value = "mauSacIds", required = false) List<String> mauSacTen,
+                       @RequestParam(value = "minPrice", required = false) List<String> minPrice
+
+    ) {
         // Đặt danh sách sản phẩm vào model khi trang ban đầu được tải
         String userEmail = "namdc@gmail.com";
         List<GioHangChiTiet> cartItems = cartService.getCartItems(userEmail);
         double totalCartPrice = cartItems.stream()
                 .mapToDouble(item -> item.getId().getChiTietGiay().getGia() * item.getSoLuong())
                 .sum();
-        List<ChiTietGiay> filteredChiTietGiay = chiTietGiayService.filterChiTietGiay(giayTen, kichCoTen, deGiayTen,hangTen, loaiGiayTen, mauSacTen);
+        List<ChiTietGiay> filteredChiTietGiay = chiTietGiayService.filterChiTietGiay(giayTen, kichCoTen, deGiayTen,hangTen, loaiGiayTen, mauSacTen,minPrice);
         Long soLuong = this.cartService.countCartItems(userEmail);
 
         model.addAttribute("soLuong",soLuong);
@@ -63,6 +65,16 @@ public class ProductWebController {
         model.addAttribute("danhSachLoaiGiay", this.loaiGiayRepository.findAll());
         model.addAttribute("danhSachGiay", this.giayRepository.findAll());
         model.addAttribute("cartItems", cartItems);
+        System.out.println("MinPrice values: " + minPrice);
+        //giữ giá trị checkbox đã chọn
+        model.addAttribute("loaiGiayTen", loaiGiayTen);
+        model.addAttribute("hangTen", hangTen);
+        model.addAttribute("deGiayTen", deGiayTen);
+        model.addAttribute("kichCoTen", kichCoTen);
+        model.addAttribute("mauSacTen", mauSacTen);
+        model.addAttribute("giayTen", giayTen);
+        model.addAttribute("minPrice", minPrice);
+
         return "website/productwebsite/shop-grid-sidebar-left";
     }
 

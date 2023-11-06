@@ -91,22 +91,5 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
             @Param("mauSac") MauSac mauSac);
 
 
-        // Xây dựng truy vấn JPQL dựa trên các giá trị đã chọn
-        @Query("SELECT ctg FROM ChiTietGiay ctg " +
-                "WHERE (:tenGiay IS NULL OR ctg.giay.ten IN :tenGiay) " +
-                "AND (:tenKichCo IS NULL OR ctg.kichCo.ten IN :tenKichCo) " +
-                "AND (:tenDeGiay IS NULL OR ctg.deGiay.ten IN :tenDeGiay) " +
-                "AND (:tenHang IS NULL OR ctg.hang.ten IN :tenHang) " +
-                "AND (:tenLoaiGiay IS NULL OR ctg.loaiGiay.ten IN :tenLoaiGiay) " +
-                "AND (:tenMauSac IS NULL OR ctg.mauSac.ten IN :tenMauSac)")
-        List<ChiTietGiay> filterChiTietGiay(
-                @Param("tenGiay") List<String> tenGiay,
-                @Param("tenKichCo") List<String> tenKichCo,
-                @Param("tenDeGiay") List<String> tenDeGiay,
-                @Param("tenHang") List<String> tenHang,
-                @Param("tenLoaiGiay") List<String> tenLoaiGiay,
-                @Param("tenMauSac") List<String> tenMauSac
-        );
-
 }
 

@@ -624,8 +624,7 @@
             <div class="col-lg-3">
                 <!-- Start Sidebar Area -->
                 <div class="siderbar-section" data-aos="fade-up" data-aos-delay="0">
-                    <form th:action="@{/sophia-store/product}">
-                        <button type="submit" class="btn btn-pink">Tìm</button>
+                    <form th:action="@{/sophia-store/product}" id="filterForm">
                         <!-- Start Single Sidebar Widget -->
                         <div class="sidebar-single-widget">
                             <h6 class="sidebar-title">HÃNG</h6>
@@ -634,7 +633,8 @@
                                     <li th:each="hang : ${danhSachHang}">
                                         <label class="checkbox-default" th:id="'checkbox-' + ${hang.ten}">
                                             <input type="checkbox" data-name="hangIds" name="hangIds"
-                                                   th:value="${hang.getTen()}" onchange="test();">
+                                                   th:value="${hang.getTen()}"
+                                                   th:checked="${hangTen != null and #lists.contains(hangTen, hang.getTen())}">
                                             <span th:text="${hang.ten}"></span>
                                         </label>
                                     </li>
@@ -644,15 +644,41 @@
 
                         <!-- Start Single Sidebar Widget -->
                         <div class="sidebar-single-widget">
-                            <h6 class="sidebar-title">LỌC THEO GIÁ</h6>
+                            <h6 class="sidebar-title">GIÁ</h6>
                             <div class="sidebar-content">
-                                <div id="slider-range"></div>
-                                <div class="filter-type-price">
-                                    <label for="amount">Price range:</label>
-                                    <input type="text" id="amount">
-                                </div>
+                                <label class="checkbox-default">
+                                    <input type="checkbox" data-name="price" name="minPrice" value="0-1"
+                                           th:checked="${minPrice != null and #lists.contains(minPrice, '0-1')}" style="padding-right: 200px">
+                                    <span>Dưới 1.000.000đ</span>
+                                </label>
+                                <label class="checkbox-default">
+                                    <input type="checkbox" data-name="price" name="minPrice" value="1-1.5"
+                                           th:checked="${minPrice != null and #lists.contains(minPrice, '1-1.5')}" style="padding-right: 200px">
+                                    <span>1.000.000đ - 1.500.000đ</span>
+                                </label>
+                                <label class="checkbox-default">
+                                    <input type="checkbox" data-name="price" name="minPrice" value="1.5-2"
+                                           th:checked="${minPrice != null and #lists.contains(minPrice, '1.5-2')}" style="padding-right: 200px">
+                                    <span>1.500.000đ - 2.000.000đ</span>
+                                </label>
+                                <label class="checkbox-default">
+                                    <input type="checkbox" data-name="price" name="minPrice" value="2-2.5"
+                                           th:checked="${minPrice != null and #lists.contains(minPrice, '2-2.5')}" style="padding-right: 200px">
+                                    <span>2.000.000đ - 2.500.000đ</span>
+                                </label>
+                                <label class ="checkbox-default">
+                                <input type="checkbox" data-name="price" name="minPrice" value="2.5-3"
+                                       th:checked="${minPrice != null and #lists.contains(minPrice, '2.5-3')}" style="padding-right: 200px">
+                                <span>2.500.000đ - 3.000.000đ</span>
+                                </label>
+                                <label class="checkbox-default">
+                                    <input type="checkbox" data-name="price" name="minPrice" value="3+"
+                                           th:checked="${minPrice != null and #lists.contains(minPrice, '3+')}" style="padding-right: 200px">
+                                    <span>Trên 3.000.000đ</span>
+                                </label>
                             </div>
-                        </div> <!-- End Single Sidebar Widget -->
+                        </div>
+                         <!-- End Single Sidebar Widget -->
 
                         <div class="sidebar-single-widget">
                             <h6 class="sidebar-title">Giày</h6>
@@ -663,7 +689,8 @@
                                             <label class="checkbox-default" th:id="'checkbox-' + ${giay.ten}">
                                                 <input type="checkbox" data-name="giayIds" name="giayIds"
                                                        th:value="${giay.getTen()}"
-                                                       id="checkbox-giay" onchange="test();">
+                                                       id="checkbox-giay"
+                                                       th:checked="${giayTen != null and #lists.contains(giayTen, giay.getTen())}">
                                                 <span th:text="${giay.ten}"></span>
                                             </label>
                                         </li>
@@ -681,7 +708,8 @@
                                             <label class="checkbox-default" th:id="'checkbox-' + ${loai.ten}">
                                                 <input type="checkbox" data-name="loaiGiayIds" name="loaiGiayIds"
                                                        id="checkboxLoaiGiay"
-                                                       th:value="${loai.getTen()}" onchange="test();">
+                                                       th:value="${loai.getTen()}"
+                                                       th:checked="${loaiGiayTen != null and #lists.contains(loaiGiayTen, loai.getTen())}">
                                                 <span th:text="${loai.ten}"></span>
                                             </label>
                                         </li>
@@ -700,7 +728,8 @@
                                             <label class="checkbox-default" th:id="'checkbox-' + ${de.ten}">
                                                 <input type="checkbox" data-name="deGiayIds" name="deGiayIds"
                                                        id="checkboxDeGiay"
-                                                       th:value="${de.getTen}" onchange="test();">
+                                                       th:value="${de.getTen}"
+                                                       th:checked="${deGiayTen != null and #lists.contains(deGiayTen, de.getTen())}">
                                                 <span th:text="${de.ten}"></span>
                                             </label>
                                         </li>
@@ -718,7 +747,8 @@
                                             <label class="checkbox-default" th:id="'checkbox-' + ${size.ten}">
                                                 <input type="checkbox" data-name="kichCoIds" name="kichCoIds"
                                                        id="checkboxKichCo"
-                                                       th:value="${size.getTen}" onclick="test();">
+                                                       th:value="${size.getTen}"
+                                                       th:checked="${kichCoTen != null and #lists.contains(kichCoTen, size.getTen())}">
                                                 <span th:text="${size.ten}"></span>
                                             </label>
                                         </li>
@@ -737,7 +767,8 @@
                                             <label class="checkbox-default" th:id="'checkbox-' + ${mau.getTen()}">
                                                 <input type="checkbox" data-name="mauSacIds" name="mauSacIds"
                                                        id="checkboxMauSac"
-                                                       th:value="${mau.getTen()}" onchange="test();">
+                                                       th:value="${mau.getTen()}"
+                                                       th:checked="${mauSacTen != null and #lists.contains(mauSacTen, mau.getTen())}">
                                                 <span th:text="${mau.getTen()}"></span>
                                             </label>
                                         </li>
@@ -1127,8 +1158,9 @@
                             </div>
                             <div class="col-md-5 modal-border">
                                 <ul class="modal-add-cart-product-shipping-info">
-                                    <li><strong><i class="icon-shopping-cart"></i> There Are <strong th:text="${cartItems.size()+1}"></strong> Items In Your
-                                    Cart.</strong></li>
+                                    <li><strong><i class="icon-shopping-cart"></i> There Are <strong
+                                            th:text="${cartItems.size()+1}"></strong> Items In Your
+                                        Cart.</strong></li>
                                     <li><strong>TOTAL PRICE: </strong> <span
                                             th:text="${#numbers.formatCurrency(totalCartPrice)}"></span></li>
                                     <li class="modal-continue-button"><a href="#" data-bs-dismiss="modal">CONTINUE
