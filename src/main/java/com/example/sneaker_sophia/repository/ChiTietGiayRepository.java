@@ -91,6 +91,5 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
             @Param("mauSac") MauSac mauSac);
 
 
-
 }
 

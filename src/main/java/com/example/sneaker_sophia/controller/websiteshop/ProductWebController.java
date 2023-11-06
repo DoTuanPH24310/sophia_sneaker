@@ -4,6 +4,7 @@ import com.example.sneaker_sophia.entity.ChiTietGiay;
 import com.example.sneaker_sophia.entity.GioHangChiTiet;
 import com.example.sneaker_sophia.repository.*;
 import com.example.sneaker_sophia.service.CartService;
+import com.example.sneaker_sophia.service.ChiTietGiayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,27 +35,49 @@ public class ProductWebController {
     private HangRepository hangRepository;
     @Autowired
     private ChiTietGiayRepository chiTietGiayRepository;
+    @Autowired
+    private ChiTietGiayService chiTietGiayService;
 
     @GetMapping("/product")
-    public String home(Model model){
+    public String home(Model model,  @RequestParam(value = "giayIds", required = false) List<String> giayTen,
+                       @RequestParam(value = "kichCoIds", required = false) List<String> kichCoTen,
+                       @RequestParam(value = "deGiayIds", required = false) List<String> deGiayTen,
+                       @RequestParam(value = "hangIds", required = false) List<String> hangTen,
+                       @RequestParam(value = "loaiGiayIds", required = false) List<String> loaiGiayTen,
+                       @RequestParam(value = "mauSacIds", required = false) List<String> mauSacTen,
+                       @RequestParam(value = "minPrice", required = false) List<String> minPrice
+
+    ) {
+        // Đặt danh sách sản phẩm vào model khi trang ban đầu được tải
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         List<GioHangChiTiet> cartItems = cartService.getCartItems(authentication.getName());
         double totalCartPrice = cartItems.stream()
                 .mapToDouble(item -> item.getId().getChiTietGiay().getGia() * item.getSoLuong())
                 .sum();
-        List<ChiTietGiay> allProducts = this.chiTietGiayRepository.findAll();
         Long soLuong = this.cartService.countCartItems(authentication.getName());
+        List<ChiTietGiay> filteredChiTietGiay = chiTietGiayService.filterChiTietGiay(giayTen, kichCoTen, deGiayTen,hangTen, loaiGiayTen, mauSacTen,minPrice);
+
         model.addAttribute("soLuong",soLuong);
         model.addAttribute("totalCartPrice", totalCartPrice);
-        model.addAttribute("danhSachProduct", allProducts);
+        model.addAttribute("danhSachProduct", filteredChiTietGiay);
         model.addAttribute("danhSachHang", this.hangRepository.findAll());
         model.addAttribute("danhSachMauSac", this.mauSacRepository.findAll());
         model.addAttribute("danhSachKichCo", this.kichCoRepository.findAll());
         model.addAttribute("danhSachDeGiay", this.deGiayRepository.findAll());
         model.addAttribute("danhSachLoaiGiay", this.loaiGiayRepository.findAll());
-        model.addAttribute("danhSachGiay", this.loaiGiayRepository.findAll());
+        model.addAttribute("danhSachGiay", this.giayRepository.findAll());
         model.addAttribute("cartItems", cartItems);
+        System.out.println("MinPrice values: " + minPrice);
+        //giữ giá trị checkbox đã chọn
+        model.addAttribute("loaiGiayTen", loaiGiayTen);
+        model.addAttribute("hangTen", hangTen);
+        model.addAttribute("deGiayTen", deGiayTen);
+        model.addAttribute("kichCoTen", kichCoTen);
+        model.addAttribute("mauSacTen", mauSacTen);
+        model.addAttribute("giayTen", giayTen);
+        model.addAttribute("minPrice", minPrice);
+
         return "website/productwebsite/shop-grid-sidebar-left";
     }
 

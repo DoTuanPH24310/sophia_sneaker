@@ -485,3 +485,24 @@ document.querySelectorAll(".add-to-cart").forEach(function(addToCartButton) {
         });
     });
 });
+
+//search shop product
+document.addEventListener("DOMContentLoaded", function() {
+    var filterInputs = document.querySelectorAll('input[data-name]');
+    var timeout;
+
+    filterInputs.forEach(function(input) {
+        input.addEventListener("change", function() {
+            // Hủy bỏ độ trễ hiện có nếu có
+            if (timeout) {
+                clearTimeout(timeout);
+            }
+
+            // Đặt một độ trễ mới 2 giây trước khi gửi yêu cầu lọc
+            timeout = setTimeout(function() {
+                document.getElementById("filterForm").submit();
+            }, 2000); // 2 giây
+        });
+    });
+});
+
