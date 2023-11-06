@@ -487,43 +487,22 @@ document.querySelectorAll(".add-to-cart").forEach(function(addToCartButton) {
 });
 
 //search shop product
-$(document).ready(function() {
-    var selectedValues = [];
+document.addEventListener("DOMContentLoaded", function() {
+    var filterInputs = document.querySelectorAll('input[data-name]');
+    var timeout;
 
-    $('input[type=checkbox]').on('change', function() {
-        // Cập nhật mảng giá trị được chọn
-        updateSelectedValues();
-    });
-
-    // Xử lý khi người dùng nhấn nút "Tìm"
-    $('#searchButton').on('click', function() {
-        // Thực hiện AJAX request chỉ khi người dùng nhấn nút "Tìm"
-        performSearch();
-    });
-
-    function updateSelectedValues() {
-        selectedValues = [];
-
-        $('input[type=checkbox]:checked').each(function() {
-            selectedValues.push($(this).val());
-        });
-    }
-
-    function performSearch() {
-        var endpoint = '/sophia-store/product';
-        var requestData = { selectedValues: selectedValues };
-
-        $.ajax({
-            type: 'GET',
-            url: endpoint,
-            data: requestData,
-            success: function(data) {
-                // Xóa toàn bộ nội dung hiện tại của .shop-section
-                $('.shop-section').html(data);
-            },
-            error: function() {
-                // Xử lý lỗi (nếu có)
+    filterInputs.forEach(function(input) {
+        input.addEventListener("change", function() {
+            // Hủy bỏ độ trễ hiện có nếu có
+            if (timeout) {
+                clearTimeout(timeout);
             }
+
+            // Đặt một độ trễ mới 2 giây trước khi gửi yêu cầu lọc
+            timeout = setTimeout(function() {
+                document.getElementById("filterForm").submit();
+            }, 2000); // 2 giây
         });
-    }
+    });
 });
+

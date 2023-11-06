@@ -167,7 +167,15 @@ public class ChiTietGiayService {
     }
 
 
-    public List<ChiTietGiay> filterChiTietGiay(List<String> tenGiay, List<String> tenKichCo, List<String> tenDeGiay, List<String> tenHang, List<String> tenLoaiGiay, List<String> tenMauSac) {
+    public List<ChiTietGiay> filterChiTietGiay(
+            List<String> tenGiay,
+            List<String> tenKichCo,
+            List<String> tenDeGiay,
+            List<String> tenHang,
+            List<String> tenLoaiGiay,
+            List<String> tenMauSac,
+            List<String> minPriceRanges
+    ) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<ChiTietGiay> query = cb.createQuery(ChiTietGiay.class);
         Root<ChiTietGiay> root = query.from(ChiTietGiay.class);
@@ -192,11 +200,58 @@ public class ChiTietGiayService {
         if (tenMauSac != null && !tenMauSac.isEmpty()) {
             predicates.add(root.get("mauSac").get("ten").in(tenMauSac));
         }
+        if (minPriceRanges != null && !minPriceRanges.isEmpty()) {
+            List<Predicate> priceRangePredicates = new ArrayList<>();
 
+            for (String priceRange : minPriceRanges) {
+                double minPrice = 0.0;
+                double maxPrice = Double.MAX_VALUE;
+
+                switch (priceRange) {
+                    case "0-1":
+                        maxPrice = 1000000.0;
+                        break;
+                    case "1-1.5":
+                        minPrice = 1000000.0;
+                        maxPrice = 1500000.0;
+                        break;
+                    case "1.5-2":
+                        minPrice = 1500000.0;
+                        maxPrice = 2000000.0;
+                        break;
+                    case "2-2.5":
+                        minPrice = 2000000.0;
+                        maxPrice = 2500000.0;
+                        break;
+                    case "2.5-3":
+                        minPrice = 2500000.0;
+                        maxPrice = 3000000.0;
+                        break;
+                    case "3+":
+                        minPrice = 3000000.0;
+                        break;
+                    default:
+                        // Xử lý các khoảng giá khác nếu cần
+                        break;
+                }
+
+                // Tạo một Predicate cho mỗi khoảng giá
+                Predicate pricePredicate = cb.between(root.get("gia"), minPrice, maxPrice);
+                priceRangePredicates.add(pricePredicate);
+            }
+
+            // Tạo một Predicate gồm logic OR cho tất cả các khoảng giá
+            Predicate priceRangeOrPredicate = cb.or(priceRangePredicates.toArray(new Predicate[0]));
+
+            // Thêm Predicate logic OR vào danh sách các Predicate
+            predicates.add(priceRangeOrPredicate);
+        }
         query.where(predicates.toArray(new Predicate[0]));
 
         TypedQuery<ChiTietGiay> typedQuery = entityManager.createQuery(query);
+        System.out.println("typedQuery ở đây"+typedQuery.getResultList());
         return typedQuery.getResultList();
     }
+
 }
 
