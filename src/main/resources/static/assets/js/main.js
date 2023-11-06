@@ -487,65 +487,43 @@ document.querySelectorAll(".add-to-cart").forEach(function(addToCartButton) {
 });
 
 //search shop product
-function test() {
-    var giayIds = [];
-    var kichCoIds = [];
-    var deGiayIds = [];
-    var hangIds = [];
-    var loaiGiayIds = [];
-    var mauSacIds = [];
+$(document).ready(function() {
+    var selectedValues = [];
 
-    // Lấy giá trị của các checkbox đã chọn
-    $('input[type=checkbox]:checked').each(function () {
-        var name = $(this).data('name');
-        var value = $(this).val();
-
-        if (name === "giayIds") {
-            giayIds.push(value);
-        } else if (name === "kichCoIds") {
-            kichCoIds.push(value);
-        } else if (name === "deGiayIds") {
-            deGiayIds.push(value);
-        } else if (name === "hangIds") {
-            hangIds.push(value);
-        } else if (name === "loaiIds") {
-            loaiGiayIds.push(value);
-        } else if (name === "mauSacIds") {
-            mauSacIds.push(value);
-        }
+    $('input[type=checkbox]').on('change', function() {
+        // Cập nhật mảng giá trị được chọn
+        updateSelectedValues();
     });
 
-    // Gọi Ajax để gửi yêu cầu tới controller
-    $.ajax({
-        type: "GET",
-        url: "/filterChiTietGiay",
-        data: {
-            giayIds: giayIds,
-            kichCoIds: kichCoIds,
-            deGiayIds: deGiayIds,
-            hangIds: hangIds,
-            loaiGiayIds: loaiGiayIds,
-            mauSacIds: mauSacIds
-        },
-        success: function (data) {
-            // Dữ liệu đã được lọc trả về từ controller
-            // Cập nhật giao diện với danh sách đã lọc
-            updateProductList(data);
-        }
+    // Xử lý khi người dùng nhấn nút "Tìm"
+    $('#searchButton').on('click', function() {
+        // Thực hiện AJAX request chỉ khi người dùng nhấn nút "Tìm"
+        performSearch();
     });
-    console.log(giayIds,kichCoIds,deGiayIds,hangIds,loaiGiayIds,mauSacIds)
-}
 
-// Hàm cập nhật giao diện với danh sách sản phẩm mới
-function updateProductList(products) {
-    var productListDiv = $(".product-list");
-    productListDiv.empty();
+    function updateSelectedValues() {
+        selectedValues = [];
 
-    products.forEach(function (product) {
-        var productDiv = $("<div>");
-        productDiv.append("<p>" + product.id + "</p>");
-        productDiv.append("<p>" + product.kichCo + "</p>");
-        productDiv.append("<p>" + product.ma + "</p>");
-        productListDiv.append(productDiv);
-    });
-}
+        $('input[type=checkbox]:checked').each(function() {
+            selectedValues.push($(this).val());
+        });
+    }
+
+    function performSearch() {
+        var endpoint = '/sophia-store/product';
+        var requestData = { selectedValues: selectedValues };
+
+        $.ajax({
+            type: 'GET',
+            url: endpoint,
+            data: requestData,
+            success: function(data) {
+                // Xóa toàn bộ nội dung hiện tại của .shop-section
+                $('.shop-section').html(data);
+            },
+            error: function() {
+                // Xử lý lỗi (nếu có)
+            }
+        });
+    }
+});

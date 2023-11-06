@@ -2,6 +2,13 @@ package com.example.sneaker_sophia.service;
 
 import com.example.sneaker_sophia.entity.*;
 import com.example.sneaker_sophia.repository.ChiTietGiayRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -20,7 +27,8 @@ import java.util.UUID;
 public class ChiTietGiayService {
     @Autowired
     private ChiTietGiayRepository chiTietGiayRepository;
-
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public static int checkCTG = 0;
 
@@ -158,10 +166,37 @@ public class ChiTietGiayService {
         return chiTietGiayRepository.getChiTietGiaysByIdChiTietGiay(giay,deGiay,hang,loaiGiay,mauSac);
     }
 
-    public List<ChiTietGiay> filterChiTietGiay(List<String> giayIds, List<String> kichCoIds, List<String> deGiayIds, List<String> hangIds, List<String> loaiGiayIds, List<String> mauSacIds) {
 
-        List<ChiTietGiay> filteredChiTietGiay = chiTietGiayRepository.filterChiTietGiay(giayIds, kichCoIds, deGiayIds, hangIds, loaiGiayIds, mauSacIds);
+    public List<ChiTietGiay> filterChiTietGiay(List<String> tenGiay, List<String> tenKichCo, List<String> tenDeGiay, List<String> tenHang, List<String> tenLoaiGiay, List<String> tenMauSac) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<ChiTietGiay> query = cb.createQuery(ChiTietGiay.class);
+        Root<ChiTietGiay> root = query.from(ChiTietGiay.class);
 
-        return filteredChiTietGiay;
+        List<Predicate> predicates = new ArrayList<>();
+
+        if (tenGiay != null && !tenGiay.isEmpty()) {
+            predicates.add(root.get("giay").get("ten").in(tenGiay));
+        }
+        if (tenKichCo != null && !tenKichCo.isEmpty()) {
+            predicates.add(root.get("kichCo").get("ten").in(tenKichCo));
+        }
+        if (tenDeGiay != null && !tenDeGiay.isEmpty()) {
+            predicates.add(root.get("deGiay").get("ten").in(tenDeGiay));
+        }
+        if (tenHang != null && !tenHang.isEmpty()) {
+            predicates.add(root.get("hang").get("ten").in(tenHang));
+        }
+        if (tenLoaiGiay != null && !tenLoaiGiay.isEmpty()) {
+            predicates.add(root.get("loaiGiay").get("ten").in(tenLoaiGiay));
+        }
+        if (tenMauSac != null && !tenMauSac.isEmpty()) {
+            predicates.add(root.get("mauSac").get("ten").in(tenMauSac));
+        }
+
+        query.where(predicates.toArray(new Predicate[0]));
+
+        TypedQuery<ChiTietGiay> typedQuery = entityManager.createQuery(query);
+        return typedQuery.getResultList();
     }
 }
+

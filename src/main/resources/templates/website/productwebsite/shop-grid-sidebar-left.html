@@ -596,26 +596,26 @@
 <div class="offcanvas-overlay"></div>
 
 <!-- ...:::: Start Breadcrumb Section:::... -->
-<div class="breadcrumb-section breadcrumb-bg-color--golden">
-    <div class="breadcrumb-wrapper">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <h3 class="breadcrumb-title">Shop - Grid Left Sidebar</h3>
-                    <div class="breadcrumb-nav breadcrumb-nav-color--black breadcrumb-nav-hover-color--golden">
-                        <nav aria-label="breadcrumb">
-                            <ul>
-                                <li><a href="index.html">Home</a></li>
-                                <li><a href="shop-grid-sidebar-left.html">Shop</a></li>
-                                <li class="active" aria-current="page">Shop Grid Left Sidebar</li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div> <!-- ...:::: End Breadcrumb Section:::... -->
+<!--<div class="breadcrumb-section breadcrumb-bg-color&#45;&#45;golden">-->
+<!--    <div class="breadcrumb-wrapper">-->
+<!--        <div class="container">-->
+<!--            <div class="row">-->
+<!--                <div class="col-12">-->
+<!--                    <h3 class="breadcrumb-title">Shop - Grid Left Sidebar</h3>-->
+<!--                    <div class="breadcrumb-nav breadcrumb-nav-color&#45;&#45;black breadcrumb-nav-hover-color&#45;&#45;golden">-->
+<!--                        <nav aria-label="breadcrumb">-->
+<!--                            <ul>-->
+<!--                                <li><a href="index.html">Home</a></li>-->
+<!--                                <li><a href="shop-grid-sidebar-left.html">Shop</a></li>-->
+<!--                                <li class="active" aria-current="page">Shop Grid Left Sidebar</li>-->
+<!--                            </ul>-->
+<!--                        </nav>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div> &lt;!&ndash; ...:::: End Breadcrumb Section:::... &ndash;&gt;-->
 
 <!-- ...:::: Start Shop Section:::... -->
 <div class="shop-section">
@@ -626,25 +626,25 @@
                 <div class="siderbar-section" data-aos="fade-up" data-aos-delay="0">
                     <form th:action="@{/sophia-store/product}">
                         <button type="submit" class="btn btn-pink">Tìm</button>
-                    <!-- Start Single Sidebar Widget -->
-                    <div class="sidebar-single-widget">
-                        <h6 class="sidebar-title">HÃNG</h6>
-                        <div class="sidebar-content">
-                            <ul class="sidebar-menu">
-                                <li th:each="hang : ${danhSachHang}">
-                                    <label class="checkbox-default" th:id="'checkbox-' + ${hang.ten}">
-                                        <input type="checkbox"  data-name="hangIds" name="hang"
-                                               th:value="${hang.getTen()}" onchange="test();">
-                                        <span th:text="${hang.ten}"></span>
-                                    </label>
-                                </li>
-                            </ul>
-                        </div>
-                    </div> <!-- End Single Sidebar Widget -->
+                        <!-- Start Single Sidebar Widget -->
+                        <div class="sidebar-single-widget">
+                            <h6 class="sidebar-title">HÃNG</h6>
+                            <div class="sidebar-content">
+                                <ul class="sidebar-menu">
+                                    <li th:each="hang : ${danhSachHang}">
+                                        <label class="checkbox-default" th:id="'checkbox-' + ${hang.ten}">
+                                            <input type="checkbox" data-name="hangIds" name="hangIds"
+                                                   th:value="${hang.getTen()}" onchange="test();">
+                                            <span th:text="${hang.ten}"></span>
+                                        </label>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div> <!-- End Single Sidebar Widget -->
 
-                    <!-- Start Single Sidebar Widget -->
-                    <div class="sidebar-single-widget">
-                        <h6 class="sidebar-title">LỌC THEO GIÁ</h6>
+                        <!-- Start Single Sidebar Widget -->
+                        <div class="sidebar-single-widget">
+                            <h6 class="sidebar-title">LỌC THEO GIÁ</h6>
                             <div class="sidebar-content">
                                 <div id="slider-range"></div>
                                 <div class="filter-type-price">
@@ -652,114 +652,107 @@
                                     <input type="text" id="amount">
                                 </div>
                             </div>
-                    </div> <!-- End Single Sidebar Widget -->
+                        </div> <!-- End Single Sidebar Widget -->
 
-                    <div class="sidebar-single-widget">
-                        <h6 class="sidebar-title">Giày</h6>
-                        <div class="sidebar-content">
-                            <div class="filter-type-select">
-                                <ul>
-                                    <li th:each="giay : ${danhSachGiay}">
-                                        <label class="checkbox-default"  th:id="'checkbox-' + ${giay.ten}">
-                                            <input type="checkbox" data-name="giayIds" name="giay"
-                                                   th:value="${giay.getTen()}"
-                                                   id="checkbox-giay" onchange="test();">
-                                            <span th:text="${giay.ten}"></span>
-                                        </label>
-                                    </li>
-                                </ul>
+                        <div class="sidebar-single-widget">
+                            <h6 class="sidebar-title">Giày</h6>
+                            <div class="sidebar-content">
+                                <div class="filter-type-select">
+                                    <ul>
+                                        <li th:each="giay : ${danhSachGiay}">
+                                            <label class="checkbox-default" th:id="'checkbox-' + ${giay.ten}">
+                                                <input type="checkbox" data-name="giayIds" name="giayIds"
+                                                       th:value="${giay.getTen()}"
+                                                       id="checkbox-giay" onchange="test();">
+                                                <span th:text="${giay.ten}"></span>
+                                            </label>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="sidebar-single-widget">
-                        <h6 class="sidebar-title">THỂ LOẠI</h6>
-                        <div class="sidebar-content">
-                            <div class="filter-type-select">
-                                <ul>
-                                    <li th:each="loai : ${danhSachLoaiGiay}">
-                                        <label class="checkbox-default" th:id="'checkbox-' + ${loai.ten}">
-                                            <input type="checkbox" data-name="loaiIds" name="loaiGiay"
-                                                   id="checkboxLoaiGiay"
-                                                   th:value="${loai.getTen()}" onchange="test();">
-                                            <span th:text="${loai.ten}"></span>
-                                        </label>
-                                    </li>
-                                </ul>
+                        <div class="sidebar-single-widget">
+                            <h6 class="sidebar-title">THỂ LOẠI</h6>
+                            <div class="sidebar-content">
+                                <div class="filter-type-select">
+                                    <ul>
+                                        <li th:each="loai : ${danhSachLoaiGiay}">
+                                            <label class="checkbox-default" th:id="'checkbox-' + ${loai.ten}">
+                                                <input type="checkbox" data-name="loaiGiayIds" name="loaiGiayIds"
+                                                       id="checkboxLoaiGiay"
+                                                       th:value="${loai.getTen()}" onchange="test();">
+                                                <span th:text="${loai.ten}"></span>
+                                            </label>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
-                    </div> <!-- End Single Sidebar Widget -->
+                        </div> <!-- End Single Sidebar Widget -->
 
-                    <!-- Start Single Sidebar Widget -->
-                    <div class="sidebar-single-widget">
-                        <h6 class="sidebar-title">ĐẾ GIÀY</h6>
-                        <div class="sidebar-content">
-                            <div class="filter-type-select">
-                                <ul>
-                                    <li th:each="de : ${danhSachDeGiay}">
-                                        <label class="checkbox-default" th:id="'checkbox-' + ${de.ten}">
-                                            <input type="checkbox" data-name="deGiayIds" name="deGiay"
-                                                   id="checkboxDeGiay"
-                                                   th:value="${de.getTen}" onchange="test();">
-                                            <span th:text="${de.ten}"></span>
-                                        </label>
-                                    </li>
-                                </ul>
+                        <!-- Start Single Sidebar Widget -->
+                        <div class="sidebar-single-widget">
+                            <h6 class="sidebar-title">ĐẾ GIÀY</h6>
+                            <div class="sidebar-content">
+                                <div class="filter-type-select">
+                                    <ul>
+                                        <li th:each="de : ${danhSachDeGiay}">
+                                            <label class="checkbox-default" th:id="'checkbox-' + ${de.ten}">
+                                                <input type="checkbox" data-name="deGiayIds" name="deGiayIds"
+                                                       id="checkboxDeGiay"
+                                                       th:value="${de.getTen}" onchange="test();">
+                                                <span th:text="${de.ten}"></span>
+                                            </label>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
-                    </div> <!-- End Single Sidebar Widget -->
+                        </div> <!-- End Single Sidebar Widget -->
 
-                    <div class="sidebar-single-widget">
-                        <h6 class="sidebar-title">SIZE</h6>
-                        <div class="sidebar-content">
-                            <div class="filter-type-select">
-                                <ul>
-                                    <li th:each="size : ${danhSachKichCo}">
-                                        <label class="checkbox-default" th:id="'checkbox-' + ${size.ten}">
-                                            <input type="checkbox" data-name="kichCoIds" name="kichCo"
-                                                   id="checkboxKichCo"
-                                                   th:value="${size.getTen}" onclick="test();">
-                                            <span th:text="${size.ten}"></span>
-                                        </label>
-                                    </li>
-                                </ul>
+                        <div class="sidebar-single-widget">
+                            <h6 class="sidebar-title">SIZE</h6>
+                            <div class="sidebar-content">
+                                <div class="filter-type-select">
+                                    <ul>
+                                        <li th:each="size : ${danhSachKichCo}">
+                                            <label class="checkbox-default" th:id="'checkbox-' + ${size.ten}">
+                                                <input type="checkbox" data-name="kichCoIds" name="kichCoIds"
+                                                       id="checkboxKichCo"
+                                                       th:value="${size.getTen}" onclick="test();">
+                                                <span th:text="${size.ten}"></span>
+                                            </label>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
-                    </div> <!-- End Single Sidebar Widget -->
+                        </div> <!-- End Single Sidebar Widget -->
 
-                    <!-- Start Single Sidebar Widget -->
-                    <div class="sidebar-single-widget">
-                        <h6 class="sidebar-title">MÀU SẮC</h6>
-                        <div class="sidebar-content">
-                            <div class="filter-type-select">
-                                <ul>
-                                    <li th:each="mau : ${danhSachMauSac}">
-                                        <label class="checkbox-default" th:id="'checkbox-' + ${mau.getTen()}">
-                                            <input type="checkbox" data-name="mauSacIds" name="mauSac"
-                                                   id="checkboxMauSac"
-                                                   th:value="${mau.getTen()}" onchange="test();">
-                                            <span  th:text="${mau.getTen()}"></span>
-                                        </label>
-                                    </li>
-                                </ul>
+                        <!-- Start Single Sidebar Widget -->
+                        <div class="sidebar-single-widget">
+                            <h6 class="sidebar-title">MÀU SẮC</h6>
+                            <div class="sidebar-content">
+                                <div class="filter-type-select">
+                                    <ul>
+                                        <li th:each="mau : ${danhSachMauSac}">
+                                            <label class="checkbox-default" th:id="'checkbox-' + ${mau.getTen()}">
+                                                <input type="checkbox" data-name="mauSacIds" name="mauSacIds"
+                                                       id="checkboxMauSac"
+                                                       th:value="${mau.getTen()}" onchange="test();">
+                                                <span th:text="${mau.getTen()}"></span>
+                                            </label>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
-                    </div> <!-- End Single Sidebar Widget -->
-                        <div class="product-list">
-                            <div th:each="product : ${danhSachProduct}">
-                                <p th:text="${product.id}"></p>
-                                <p th:text="${product.kichCo}"></p>
-                                <p th:text="${product.ma}"></p>
+                        </div> <!-- End Single Sidebar Widget -->
+                        <!-- Start Single Sidebar Widget -->
+                        <div class="sidebar-single-widget">
+                            <div class="sidebar-content">
+                                <a href="../product-details-default.html" class="sidebar-banner img-hover-zoom">
+                                    <img class="img-fluid" src="/assets/images/banner/side-banner.jpg" alt="">
+                                </a>
                             </div>
-                        </div>
-                    <!-- Start Single Sidebar Widget -->
-                    <div class="sidebar-single-widget">
-                        <div class="sidebar-content">
-                            <a href="../product-details-default.html" class="sidebar-banner img-hover-zoom">
-                                <img class="img-fluid" src="/assets/images/banner/side-banner.jpg" alt="">
-                            </a>
-                        </div>
-                    </div> <!-- End Single Sidebar Widget -->
+                        </div> <!-- End Single Sidebar Widget -->
                     </form>
                 </div> <!-- End Sidebar Area -->
             </div>
@@ -837,8 +830,10 @@
                                                         </a>
                                                         <div class="action-link">
                                                             <div class="action-link-left">
-                                                                <a class="add-to-cart" th:attr="data-product-id=${product.getId()}"
-                                                                   data-bs-toggle="modal" data-bs-target="#modalAddcart" href="#">Add to Cart</a>
+                                                                <a class="add-to-cart"
+                                                                   th:attr="data-product-id=${product.getId()}"
+                                                                   data-bs-toggle="modal" data-bs-target="#modalAddcart"
+                                                                   href="#">Add to Cart</a>
                                                             </div>
                                                             <div class="action-link-right">
                                                                 <a href="#" data-bs-toggle="modal"
@@ -1115,8 +1110,8 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="modal-add-cart-product-img">
-<!--                                            <img th:src="@{'/img/' + ${products.get(0).getChiTietGiayList().get(0).getAnhs().get(0).getAnhChinh()}}"-->
-<!--                                                 style="width: 90px; height: 135px" class="img-fluid" alt=""/>-->
+                                            <!--                                            <img th:src="@{'/img/' + ${products.get(0).getChiTietGiayList().get(0).getAnhs().get(0).getAnhChinh()}}"-->
+                                            <!--                                                 style="width: 90px; height: 135px" class="img-fluid" alt=""/>-->
                                         </div>
                                     </div>
                                     <div class="col-md-8">
@@ -1133,8 +1128,9 @@
                             <div class="col-md-5 modal-border">
                                 <ul class="modal-add-cart-product-shipping-info">
                                     <li><strong><i class="icon-shopping-cart"></i> There Are <strong th:text="${cartItems.size()+1}"></strong> Items In Your
-                                        Cart.</strong></li>
-                                    <li><strong>TOTAL PRICE: </strong> <span th:text="${#numbers.formatCurrency(totalCartPrice)}"></span></li>
+                                    Cart.</strong></li>
+                                    <li><strong>TOTAL PRICE: </strong> <span
+                                            th:text="${#numbers.formatCurrency(totalCartPrice)}"></span></li>
                                     <li class="modal-continue-button"><a href="#" data-bs-dismiss="modal">CONTINUE
                                         SHOPPING</a></li>
                                 </ul>
