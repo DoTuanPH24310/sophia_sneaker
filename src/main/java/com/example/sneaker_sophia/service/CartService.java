@@ -69,7 +69,7 @@ public class CartService {
                 return gioHangChiTietRepository.findById_GioHang(gioHang);
             }
         }
-        return new ArrayList<>(); // hoặc bạn có thể trả về null hoặc xử lý khác tùy theo trường hợp của bạn
+        return new ArrayList<>();
     }
 
     public void removeFromCart(UUID gioHangId, UUID chiTietGiayId) {

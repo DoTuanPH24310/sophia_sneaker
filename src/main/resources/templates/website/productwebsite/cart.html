@@ -667,14 +667,11 @@
 
                                     <td class="product_quantity">
                                         <label for="quantity">Số lượng:</label>
-                                        <button class="buttonCT decreaseQuantity"
-                                                th:data-id="${cart.id.gioHang.id + '/' + cart.id.chiTietGiay.id}">-
-                                        </button>
-                                        <input min="1" max="100" id="quantity" type="text" th:value="${cart.soLuong}">
-                                        <button class="buttonCT increaseQuantity"
-                                                th:data-id="${cart.id.gioHang.id + '/' + cart.id.chiTietGiay.id}">+
-                                        </button>
+                                        <button class="buttonCT decreaseQuantity" th:data-id="${cart.id.gioHang.id} + '/' +${cart.id.chiTietGiay.id}">-</button>
+                                        <input min="1" max="100" id="quantity" type="text" th:value="${cart.soLuong}" th:data-id="${cart.id.gioHang.id} + '/' +${cart.id.chiTietGiay.id}" onchange="updateQuantity(this)">
+                                        <button class="buttonCT increaseQuantity" th:data-id="${cart.id.gioHang.id} + '/' +${cart.id.chiTietGiay.id}">+</button>
                                     </td>
+
 
                                     <td class="product_total">
                                         <span class="productTotalAmount" style="font-size: 15px"
@@ -1126,7 +1123,6 @@
 <script src="https://unpkg.com/numbers"></script>
 <!-- Main JS -->
 <script src="/assets/js/main.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 
     $(document).ready(function () {
@@ -1146,7 +1142,7 @@
                 // Tính giá mới dựa trên số lượng
                 var giaMoi = giaSanPham * (currentQuantity + 1);
 
-                $.post("/giohangchitiet/" + id + "/increase", function (data) {
+                $.get("/giohangchitiet/" + id + "/increase", function (data) {
                     // Tăng số lượng
                     quantityInput.val(currentQuantity + 1);
 
@@ -1172,7 +1168,7 @@
                     // Tính giá mới dựa trên số lượng
                     var giaMoi = giaSanPham * (currentQuantity - 1);
                     console.log('giaSanPham:', giaSanPham);
-                    $.post("/giohangchitiet/" + id + "/decrease", function (data) {
+                    $.get("/giohangchitiet/" + id + "/decrease", function (data) {
                         // Giảm số lượng
                         quantityInput.val(currentQuantity - 1);
 
@@ -1197,12 +1193,39 @@
         }
     });
 
-    const refreshButton = document.getElementById("xoa");
 
-    refreshButton.addEventListener("click", () => {
-        // Load lại trang hiện tại
-        window.location.reload();
-    });
+    function updateQuantity(input) {
+        var newQuantity = parseInt(input.value);
+        var productId = input.getAttribute('data-id');
+
+        if (!isNaN(newQuantity) && newQuantity >= 1 && newQuantity <= 100) {
+            $.get("/giohangchitiet/" + productId + "/updatequantity", { newQuantity: newQuantity }, function (data) {
+                // Xử lý dữ liệu trả về ở đây (nếu cần)
+                console.log(data);
+                // Cập nhật giá sản phẩm sau khi cập nhật số lượng (nếu cần)
+                var giaSanPhamString = $(input).parents("tr").find(".product-price").data("gia");
+                console.log(giaSanPhamString);
+                var giaSanPham = parseFloat(giaSanPhamString);
+                var giaMoi = giaSanPham * newQuantity;
+                updatePrice($(input), giaMoi);
+            });
+        }
+    }
+
+
+    function updatePrice(input, giaMoi) {
+        // Định dạng giá mới thành chuỗi tiền tệ
+        const formatter = new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        });
+        const giaMoiFormatted = formatter.format(giaMoi);
+
+        // Thay thế giá trị trong thẻ
+        var productTotal = $(input).parents("tr").find(".productTotalAmount");
+        productTotal.text(giaMoiFormatted);
+    }
+
 
 
 </script>

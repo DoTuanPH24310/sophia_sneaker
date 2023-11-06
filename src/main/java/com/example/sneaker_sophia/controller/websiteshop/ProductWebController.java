@@ -5,6 +5,8 @@ import com.example.sneaker_sophia.entity.GioHangChiTiet;
 import com.example.sneaker_sophia.repository.*;
 import com.example.sneaker_sophia.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -35,14 +37,14 @@ public class ProductWebController {
 
     @GetMapping("/product")
     public String home(Model model){
-        // Đặt danh sách sản phẩm vào model khi trang ban đầu được tải
-        String userEmail = "namdc@gmail.com";
-        List<GioHangChiTiet> cartItems = cartService.getCartItems(userEmail);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        List<GioHangChiTiet> cartItems = cartService.getCartItems(authentication.getName());
         double totalCartPrice = cartItems.stream()
                 .mapToDouble(item -> item.getId().getChiTietGiay().getGia() * item.getSoLuong())
                 .sum();
         List<ChiTietGiay> allProducts = this.chiTietGiayRepository.findAll();
-        Long soLuong = this.cartService.countCartItems(userEmail);
+        Long soLuong = this.cartService.countCartItems(authentication.getName());
         model.addAttribute("soLuong",soLuong);
         model.addAttribute("totalCartPrice", totalCartPrice);
         model.addAttribute("danhSachProduct", allProducts);

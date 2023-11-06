@@ -16,7 +16,7 @@ import java.util.List;
 public class ProductController {
 
     @Autowired
-    private ProductService productService; // ProductService là một service xử lý dữ liệu sản phẩm
+    private ProductService productService;
 
     @GetMapping("/filter")
     public List<ChiTietGiay> filterProducts(

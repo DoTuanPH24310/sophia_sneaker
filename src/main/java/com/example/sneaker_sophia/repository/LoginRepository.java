@@ -10,5 +10,6 @@ import java.util.UUID;
 public interface LoginRepository extends JpaRepository<TaiKhoan, UUID> {
     TaiKhoan findByEmail(String email);
     boolean existsByEmail(String email);
+    TaiKhoan getTaiKhoanByEmail(String email);
 
 }

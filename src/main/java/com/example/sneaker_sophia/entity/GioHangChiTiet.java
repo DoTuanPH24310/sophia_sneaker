@@ -33,4 +33,11 @@ public class GioHangChiTiet {
         this.id = id;
         this.soLuong = soLuong;
     }
+
+    public void increaseQuantity(int amount) {
+        if (soLuong == null) {
+            soLuong = 0;
+        }
+        soLuong += amount;
+    }
 }

@@ -39,7 +39,7 @@ public class LoginConfiguration {
         http
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
-                        .requestMatchers("/user/**").hasAuthority("USER")
+//                        .requestMatchers("/user/**").hasAuthority("USER")
                         .anyRequest().authenticated()
                 )
                 .formLogin(login -> login

@@ -11,6 +11,8 @@ import com.example.sneaker_sophia.service.CartService;
 import com.example.sneaker_sophia.service.ChiTietGiayService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,12 +36,16 @@ public class CartController {
 
     @GetMapping("hien-thi")
     public String viewCart(Model model) {
-        String userEmail = "namdc@gmail.com";
-        List<GioHangChiTiet> cartItems = cartService.getCartItems(userEmail);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        List<GioHangChiTiet> cartItems = cartService.getCartItems(authentication.getName());
         double totalCartPrice = cartItems.stream()
                 .mapToDouble(item -> item.getId().getChiTietGiay().getGia() * item.getSoLuong())
                 .sum();
-        Long soLuong = this.cartService.countCartItems(userEmail);
+        Long soLuong = this.cartService.countCartItems(authentication.getName());
+        if(soLuong == 0){
+            return "website/productwebsite/empty-cart";
+        }
         model.addAttribute("soLuong", soLuong);
         model.addAttribute("totalCartPrice", totalCartPrice);
         model.addAttribute("cartItems", cartItems);
@@ -49,19 +55,19 @@ public class CartController {
     @GetMapping("/add-to-cart/{id}")
     public String addToCart(@PathVariable("id") UUID chiTietGiayId, Model model) {
         try {
-            String userEmail = "namdc@gmail.com";
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-            TaiKhoan taiKhoan = loginRepository.findByEmail(userEmail);
+            TaiKhoan taiKhoan = loginRepository.findByEmail(authentication.getName());
 
             cartService.addToCart(taiKhoan.getEmail(), chiTietGiayId);
 
             GioHang gioHang = gioHangRepository.findByTaiKhoan(taiKhoan);
-            List<GioHangChiTiet> cartItems = cartService.getCartItems(userEmail);
+            List<GioHangChiTiet> cartItems = cartService.getCartItems(authentication.getName());
 
             double totalCartPrice = cartItems.stream()
                     .mapToDouble(item -> item.getId().getChiTietGiay().getGia() * item.getSoLuong())
                     .sum();
-            Long soLuong = this.cartService.countCartItems(userEmail);
+            Long soLuong = this.cartService.countCartItems(authentication.getName());
             model.addAttribute("soLuong", soLuong);
             model.addAttribute("totalCartPrice", totalCartPrice);
             model.addAttribute("gioHang", gioHang);
@@ -82,6 +88,8 @@ public class CartController {
             return "website/productwebsite/cart"; // Xử lý lỗi và chuyển hướng với thông báo lỗi
         }
     }
+
+
 
 
 }
