@@ -80,4 +80,35 @@ public class SoluongService {
 
         return productList;
     }
+
+    public void updateQuantity(UUID gioHangId, UUID chiTietGiayId, int newQuantity) {
+        // Tìm đối tượng GioHangChiTiet trong cơ sở dữ liệu
+        GioHang gioHang = gioHangRepository.findById(gioHangId)
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy Giỏ hàng với ID: " + gioHangId));
+
+        // Lấy thông tin ChiTietGiay và ChiTietGiayChiTiet từ cơ sở dữ liệu
+        ChiTietGiay chiTietGiay = chiTietGiayRepository.findById(chiTietGiayId)
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy ChiTietGiay với ID: " + chiTietGiayId));
+
+        IdGioHangChiTiet id = new IdGioHangChiTiet();
+        id.setGioHang(gioHang);
+        id.setChiTietGiay(chiTietGiay);
+
+        GioHangChiTiet gioHangChiTiet = gioHangChiTietRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy GioHangChiTiet với ID: " + id));
+
+        if (gioHangChiTiet != null) {
+            int chiTietGiayQuantity = chiTietGiay.getSoLuong();
+
+            if (newQuantity > chiTietGiayQuantity) {
+                gioHangChiTiet.setSoLuong(chiTietGiayQuantity);
+
+            } else {
+                gioHangChiTiet.setSoLuong(newQuantity);
+            }
+        }
+        gioHangChiTietRepository.save(gioHangChiTiet);
+
+    }
+
 }

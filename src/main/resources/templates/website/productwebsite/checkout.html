@@ -95,7 +95,7 @@
                                                     <a href="#" class="mega-menu-item-title">Other Pages</a>
                                                     <ul class="mega-menu-sub">
                                                         <li><a href="../cart.html">Cart</a></li>
-                                                        <li><a href="../empty-cart.html">Empty Cart</a></li>
+                                                        <li><a href="empty-cart.html">Empty Cart</a></li>
                                                         <li><a href="../wishlist.html">Wishlist</a></li>
                                                         <li><a href="../compare.html">Compare</a></li>
                                                         <li><a href="checkout.html">Checkout</a></li>
@@ -314,7 +314,7 @@
                                 <a href="#">Shop Pages</a>
                                 <ul class="mobile-sub-menu">
                                     <li><a href="../cart.html">Cart</a></li>
-                                    <li><a href="../empty-cart.html">Empty Cart</a></li>
+                                    <li><a href="empty-cart.html">Empty Cart</a></li>
                                     <li><a href="../wishlist.html">Wishlist</a></li>
                                     <li><a href="../compare.html">Compare</a></li>
                                     <li><a href="checkout.html">Checkout</a></li>
@@ -700,31 +700,31 @@
         <div class="checkout_form" data-aos="fade-up" data-aos-delay="400">
             <div class="row">
                 <div class="col-lg-6 col-md-6">
-                    <form action="#">
+                    <form th:object="${diaChi}" method="post">
                         <h3>Thông tin địa chỉ</h3>
                         <div class="row">
                             <div class="col-12">
                                 <div class="default-form-box">
                                     <label>Họ tên người nhận hàng</label>
-                                    <input type="text">
+                                    <input type="text" th:field="*{ten}">
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="default-form-box">
                                     <label>Số điện thoại <span>*</span></label>
-                                    <input type="text">
+                                    <input type="text" th:field="*{sdt}">
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="default-form-box">
                                     <label> Địa chỉ email <span>*</span></label>
-                                    <input type="text">
+                                    <input type="text" th:field="*{taiKhoan.email}">
                                 </div>
                             </div>
                             <div class="col-4">
                                 <div class="default-form-box">
                                     <label for="province">Tỉnh<span>*</span></label>
-                                    <select class="country_option nice-select wide" name="province" id="province">
+                                    <select class="country_option nice-select wide" id="province" th:field="*{tinh}">
                                         <option value=""></option>
                                     </select>
                                 </div>
@@ -732,7 +732,8 @@
                             <div class="col-4">
                                 <div class="default-form-box">
                                     <label for="district">Huyện <span>*</span></label>
-                                    <select class="country_option nice-select wide" name="district" id="district">
+                                    <select class="country_option nice-select wide" id="district"
+                                            th:field="*{quanHuyen}">
                                         <option value=""></option>
                                     </select>
                                 </div>
@@ -740,7 +741,7 @@
                             <div class="col-4">
                                 <div class="default-form-box">
                                     <label for="ward">Xã <span>*</span></label>
-                                    <select class="country_option nice-select wide" name="ward" id="ward">
+                                    <select class="country_option nice-select wide" id="ward" th:field="*{phuongXa}">
                                         <option value=""></option>
                                     </select>
                                 </div>
@@ -749,101 +750,16 @@
                             <div class="col-12">
                                 <div class="default-form-box">
                                     <label>Địa chỉ cụ thể <span>*</span></label>
-                                    <input placeholder="House number and street name" type="text">
-                                </div>
-                            </div>
-
-
-                            <div class="col-12">
-                                <label class="checkbox-default" for="newAccount" data-bs-toggle="collapse"
-                                       data-bs-target="#newAccountPassword">
-                                    <input type="checkbox" id="newAccount">
-                                    <span>Create an account?</span>
-                                </label>
-                                <div id="newAccountPassword" class="collapse mt-3"
-                                     data-parent="#newAccountPassword">
-                                    <div class="card-body1 default-form-box">
-                                        <label> Account password <span>*</span></label>
-                                        <input placeholder="password" type="password">
-                                    </div>
-                                </div>
-                            </div>
-<!--                            <div class="col-12">-->
-<!--                                <label class="checkbox-default" for="newShipping" data-bs-toggle="collapse"-->
-<!--                                       data-bs-target="#anotherShipping">-->
-<!--                                    <input type="checkbox" id="newShipping">-->
-<!--                                    <span>Ship to a different address?</span>-->
-<!--                                </label>-->
-
-<!--                                <div id="anotherShipping" class="collapse mt-3" data-parent="#anotherShipping">-->
-<!--                                    <div class="row">-->
-<!--                                        <div class="col-12">-->
-<!--                                            <div class="default-form-box">-->
-<!--                                                <label>Họ tên người nhận hàng</label>-->
-<!--                                                <input type="text">-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                        <div class="col-lg-6">-->
-<!--                                            <div class="default-form-box">-->
-<!--                                                <label>Số điện thoại <span>*</span></label>-->
-<!--                                                <input type="text">-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                        <div class="col-lg-6">-->
-<!--                                            <div class="default-form-box">-->
-<!--                                                <label> Địa chỉ email <span>*</span></label>-->
-<!--                                                <input type="text">-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                        <div class="col-4">-->
-<!--                                            <div class="default-form-box">-->
-<!--                                                <label for="province">Tỉnh<span>*</span></label>-->
-<!--                                                <select class="province nice-select wide" name="country"-->
-<!--                                                        id="province">-->
-<!--                                                    <option value="2"></option>-->
-<!--                                                </select>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                        <div class="col-4">-->
-<!--                                            <div class="default-form-box">-->
-<!--                                                <label for="district">Huyện <span>*</span></label>-->
-<!--                                                <select class="country_option nice-select wide" name="country"-->
-<!--                                                        id="district">-->
-<!--                                                    <option value="9"></option>-->
-<!--                                                </select>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                        <div class="col-4">-->
-<!--                                            <div class="default-form-box">-->
-<!--                                                <label for="ward">Xã <span>*</span></label>-->
-<!--                                                <select class="country_option nice-select wide" name="country"-->
-<!--                                                        id="ward">-->
-<!--                                                    <option value="2"></option>-->
-<!--                                                </select>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                        <div class="col-12">-->
-<!--                                            <div class="default-form-box">-->
-<!--                                                <label>Địa chỉ cụ thể <span>*</span></label>-->
-<!--                                                <input placeholder="House number and street name" type="text">-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-                            <div class="col-12 mt-3">
-                                <div class="order-notes">
-                                    <label for="order_note">Ghi chú</label>
-                                    <textarea id="order_note"
-                                              placeholder="Notes about your order, e.g. special notes for delivery."></textarea>
+                                    <input placeholder="House number and street name" type="text"
+                                           th:field="*{diaChiCuThe}">
                                 </div>
                             </div>
                         </div>
                     </form>
-<!--                    <h2 id="result"></h2>-->
+
                 </div>
                 <div class="col-lg-6 col-md-6">
-                    <form action="#">
+                    <form th:action="@{/check-out/thanh-toan}" method="post">
                         <h3>Đơn hàng của bạn</h3>
                         <div class="order_table table-responsive">
                             <table>
@@ -874,11 +790,11 @@
                                 </tr>
                                 <tr>
                                     <td colspan="2" style="text-align: center;">Phí vận chuyển</td>
-                                    <td><strong>$5.00</strong></td>
+                                    <td id="shipping-cost" th:value="20000">20000</td>
                                 </tr>
                                 <tr class="order_total">
                                     <td colspan="2" style="text-align: center;">Tổng tiền đơn hàng</td>
-                                    <td><strong></strong></td>
+                                    <td ><strong th:text="${#numbers.formatCurrency(total) }"></strong></td>
                                 </tr>
                                 </tfoot>
                             </table>
@@ -887,7 +803,7 @@
                             <div class="panel-default">
                                 <label class="checkbox-default" for="currencyCod" data-bs-toggle="collapse"
                                        data-bs-target="#methodCod">
-                                    <input type="checkbox" id="currencyCod">
+                                    <input type="radio" id="currencyCod" name="hinhThucThanhToan" value="0">
                                     <span>Thanh toán khi nhận hàng</span>
                                 </label>
 
@@ -900,7 +816,7 @@
                             <div class="panel-default">
                                 <label class="checkbox-default" for="currencyPaypal" data-bs-toggle="collapse"
                                        data-bs-target="#methodPaypal">
-                                    <input type="checkbox" id="currencyPaypal">
+                                    <input type="radio" id="currencyPaypal" name="hinhThucThanhToan" value="1">
                                     <span>PayPal</span>
                                 </label>
                                 <div id="methodPaypal" class="collapse " data-parent="#methodPaypal">
@@ -911,8 +827,7 @@
                                 </div>
                             </div>
                             <div class="order_button pt-3">
-                                <button class="btn btn-md btn-black-default-hover" type="submit">Proceed to
-                                    PayPal
+                                <button class="btn btn-md btn-black-default-hover" type="submit">Thanh toán
                                 </button>
                             </div>
                         </div>
@@ -1308,64 +1223,95 @@
 <script src="/assets/js/plugins/plugins.min.js"></script>
 <!-- Main JS -->
 <script src="/assets/js/main.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js" integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+        integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js"
+        integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script>
+    const tinh = [[${session.tinh}]];
+    const quan = [[${session.quan}]];
+    let phuong = [[${session.phuong}]];
     const host = "https://provinces.open-api.vn/api/";
+
+    var renderData = (array, select) => {
+        let row = ' <option disable value="">--Chọn Tỉnh/Thành phố--</option';
+        array.forEach(element => {
+            if (tinh === element.code) {
+                renderDataDis(element.districts, "district");
+                row = `<option selected value="${element.code}">${element.name}</option>`;
+            } else {
+                row += `<option value="${element.code}">${element.name}</option>`;
+            }
+        });
+        document.querySelector("#" + select).innerHTML = row;
+    }
+
+    var renderDataDis = (array, select) => {
+        let row = ' <option disable value="">--Chọn Quận/Huyện--</option>';
+        array.forEach(element => {
+            if (quan === element.code) {
+                renderDataWar(element.wards, "ward");
+                row = `<option selected value="${element.code}">${element.name}</option>`;
+            } else {
+                row += `<option value="${element.code}">${element.name}</option>`;
+            }
+
+        });
+
+        document.querySelector("#" + select).innerHTML = row;
+    }
+
+    var renderDataWar = (array, select) => {
+        let row = ' <option disable value="">--Chọn Phường/Xã--</option>';
+        array.forEach(element => {
+            if (phuong === element.code) {
+                row = `<option selected value="${element.code}">${element.name}</option>`;
+                console.log(element);
+            } else {
+                row += `<option value="${element.code}">${element.name}</option>`;
+            }
+
+        });
+        document.querySelector("#" + select).innerHTML = row;
+    }
 
     var callAPI = (api) => {
         return axios.get(api)
             .then((response) => {
-                console.log(response.data);
                 renderData(response.data, "province");
-            })
-            .catch((error) => {
-                console.error("Error calling API:", error);
             });
-    }
+    };
+    callAPI('https://provinces.open-api.vn/api/?depth=3');
 
-    callAPI('https://provinces.open-api.vn/api/?depth=1');
 
     var callApiDistrict = (api) => {
         return axios.get(api)
             .then((response) => {
-                console.log(response.data.districts);
-                renderData(response.data.districts, "district");
-                printResult();
-            })
-            .catch((error) => {
-                console.error("Error calling API:", error);
+                renderDataDis(response.data.districts, "district");
             });
-    }
-
+    };
     var callApiWard = (api) => {
         return axios.get(api)
             .then((response) => {
-                renderData(response.data.wards, "ward");
-                printResult();
-            })
-            .catch((error) => {
-                console.error("Error calling API:", error);
+                renderDataWar(response.data.wards, "ward");
             });
     }
 
-    var renderData = (array, select) => {
-        let row = ' <option disable value="">chọn</option>';
-        array.forEach(element => {
-            row += `<option value="${element.code}">${element.name}</option>`
-        });
-        document.querySelector("#" + select).innerHTML = row
-    }
-
     $("#province").change(() => {
-        callApiDistrict(host + "p/" + $("#province").val() + "?depth=2");
+        phuong = 0;
+        callApiDistrict(host + "p/" + $("#province").val() + "?depth=2")
+        callApiWard(host + "d/" + $("#district").val() + "?depth=2");
+        printResult();
     });
+
 
     $("#district").change(() => {
         callApiWard(host + "d/" + $("#district").val() + "?depth=2");
+        printResult();
     });
-
     $("#ward").change(() => {
         printResult();
     })
@@ -1378,48 +1324,8 @@
                 $("#ward option:selected").text();
             $("#result").text(result)
         }
-    }
 
-    // function calculateShippingFee(orderDetails) {
-    //     // Định nghĩa các thông số cần thiết cho yêu cầu tính phí vận chuyển
-    //     const weight = orderDetails.weight; // Trọng lượng
-    //     const dimensions = orderDetails.dimensions; // Kích thước
-    //     const senderAddress = orderDetails.senderAddress; // Địa chỉ người gửi
-    //     const receiverAddress = orderDetails.receiverAddress; // Địa chỉ người nhận
-    //
-    //     // Tạo một đối tượng chứa thông tin đơn hàng để gửi đi
-    //     const orderData = {
-    //         weight: weight,
-    //         dimensions: dimensions,
-    //         senderAddress: senderAddress,
-    //         receiverAddress: receiverAddress
-    //     };
-    //
-    //     // Gửi yêu cầu tính phí vận chuyển đến API của hãng vận chuyển (sử dụng thư viện như Axios)
-    //     axios.post('/calculate-shipping-fee', orderData)
-    //         .then(response => {
-    //             // Xử lý phản hồi từ API để lấy phí vận chuyển
-    //             const shippingFee = response.data.shippingFee;
-    //
-    //             // Sau khi nhận được phí vận chuyển, cập nhật nó lên trang thanh toán
-    //             const shippingFeeElement = document.getElementById("shippingFee");
-    //             shippingFeeElement.innerHTML = `$${shippingFee}`;
-    //         })
-    //         .catch(error => {
-    //             // Xử lý lỗi nếu có
-    //             console.error('Error calculating shipping fee:', error);
-    //         });
-    // }
-    //
-    // // Sử dụng hàm để tính phí vận chuyển và cập nhật trên trang thanh toán
-    // const orderDetails = {
-    //     weight: 2.5, // Điền thông tin trọng lượng, kích thước, địa chỉ, v.v. dựa trên thông tin đơn hàng của bạn.
-    //     dimensions: '20x30x10',
-    //     senderAddress: '123 Sender St, Sender City',
-    //     receiverAddress: '456 Receiver St, Receiver City'
-    // };
-    //
-    // calculateShippingFee(orderDetails);
+    }
 
 
 </script>

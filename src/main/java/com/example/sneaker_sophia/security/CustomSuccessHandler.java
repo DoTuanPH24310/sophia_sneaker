@@ -31,9 +31,9 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         if (roles.contains("ADMIN")) {
             url = "/admin/giay/hien-thi";
         } else if (roles.contains("USER")) {
-            url = "/user/hien-thi";
+            url = "/sophia-store/product";
         } else {
-            url = "/login/home";
+            url = "/sophia-store/home";
         }
         return url;
     }

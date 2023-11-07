@@ -667,21 +667,17 @@
 
                                     <td class="product_quantity">
                                         <label for="quantity">Số lượng:</label>
-                                        <button class="buttonCT decreaseQuantity"
-                                                th:data-id="${cart.id.gioHang.id + '/' + cart.id.chiTietGiay.id}">-
-                                        </button>
-                                        <input min="1" max="100" id="quantity" type="text" th:value="${cart.soLuong}">
-                                        <button class="buttonCT increaseQuantity"
-                                                th:data-id="${cart.id.gioHang.id + '/' + cart.id.chiTietGiay.id}">+
-                                        </button>
+                                        <button class="buttonCT decreaseQuantity" th:data-id="${cart.id.gioHang.id} + '/' +${cart.id.chiTietGiay.id}">-</button>
+                                        <input min="1" max="100" id="quantity" type="text" th:value="${cart.soLuong}" th:data-id="${cart.id.gioHang.id} + '/' +${cart.id.chiTietGiay.id}" onchange="updateQuantity(this)">
+                                        <button class="buttonCT increaseQuantity" th:data-id="${cart.id.gioHang.id} + '/' +${cart.id.chiTietGiay.id}">+</button>
                                     </td>
+
 
                                     <td class="product_total">
                                         <span class="productTotalAmount" style="font-size: 15px"
                                               th:text="${#numbers.formatCurrency(cart.id.chiTietGiay.gia * cart.soLuong)}"> </span>
                                     </td>
 
-                                    <!--                                    <div th:with="totalAmount=${totalAmount + (cart.id.chiTietGiay.gia * cart.soLuong)}"></div>-->
                                 </tr> <!-- End Cart Single Item-->
                                 <!-- Start Cart Single Item-->
                                 <!-- End Cart Single Item-->
@@ -720,16 +716,16 @@
                                 <span class="offcanvas-cart-total-price-value"
                                       th:text="${#numbers.formatCurrency(totalCartPrice)}"></span>
                             </div>
-                            <div class="cart_subtotal ">
-                                <p>Giao hàng</p>
-                                <p class="cart_amount"><span>Flat Rate:</span> $255.00</p>
-                            </div>
-                            <a href="#">Calculate shipping</a>
+<!--                            <div class="cart_subtotal ">-->
+<!--                                <p>Giao hàng</p>-->
+<!--                                <p class="cart_amount"><span>Flat Rate:</span> $255.00</p>-->
+<!--                            </div>-->
+<!--                            <a href="#">Calculate shipping</a>-->
 
-                            <div class="cart_subtotal">
-                                <p>Tổng tiền</p>
-                                <p class="cart_amount">$215.00</p>
-                            </div>
+<!--                            <div class="cart_subtotal">-->
+<!--                                <p>Tổng tiền</p>-->
+<!--                                <p class="cart_amount">$215.00</p>-->
+<!--                            </div>-->
                             <div class="checkout_btn">
                                 <a th:href="@{/check-out/home}" class="btn btn-md btn-golden">Proceed to Checkout</a>
                             </div>
@@ -1126,7 +1122,6 @@
 <script src="https://unpkg.com/numbers"></script>
 <!-- Main JS -->
 <script src="/assets/js/main.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 
     $(document).ready(function () {
@@ -1146,7 +1141,7 @@
                 // Tính giá mới dựa trên số lượng
                 var giaMoi = giaSanPham * (currentQuantity + 1);
 
-                $.post("/giohangchitiet/" + id + "/increase", function (data) {
+                $.get("/giohangchitiet/" + id + "/increase", function (data) {
                     // Tăng số lượng
                     quantityInput.val(currentQuantity + 1);
 
@@ -1172,7 +1167,7 @@
                     // Tính giá mới dựa trên số lượng
                     var giaMoi = giaSanPham * (currentQuantity - 1);
                     console.log('giaSanPham:', giaSanPham);
-                    $.post("/giohangchitiet/" + id + "/decrease", function (data) {
+                    $.get("/giohangchitiet/" + id + "/decrease", function (data) {
                         // Giảm số lượng
                         quantityInput.val(currentQuantity - 1);
 
@@ -1182,28 +1177,71 @@
                 }
             }
         });
+    });
 
-        function updatePrice(button, giaMoi) {
-            // Định dạng giá mới thành chuỗi tiền tệ
-            const formatter = new Intl.NumberFormat('vi-VN', {
-                style: 'currency',
-                currency: 'VND'
+
+    function updateQuantity(input) {
+        var newQuantity = parseInt(input.value);
+        var productId = input.getAttribute('data-id');
+
+        if (!isNaN(newQuantity) && newQuantity >= 1 && newQuantity <= 100) {
+            $.get("/giohangchitiet/" + productId + "/updatequantity", { newQuantity: newQuantity }, function (data) {
+                // Xử lý dữ liệu trả về ở đây (nếu cần)
+                console.log(data);
+                // Cập nhật giá sản phẩm sau khi cập nhật số lượng (nếu cần)
+                var giaSanPhamString = $(input).parents("tr").find(".product-price").data("gia");
+                console.log(giaSanPhamString);
+                var giaSanPham = parseFloat(giaSanPhamString);
+                var giaMoi = giaSanPham * newQuantity;
+                updatePrice($(input), giaMoi);
             });
-            const giaMoiFormatted = formatter.format(giaMoi);
-
-            // Thay thế giá trị trong thẻ
-            var productTotal = button.parents("tr").find(".productTotalAmount");
-            productTotal.text(giaMoiFormatted);
         }
-    });
+    }
 
-    const refreshButton = document.getElementById("xoa");
 
-    refreshButton.addEventListener("click", () => {
-        // Load lại trang hiện tại
-        window.location.reload();
-    });
+    function updatePrice(input, giaMoi) {
+        // Định dạng giá mới thành chuỗi tiền tệ
+        const formatter = new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        });
+        const giaMoiFormatted = formatter.format(giaMoi);
 
+        // Thay thế giá trị trong thẻ
+        var productTotal = $(input).parents("tr").find(".productTotalAmount");
+        productTotal.text(giaMoiFormatted);
+
+        // Tính tổng tiền sản phẩm sau cập nhật giá
+        updateTotalPrice();
+    }
+    function updateTotalPrice() {
+        var totalCartPrice = 0;
+        $(".productTotalAmount").each(function () {
+            var giaMoiFormatted = $(this).text().replace('₫', '').replace(/\./g, '').replace('₫', '').replace('₫', '').replace('₫', '').replace('₫', '');
+            totalCartPrice += parseFloat(giaMoiFormatted);
+        });
+
+        // Định dạng tổng tiền thành chuỗi tiền tệ
+        const formatter = new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        });
+        const totalCartPriceFormatted = formatter.format(totalCartPrice);
+
+        // Cập nhật tổng tiền sản phẩm lên giao diện
+        $(".offcanvas-cart-total-price-value").text(totalCartPriceFormatted);
+    }
+
+
+    // // Lắng nghe sự kiện keyup trên tất cả các ô nhập số lượng
+    // $("input[type='text']").on("keyup", function() {
+    //
+    //     // Đảm bảo rằng giá trị nhập liệu sau khi keyup là một số nguyên dương
+    //     var inputValue = $(this).val();
+    //     if (isNaN(inputValue) || inputValue <= 0) {
+    //         $(this).val(1);
+    //     }
+    // });
 
 </script>
 
