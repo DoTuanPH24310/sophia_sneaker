@@ -20,7 +20,7 @@ public class LoginController {
     @GetMapping("home")
     public String home(Model model) {
 //        model.addAttribute("data", taiKhoan);
-        return "/login/dang_nhap";
+        return "/login/dang_nhap.html";
     }
 
 //    @PostMapping("home")
