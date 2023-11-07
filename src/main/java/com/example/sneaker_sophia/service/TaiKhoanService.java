@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -44,10 +45,6 @@ public class TaiKhoanService {
         return nhanVienRequest;
     }
 
-//    public TaiKhoan getTaiKhoanById(String id) {
-//        TaiKhoan taiKhoan = taiKhoanRepository.findById(id).orElse(null);
-//        return taiKhoan;
-//    }
 
     public boolean save(NhanVienRequest nhanVienRequest, Model model) {
         int check = 0;

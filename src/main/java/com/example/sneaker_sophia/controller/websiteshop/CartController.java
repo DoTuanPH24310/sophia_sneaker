@@ -1,15 +1,11 @@
 package com.example.sneaker_sophia.controller.websiteshop;
 
-import com.example.sneaker_sophia.entity.ChiTietGiay;
 import com.example.sneaker_sophia.entity.GioHang;
 import com.example.sneaker_sophia.entity.GioHangChiTiet;
 import com.example.sneaker_sophia.entity.TaiKhoan;
-import com.example.sneaker_sophia.repository.ChiTietGiayRepository;
 import com.example.sneaker_sophia.repository.GioHangRepository;
 import com.example.sneaker_sophia.repository.LoginRepository;
 import com.example.sneaker_sophia.service.CartService;
-import com.example.sneaker_sophia.service.ChiTietGiayService;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
@@ -17,7 +13,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Controller
