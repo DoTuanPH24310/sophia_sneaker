@@ -2,10 +2,17 @@ package com.example.sneaker_sophia.controller;
 
 
 import com.example.sneaker_sophia.dto.DTO_API_CTG;
+import com.example.sneaker_sophia.entity.ChiTietGiay;
+import com.example.sneaker_sophia.repository.AnhRepository;
 import com.example.sneaker_sophia.service.*;
+import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin("*")
@@ -33,9 +40,16 @@ public class RestControllerCTGiay {
     @Autowired
     private LoaiGiayService loaiGiayService;
 
+    @Resource(name = "anhRepository")
+    AnhRepository anhRepository;
 
     @GetMapping("/allCTG")
-    public ResponseEntity<?> getListCTG() {
+    public ResponseEntity<?> getListCTG(HttpSession session) {
+        List<ChiTietGiay> list = chiTietGiayService.getAll();
+        for (ChiTietGiay chiTietGiay : list){
+            String avtctg = anhRepository.getAnhChinhByIdctg(chiTietGiay.getId());
+            session.setAttribute("avtctsp", avtctg);
+        }
         return ResponseEntity.ok(chiTietGiayService.findAllByTrangThaiEquals(0));
     }
 

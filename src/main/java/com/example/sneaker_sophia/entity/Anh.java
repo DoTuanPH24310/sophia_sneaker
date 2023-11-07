@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
+
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -16,9 +18,10 @@ import java.util.UUID;
 @Table(name = "Anh")
 public class Anh {
     @Id
-    @Column(name = "Id")
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GenericGenerator(name = "generator", strategy = "guid", parameters = {})
+    @GeneratedValue(generator = "generator")
+    @Column(name = "Id", columnDefinition = "uniqueidentifier")
+    private String id;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ChiTietGiay", referencedColumnName = "Id")
@@ -37,10 +40,10 @@ public class Anh {
     private LocalDate ngaySua;
 
     @Column(name = "nguoiTao")
-    private UUID nguoiTao;
+    private String nguoiTao;
 
     @Column(name = "nguoiSua")
-    private UUID nguoiSua;
+    private String nguoiSua;
 
     @Column(name = "trangThai")
     private Integer trangThai;

@@ -2,6 +2,7 @@ package com.example.sneaker_sophia.controller;
 
 
 import com.example.sneaker_sophia.entity.*;
+import com.example.sneaker_sophia.repository.AnhRepository;
 import com.example.sneaker_sophia.request.NhanVienRequest;
 import com.example.sneaker_sophia.service.*;
 import jakarta.annotation.Resource;
@@ -46,6 +47,8 @@ public class TaiQuayController {
     @Resource(name = "htttService")
     HTTTService htttService;
 
+    @Resource(name = "anhRepository")
+    AnhRepository anhRepository;
     //    alo ôla
     @GetMapping("/hien-thi")
     public String index(Model model) {
@@ -113,6 +116,7 @@ public class TaiQuayController {
 
         }
         if (hoaDonChiTietServive.getHDCTByIdCTSP(chiTietGiay.getId(), tempIdHD) != null) {
+            hoaDonChiTiet.setId(hoaDonChiTietOld.getId());
             hoaDonChiTiet.setSoLuong(hoaDonChiTietOld.getSoLuong() + soLuong);
         } else {
             hoaDonChiTiet.setSoLuong(soLuong);
@@ -158,6 +162,13 @@ public class TaiQuayController {
         model.addAttribute("listHDC", list);
         model.addAttribute("maHD", id);
         List<HoaDonChiTiet> listhdct = hoaDonChiTietServive.getHDCTByIdHD(id);
+
+        for (HoaDonChiTiet hdct : listhdct){
+            UUID idctg = hdct.getChiTietGiay().getId();
+            String avtctg = anhRepository.getAnhChinhByIdctg(idctg);
+            model.addAttribute("avtctg", avtctg);
+        }
+
         model.addAttribute("listhdct", listhdct);
         Double tongTien = hoaDonChiTietServive.tongTienHD(tempIdHD);
         model.addAttribute("tongTienHD", tongTien);

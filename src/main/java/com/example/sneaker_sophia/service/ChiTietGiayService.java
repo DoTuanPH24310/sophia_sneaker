@@ -47,7 +47,6 @@ public class ChiTietGiayService {
     }
 
 
-
     public List<String> checkedCTG(List<String> listIDCTG, Model model, List<String> listIDG) {
 
         List<String> temp = listIDCTG;
@@ -106,24 +105,28 @@ public class ChiTietGiayService {
     }
 
     public static final int PRODUCT_DETAIL_PER_PAGE = 10;
-    public List<ChiTietGiay> getAll(){
+
+    public List<ChiTietGiay> getAll() {
         return chiTietGiayRepository.findAll();
     }
-    public void save(ChiTietGiay chiTietGiay){
+
+    public void save(ChiTietGiay chiTietGiay) {
         chiTietGiayRepository.save(chiTietGiay);
     }
-    public ChiTietGiay getOne(UUID id){
+
+    public ChiTietGiay getOne(UUID id) {
         return chiTietGiayRepository.findById(id).get();
     }
-    public void delete(UUID id){
+
+    public void delete(UUID id) {
         chiTietGiayRepository.deleteById(id);
     }
 
-    public Page<ChiTietGiay> findAll(Pageable pageable){
+    public Page<ChiTietGiay> findAll(Pageable pageable) {
         return chiTietGiayRepository.findAll(pageable);
     }
 
-    public Page<ChiTietGiay> listByPageAndProductName(int pageNum, String sortField, String sortDir, String keyword, String productName){
+    public Page<ChiTietGiay> listByPageAndProductName(int pageNum, String sortField, String sortDir, String keyword, String productName) {
         Sort sort = Sort.by(sortField);
         sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
         Pageable pageable = PageRequest.of(pageNum - 1, PRODUCT_DETAIL_PER_PAGE, sort);
@@ -139,37 +142,38 @@ public class ChiTietGiayService {
         }
     }
 
-    public Page<ChiTietGiay> filterCombobox(int pageNum, String sortField, String sortDir,Giay giay, DeGiay deGiay, Hang hang, LoaiGiay loaiGiay, MauSac mauSac, KichCo kichCo,Double giaMin,Double giaMax){
+    public Page<ChiTietGiay> filterCombobox(int pageNum, String sortField, String sortDir, Giay giay, DeGiay deGiay, Hang hang, LoaiGiay loaiGiay, MauSac mauSac, KichCo kichCo, Double giaMin, Double giaMax) {
         Sort sort = Sort.by(sortField);
         sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
         Pageable pageable = PageRequest.of(pageNum - 1, PRODUCT_DETAIL_PER_PAGE, sort);
-        return chiTietGiayRepository.findChiTietGiayByMultipleParams(giay,deGiay,hang,loaiGiay,mauSac,kichCo,giaMin,giaMax,pageable);
+        return chiTietGiayRepository.findChiTietGiayByMultipleParams(giay, deGiay, hang, loaiGiay, mauSac, kichCo, giaMin, giaMax, pageable);
     }
 
     //28-10 hoanghh
-    public List<ChiTietGiay> findChiTietGiayByMultipleParamsAPI(DTO_API_CTG ctg){
-        System.out.println(ctg.getIdLoaigiay() +"test2");
-        UUID idGiay = !ctg.getIdGiay().equals("null")? UUID.fromString(ctg.getIdGiay()):null;
-        UUID idDeGiay = !ctg.getIdDe().equals("null")? UUID.fromString(ctg.getIdDe()):null;
-        UUID idHang = !ctg.getIdHang().equals("null")? UUID.fromString(ctg.getIdHang()):null;
-        UUID idLoaiGiay = !ctg.getIdLoaigiay().equals("null")? UUID.fromString(ctg.getIdLoaigiay()):null;
-        UUID idMau = !ctg.getIdMau().equals("null")? UUID.fromString(ctg.getIdMau()):null;
-        UUID idKichCo = !ctg.getIdSize().equals("null")? UUID.fromString(ctg.getIdSize()):null;
-        String textSearch =  ctg.getTextSearch() ==null||ctg.getTextSearch().trim().length() == 0 ? null : "%"+ctg.getTextSearch()+"%";
-        return chiTietGiayRepository.findChiTietGiayByMultipleParamsAPI(idGiay,idDeGiay,idHang,idLoaiGiay,idMau,idKichCo,textSearch);
+    public List<ChiTietGiay> findChiTietGiayByMultipleParamsAPI(DTO_API_CTG ctg) {
+        System.out.println(ctg.getIdLoaigiay() + "test2");
+        UUID idGiay = !ctg.getIdGiay().equals("null") ? UUID.fromString(ctg.getIdGiay()) : null;
+        UUID idDeGiay = !ctg.getIdDe().equals("null") ? UUID.fromString(ctg.getIdDe()) : null;
+        UUID idHang = !ctg.getIdHang().equals("null") ? UUID.fromString(ctg.getIdHang()) : null;
+        UUID idLoaiGiay = !ctg.getIdLoaigiay().equals("null") ? UUID.fromString(ctg.getIdLoaigiay()) : null;
+        UUID idMau = !ctg.getIdMau().equals("null") ? UUID.fromString(ctg.getIdMau()) : null;
+        UUID idKichCo = !ctg.getIdSize().equals("null") ? UUID.fromString(ctg.getIdSize()) : null;
+        String textSearch = ctg.getTextSearch() == null || ctg.getTextSearch().trim().length() == 0 ? null : "%" + ctg.getTextSearch() + "%";
+        return chiTietGiayRepository.findChiTietGiayByMultipleParamsAPI(idGiay, idDeGiay, idHang, idLoaiGiay, idMau, idKichCo, textSearch);
     }
 
     // 28-10 cuongdv
-    public ChiTietGiay getChiTietGiayByIdctg(UUID idct){
+    public ChiTietGiay getChiTietGiayByIdctg(UUID idct) {
         return chiTietGiayRepository.findById(idct).orElse(null);
     }
+
     // 29-10 cuongdv
-    public UUID getIdCTGByMa(String maCTG){
+    public UUID getIdCTGByMa(String maCTG) {
         return chiTietGiayRepository.getIdCTGByMa(maCTG);
     }
 
-//    29/10 hoangnh
-    public Integer findSoLuongTon(String ma){
+    //    29/10 hoangnh
+    public Integer findSoLuongTon(String ma) {
         return chiTietGiayRepository.findSoLuongTon(ma);
     }
 }

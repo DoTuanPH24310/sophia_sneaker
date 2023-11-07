@@ -122,11 +122,13 @@
                 <table id="table" class="table  table-borderless">
                     <thead>
                     <tr class="bg-light">
+                        <th>Ảnh</th>
                         <th>Mã</th>
+                        <th>Hãng</th>
                         <th>Tên</th>
-                        <th>Số lượng</th>
-                        <th>Size</th>
                         <th>Màu sắc</th>
+                        <th>Size</th>
+                        <th>Số lượng</th>
                         <th>Thành tiền</th>
                         <th>Thao tác</th>
 
@@ -135,8 +137,12 @@
                     <tbody>
 
                     <tr style="line-height: 25px" th:each="hdct : ${listhdct}">
+                        <td><img th:src="@{${avtctg}}" alt="" width="100" height="100"></td>
                         <td th:text="${hdct.chiTietGiay.ma}"></td>
-                        <td th:text="${hdct.chiTietGiay.giay.ten}"></td>
+                        <td th:text="${hdct.chiTietGiay.hang.ten}"></td>
+                        <td th:text="${hdct.chiTietGiay.giay.ten + ' ' + hdct.chiTietGiay.ten}"></td>
+                        <td th:text="${hdct.chiTietGiay.mauSac.ten}"></td>
+                        <td th:text="${hdct.chiTietGiay.kichCo.ten}"></td>
                         <td>
 
                                 <span class="input-group-btn">
@@ -155,8 +161,7 @@
                                 </span>
 
                         </td>
-                        <td th:text="${hdct.chiTietGiay.kichCo.ten}"></td>
-                        <td th:text="${hdct.chiTietGiay.mauSac.ten}"></td>
+
                         <td th:text="${#numbers.formatCurrency(hdct.soLuong * hdct.donGia)}"></td>
                         <td>
                             <a class="delete" style="text-decoration: none"
@@ -576,7 +581,6 @@
                                     </tr>
                                     </thead>
                                     <tbody id="sinhvien">
-
                                     </tbody>
 
                                 </table>
@@ -873,8 +877,20 @@
 
         function insertTrCTG(x) {
             console.log("Vào");
+            const avtctsp = [[${session.avtctsp}]];
+            console.log(avtctsp)
             var btn = '<button class="btn btn-warning" data-toggle="modal" data-target="#modalSoLuong">Chọn</button>';
             const row = tableBody.insertRow();
+
+            // // Tạo một cell để chứa ảnh
+            // var imageCell = row.insertCell();
+            // var img = document.createElement('img');
+            // img.src = avtctsp; // Đặt đường dẫn ảnh từ biến avtctsp
+            // img.alt = 'Ảnh sản phẩm'; // Đặt văn bản thay thế cho ảnh (nếu cần)
+            // img.width = 100; // Đặt chiều rộng ảnh (tuỳ chọn)
+            // img.height = 100; // Đặt chiều cao ảnh (tuỳ chọn)
+            // imageCell.appendChild(img);
+
             row.insertCell().innerHTML = '';
             row.insertCell().innerHTML = x.ma;
             row.insertCell().innerHTML = x.giay.ten;
