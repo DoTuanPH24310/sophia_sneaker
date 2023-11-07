@@ -36,9 +36,6 @@ public class TaiKhoan {
     @ManyToOne(fetch = FetchType.EAGER)
     private VaiTro vaiTro;
 
-    @Column(name = "taiKhoan")
-    private String taiKhoan;
-
     @Column(name = "ten")
     private String ten;
 

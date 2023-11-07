@@ -49,6 +49,12 @@ public class ChiTietGiay {
     @Column(name = "ma")
     private String ma;
 
+    @Column(name = "moTa")
+    private String moTa;
+
+    @Column(name = "ten")
+    private String ten;
+
     @Column(name = "gia")
     private Double gia;
 

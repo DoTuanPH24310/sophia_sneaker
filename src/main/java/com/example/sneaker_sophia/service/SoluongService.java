@@ -102,13 +102,13 @@ public class SoluongService {
 
             if (newQuantity > chiTietGiayQuantity) {
                 gioHangChiTiet.setSoLuong(chiTietGiayQuantity);
+
             } else {
                 gioHangChiTiet.setSoLuong(newQuantity);
-                gioHangChiTietRepository.save(gioHangChiTiet);
             }
         }
+        gioHangChiTietRepository.save(gioHangChiTiet);
+
     }
-
-
 
 }
