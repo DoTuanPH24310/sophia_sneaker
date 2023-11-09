@@ -66,22 +66,22 @@ public class NhanVienController {
         return "admin/nhanvien/createnv";
     }
 
-    @GetMapping("/edit/{id}")
-    public String editView(
-            Model model,
-            @PathVariable("id") String id, HttpSession session
-    ) {
-//        DiaChi taiKhoan = diaChiService.getNhanVienDTOById(id);
-        NhanVienRequest taiKhoanDiaChi = taiKhoanService.getTaiKhoanById(id);
-        DiaChi diaChiList = diaChiService.getDiaChiByIdTaiKhoan(id);
-        model.addAttribute("nhanVien", taiKhoanDiaChi);
-        session.setAttribute("tinh", diaChiList.getTinh());
-        session.setAttribute("quan", diaChiList.getQuanHuyen());
-        session.setAttribute("phuong", diaChiList.getPhuongXa());
-        session.setAttribute("anhDaiDien", taiKhoanDiaChi.getAnhDaiDien());
-
-        return "admin/nhanvien/editnv";
-    }
+//    @GetMapping("/edit/{id}")
+//    public String editView(
+//            Model model,
+//            @PathVariable("id") String id, HttpSession session
+//    ) {
+////        DiaChi taiKhoan = diaChiService.getNhanVienDTOById(id);
+//        NhanVienRequest taiKhoanDiaChi = taiKhoanService.getTaiKhoanById(id);
+//        DiaChi diaChiList = diaChiService.getDiaChiByIdTaiKhoan(id);
+//        model.addAttribute("nhanVien", taiKhoanDiaChi);
+//        session.setAttribute("tinh", diaChiList.getTinh());
+//        session.setAttribute("quan", diaChiList.getQuanHuyen());
+//        session.setAttribute("phuong", diaChiList.getPhuongXa());
+//        session.setAttribute("anhDaiDien", taiKhoanDiaChi.getAnhDaiDien());
+//
+//        return "admin/nhanvien/editnv";
+//    }
 
     @PostMapping("/store")
     public String create(

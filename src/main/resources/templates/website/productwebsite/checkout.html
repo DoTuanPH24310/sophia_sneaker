@@ -759,7 +759,7 @@
 
                 </div>
                 <div class="col-lg-6 col-md-6">
-                    <form action="#">
+                    <form th:action="@{/check-out/thanh-toan}" method="post">
                         <h3>Đơn hàng của bạn</h3>
                         <div class="order_table table-responsive">
                             <table>
@@ -790,11 +790,11 @@
                                 </tr>
                                 <tr>
                                     <td colspan="2" style="text-align: center;">Phí vận chuyển</td>
-                                    <td id="shipping-cost"></td>
+                                    <td id="shipping-cost" th:value="20000">20000</td>
                                 </tr>
                                 <tr class="order_total">
                                     <td colspan="2" style="text-align: center;">Tổng tiền đơn hàng</td>
-                                    <td ><strong></strong></td>
+                                    <td ><strong th:text="${#numbers.formatCurrency(total) }"></strong></td>
                                 </tr>
                                 </tfoot>
                             </table>
@@ -803,7 +803,7 @@
                             <div class="panel-default">
                                 <label class="checkbox-default" for="currencyCod" data-bs-toggle="collapse"
                                        data-bs-target="#methodCod">
-                                    <input type="checkbox" id="currencyCod">
+                                    <input type="radio" id="currencyCod" name="hinhThucThanhToan" value="0">
                                     <span>Thanh toán khi nhận hàng</span>
                                 </label>
 
@@ -816,7 +816,7 @@
                             <div class="panel-default">
                                 <label class="checkbox-default" for="currencyPaypal" data-bs-toggle="collapse"
                                        data-bs-target="#methodPaypal">
-                                    <input type="checkbox" id="currencyPaypal">
+                                    <input type="radio" id="currencyPaypal" name="hinhThucThanhToan" value="1">
                                     <span>PayPal</span>
                                 </label>
                                 <div id="methodPaypal" class="collapse " data-parent="#methodPaypal">
@@ -827,8 +827,7 @@
                                 </div>
                             </div>
                             <div class="order_button pt-3">
-                                <button class="btn btn-md btn-black-default-hover" type="submit">Proceed to
-                                    PayPal
+                                <button class="btn btn-md btn-black-default-hover" type="submit">Thanh toán
                                 </button>
                             </div>
                         </div>
@@ -1327,72 +1326,6 @@
         }
 
     }
-
-    // var printResult = () => {
-    //     if ($("#district").val() != "" && $("#province").val() != "" &&
-    //         $("#ward").val() != "") {
-    //         let result = $("#province option:selected").text() +
-    //             " | " + $("#district option:selected").text() + " | " +
-    //             $("#ward option:selected").text();
-    //         $("#result").text(result)
-    //     }
-    // }
-    //
-    // const loadAllData = () => {
-    //     axios.get(`${host}?depth=3`)
-    //         .then((response) => {
-    //             const data = response.data;
-    //
-    //             // Lấy danh sách tỉnh
-    //             const provinces = data;
-    //
-    //             // Lấy danh sách huyện
-    //             const districts = data.map(province => province.districts).flat();
-    //
-    //             // Lấy danh sách xã
-    //             const wards = data.map(province => province.districts.map(district => district.wards)).flat().flat();
-    //
-    //             // Hiển thị dữ liệu lên các dropdown
-    //             renderData(provinces, "province");
-    //             renderData(districts, "district");
-    //             renderData(wards, "ward");
-    //         })
-    //         .catch((error) => {
-    //             console.error("Error calling API:", error);
-    //         });
-    // }
-    // loadAllData();
-
-    // JavaScript hoàn thiện
-    // const axios = require('axios');
-    //
-    // // Thông tin địa chỉ gửi cố định
-    // const senderAddress = 'Phường Xuân Phương - Quận Nam Từ Liêm - Thành Phố Hà Nội';
-    //
-    // // Lấy thông tin địa chỉ nhận từ form
-    // const receiverAddress = {
-    //     tinh: document.getElementById('tinh').value,
-    //     quanHuyen: document.getElementById('quanHuyen').value,
-    //     phuongXa: document.getElementById('phuongXa').value,
-    //     diaChiCuThe: document.getElementById('diaChiCuThe').value,
-    // };
-    //
-    // // Gửi thông tin địa chỉ đến API của dịch vụ vận chuyển
-    // axios.post('https://api.shipping-service.com/calculate-shipping', {
-    //     sender: senderAddress,
-    //     receiver: receiverAddress,
-    // })
-    //     .then((response) => {
-    //         // Xử lý kết quả tính toán tiền vận chuyển từ response.data
-    //         const shippingCost = response.data.shippingCost;
-    //
-    //         // Hiển thị giá vận chuyển trong phần tử có ID "shipping-cost"
-    //         const shippingCostElement = document.getElementById('shipping-cost');
-    //         shippingCostElement.textContent = `Tiền vận chuyển: ${shippingCost} VNĐ`;
-    //     })
-    //     .catch((error) => {
-    //         console.error('Lỗi khi gọi API vận chuyển:', error);
-    //     });
 
 
 </script>
