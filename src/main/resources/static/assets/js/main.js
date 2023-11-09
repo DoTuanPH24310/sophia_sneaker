@@ -486,7 +486,7 @@ document.querySelectorAll(".add-to-cart").forEach(function(addToCartButton) {
     });
 });
 
-//search shop product
+//filter shop product
 document.addEventListener("DOMContentLoaded", function() {
     var filterInputs = document.querySelectorAll('input[data-name]');
     var timeout;
@@ -501,8 +501,20 @@ document.addEventListener("DOMContentLoaded", function() {
             // Đặt một độ trễ mới 2 giây trước khi gửi yêu cầu lọc
             timeout = setTimeout(function() {
                 document.getElementById("filterForm").submit();
-            }, 2000); // 2 giây
+            }, 1000); // 2 giây
         });
     });
+
+    // Gọi hàm lướt xuống phần tử có class "shop-section" ngay sau khi trang tải xong
+    scrollToShopSection();
 });
+
+// Hàm lướt xuống phần tử có class "shop-section"
+function scrollToShopSection() {
+    var shopSection = document.querySelector('.shop-section');
+    if (shopSection) {
+        shopSection.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
 

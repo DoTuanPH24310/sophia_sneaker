@@ -44,10 +44,6 @@ public class TaiKhoanService {
         return nhanVienRequest;
     }
 
-//    public TaiKhoan getTaiKhoanById(String id) {
-//        TaiKhoan taiKhoan = taiKhoanRepository.findById(id).orElse(null);
-//        return taiKhoan;
-//    }
 
     public boolean save(NhanVienRequest nhanVienRequest, Model model) {
         int check = 0;
