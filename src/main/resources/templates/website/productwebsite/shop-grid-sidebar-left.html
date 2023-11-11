@@ -807,7 +807,7 @@
 
                                     <!-- Start Page  -->
                                     <div class="page-amount ml-2">
-                                        <span>Showing 1–9 of 21 results</span>
+                                        <span>Showing 1–9 of <span th:text="${danhSachProduct.size()}"></span> results</span>
                                     </div>
                                 </div> <!-- End Sort tab Button -->
 
@@ -974,12 +974,15 @@
                     <!-- Start Pagination -->
                     <div class="page-pagination text-center" data-aos="fade-up" data-aos-delay="0">
                         <ul>
-                            <li><a class="active" href="#">1</a></li>
-                            <li><a href="#">2</a></li>
-                            <li><a href="#">3</a></li>
-                            <li><a href="#"><i class="ion-ios-skipforward"></i></a></li>
+                            <li><a href="?page=1">1</a></li>
+                            <li><a href="?page=2">2</a></li>
+                            <li><a href="?page=3">3</a></li>
+                            <li><a href="?page=4">4</a></li>
+                            <!-- Thêm thêm các trang tùy theo tổng số trang -->
+                            <li><a href="?page=5">5</a></li>
                         </ul>
-                    </div> <!-- End Pagination -->
+                    </div>
+                    <!-- End Pagination -->
                 </div>
             </div>
         </div>

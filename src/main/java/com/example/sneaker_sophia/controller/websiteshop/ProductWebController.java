@@ -6,6 +6,7 @@ import com.example.sneaker_sophia.repository.*;
 import com.example.sneaker_sophia.service.CartService;
 import com.example.sneaker_sophia.service.ChiTietGiayService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -45,7 +46,10 @@ public class ProductWebController {
                        @RequestParam(value = "hangIds", required = false) List<String> hangTen,
                        @RequestParam(value = "loaiGiayIds", required = false) List<String> loaiGiayTen,
                        @RequestParam(value = "mauSacIds", required = false) List<String> mauSacTen,
-                       @RequestParam(value = "minPrice", required = false) List<String> minPrice
+                       @RequestParam(value = "minPrice", required = false) List<String> minPrice,
+                       @RequestParam(value = "page", required = false, defaultValue = "1") int page, // Số trang
+                       @RequestParam(value = "pageSize", required = false, defaultValue = "12") int pageSize,
+                       @RequestParam(value = "sortField", required = false) String sortField
 
     ) {
         // Đặt danh sách sản phẩm vào model khi trang ban đầu được tải
@@ -56,11 +60,10 @@ public class ProductWebController {
                 .mapToDouble(item -> item.getId().getChiTietGiay().getGia() * item.getSoLuong())
                 .sum();
         Long soLuong = this.cartService.countCartItems(authentication.getName());
-        List<ChiTietGiay> filteredChiTietGiay = chiTietGiayService.filterChiTietGiay(giayTen, kichCoTen, deGiayTen,hangTen, loaiGiayTen, mauSacTen,minPrice);
+        Page<ChiTietGiay> filteredChiTietGiay = chiTietGiayService.filterChiTietGiay(giayTen, kichCoTen, deGiayTen,hangTen, loaiGiayTen, mauSacTen,minPrice,page,pageSize,sortField);
 
         model.addAttribute("soLuong",soLuong);
         model.addAttribute("totalCartPrice", totalCartPrice);
-        model.addAttribute("danhSachProduct", filteredChiTietGiay);
         model.addAttribute("danhSachHang", this.hangRepository.findAll());
         model.addAttribute("danhSachMauSac", this.mauSacRepository.findAll());
         model.addAttribute("danhSachKichCo", this.kichCoRepository.findAll());
@@ -68,7 +71,9 @@ public class ProductWebController {
         model.addAttribute("danhSachLoaiGiay", this.loaiGiayRepository.findAll());
         model.addAttribute("danhSachGiay", this.giayRepository.findAll());
         model.addAttribute("cartItems", cartItems);
-        System.out.println("MinPrice values: " + minPrice);
+        model.addAttribute("danhSachProduct", filteredChiTietGiay.getContent()); // Lấy danh sách sản phẩm từ Page
+        model.addAttribute("totalPages", filteredChiTietGiay.getTotalPages()); // Tổng số trang
+        model.addAttribute("currentPage", page); // Trang hiện tại
         //giữ giá trị checkbox đã chọn
         model.addAttribute("loaiGiayTen", loaiGiayTen);
         model.addAttribute("hangTen", hangTen);
