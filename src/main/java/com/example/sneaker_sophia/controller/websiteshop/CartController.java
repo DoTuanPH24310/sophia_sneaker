@@ -1,11 +1,9 @@
 package com.example.sneaker_sophia.controller.websiteshop;
 
 import com.example.sneaker_sophia.entity.*;
-import com.example.sneaker_sophia.repository.ChiTietGiayRepository;
 import com.example.sneaker_sophia.repository.GioHangRepository;
 import com.example.sneaker_sophia.repository.LoginRepository;
 import com.example.sneaker_sophia.service.CartService;
-import com.example.sneaker_sophia.service.ChiTietGiayService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
