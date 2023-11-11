@@ -166,7 +166,6 @@ public class ChiTietGiayService {
         return chiTietGiayRepository.getChiTietGiaysByIdChiTietGiay(giay,deGiay,hang,loaiGiay,mauSac);
     }
 
-
     public List<ChiTietGiay> filterChiTietGiay(
             List<String> tenGiay,
             List<String> tenKichCo,

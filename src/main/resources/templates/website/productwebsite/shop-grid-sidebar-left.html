@@ -106,7 +106,7 @@
                                                     <a href="#" class="mega-menu-item-title">Other Pages</a>
                                                     <ul class="mega-menu-sub">
                                                         <li><a href="../cart.html">Cart</a></li>
-                                                        <li><a href="empty-cart.html">Empty Cart</a></li>
+                                                        <li><a href="../empty-cart.html">Empty Cart</a></li>
                                                         <li><a href="../wishlist.html">Wishlist</a></li>
                                                         <li><a href="../compare.html">Compare</a></li>
                                                         <li><a href="checkout.html">Checkout</a></li>
@@ -854,17 +854,17 @@
                                                                  th:src="@{'/img/' + ${product.anhs.get(0).anhChinh}}"
                                                                  style="width: 260px; height: 260px"
                                                                  alt="">
-<!--                                                            <img class="img-fluid"-->
-<!--                                                                 th:src="@{'/img/' + ${product.anhs.get(1).anhChinh}}"-->
-<!--                                                                 style="width: 260px; height: 260px"-->
-<!--                                                                 alt="">-->
+                                                            <img class="img-fluid"
+                                                                 th:src="@{'/img/' + ${product.anhs.get(1).anhChinh}}"
+                                                                 style="width: 260px; height: 260px"
+                                                                 alt="">
                                                         </a>
                                                         <div class="action-link">
                                                             <div class="action-link-left">
-                                                                <a th:href="@{/cart/add-to-cart/{id}(id=${product.id})}">Thêm
-                                                                    vào giỏ</a>
-                                                                <!--                                                                data-bs-toggle="modal"-->
-                                                                <!--                                                                data-bs-target="#modalAddcart"-->
+                                                                <a class="add-to-cart"
+                                                                   th:attr="data-product-id=${product.getId()}"
+                                                                   data-bs-toggle="modal" data-bs-target="#modalAddcart"
+                                                                   href="#">Add to Cart</a>
                                                             </div>
                                                             <div class="action-link-right">
                                                                 <a href="#" data-bs-toggle="modal"
@@ -920,10 +920,10 @@
                                                              th:src="@{'/img/' + ${product.anhs.get(0).anhChinh}}"
                                                              style="width: 260px; height: 260px"
                                                              alt="">
-<!--                                                        <img class="img-fluid"-->
-<!--                                                             th:src="@{'/img/' + ${product.anhs.get(1).anhChinh}}"-->
-<!--                                                             style="width: 260px; height: 260px"-->
-<!--                                                             alt="">-->
+                                                        <img class="img-fluid"
+                                                             th:src="@{'/img/' + ${product.anhs.get(1).anhChinh}}"
+                                                             style="width: 260px; height: 260px"
+                                                             alt="">
                                                     </a>
                                                     <div class="product-list-content">
                                                         <h5 class="product-list-link"><a
