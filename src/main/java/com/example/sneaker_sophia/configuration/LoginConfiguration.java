@@ -1,6 +1,7 @@
 package com.example.sneaker_sophia.configuration;
 
 
+import com.example.sneaker_sophia.security.AuthenticationSuccessEventListener;
 import com.example.sneaker_sophia.security.CustomSuccessHandler;
 import com.example.sneaker_sophia.service.MyUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,7 @@ public class LoginConfiguration {
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
 //                        .requestMatchers("/user/**").hasAuthority("USER")
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 .formLogin(login -> login
                         .loginPage("/login/home")
@@ -54,6 +55,11 @@ public class LoginConfiguration {
                 );
 
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationSuccessEventListener customAuthenticationSuccessEventListener() {
+        return new AuthenticationSuccessEventListener();
     }
 
 

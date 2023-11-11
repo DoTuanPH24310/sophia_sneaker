@@ -475,21 +475,18 @@
     <div class="offcanvas-add-cart-wrapper">
         <h4 class="offcanvas-title">Giỏ hàng</h4>
         <ul class="offcanvas-cart">
-            <li class="offcanvas-cart-item-single" th:each="cart : ${cartItems}">
+            <li class="offcanvas-cart-item-single" th:each="item : ${cartItem}">
                 <div class="offcanvas-cart-item-block">
                     <a href="#" class="offcanvas-cart-item-image-link">
-                        <img class="offcanvas-cart-image"
-                             th:src="@{'/img/' + ${cart.id.chiTietGiay.anhs.get(0).anhChinh}}"
-                             style="width: 92px; height: 92px"
-                             alt="">
+                        <img class="offcanvas-cart-image" th:src="@{'/img/' + ${item.anh}}" style="width: 92px; height: 92px" alt="">
                     </a>
                     <div class="offcanvas-cart-item-content">
                         <a href="#" class="offcanvas-cart-item-link"
-                           th:text="${cart.id.chiTietGiay.hang.ten + ' ' + cart.id.chiTietGiay.giay.ten + ' ' + cart.id.chiTietGiay.loaiGiay.ten + ' ' + cart.id.chiTietGiay.mauSac.ten}"></a>
+                           th:text="${item.hang + ' ' + item.giay + ' ' + item.loaiGiay + ' ' + item.mauSac}"></a>
                         <div class="offcanvas-cart-item-details">
-                            <span class="offcanvas-cart-item-details-quantity" th:text="${cart.soLuong} + ' x'"></span>
+                            <span class="offcanvas-cart-item-details-quantity" th:text="${item.soLuong} + ' x'"></span>
                             <span class="offcanvas-cart-item-details-price"
-                                  th:text="${#numbers.formatCurrency(cart.id.chiTietGiay.gia * cart.soLuong)}"></span>
+                                  th:text="${#numbers.formatCurrency(item.gia)}"></span>
                         </div>
                     </div>
                 </div>
@@ -639,51 +636,41 @@
                                     <th class="product_quantity">Số lượng</th>
                                     <th class="product_total">Tổng tiền</th>
                                 </tr>
-                                </thead> <!-- End Cart Table Head -->
+                                </thead>
+                                <!-- End Cart Table Head -->
                                 <tbody>
                                 <!-- Start Cart Single Item-->
-                                <tr th:each="cart : ${cartItems}">
+                                <tr th:each="item : ${cartItem}">
                                     <td class="product_remove">
-                                        <a
-                                           th:href="@{'/cart/removeProductCart?gioHangId=' + ${cart.id.gioHang.id} + '&chiTietGiayId=' + ${cart.id.chiTietGiay.id}}">
+                                        <a >
                                             <i class="fa fa-trash-o"></i>
                                         </a>
                                     </td>
                                     <td class="product_thumb">
                                         <a href="product-details-default.html">
-                                            <img class="offcanvas-cart-image"
-                                                 th:src="@{'/img/' + ${cart.id.chiTietGiay.anhs.get(0).anhChinh}}"
-                                                 style="width: 92px; height: 92px"
-                                                 alt="">
+                                            <img class="offcanvas-cart-image" th:src="@{'/img/' + ${item.anh}}" style="width: 92px; height: 92px" alt="">
                                         </a>
                                     </td>
-                                    <td class="product_name"><a href="product-details-default.html"
-                                                                th:text="${cart.id.chiTietGiay.hang.ten + ' ' + cart.id.chiTietGiay.giay.ten + ' ' + cart.id.chiTietGiay.loaiGiay.ten + ' ' + cart.id.chiTietGiay.mauSac.ten}"></a>
+                                    <td class="product_name">
+                                        <a href="product-details-default.html" th:text="${item.hang + ' ' + item.giay + ' ' + item.loaiGiay + ' ' + item.mauSac}"></a>
                                     </td>
-                                    <td class="product-price"
-                                        th:attr="data-gia=${cart.id.chiTietGiay.gia}"
-                                        th:text="${#numbers.formatCurrency(cart.id.chiTietGiay.gia)}">
-                                    </td>
+                                    <td class="product-price" th:attr="data-gia=${item.gia}" th:text="${#numbers.formatCurrency(item.gia)}"></td>
 
                                     <td class="product_quantity">
                                         <label for="quantity">Số lượng:</label>
-                                        <button class="buttonCT decreaseQuantity" th:data-id="${cart.id.gioHang.id} + '/' +${cart.id.chiTietGiay.id}">-</button>
-                                        <input min="1" max="100" id="quantity" type="text" th:value="${cart.soLuong}" th:data-id="${cart.id.gioHang.id} + '/' +${cart.id.chiTietGiay.id}" onchange="updateQuantity(this)">
-                                        <button class="buttonCT increaseQuantity" th:data-id="${cart.id.gioHang.id} + '/' +${cart.id.chiTietGiay.id}">+</button>
+                                        <button class="buttonCT decreaseQuantity" >-</button>
+                                        <input min="1" max="100" id="quantity" type="text" th:value="${item.soLuong}" onchange="updateQuantity(this)">
+                                        <button class="buttonCT increaseQuantity" >+</button>
                                     </td>
-
 
                                     <td class="product_total">
-                                        <span class="productTotalAmount" style="font-size: 15px"
-                                              th:text="${#numbers.formatCurrency(cart.id.chiTietGiay.gia * cart.soLuong)}"> </span>
+                                        <span class="productTotalAmount" style="font-size: 15px" th:text="${#numbers.formatCurrency(item.gia * item.soLuong)}"></span>
                                     </td>
-
-                                </tr> <!-- End Cart Single Item-->
-
-                                <!-- Start Cart Single Item-->
+                                </tr>
                                 <!-- End Cart Single Item-->
                                 </tbody>
                             </table>
+
                         </div>
                         <div class="cart_submit">
                             <button class="btn btn-md btn-golden" type="submit">update cart</button>

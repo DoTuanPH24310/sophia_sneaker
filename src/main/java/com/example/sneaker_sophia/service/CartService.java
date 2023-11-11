@@ -8,6 +8,8 @@ import com.example.sneaker_sophia.repository.LoginRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceContext;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +25,8 @@ public class CartService {
 
     private final LoginRepository loginRepository;
     private final GioHangRepository gioHangRepository;
-
+    @PersistenceContext
+    private EntityManager entityManager;
     @Autowired
     private GioHangChiTietRepository gioHangChiTietRepository;
     @Autowired
@@ -64,6 +67,90 @@ public class CartService {
             cartItem.setNgaySua(LocalDate.now());
         }
         gioHangChiTietRepository.save(cartItem);
+    }
+
+    public void addToCartNoLogin(UUID id, HttpSession httpSession) {
+        Optional<ChiTietGiay> chiTietSanPham = this.chiTietGiayRepository.findById(id);
+        CartItem item = new CartItem(chiTietSanPham.get().getId(),
+                chiTietSanPham.get().getAnhs().get(0).getAnhChinh(),
+                chiTietSanPham.get().getGiay().getTen(),
+                chiTietSanPham.get().getTen(),
+                chiTietSanPham.get().getHang().getTen(),
+                chiTietSanPham.get().getLoaiGiay().getTen(),
+                chiTietSanPham.get().getMauSac().getTen(),
+                1,
+                chiTietSanPham.get().getGia());
+
+        Cart cartSession = (Cart) httpSession.getAttribute("cart");
+        if (cartSession == null) {
+            Cart cart = new Cart();
+            List<CartItem> list = new ArrayList<>();
+            list.add(item);
+            cart.setItems(list);
+            httpSession.setAttribute("cart", cart);
+        } else {
+            Cart cart = (Cart) httpSession.getAttribute("cart");
+            List<CartItem> listItem = cart.getItems();
+
+            boolean itemExists = false;
+            for (CartItem itemTmp : listItem) {
+                if (itemTmp.getId().equals(id)) {
+                    itemTmp.setSoLuong(itemTmp.getSoLuong() + 1);
+                    itemExists = true;
+                    break;
+                }
+            }
+
+            if (!itemExists) {
+                listItem.add(item);
+            }
+
+            // Cập nhật giỏ hàng trong session
+            httpSession.setAttribute("cart", cart);
+        }
+    }
+
+    @Transactional
+    public void mergeCarts(String userEmail, Cart cartSession) {
+        if (!loginRepository.existsByEmail(userEmail)) {
+            return;
+        }
+        TaiKhoan taiKhoan = loginRepository.findByEmail(userEmail);
+        GioHang gioHang = gioHangRepository.findByTaiKhoan(taiKhoan);
+
+        if (gioHang == null) {
+            gioHang = new GioHang();
+            gioHang.setTaiKhoan(taiKhoan);
+            gioHang.setNgayTao(LocalDate.now());
+            gioHang = gioHangRepository.save(gioHang);
+        }
+
+        for (CartItem cartItem : cartSession.getItems()) {
+            ChiTietGiay chiTietGiay = chiTietGiayRepository.findById(cartItem.getId()).orElse(null);
+            if (chiTietGiay != null) {
+                GioHangChiTiet cartItemDatabase = gioHangChiTietRepository.findById_GioHangAndId_ChiTietGiay(gioHang, chiTietGiay);
+                if (cartItemDatabase == null) {
+                    cartItemDatabase = new GioHangChiTiet(new IdGioHangChiTiet(gioHang, chiTietGiay), cartItem.getSoLuong());
+                    cartItemDatabase.setNgayTao(LocalDate.now());
+                } else {
+                    cartItemDatabase.setSoLuong(cartItemDatabase.getSoLuong() + cartItem.getSoLuong());
+                    cartItemDatabase.setNgaySua(LocalDate.now());
+                }
+                gioHangChiTietRepository.save(cartItemDatabase);
+            }
+        }
+    }
+
+    public Cart getOrCreateCartFromSession(HttpSession session) {
+        Cart cart = (Cart) session.getAttribute("cart");
+
+        if (cart == null) {
+            // Nếu giỏ hàng không tồn tại trong session, tạo một giỏ hàng mới
+            cart = new Cart();
+            session.setAttribute("cart", cart);
+        }
+
+        return cart;
     }
 
     public List<GioHangChiTiet> getCartItems(String userEmail) {
