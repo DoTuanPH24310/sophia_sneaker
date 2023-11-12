@@ -12,6 +12,8 @@ import jakarta.persistence.criteria.Root;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.JpaSort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -166,7 +168,6 @@ public class ChiTietGiayService {
         return chiTietGiayRepository.getChiTietGiaysByIdChiTietGiay(giay,deGiay,hang,loaiGiay,mauSac);
     }
 
-
     public List<ChiTietGiay> filterChiTietGiay(
             List<String> tenGiay,
             List<String> tenKichCo,
@@ -253,5 +254,107 @@ public class ChiTietGiayService {
         return typedQuery.getResultList();
     }
 
+    public Page<ChiTietGiay> filterChiTietGiay(
+            List<String> tenGiay,
+            List<String> tenKichCo,
+            List<String> tenDeGiay,
+            List<String> tenHang,
+            List<String> tenLoaiGiay,
+            List<String> tenMauSac,
+            List<String> minPriceRanges,
+            int page,
+            int pageSize,
+            String sortField
+    ) {
+        Specification<ChiTietGiay> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (tenGiay != null && !tenGiay.isEmpty()) {
+                predicates.add(root.get("giay").get("ten").in(tenGiay));
+            }
+            if (tenKichCo != null && !tenKichCo.isEmpty()) {
+                predicates.add(root.get("kichCo").get("ten").in(tenKichCo));
+            }
+            if (tenDeGiay != null && !tenDeGiay.isEmpty()) {
+                predicates.add(root.get("deGiay").get("ten").in(tenDeGiay));
+            }
+            if (tenHang != null && !tenHang.isEmpty()) {
+                predicates.add(root.get("hang").get("ten").in(tenHang));
+            }
+            if (tenLoaiGiay != null && !tenLoaiGiay.isEmpty()) {
+                predicates.add(root.get("loaiGiay").get("ten").in(tenLoaiGiay));
+            }
+            if (tenMauSac != null && !tenMauSac.isEmpty()) {
+                predicates.add(root.get("mauSac").get("ten").in(tenMauSac));
+            }
+            if (minPriceRanges != null && !minPriceRanges.isEmpty()) {
+                List<Predicate> priceRangePredicates = new ArrayList<>();
+
+                for (String priceRange : minPriceRanges) {
+                    double minPrice = 0.0;
+                    double maxPrice = Double.MAX_VALUE;
+
+                    switch (priceRange) {
+                        case "0-1":
+                            maxPrice = 1000000.0;
+                            break;
+                        case "1-1.5":
+                            minPrice = 1000000.0;
+                            maxPrice = 1500000.0;
+                            break;
+                        case "1.5-2":
+                            minPrice = 1500000.0;
+                            maxPrice = 2000000.0;
+                            break;
+                        case "2-2.5":
+                            minPrice = 2000000.0;
+                            maxPrice = 2500000.0;
+                            break;
+                        case "2.5-3":
+                            minPrice = 2500000.0;
+                            maxPrice = 3000000.0;
+                            break;
+                        case "3+":
+                            minPrice = 3000000.0;
+                            break;
+                        default:
+                            // Xử lý các khoảng giá khác nếu cần
+                            break;
+                    }
+                    // Tạo một Predicate cho mỗi khoảng giá
+                    Predicate pricePredicate = cb.between(root.get("gia"), minPrice, maxPrice);
+                    priceRangePredicates.add(pricePredicate);
+                }
+
+                // Tạo một Predicate gồm logic OR cho tất cả các khoảng giá
+                Predicate priceRangeOrPredicate = cb.or(priceRangePredicates.toArray(new Predicate[0]));
+
+                // Thêm Predicate logic OR vào danh sách các Predicate
+                predicates.add(priceRangeOrPredicate);
+            }
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+
+        // Sử dụng ChiTietGiayRepository và PageRequest để lấy kết quả phân trang
+        Sort sort = Sort.unsorted();
+
+        if ("lowPrice".equals(sortField)) {
+            sort = JpaSort.unsafe(Sort.Direction.ASC, "CAST(gia AS DECIMAL)");
+        } else if ("hightPrice".equals(sortField)) {
+            sort = JpaSort.unsafe(Sort.Direction.DESC, "CAST(gia AS DECIMAL)");
+        }
+//        else if ("ten".equals(sortField)) {
+//            sort = Sort.by("ten").ascending();
+//        }
+        else if ("newest".equals(sortField)) {
+            sort = Sort.by("ngayTao").descending();
+        }
+
+        Pageable pageable = PageRequest.of(page - 1, pageSize, sort);
+
+        Page<ChiTietGiay> pageResult = chiTietGiayRepository.findAll(spec, pageable);
+
+        return pageResult;
+    }
 }
 

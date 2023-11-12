@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Controller
@@ -71,7 +72,6 @@ public class CartController {
         }
     }
 
-
     @GetMapping("/add-to-cart/{id}")
     public String addToCart(@PathVariable("id") UUID chiTietGiayId, Model model, HttpSession httpSession) {
         try {
@@ -117,7 +117,6 @@ public class CartController {
             return "website/productwebsite/error";
         }
     }
-
 
     @GetMapping("/removeProductCart")
     public String removeFromCart(@RequestParam("gioHangId") UUID gioHangId,

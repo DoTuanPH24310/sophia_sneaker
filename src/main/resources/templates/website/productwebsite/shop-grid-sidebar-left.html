@@ -106,7 +106,7 @@
                                                     <a href="#" class="mega-menu-item-title">Other Pages</a>
                                                     <ul class="mega-menu-sub">
                                                         <li><a href="../cart.html">Cart</a></li>
-                                                        <li><a href="empty-cart.html">Empty Cart</a></li>
+                                                        <li><a href="../empty-cart.html">Empty Cart</a></li>
                                                         <li><a href="../wishlist.html">Wishlist</a></li>
                                                         <li><a href="../compare.html">Compare</a></li>
                                                         <li><a href="checkout.html">Checkout</a></li>
@@ -807,7 +807,7 @@
 
                                     <!-- Start Page  -->
                                     <div class="page-amount ml-2">
-                                        <span>Showing 1–9 of 21 results</span>
+                                        <span>Showing 1–9 of <span th:text="${danhSachProduct.size()}"></span> results</span>
                                     </div>
                                 </div> <!-- End Sort tab Button -->
 
@@ -854,17 +854,17 @@
                                                                  th:src="@{'/img/' + ${product.anhs.get(0).anhChinh}}"
                                                                  style="width: 260px; height: 260px"
                                                                  alt="">
-<!--                                                            <img class="img-fluid"-->
-<!--                                                                 th:src="@{'/img/' + ${product.anhs.get(1).anhChinh}}"-->
-<!--                                                                 style="width: 260px; height: 260px"-->
-<!--                                                                 alt="">-->
+                                                            <img class="img-fluid"
+                                                                 th:src="@{'/img/' + ${product.anhs.get(1).anhChinh}}"
+                                                                 style="width: 260px; height: 260px"
+                                                                 alt="">
                                                         </a>
                                                         <div class="action-link">
                                                             <div class="action-link-left">
-                                                                <a th:href="@{/cart/add-to-cart/{id}(id=${product.id})}">Thêm
-                                                                    vào giỏ</a>
-                                                                <!--                                                                data-bs-toggle="modal"-->
-                                                                <!--                                                                data-bs-target="#modalAddcart"-->
+                                                                <a class="add-to-cart"
+                                                                   th:attr="data-product-id=${product.getId()}"
+                                                                   data-bs-toggle="modal" data-bs-target="#modalAddcart"
+                                                                   href="#">Add to Cart</a>
                                                             </div>
                                                             <div class="action-link-right">
                                                                 <a href="#" data-bs-toggle="modal"
@@ -920,10 +920,10 @@
                                                              th:src="@{'/img/' + ${product.anhs.get(0).anhChinh}}"
                                                              style="width: 260px; height: 260px"
                                                              alt="">
-<!--                                                        <img class="img-fluid"-->
-<!--                                                             th:src="@{'/img/' + ${product.anhs.get(1).anhChinh}}"-->
-<!--                                                             style="width: 260px; height: 260px"-->
-<!--                                                             alt="">-->
+                                                        <img class="img-fluid"
+                                                             th:src="@{'/img/' + ${product.anhs.get(1).anhChinh}}"
+                                                             style="width: 260px; height: 260px"
+                                                             alt="">
                                                     </a>
                                                     <div class="product-list-content">
                                                         <h5 class="product-list-link"><a
@@ -974,12 +974,15 @@
                     <!-- Start Pagination -->
                     <div class="page-pagination text-center" data-aos="fade-up" data-aos-delay="0">
                         <ul>
-                            <li><a class="active" href="#">1</a></li>
-                            <li><a href="#">2</a></li>
-                            <li><a href="#">3</a></li>
-                            <li><a href="#"><i class="ion-ios-skipforward"></i></a></li>
+                            <li><a href="?page=1">1</a></li>
+                            <li><a href="?page=2">2</a></li>
+                            <li><a href="?page=3">3</a></li>
+                            <li><a href="?page=4">4</a></li>
+                            <!-- Thêm thêm các trang tùy theo tổng số trang -->
+                            <li><a href="?page=5">5</a></li>
                         </ul>
-                    </div> <!-- End Pagination -->
+                    </div>
+                    <!-- End Pagination -->
                 </div>
             </div>
         </div>
