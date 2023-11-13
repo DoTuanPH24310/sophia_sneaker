@@ -65,6 +65,10 @@ public class ChiTietGiay {
     @Column(name = "trangThai")
     private Integer trangThai;
 
+    @Column(name = "qrCode")
+    private String qrCode;
+
+
     @JsonIgnore
     @OneToMany(mappedBy = "chiTietGiay")
     private List<Anh> anhs;

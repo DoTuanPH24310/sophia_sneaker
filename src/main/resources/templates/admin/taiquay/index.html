@@ -30,7 +30,7 @@
         }
     </style>
 
-
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.0.0/dist/jsQR.min.js"></script>
 </head>
 
 <body>
@@ -38,7 +38,10 @@
 <div layout:fragment="content" class="container" style="background-color: white;">
     <!--        <form action="/admin/tai-quay/addHD" method="post">-->
     <div class="row float-right mr-1">
-        <a th:href="@{/admin/tai-quay/addHD}" class="btn btn-primary mt-2 ">Tạo hóa đơn</a>
+        <form action="/admin/tai-quay/addHD" method="get">
+            <button class="btn btn-primary mt-2 ">Tạo hóa đơn</button>
+        </form>
+
     </div>
     <!--        </form>-->
 
@@ -97,7 +100,8 @@
 
 
             <div class="col-9">
-                <a class="btn btn-primary  float-right" href="/admin/tai-quay/pdf">
+                <a type="button" class="btn btn-primary float-right" id="startScanning" data-toggle="modal"
+                   data-target="#modalQRCode">
                     QR code sản phẩm
                 </a>
 
@@ -137,7 +141,7 @@
                     <tbody>
 
                     <tr style="line-height: 25px" th:each="hdct : ${listhdct}">
-                        <td><img th:src="@{${avtctg}}" alt="" width="100" height="100"></td>
+                        <td><img th:src="${avtctgMap[hdct.chiTietGiay.id]}" alt="" width="100" height="100"></td>
                         <td th:text="${hdct.chiTietGiay.ma}"></td>
                         <td th:text="${hdct.chiTietGiay.hang.ten}"></td>
                         <td th:text="${hdct.chiTietGiay.giay.ten + ' ' + hdct.chiTietGiay.ten}"></td>
@@ -811,6 +815,41 @@
         </form>
     </div>
 
+    <!--    Modal scan-->
+
+    <div class="modal fade" data-backdrop="static" id="modalQRCode" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" style="max-width: 700px">
+            <div class="modal-content" style="height: 620px">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">QR Scan</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" id="stopScanning" >&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row mb-4">
+                            <video id="video" autoplay></video>
+                        </div>
+                        <div class="row" style="float: bottom">
+                            <div id="result" th:text="${qrCodeResult}">kjahdkasjhd</div>
+<!--                            <div class="col-6">-->
+<!--                                <button id="startScanning">Start Scanning</button>-->
+<!--                            </div>-->
+<!--                            <div class="col-6" style="float: right">-->
+<!--                                <button id="stopScanning" disabled>Stop Scanning</button>-->
+<!--                            </div>-->
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <!--    alo ô la-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
             integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
@@ -1263,6 +1302,126 @@
         var quan = [[${session.quan}]];
         var phuong = [[${session.phuong}]];
         apiDiaChiGender('province', 'district', 'ward', tinh, quan, phuong);
+
+        //    qrcode scan
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const video = document.getElementById('video');
+            const resultDiv = document.getElementById('result');
+            const startScanningButton = document.getElementById('startScanning');
+            const stopScanningButton = document.getElementById('stopScanning');
+            let scanning = false;
+            let stream;
+            // let timeoutID;
+            // let qrCodeFound = false;
+            startScanningButton.addEventListener('click', function() {
+                scanning = true;
+                startScanning();
+            });
+            stopScanningButton.addEventListener('click', function () {
+                stopScanning();
+            });
+
+            function startScanning() {
+                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    navigator.mediaDevices.getUserMedia({video: true})
+                        .then(function (newStream) {
+                            video.srcObject = newStream;
+                            video.play();
+                            video.addEventListener('loadedmetadata', function () {
+                                scanQRCode();
+                            });
+                            stream = newStream;
+                            scanning = true;
+                            startScanningButton.disabled = true;
+                            stopScanningButton.disabled = false;
+                        })
+                        .catch(function (error) {
+                            console.error("Error accessing the camera: ", error);
+                        });
+                } else {
+                    console.error("getUserMedia is not supported on your browser");
+                }
+            }
+
+            function stopScanning() {
+                if (stream) {
+                    const tracks = stream.getTracks();
+                    tracks.forEach(track => track.stop());
+                    video.srcObject = null;
+                    scanning = false;
+                    startScanningButton.disabled = false;
+                    stopScanningButton.disabled = true;
+                    location.reload();
+                }
+            }
+            function scanQRCode() {
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                let qrCodeFound = false;
+                let lastScanTime = 0;
+
+                function captureFrame() {
+                    if (!scanning) return;
+
+                    const currentTime = Date.now();
+                    const timeSinceLastScan = currentTime - lastScanTime;
+
+                    if (timeSinceLastScan >= 1000) { // Chỉ quét mỗi 2 giây
+                        lastScanTime = currentTime;
+
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
+                        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                        const resizedCanvas = document.createElement('canvas');
+                        const resizedContext = resizedCanvas.getContext('2d');
+                        resizedCanvas.width = 300;
+                        resizedCanvas.height = (video.videoHeight / video.videoWidth) * 300;
+                        resizedContext.drawImage(canvas, 0, 0, resizedCanvas.width, resizedCanvas.height);
+
+                        const imageData = resizedContext.getImageData(0, 0, resizedCanvas.width, resizedCanvas.height);
+                        const code = jsQR(imageData.data, imageData.width, imageData.height);
+
+                        if (code) {
+                            resultDiv.innerText = 'QR Code content: ' + code.data;
+                            sendQRCodeToServer(code.data);
+                            // stopScanning();
+                        } else {
+                            resultDiv.innerText = 'No QR Code found.';
+                            qrCodeFound = false;
+                        }
+                    }
+
+                    if (scanning) {
+                        requestAnimationFrame(captureFrame);
+                    }
+                }
+
+                captureFrame();
+            }
+
+            function sendQRCodeToServer(qrCodeData) {
+                const url = '/admin/tai-quay/scan';
+                const data = {qrCodeData: qrCodeData};
+
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                })
+                    .then(response => response.json())
+                    .then(parsedData => {
+                        const extractedData = parsedData.qrCodeData;
+                        console.log('Extracted QR Code Data:', extractedData);
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+            }
+        });
     </script>
 
 </div>

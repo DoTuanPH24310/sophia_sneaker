@@ -98,6 +98,9 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
 
     @Query(value = "select soLuong from ChiTietGiay where ma =?1", nativeQuery = true)
     Integer findSoLuongTon(String ma);
+
+    @Query(value = "select ct from ChiTietGiay ct where ct.qrCode = ?1")
+    public ChiTietGiay getChiTietGiayByQrCode(String qrcode);
 }
 //         OR UPPER(ctsp.kichCo.ten) LIKE %?1%
 //(:kichCo IS NULL OR c.kichCo = :kichCo) AND

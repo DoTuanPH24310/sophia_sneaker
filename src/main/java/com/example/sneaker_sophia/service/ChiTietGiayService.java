@@ -176,4 +176,8 @@ public class ChiTietGiayService {
     public Integer findSoLuongTon(String ma) {
         return chiTietGiayRepository.findSoLuongTon(ma);
     }
+    // 11- 11
+    public ChiTietGiay getCTGByQrCode(String qrcode){
+        return chiTietGiayRepository.getChiTietGiayByQrCode(qrcode);
+    }
 }

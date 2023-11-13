@@ -12,9 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 // reset sesion khi thanh toán thành công
 // Sửa mtifm kiếm modal chọn ctg
 
@@ -136,18 +134,19 @@ public class TaiQuayController {
         return "forward:/admin/tai-quay/detail/" + tempIdHD;
     }
 
-    @RequestMapping("/addHD")
+    @GetMapping("/addHD")
     public String addHD(
             Model model
     ) {
         HoaDon hd = hoaDonService.addHD(model);
         if (hd != null) {
             tempIdHD = hd.getId();
-            return "forward:/admin/tai-quay/detail/" + tempIdHD;
+            return "redirect:/admin/tai-quay/detail/" + tempIdHD;
         }
 
         return "forward:/admin/tai-quay/hien-thi";
     }
+
 
     @GetMapping("/detail/{id}")
     public String detail(
@@ -162,11 +161,12 @@ public class TaiQuayController {
         model.addAttribute("listHDC", list);
         model.addAttribute("maHD", id);
         List<HoaDonChiTiet> listhdct = hoaDonChiTietServive.getHDCTByIdHD(id);
-
+        Map<UUID, String> avtctgMap = new HashMap<>();
         for (HoaDonChiTiet hdct : listhdct){
             UUID idctg = hdct.getChiTietGiay().getId();
             String avtctg = anhRepository.getAnhChinhByIdctg(idctg);
-            model.addAttribute("avtctg", avtctg);
+            avtctgMap.put(idctg, avtctg);
+            model.addAttribute("avtctgMap", avtctgMap);
         }
 
         model.addAttribute("listhdct", listhdct);
@@ -224,7 +224,7 @@ public class TaiQuayController {
         hoaDonChiTietServive.deleteHDCT(idctsp, tempIdHD);
         List<HoaDon> list = hoaDonService.getHoaDonByTrangThai();
         model.addAttribute("listHDC", list);
-        return "forward:/admin/tai-quay/detail/" + tempIdHD;
+        return "redirect:/admin/tai-quay/detail/" + tempIdHD;
     }
 
 
@@ -354,7 +354,7 @@ public class TaiQuayController {
             @RequestParam("sdt") String sdt
     ) {
         List<DiaChi> listDC = diaChiService.findListTKById(tempIdKH);
-        if(listDC.size() > 3){
+        if(listDC.size() >= 3){
             return "redirect:/admin/tai-quay/detail/" + tempIdHD;
         }
         DiaChi diaChi = new DiaChi();
@@ -374,6 +374,35 @@ public class TaiQuayController {
         diaChi.setDiaChiMacDinh(1);
         diaChiService.saveDC(diaChi);
         return "redirect:/admin/tai-quay/detail/" + tempIdHD;
+    }
+
+    // 11-11
+    @PostMapping(value = "/scan", consumes = "application/json")
+    public String handleQRCode(@RequestBody Map<String, String> requestBody) {
+        String qrCodeData = requestBody.get("qrCodeData");
+
+        ChiTietGiay chiTietGiay = chiTietGiayService.getCTGByQrCode(qrCodeData);
+        HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
+        HoaDonChiTiet hoaDonChiTietOld = hoaDonChiTietServive.getHDCTByIdCTSP(chiTietGiay.getId(), tempIdHD);
+
+        if (hoaDonChiTietServive.getHDCTByIdCTSP(chiTietGiay.getId(), tempIdHD) != null) {
+            hoaDonChiTiet.setId(hoaDonChiTietOld.getId());
+            hoaDonChiTiet.setSoLuong(hoaDonChiTietOld.getSoLuong() + 1);
+        } else {
+            hoaDonChiTiet.setSoLuong(1);
+        }
+
+        hoaDonChiTiet.setDonGia(chiTietGiay.getGia());
+        hoaDonChiTiet.setHoaDon(hoaDonService.getHoaDonById(tempIdHD));
+        hoaDonChiTiet.setChiTietGiay(chiTietGiay);
+        hoaDonChiTiet.setTrangThai(1);
+        chiTietGiay.setSoLuong(chiTietGiay.getSoLuong() - 1);
+        chiTietGiayService.save(chiTietGiay);
+        hoaDonChiTietServive.addhdct(hoaDonChiTiet);
+        // Process qrCodeData as needed
+//        System.out.println("Received QR Code data: " + qrCodeData);
+        return "redirect:/admin/tai-quay/detail/" + tempIdHD;
+//        return "redirect:/scan"; // Redirect to the home page or any other desired page
     }
 
     // =================================================================
