@@ -69,6 +69,9 @@ public class HoaDon {
     @Column(name = "NgayNhan")
     private LocalDate ngayNhan;
 
+    @Column(name = "ghiChu")
+    private String ghiChu;
+
     @CreatedBy
     @Column(name = "nguoiTao")
     private String createdBy;

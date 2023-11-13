@@ -332,7 +332,7 @@ public class TaiQuayController {
             @RequestParam("quan") String quan,
             @RequestParam("tinh") String tinh,
             @RequestParam("ghiChu") String ghiChu,
-            @RequestParam("phiVanChuyen") String phiVanChuyen
+            @RequestParam(value = "phiVanChuyen", defaultValue = "0") String phiVanChuyen
     ) {
         HinhThucThanhToan hinhThucThanhToan = new HinhThucThanhToan();
         if (tienKhachDua.equals("")) {
@@ -349,7 +349,10 @@ public class TaiQuayController {
         hoaDon.setTenKhachHang(taiKhoan.getTen());
         hoaDon.setSoDienThoai(taiKhoan.getSdt());
         hoaDon.setDiaChi(taiKhoan.getDiaChiCuThe() + "," + xa + "," + quan + "," + tinh);
-        hoaDon.setPhiShip(Double.parseDouble(phiVanChuyen));
+        if (hoaDon.getLoaiHoaDon() == 2){
+            hoaDon.setPhiShip(Double.parseDouble(phiVanChuyen));
+        }
+        hoaDon.setGhiChu(ghiChu);
         hoaDon.setTongTien(tongTien);
         hoaDon.setTrangThai(1);
         hoaDonService.savehd(hoaDon);
@@ -396,6 +399,10 @@ public class TaiQuayController {
         ChiTietGiay chiTietGiay = chiTietGiayService.getCTGByQrCode(qrCodeData);
         HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
         HoaDonChiTiet hoaDonChiTietOld = hoaDonChiTietServive.getHDCTByIdCTSP(chiTietGiay.getId(), tempIdHD);
+
+        if(chiTietGiay.getSoLuong() == 0){
+            return "redirect:/admin/tai-quay/detail/" + tempIdHD;
+        }
 
         if (hoaDonChiTietServive.getHDCTByIdCTSP(chiTietGiay.getId(), tempIdHD) != null) {
             hoaDonChiTiet.setId(hoaDonChiTietOld.getId());
