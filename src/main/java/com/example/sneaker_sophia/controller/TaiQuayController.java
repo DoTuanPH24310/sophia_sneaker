@@ -339,7 +339,7 @@ public class TaiQuayController {
         hoaDon.setDiaChi(taiKhoan.getDiaChiCuThe() + "," + xa + "," + quan + "," + tinh);
         hoaDon.setPhiShip(Double.parseDouble(phiVanChuyen));
         hoaDon.setTongTien(tongTien);
-        hoaDon.setTrangThai(2);
+        hoaDon.setTrangThai(1);
         hoaDonService.savehd(hoaDon);
         return "forward:/admin/tai-quay/hien-thi";
     }
