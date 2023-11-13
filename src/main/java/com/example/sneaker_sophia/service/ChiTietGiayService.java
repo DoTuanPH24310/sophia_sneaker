@@ -180,4 +180,8 @@ public class ChiTietGiayService {
     public ChiTietGiay getCTGByQrCode(String qrcode){
         return chiTietGiayRepository.getChiTietGiayByQrCode(qrcode);
     }
+    // 13-11
+    public List<ChiTietGiay> getAllCTG(){
+        return chiTietGiayRepository.findAll();
+    }
 }

@@ -164,17 +164,26 @@ public class TaiQuayController {
         model.addAttribute("maHD", id);
         List<HoaDonChiTiet> listhdct = hoaDonChiTietServive.getHDCTByIdHD(id);
         Map<UUID, String> avtctgMap = new HashMap<>();
+        List<ChiTietGiay> chiTietGiayList = chiTietGiayService.getAllCTG();
+
+        for (ChiTietGiay ctg : chiTietGiayList){
+            UUID idct = ctg.getId();
+            String avtct = anhRepository.getAnhChinhByIdctg(idct);
+            avtctgMap.put(idct, avtct);
+            session.setAttribute("avtctsp", avtctgMap);
+        }
         for (HoaDonChiTiet hdct : listhdct){
             UUID idctg = hdct.getChiTietGiay().getId();
             String avtctg = anhRepository.getAnhChinhByIdctg(idctg);
             avtctgMap.put(idctg, avtctg);
             model.addAttribute("avtctgMap", avtctgMap);
-            session.setAttribute("avtctsp", avtctgMap);
         }
 
         model.addAttribute("listhdct", listhdct);
         Double tongTien = hoaDonChiTietServive.tongTienHD(tempIdHD);
         model.addAttribute("tongTienHD", tongTien);
+        // 13-11
+        session.setAttribute("tongTienHD", tongTien);
         // 30/10
         HoaDon hoaDon = hoaDonService.getHoaDonById(id);
 
@@ -215,7 +224,7 @@ public class TaiQuayController {
         hoaDonService.deleteHD(hoaDon);
         List<HoaDon> list = hoaDonService.getHoaDonByTrangThai();
         model.addAttribute("listHDC", list);
-        return "/admin/taiquay/index";
+        return "redirect:/admin/tai-quay/hien-thi";
     }
 
 
@@ -407,6 +416,17 @@ public class TaiQuayController {
         return "redirect:/admin/tai-quay/detail/" + tempIdHD;
 //        return "redirect:/scan"; // Redirect to the home page or any other desired page
     }
+
+    // 13-11
+
+    @GetMapping("deletekhhd")
+    public String deletekhhd(){
+        HoaDon hoaDon = hoaDonService.getHoaDonById(tempIdHD);
+        hoaDon.setTaiKhoan(null);
+        hoaDonService.savehd(hoaDon);
+        return "redirect:/admin/tai-quay/detail/" + tempIdHD;
+    }
+
 
     // =================================================================
 //    @GetMapping("/pdf")
