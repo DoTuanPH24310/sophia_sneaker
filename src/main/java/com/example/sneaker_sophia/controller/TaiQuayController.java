@@ -151,7 +151,8 @@ public class TaiQuayController {
     @GetMapping("/detail/{id}")
     public String detail(
             @PathVariable("id") String id,
-            Model model
+            Model model,
+            HttpSession session
     ) {
         tempIdHD = id;
         session.setAttribute("idHoaDon", id);
@@ -167,6 +168,7 @@ public class TaiQuayController {
             String avtctg = anhRepository.getAnhChinhByIdctg(idctg);
             avtctgMap.put(idctg, avtctg);
             model.addAttribute("avtctgMap", avtctgMap);
+            session.setAttribute("avtctsp", avtctgMap);
         }
 
         model.addAttribute("listhdct", listhdct);

@@ -9,6 +9,6 @@ import java.util.UUID;
 
 @Repository("anhRepository")
 public interface AnhRepository extends JpaRepository<Anh, String> {
-    @Query(value = "select a.anhChinh from Anh a join ChiTietGiay CTG on a.ChiTietGiay = CTG.Id where CTG.Id = ?1", nativeQuery = true)
+    @Query(value = "select a.duongDan from Anh a join ChiTietGiay CTG on a.ChiTietGiay = CTG.Id where CTG.Id = ?1 and anhChinh  = 1", nativeQuery = true)
     String getAnhChinhByIdctg(UUID idctg);
 }

@@ -673,7 +673,6 @@
                                 <table id="tableKhachHang" class="table  table-borderless  formTable">
                                     <thead>
                                     <tr class="bg-light">
-                                        <th width="20%">Ảnh</th>
                                         <th width="25%">Tên</th>
                                         <th width="25%">Email</th>
                                         <th width="20%">Số điện thoai</th>
@@ -916,19 +915,11 @@
 
         function insertTrCTG(x) {
             console.log("Vào");
-            const avtctsp = 'https://res.cloudinary.com/deihbhsfj/image/upload/v1699263368/Jordan_1_Low_panda_qektqc.jpg';
+            const avtctsp = [[${session.avtctsp}]];
             var btn = '<button class="btn btn-warning" data-toggle="modal" data-target="#modalSoLuong">Chọn</button>';
             const row = tableBody.insertRow();
-            // // Tạo một cell để chứa ảnh
-            // var imageCell = row.insertCell();
-            // var img = document.createElement('img');
-            // img.src = avtctsp; // Đặt đường dẫn ảnh từ biến avtctsp
-            // img.alt = 'Ảnh sản phẩm'; // Đặt văn bản thay thế cho ảnh (nếu cần)
-            // img.width = 100; // Đặt chiều rộng ảnh (tuỳ chọn)
-            // img.height = 100; // Đặt chiều cao ảnh (tuỳ chọn)
-            // imageCell.appendChild(img);
 
-            row.insertCell().innerHTML = `<img src="${avtctsp}" alt="" width="100" height="100">`;
+            row.insertCell().innerHTML = `<img src="${avtctsp[x.id]}" alt="" width="100" height="100">`;
             row.insertCell().innerHTML = x.ma;
             row.insertCell().innerHTML = x.giay.ten;
             row.insertCell().innerHTML = x.deGiay.ten;
@@ -1109,7 +1100,6 @@
             button.classList.add("btn-warning")
 
             var tr = tbody.insertRow();
-            tr.insertCell().innerHTML = '';
             tr.insertCell().innerHTML = x.ten;
             tr.insertCell().innerHTML = x.email;
             tr.insertCell().innerHTML = x.sdt;
