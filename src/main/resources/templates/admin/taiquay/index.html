@@ -229,6 +229,7 @@
                         <a href="" style="border-radius: 20px;" class="btn btn-secondary"> Khách lẻ</a>
                     </th:block>
 
+
                 </div>
                 <div class="col-9">
                 </div>
@@ -819,6 +820,71 @@
         </form>
     </div>
 
+    <!--    Modal sửa địa chỉ-->
+
+    <div class="modal fade" id="modalSuaDiaChi" tabindex="-1" data-backdrop="static"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <form action="/admin/tai-quay/adddc" method="post">
+            <div class="modal-dialog" style="max-width: 500px;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Thêm địa chỉ</h5>
+                        <a type="button" class="close" onclick="resetModalTDC();" data-dismiss="modal"
+                           aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </a>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-6">
+                                    <label>Họ và Tên</label>
+                                    <input type="text" name="hoTen"
+                                           class="form-control">
+                                </div>
+                                <div class="col-6">
+                                    <label>Số điện thoại</label>
+                                    <input type="text" name="sdt"
+                                           class="form-control  ">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label for="provincetdc">Tỉnh/Thành phố</label>
+                                <select id="provincetdc" name="tinh" class="form-control">
+                                    <option value="">---Chọn Tỉnh/Thành Phố----</option>
+                                </select>
+                            </div>
+
+                            <div class="row">
+                                <label for="districttdc">Quận/Huyện</label>
+                                <select name="quan" class="form-control" id="districttdc">
+                                    <option value="">---Chọn----</option>
+                                </select>
+                            </div>
+
+                            <div class="row">
+                                <label for="wardtdc">Xã/Phường</label>
+                                <select name="xa" class="form-control" id="wardtdc">
+                                    <option value="">---Chọn----</option>
+                                </select>
+                            </div>
+
+                            <div class="row">
+                                <label>Đ/C chi tiết</label>
+                                <input name="dcCuThe" class="form-control" type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <!--                    ?link day nha thang ngiu-->
+                        <button type="submit" class="btn btn-primary">Xác nhận</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
     <!--    Modal scan-->
 
     <div class="modal fade" data-backdrop="static" id="modalQRCode" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -1227,11 +1293,23 @@
 
         function loadTrDDC(x, index) {
             // Update thành địa chỉ mặc định
-            var button = document.createElement('a');
-            button.href = '/admin/tai-quay/updateDCMD/' + x.id + '#labelKhachhang';
-            button.text = 'Chọn'
-            button.classList.add('btn');
-            button.classList.add('btn-warning');
+            var buttonChon = document.createElement('a');
+            var buttonSua = document.createElement('a');
+            buttonChon.href = '/admin/tai-quay/updateDCMD/' + x.id + '#labelKhachhang';
+            buttonChon.text = 'Chọn'
+            buttonChon.classList.add('btn');
+            buttonChon.classList.add('btn-warning');
+
+
+            buttonSua.href = '/admin/tai-quay/updateDCMD/' + x.id + '#labelKhachhang';
+            buttonSua.text = 'Sửa'
+            buttonSua.classList.add('btn');
+            buttonSua.setAttribute("data-toggle", "modal");
+            buttonSua.setAttribute("data-target", "#modalSuaDiaChi");
+            buttonSua.classList.add('btn-primary');
+            buttonSua.addEventListener("click",function (){
+                modalContentDDC.style.opacity = '0.6';
+            });
             var row = tbodyDDC.insertRow();
             var idHTML = index + 1;
             var selectTinh = '<select disabled id="province' + idHTML + '" class="form-control text-center"></select>'
@@ -1241,15 +1319,15 @@
 
             if (x.diaChiMacDinh == 1) {
                 checkBox = '  <button class="btn btn-success">Mặc định</button>';
-
-
             }
             row.insertCell().innerHTML = x.diaChiCuThe;
             row.insertCell().innerHTML = selectXa;
             row.insertCell().innerHTML = selectQuan;
             row.insertCell().innerHTML = selectTinh;
             row.insertCell().innerHTML = checkBox;
-            row.insertCell().appendChild(button);
+            var action =row.insertCell();
+            action.appendChild(buttonChon);
+            action.appendChild(buttonSua);
             apiDiaChiGender('province' + idHTML, 'district' + idHTML, 'ward' + idHTML, x.tinh, x.quanHuyen, x.phuongXa);
         }
 

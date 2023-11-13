@@ -13,8 +13,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-// reset sesion khi thanh toán thành công
-// Sửa mtifm kiếm modal chọn ctg
+
+// Sửa công tắc và phí ship.
+// Thông báo ở modal tìm khách hàng
 
 @Controller
 @RequestMapping("/admin/tai-quay")
