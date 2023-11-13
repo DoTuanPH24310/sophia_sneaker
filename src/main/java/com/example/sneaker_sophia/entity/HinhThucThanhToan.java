@@ -33,12 +33,6 @@ public class HinhThucThanhToan {
     @JoinColumn(name = "IdHoaDon")
     private HoaDon hoaDon;
 
-    @Column(name = "ma")
-    private String ma;
-
-    @Column(name = "ten")
-    private String ten;
-
     @Column(name = "soTien")
     private Double soTien;
 
@@ -58,7 +52,7 @@ public class HinhThucThanhToan {
     @Column(name = "ngaySua")
     private LocalDateTime updatedDate;
 
-    @Column(name = "trangThai")
+    @Column(name = "phuongThuc")
     private Integer trangThai;
 
 
