@@ -46,7 +46,7 @@ public class RestControllerCTGiay {
     @GetMapping("/allCTG")
     public ResponseEntity<?> getListCTG(HttpSession session) {
         List<ChiTietGiay> list = chiTietGiayService.getAll();
-        for (ChiTietGiay chiTietGiay : list){
+        for (ChiTietGiay chiTietGiay : list) {
             String avtctg = anhRepository.getAnhChinhByIdctg(chiTietGiay.getId());
             session.setAttribute("avtctsp", avtctg);
         }
@@ -84,8 +84,8 @@ public class RestControllerCTGiay {
     }
 
     @PostMapping("/multipleFind")
-    public ResponseEntity<?> multipleFind(@RequestBody DTO_API_CTG idGiay){
-        System.out.println(idGiay +"test");
+    public ResponseEntity<?> multipleFind(@RequestBody DTO_API_CTG idGiay) {
+        System.out.println(idGiay + "test");
         return ResponseEntity.ok(chiTietGiayService.findChiTietGiayByMultipleParamsAPI(idGiay));
     }
 
@@ -95,4 +95,12 @@ public class RestControllerCTGiay {
 
         return ResponseEntity.ok(chiTietGiayService.findSoLuongTon(slt));
     }
+
+
+    @GetMapping("getSLTBYQR/{qr}")
+    public ResponseEntity<?> getSLT(@PathVariable("qr") String qr) {
+        System.out.println("Ma ne: "+ chiTietGiayService.findSoLuongTonByQrCode(qr));
+        return ResponseEntity.ok(chiTietGiayService.findSoLuongTonByQrCode(qr));
+    }
+
 }

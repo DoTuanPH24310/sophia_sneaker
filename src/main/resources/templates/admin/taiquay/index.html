@@ -1466,12 +1466,22 @@
                             console.log(1);
                             if (code) {
                                 resultDiv.innerText = 'QR Code content: ' + code.data;
-                                alert("Đã thêm sản phẩm vào giỏ hàng");
+                                $.ajax({
+                                    type: 'get',
+                                    url: 'http://localhost:9090/api/chi-tiet-giay/getSLTBYQR/'+code.data,
+                                    success: function (data) {
+                                        if (data - 1 < 0){
+                                            alert("Không đủ số lượng tồn");
+                                        }else {
+                                            alert("Đã thêm sản phẩm vào giỏ hàng");
+                                        }
+                                    }
+                                })
+
                                 // Viết api lấy số lượng tồn theo barcode
                                 // Kiểm tra xem cộng 1 có được không
                                 // Nếu không được thì thông báo lỗi
                                 sendQRCodeToServer(code.data);
-
                                 // stopScanning();
                             } else {
                                 resultDiv.innerText = 'No QR Code found';

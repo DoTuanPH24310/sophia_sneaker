@@ -184,4 +184,10 @@ public class ChiTietGiayService {
     public List<ChiTietGiay> getAllCTG(){
         return chiTietGiayRepository.findAll();
     }
+
+//    14/11
+
+    public Integer findSoLuongTonByQrCode(String qr){
+        return chiTietGiayRepository.findSoLuongTonByQrCode(qr);
+    }
 }
