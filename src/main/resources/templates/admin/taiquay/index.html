@@ -37,11 +37,11 @@
 
 <div layout:fragment="content" class="container" style="background-color: white;">
     <!--        <form action="/admin/tai-quay/addHD" method="post">-->
+
     <div class="row float-right mr-1">
         <form action="/admin/tai-quay/addHD" method="get">
             <button class="btn btn-primary mt-2 ">Tạo hóa đơn</button>
         </form>
-
     </div>
     <!--        </form>-->
 
@@ -110,12 +110,6 @@
                    data-target="#modalChiTietGiay">
                     Thêm sản phẩm
                 </a>
-                <span th:text="${errupdateDownSLHDCT}"></span>
-                <span th:text="${errupdateUpSLHDCT}"></span>
-                <span th:text="${errAddHd}"></span>
-                <span th:text="${errShowModal}"></span>
-                <span th:text="${errHD}"></span>
-                <span th:text="${errSLT}"></span>
             </div>
 
         </div>
@@ -928,6 +922,27 @@
         const tbodyDDC = document.getElementById('tbodyDDC');
         const loaihdg = [[${session.loaihdg}]];
 
+        let errhd = [[${session.errTaiQuay}]];
+        if (errhd != null){
+           window.addEventListener("load", function (){
+               alert(errhd);
+               removeSeesion('errTaiQuay');
+           })
+        }
+
+
+        function removeSeesion(name) {
+            console.log(name);
+            $.ajax({
+                type: 'get',
+                url: 'http://localhost:9090/api/hoa-don/deleteSession/'+name,
+                success: function (){
+                    console.log('thành công');
+                }
+            })
+
+        }
+
         // Fill and click CTG
         function getAllList() {
             console.log('123');
@@ -1450,25 +1465,30 @@
 
                         const resizedCanvas = document.createElement('canvas');
                         const resizedContext = resizedCanvas.getContext('2d');
-                        resizedCanvas.width = 300;
-                        resizedCanvas.height = (video.videoHeight / video.videoWidth) * 300;
+                        resizedCanvas.width = 400;
+                        resizedCanvas.height = (video.videoHeight / video.videoWidth) * 400;
                         resizedContext.drawImage(canvas, 0, 0, resizedCanvas.width, resizedCanvas.height);
 
                         const imageData = resizedContext.getImageData(0, 0, resizedCanvas.width, resizedCanvas.height);
-                        const code = jsQR(imageData.data, imageData.width, imageData.height);
+                        try {
+                            const code = jsQR(imageData.data, imageData.width, imageData.height);
+                            console.log(1);
+                            if (code) {
+                                resultDiv.innerText = 'QR Code content: ' + code.data;
+                                alert("Đã thêm sản phẩm vào hóa đơn");
+                                sendQRCodeToServer(code.data);
 
-                        if (code) {
-                            resultDiv.innerText = 'QR Code content: ' + code.data;
-                            alert("Đã thêm sản phẩm vào hóa đơn");
-                            sendQRCodeToServer(code.data);
-
-                            // stopScanning();
-                        } else {
-                            resultDiv.innerText = 'No QR Code found.';
-                            qrCodeFound = false;
+                                // stopScanning();
+                            } else {
+                                resultDiv.innerText = 'No QR Code found';
+                                qrCodeFound = false;
+                            }
+                        } catch (error) {
+                            console.error('Lỗi xảy ra trong jsQR:', error);
+                            // Gọi lại hàm startScanning()
+                            setTimeout(startScanning, 1000); // Thực hiện gọi lại sau 1 giây
                         }
                     }
-
                     if (scanning) {
                         requestAnimationFrame(captureFrame);
                     }

@@ -4,6 +4,7 @@ import com.example.sneaker_sophia.entity.ChiTietGiay;
 import com.example.sneaker_sophia.entity.HoaDonChiTiet;
 import com.example.sneaker_sophia.repository.HoaDonCTRepository;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -18,6 +19,9 @@ public class HoaDonChiTietServive {
 
     @Autowired
     private ChiTietGiayService chiTietGiayService;
+
+    @Autowired
+    private HttpSession session;
 
     public List<HoaDonChiTiet> getHDCTByIdHD(String idhd){
         return hoaDonCTRepository.getHDCTByIdHD(idhd);
@@ -38,7 +42,7 @@ public class HoaDonChiTietServive {
         ChiTietGiay chiTietGiay = chiTietGiayService.getChiTietGiayByIdctg(idctsp);
         if (hdct.getSoLuong() == 1){
             hdct.setSoLuong(1);
-            model.addAttribute("errupdateDownSLHDCT", "Không thể giảm thêm nữa");
+            session.setAttribute("errTaiQuay", "Số lượng tối thiểu là 1");
         }else{
             hdct.setSoLuong(hdct.getSoLuong() - 1);
             chiTietGiay.setSoLuong(chiTietGiay.getSoLuong() + 1);
@@ -53,7 +57,7 @@ public class HoaDonChiTietServive {
         ChiTietGiay chiTietGiay = chiTietGiayService.getChiTietGiayByIdctg(idctsp);
         if(hdct.getSoLuong() >= hdct.getSoLuong() + chiTietGiay.getSoLuong()){
             hdct.setSoLuong(hdct.getSoLuong());
-            model.addAttribute("errupdateUpSLHDCT", "Không thể tăng thêm nữa");
+            session.setAttribute("errTaiQuay", "Không đủ số lượng tồn");
         }else{
             hdct.setSoLuong(hdct.getSoLuong() + 1);
             chiTietGiay.setSoLuong(chiTietGiay.getSoLuong() - 1);

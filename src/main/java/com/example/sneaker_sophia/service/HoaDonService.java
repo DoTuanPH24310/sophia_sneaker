@@ -3,6 +3,8 @@ package com.example.sneaker_sophia.service;
 import com.example.sneaker_sophia.entity.HoaDon;
 import com.example.sneaker_sophia.repository.HoaDonRepository;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -15,6 +17,10 @@ public class HoaDonService {
     @Resource(name = "hoaDonRepository")
     HoaDonRepository hoaDonRepository;
 
+
+    @Autowired
+    private HttpSession session;
+
     public Integer soHD() {
         return hoaDonRepository.soHD();
     }
@@ -25,7 +31,7 @@ public class HoaDonService {
 
     public HoaDon addHD(Model model) {
         if (hoaDonRepository.countHoaDonByTrangThai() >= 5) {
-            model.addAttribute("errAddHd", "Không thể thêm mới hóa đơn");
+            session.setAttribute("errTaiQuay", "Chỉ tạo được tối đa 5 hóa đơn");
             return null;
         } else {
             HoaDon hoaDon = new HoaDon();

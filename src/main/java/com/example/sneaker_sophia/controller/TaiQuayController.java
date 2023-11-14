@@ -106,11 +106,11 @@ public class TaiQuayController {
         HoaDonChiTiet hoaDonChiTietOld = hoaDonChiTietServive.getHDCTByIdCTSP(idCTG, tempIdHD);
         ChiTietGiay chiTietGiay = chiTietGiayService.getChiTietGiayByIdctg(idCTG);
         if (hoaDonChiTietOld == null && soLuong > chiTietGiay.getSoLuong()) {
-            model.addAttribute("errSLT", "Không đủ số lượng tồn");
+            session.setAttribute("errTaiQuay", "Không đủ số lượng tồn");
             return "forward:/admin/tai-quay/open-soluong/" + idCTG;
         }
         if (hoaDonChiTietOld != null && hoaDonChiTietOld.getSoLuong() + soLuong > chiTietGiay.getSoLuong() + hoaDonChiTietOld.getSoLuong()) {
-            model.addAttribute("errSLT", "Không đủ số lượng tồn");
+            session.setAttribute("errTaiQuay", "Không đủ số lượng tồn");
             return "forward:/admin/tai-quay/open-soluong/" + idCTG;
 
         }
@@ -145,7 +145,7 @@ public class TaiQuayController {
             return "redirect:/admin/tai-quay/detail/" + tempIdHD;
         }
 
-        return "forward:/admin/tai-quay/hien-thi";
+        return "redirect:/admin/tai-quay/hien-thi";
     }
 
 
@@ -218,7 +218,7 @@ public class TaiQuayController {
         HoaDon hoaDon = hoaDonService.getHoaDonById(id);
         if (hoaDon.getListHoaDonChiTiet().size() > 0) {
             tempIdHD = id;
-            model.addAttribute("errHD", "Hóa đơn vẫn còn sản phẩm");
+            session.setAttribute("errTaiQuay", "Không thể xóa hóa đơn đã thêm sản phẩm");
             return "forward:/admin/tai-quay/detail/" + tempIdHD;
         }
         hoaDonService.deleteHD(hoaDon);

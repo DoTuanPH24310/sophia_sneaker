@@ -86,7 +86,6 @@ public class RestControllerCTGiay {
     @PostMapping("/multipleFind")
     public ResponseEntity<?> multipleFind(@RequestBody DTO_API_CTG idGiay){
         System.out.println(idGiay +"test");
-
         return ResponseEntity.ok(chiTietGiayService.findChiTietGiayByMultipleParamsAPI(idGiay));
     }
 
