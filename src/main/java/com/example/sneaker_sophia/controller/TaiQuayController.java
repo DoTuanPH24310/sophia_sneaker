@@ -106,11 +106,9 @@ public class TaiQuayController {
         HoaDonChiTiet hoaDonChiTietOld = hoaDonChiTietServive.getHDCTByIdCTSP(idCTG, tempIdHD);
         ChiTietGiay chiTietGiay = chiTietGiayService.getChiTietGiayByIdctg(idCTG);
         if (hoaDonChiTietOld == null && soLuong > chiTietGiay.getSoLuong()) {
-            session.setAttribute("errTaiQuay", "Không đủ số lượng tồn");
             return "forward:/admin/tai-quay/open-soluong/" + idCTG;
         }
         if (hoaDonChiTietOld != null && hoaDonChiTietOld.getSoLuong() + soLuong > chiTietGiay.getSoLuong() + hoaDonChiTietOld.getSoLuong()) {
-            session.setAttribute("errTaiQuay", "Không đủ số lượng tồn");
             return "forward:/admin/tai-quay/open-soluong/" + idCTG;
 
         }
@@ -192,6 +190,7 @@ public class TaiQuayController {
 //        }
         if (hoaDon.getTaiKhoan() != null) {
             session.setAttribute("idkh", hoaDon.getTaiKhoan().getId());
+            session.setAttribute("countDC", diaChiService.getCountDiaChi(hoaDon.getTaiKhoan().getId()));
             tempIdKH = hoaDon.getTaiKhoan().getId();
             NhanVienRequest nhanVienRequest = taiKhoanService.getTaiKhoanById(hoaDon.getTaiKhoan().getId());
             DiaChi diaChiGH = diaChiService.findListTKByIdKHAndDCMD(tempIdKH);
@@ -234,6 +233,7 @@ public class TaiQuayController {
             Model model
     ) {
         hoaDonChiTietServive.deleteHDCT(idctsp, tempIdHD);
+        session.setAttribute("errTaiQuay","Xóa thành công");
         List<HoaDon> list = hoaDonService.getHoaDonByTrangThai();
         model.addAttribute("listHDC", list);
         return "redirect:/admin/tai-quay/detail/" + tempIdHD;
@@ -323,6 +323,16 @@ public class TaiQuayController {
         return "forward:/admin/tai-quay/detail/" + tempIdHD;
     }
 
+
+    @GetMapping("deleteDC/{id}")
+    public String delete(
+            @PathVariable("id") String iddc
+    ) {
+        diaChiService.deleteById(iddc);
+        session.setAttribute("errTaiQuay","Xóa thành công");
+        return "forward:/admin/tai-quay/detail/" + tempIdHD;
+    }
+
     @GetMapping("addhttt")
     public String addhttt(
             Model model,
@@ -369,9 +379,6 @@ public class TaiQuayController {
             @RequestParam("sdt") String sdt
     ) {
         List<DiaChi> listDC = diaChiService.findListTKById(tempIdKH);
-        if(listDC.size() >= 3){
-            return "redirect:/admin/tai-quay/detail/" + tempIdHD;
-        }
         DiaChi diaChi = new DiaChi();
         TaiKhoan taiKhoan = taiKhoanService.getTaiKhoanByIdKH(tempIdKH);
         DiaChi diaChiMD = diaChiService.getDiaChiByIdTaiKhoan(tempIdKH);
@@ -430,6 +437,7 @@ public class TaiQuayController {
     public String deletekhhd(){
         HoaDon hoaDon = hoaDonService.getHoaDonById(tempIdHD);
         hoaDon.setTaiKhoan(null);
+        hoaDon.setLoaiHoaDon(1);
         hoaDonService.savehd(hoaDon);
         return "redirect:/admin/tai-quay/detail/" + tempIdHD;
     }

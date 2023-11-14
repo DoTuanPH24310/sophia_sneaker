@@ -92,7 +92,7 @@ public class RestControllerCTGiay {
 
     @PostMapping("/soLuongTon")
     public ResponseEntity<?> getSoLuongTon(@RequestParam("value") String slt) {
-        System.out.println(slt +" :checkcheck");
+
         return ResponseEntity.ok(chiTietGiayService.findSoLuongTon(slt));
     }
 }

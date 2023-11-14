@@ -27,4 +27,7 @@ public interface DiaChiRepository extends JpaRepository<DiaChi, String> {
     @Query(value = "select  * from DiaChi where IdTaiKhoan = ?1 and diaChiMacDinh = 1 ",nativeQuery = true)
     DiaChi findListTKByIdKHAndDCMD(String idkh);
 
+    @Query(value = "select count(Id) from DiaChi where IdTaiKhoan =?1", nativeQuery = true)
+    Integer getCountDiaChi(UUID idTaiKhoan);
+
 }
