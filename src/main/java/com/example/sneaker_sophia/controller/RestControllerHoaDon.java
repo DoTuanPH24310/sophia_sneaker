@@ -39,9 +39,4 @@ public class RestControllerHoaDon {
         session.removeAttribute(name);
     }
 
-
-    @GetMapping("/getTongTien/{idHD}")
-    public Double getTongTien(@PathVariable("idHD") String idHD){
-        return hoaDonChiTietServive.tongTienHD(idHD);
-    }
 }

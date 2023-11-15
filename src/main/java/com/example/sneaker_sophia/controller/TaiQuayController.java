@@ -1,6 +1,4 @@
 package com.example.sneaker_sophia.controller;
-
-
 import com.example.sneaker_sophia.entity.*;
 import com.example.sneaker_sophia.repository.AnhRepository;
 import com.example.sneaker_sophia.request.NhanVienRequest;
@@ -11,12 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.*;
 
 // Sửa lại tổng tiền hóa đơn(1 là dùng cách api,2 là seesion)
-// Lỗi khi bật rồi tắt giao hàng thì phải clear form địa chỉ
-
 @Controller
 @RequestMapping("/admin/tai-quay")
 public class TaiQuayController {

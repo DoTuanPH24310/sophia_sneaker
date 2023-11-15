@@ -14,6 +14,18 @@
             opacity: 0.6;
         }
 
+        #inputPhiShip, #tienKhachDua {
+            border: none;
+            border-bottom: 2px solid #e9e4e4;
+            outline: none;
+            transition: border-bottom 0.3s;
+        }
+
+        #inputPhiShip:focus,
+        #tienKhachDua:focus{
+            border-bottom: 2px solid #007bff;
+        }
+
 
         .my-custom-scrollbar {
             position: relative;
@@ -406,7 +418,7 @@
                         <div class="col-5"></div>
 
                         <div class="col-3">
-                            <input class="float-right form-control text-right" type="text" id="tienKhachDua"
+                            <input class="float-right  text-right" type="text" id="tienKhachDua"
                                    name="tienKhachDua" th:value="0">
                             <span th:text="${errTienKH}"></span>
                         </div>
@@ -873,17 +885,12 @@
             event.preventDefault();
             console.log(document.getElementById('formXacNhanDonHang').action);
             let tienKhachDua = document.getElementById('tienKhachDua').value;
-            // let tienDu = document.getElementById('tienDu').textContent;
             let phiShip = document.getElementById('inputPhiShip') == null ? 0 : parseFloat(document.getElementById('inputPhiShip').value);
-            $.ajax({
-                type: 'get',
-                url: 'http://localhost:9090/api/hoa-don/getTongTien/' + idHoaDon,
-                success: function (data) {
-                    if (data == "") {
+                    if (tongTien == null) {
                         alert("VUi lòng chọn sản phẩm mua hàng");
                         return false;
                     }
-                    if (data != "") {
+                    if (tongTien != null) {
                         tienKhachDua = tienKhachDua.replace(/[^\d.]/g, '');
                         tienKhachDua = parseFloat(tienKhachDua.replace(/\./g, ''));
                         if (tienKhachDua - (data + phiShip) < 0) {
@@ -892,10 +899,6 @@
                             document.getElementById('formXacNhanDonHang').submit();
                         }
                     }
-
-
-                }
-            })
 
 
         });
@@ -1386,7 +1389,6 @@
             col3.classList.add('col-3');
             let input = document.createElement('input');
             input.classList.add('float-right');
-            input.classList.add('form-control');
             input.classList.add('text-right');
             input.classList.add('mt-4');
             input.name = 'phiVanChuyen';
