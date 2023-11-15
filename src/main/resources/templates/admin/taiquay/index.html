@@ -363,7 +363,7 @@
 
                     </div>
 
-                    <div class="row mt-3">
+                    <div class="row mt-4">
                         <div class="col-4">
                             <label for=""><h6>Giao hàng:</h6></label>
                         </div>
@@ -375,7 +375,7 @@
                         </div>
                     </div>
 
-                    <div class="row mt-3">
+                    <div class="row mt-4">
 
                         <div class="col-4"><h6>Tiền hàng</h6></div>
 
@@ -384,20 +384,21 @@
                         </div>
                     </div>
 
-                    <div class="row mt-3" id="rowPhiShip">
+                    <div class="row" id="rowPhiShip">
                     </div>
 
-                    <div class="row mt-3">
+                    <div class="row mt-4">
 
                         <div class="col-4">
                             <h6>Tổng tiền: </h6>
                         </div>
 
                         <div class="col-8 ">
-                            <span id="spanTongTien" class="float-right" th:text="${#numbers.formatCurrency(tongTienHD)}"></span>
+                            <span id="spanTongTien" class="float-right"
+                                  th:text="${#numbers.formatCurrency(tongTienHD)}"></span>
                         </div>
                     </div>
-                    <div class="row mt-3">
+                    <div class="row mt-4">
                         <div class="col-4">
                             <label for=""><h6>Tiền khách đưa:</h6></label>
                         </div>
@@ -410,7 +411,7 @@
                             <span th:text="${errTienKH}"></span>
                         </div>
                     </div>
-                    <div class="row mt-3">
+                    <div class="row mt-4">
 
                         <div class="col-4"><h6>Tiền thừa:</h6></div>
 
@@ -703,7 +704,6 @@
 
 
                                     </tbody>
-
                                 </table>
                             </div>
                         </div>
@@ -864,6 +864,10 @@
                 }
             });
         }
+
+        window.addEventListener('load', function () {
+            validateTienThua();
+        })
 
         document.getElementById('formXacNhanDonHang').addEventListener('submit', function (event) {
             event.preventDefault();
@@ -1133,9 +1137,7 @@
                     textSearch.value = '';
                     loaAllKH(data);
                 }
-
             })
-
         }
 
         function loaAllKH(data) {
@@ -1338,9 +1340,7 @@
             customSwitches.addEventListener("change", loadding);
             window.addEventListener("load", loadding);
         }
-
         customSwitches.addEventListener("change", loadding);
-
 
         function loadding() {
             if (idKh == null) {
@@ -1358,6 +1358,12 @@
             } else {
                 form.style.display = "none";
                 rowPhiShip.innerHTML = '';
+                let tongTienGoc = tongTien.toLocaleString('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND'
+                });
+                document.getElementById('spanTongTien').textContent = tongTienGoc;
+                validateTienThua();
                 $.ajax({
                     type: 'get',
                     url: 'http://localhost:9090/api/hoa-don/updateTaiQuay/' + idHoaDon,
@@ -1370,7 +1376,7 @@
             let label1 = document.createElement('label');
             label1.innerHTML = '<h6>Phí vận chuyển:</h6>';
             col1.classList.add('col-4');
-            col1.classList.add('mt-3');
+            col1.classList.add('mt-4');
             col1.appendChild(label1);
 
             let col2 = document.createElement('div');
@@ -1382,6 +1388,7 @@
             input.classList.add('float-right');
             input.classList.add('form-control');
             input.classList.add('text-right');
+            input.classList.add('mt-4');
             input.name = 'phiVanChuyen';
             input.id = 'inputPhiShip';
             input.value = 0;
@@ -1406,22 +1413,21 @@
                     currency: 'VND'
                 });
 
-                let tongTienSauShip = (tongTien+phiShip).toLocaleString('vi-VN', {
+                let tongTienSauShip = (tongTien + phiShip).toLocaleString('vi-VN', {
                     style: 'currency',
                     currency: 'VND'
                 });
 
-                let tienDu =(tienKhachDua -(tongTien+phiShip)).toLocaleString('vi-VN', {
+                let tienDu = (tienKhachDua - (tongTien + phiShip)).toLocaleString('vi-VN', {
                     style: 'currency',
                     currency: 'VND'
                 });
-
 
                 document.getElementById('inputPhiShip').value = formattedPhiShip;
                 document.getElementById('spanTongTien').textContent = tongTienSauShip;
-                if (tienKhachDua != 0){
-                    document.getElementById("tienDu").textContent =tienDu;
-                }
+                // if (tienKhachDua !== 0) {
+                document.getElementById("tienDu").textContent = tienDu;
+                // }
 
             });
         }
@@ -1571,15 +1577,19 @@
         // 13-11
 
         let tienKhachDuaInput = document.getElementById("tienKhachDua");
-        // Lấy đối tượng hiển thị số tiền dư
         let tienDuSpan = document.getElementById("tienDu");
-        // Lấy giá trị tổng tiền từ một nguồn nào đó (vd: biến tongTienHD)
         let tongTienHD = parseFloat(tongTien);
 
         // Lắng nghe sự kiện khi người dùng nhập số tiền khách đưa
         tienKhachDuaInput.addEventListener('input', function () {
+            validateTienThua();
+        });
+
+        function validateTienThua() {
+            if (tongTien == null) return;
+
             let tienKhachDua = tienKhachDuaInput.value.replace(/[^\d.]/g, '');
-            let phiShip = document.getElementById('inputPhiShip').value;
+            let phiShip = document.getElementById('inputPhiShip') == null ? '0.' : document.getElementById('inputPhiShip').value;
             phiShip = phiShip.replace(/[^\d.]/g, '');
             phiShip = parseFloat(phiShip.replace(/\./g, ''));
             tienKhachDua = parseFloat(tienKhachDua.replace(/\./g, ''));
@@ -1590,7 +1600,7 @@
                 style: 'currency',
                 currency: 'VND'
             });
-            let tienDu = tienKhachDua - (tongTienHD+phiShip);
+            let tienDu = tienKhachDua - (tongTienHD + phiShip);
             let formattedTienDu = tienDu.toLocaleString('vi-VN', {
                 style: 'currency',
                 currency: 'VND'
@@ -1598,13 +1608,7 @@
 
             tienDuSpan.textContent = formattedTienDu;
             tienKhachDuaInput.value = formattedTienKhachDua;
-
-        });
-
-
-
-
-
+        }
     </script>
 
 </div>

@@ -20,8 +20,6 @@ public class RestKhachHangController {
 
     @GetMapping("/findByText")
     public ResponseEntity<?> findAllKH(@RequestParam("value") String value){
-        System.out.println(value);
-        System.out.println(taiKhoanService.findByText(value).size());
         return ResponseEntity.ok(taiKhoanService.findByText(value));
     }
 

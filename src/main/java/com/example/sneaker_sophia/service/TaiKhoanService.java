@@ -175,7 +175,6 @@ public class TaiKhoanService {
 
     public List<TaiKhoan> findByText(String text){
        text = text.trim().length() == 0 ?null: "%"+text+"%";
-        System.out.println(text==null);
        return taiKhoanRepository.findByText(text);
     }
 
