@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
-// Sửa công tắc và phí ship.
-// Thông báo ở modal tìm khách hàng
+// Sửa lại tổng tiền hóa đơn(1 là dùng cách api,2 là seesion)
+// Lỗi khi bật rồi tắt giao hàng thì phải clear form địa chỉ
 
 @Controller
 @RequestMapping("/admin/tai-quay")
@@ -338,10 +338,10 @@ public class TaiQuayController {
             Model model,
             @RequestParam("phuongThuc") Integer phuongThuc,
             @RequestParam("tienKhachDua") String tienKhachDua,
-            @RequestParam("xa") String xa,
-            @RequestParam("quan") String quan,
-            @RequestParam("tinh") String tinh,
-            @RequestParam("ghiChu") String ghiChu,
+            @RequestParam(value = "xa",required = false) String xa,
+            @RequestParam(value = "quan",required = false) String quan,
+            @RequestParam(value = "tinh",required = false) String tinh,
+            @RequestParam(value = "ghiChu",required = false) String ghiChu,
             @RequestParam(value = "phiVanChuyen", defaultValue = "0") String phiVanChuyen
     ) {
         HinhThucThanhToan hinhThucThanhToan = new HinhThucThanhToan();

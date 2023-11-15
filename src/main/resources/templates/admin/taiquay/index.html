@@ -235,9 +235,8 @@
             </div>
             <hr>
         </form>
-        <form action="/admin/tai-quay/addhttt" method="get" th:object="${nhanVienRequest}">
+        <form id="formXacNhanDonHang" action="/admin/tai-quay/addhttt" method="get" th:object="${nhanVienRequest}">
             <div class="row mb-5">
-
                 <th:block th:if="${nhanVienRequest != null}">
                     <div class="col-6">
                         <div id="form" style="display: none;">
@@ -368,34 +367,19 @@
                         <div class="col-4">
                             <label for=""><h6>Giao hàng:</h6></label>
                         </div>
-
-                        <!--                        <div class="col-4">-->
-                        <!--                            <form action="/admin/tai-quay/updatelhd" method="get">-->
-
-
-                        <!--                            <div class="custom-control custom-switch">-->
-                        <!--                                <input th:onchange="this.form.submit()" type="checkbox" class="custom-control-input" id="customSwitches">-->
-                        <!--                                <label class="custom-control-label" for="customSwitches"></label>-->
-                        <!--                            </div>-->
-                        <!--                            </form>-->
-                        <!--                        </div>-->
                         <div class="col-4">
-                            <form action="/admin/tai-quay/updatelhd" method="get">
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" id="customSwitches"
-                                    >
-                                    <label class="custom-control-label" for="customSwitches"></label>
-                                </div>
-                            </form>
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="customSwitches">
+                                <label class="custom-control-label" for="customSwitches"></label>
+                            </div>
                         </div>
-
                     </div>
 
                     <div class="row mt-3">
 
                         <div class="col-4"><h6>Tiền hàng</h6></div>
 
-                        <div class="col-8 ">
+                        <div class="col-8 my-1">
                             <span class="float-right" th:text="${#numbers.formatCurrency(tongTienHD)}"></span>
                         </div>
                     </div>
@@ -410,7 +394,7 @@
                         </div>
 
                         <div class="col-8 ">
-                            <span class="float-right" th:text="${#numbers.formatCurrency(tongTienHD)}"></span>
+                            <span id="spanTongTien" class="float-right" th:text="${#numbers.formatCurrency(tongTienHD)}"></span>
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -431,7 +415,7 @@
                         <div class="col-4"><h6>Tiền thừa:</h6></div>
 
                         <div class="col-8 ">
-                            <span class="float-right" id="tienDu">0 VNĐ</span>
+                            <span class="float-right" id="tienDu">0</span>
                         </div>
                     </div>
                     <div class="row mb-5">
@@ -855,6 +839,7 @@
         let buttons = null;
         const tableBody = document.getElementById("sinhvien");
         const table = document.getElementById("tableModal");
+        const tongTien = [[${session.tongTienHD}]];
         let maCTG = '';
         let selectHang = document.getElementById('cbbHang');
         let selectGiay = document.getElementById('cbbGiay');
@@ -871,7 +856,6 @@
         let eventTemp;
 
         function validateSoLuong(x) {
-            console.log('Đã vào');
             $.ajax({
                 type: "POST",
                 url: "http://localhost:9090/api/chi-tiet-giay/soLuongTon?value=" + x,
@@ -880,6 +864,37 @@
                 }
             });
         }
+
+        document.getElementById('formXacNhanDonHang').addEventListener('submit', function (event) {
+            event.preventDefault();
+            console.log(document.getElementById('formXacNhanDonHang').action);
+            let tienKhachDua = document.getElementById('tienKhachDua').value;
+            // let tienDu = document.getElementById('tienDu').textContent;
+            let phiShip = document.getElementById('inputPhiShip') == null ? 0 : parseFloat(document.getElementById('inputPhiShip').value);
+            $.ajax({
+                type: 'get',
+                url: 'http://localhost:9090/api/hoa-don/getTongTien/' + idHoaDon,
+                success: function (data) {
+                    if (data == "") {
+                        alert("VUi lòng chọn sản phẩm mua hàng");
+                        return false;
+                    }
+                    if (data != "") {
+                        tienKhachDua = tienKhachDua.replace(/[^\d.]/g, '');
+                        tienKhachDua = parseFloat(tienKhachDua.replace(/\./g, ''));
+                        if (tienKhachDua - (data + phiShip) < 0) {
+                            alert("Số tiền khách đưa còn thiếu");
+                        } else {
+                            document.getElementById('formXacNhanDonHang').submit();
+                        }
+                    }
+
+
+                }
+            })
+
+
+        });
 
 
         let errhd = [[${session.errTaiQuay}]];
@@ -1172,7 +1187,6 @@
                         row = `<option selected value="${element.name}">${element.name}</option>`;
                     }
                 });
-                console.log("#" + select);
                 document.querySelector("#" + select).innerHTML = row;
             }
 
@@ -1369,11 +1383,47 @@
             input.classList.add('form-control');
             input.classList.add('text-right');
             input.name = 'phiVanChuyen';
+            input.id = 'inputPhiShip';
+            input.value = 0;
+
             col3.appendChild(input);
 
             rowPhiShip.appendChild(col1);
             rowPhiShip.appendChild(col2);
             rowPhiShip.appendChild(col3);
+
+            document.getElementById("inputPhiShip").addEventListener('input', function () {
+                let tienKhachDua = tienKhachDuaInput.value.replace(/[^\d.]/g, '');
+                tienKhachDua = parseFloat(tienKhachDua.replace(/\./g, ''));
+                let phiShip = document.getElementById('inputPhiShip').value;
+                phiShip = phiShip.replace(/[^\d.]/g, '');
+                phiShip = parseFloat(phiShip.replace(/\./g, ''));
+                if (isNaN(phiShip)) {
+                    phiShip = 0;
+                }
+                let formattedPhiShip = phiShip.toLocaleString('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND'
+                });
+
+                let tongTienSauShip = (tongTien+phiShip).toLocaleString('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND'
+                });
+
+                let tienDu =(tienKhachDua -(tongTien+phiShip)).toLocaleString('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND'
+                });
+
+
+                document.getElementById('inputPhiShip').value = formattedPhiShip;
+                document.getElementById('spanTongTien').textContent = tongTienSauShip;
+                if (tienKhachDua != 0){
+                    document.getElementById("tienDu").textContent =tienDu;
+                }
+
+            });
         }
 
 
@@ -1463,24 +1513,19 @@
                         const imageData = resizedContext.getImageData(0, 0, resizedCanvas.width, resizedCanvas.height);
                         try {
                             const code = jsQR(imageData.data, imageData.width, imageData.height);
-                            console.log(1);
                             if (code) {
                                 resultDiv.innerText = 'QR Code content: ' + code.data;
                                 $.ajax({
                                     type: 'get',
-                                    url: 'http://localhost:9090/api/chi-tiet-giay/getSLTBYQR/'+code.data,
+                                    url: 'http://localhost:9090/api/chi-tiet-giay/getSLTBYQR/' + code.data,
                                     success: function (data) {
-                                        if (data - 1 < 0){
+                                        if (data - 1 < 0) {
                                             alert("Không đủ số lượng tồn");
-                                        }else {
+                                        } else {
                                             alert("Đã thêm sản phẩm vào giỏ hàng");
                                         }
                                     }
                                 })
-
-                                // Viết api lấy số lượng tồn theo barcode
-                                // Kiểm tra xem cộng 1 có được không
-                                // Nếu không được thì thông báo lỗi
                                 sendQRCodeToServer(code.data);
                                 // stopScanning();
                             } else {
@@ -1524,10 +1569,8 @@
         });
 
         // 13-11
-        const tongTien = [[${session.tongTienHD}]];
 
         let tienKhachDuaInput = document.getElementById("tienKhachDua");
-
         // Lấy đối tượng hiển thị số tiền dư
         let tienDuSpan = document.getElementById("tienDu");
         // Lấy giá trị tổng tiền từ một nguồn nào đó (vd: biến tongTienHD)
@@ -1536,6 +1579,9 @@
         // Lắng nghe sự kiện khi người dùng nhập số tiền khách đưa
         tienKhachDuaInput.addEventListener('input', function () {
             let tienKhachDua = tienKhachDuaInput.value.replace(/[^\d.]/g, '');
+            let phiShip = document.getElementById('inputPhiShip').value;
+            phiShip = phiShip.replace(/[^\d.]/g, '');
+            phiShip = parseFloat(phiShip.replace(/\./g, ''));
             tienKhachDua = parseFloat(tienKhachDua.replace(/\./g, ''));
             if (isNaN(tienKhachDua)) {
                 tienKhachDua = 0;
@@ -1544,7 +1590,7 @@
                 style: 'currency',
                 currency: 'VND'
             });
-            let tienDu = tienKhachDua - tongTienHD;
+            let tienDu = tienKhachDua - (tongTienHD+phiShip);
             let formattedTienDu = tienDu.toLocaleString('vi-VN', {
                 style: 'currency',
                 currency: 'VND'
@@ -1554,6 +1600,10 @@
             tienKhachDuaInput.value = formattedTienKhachDua;
 
         });
+
+
+
+
 
     </script>
 

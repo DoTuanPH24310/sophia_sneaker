@@ -1,5 +1,6 @@
 package com.example.sneaker_sophia.controller;
 import com.example.sneaker_sophia.entity.HoaDon;
+import com.example.sneaker_sophia.service.HoaDonChiTietServive;
 import com.example.sneaker_sophia.service.HoaDonService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,10 @@ public class RestControllerHoaDon {
 
     @Autowired
     private HoaDonService hoaDonService;
+
+
+    @Autowired
+    private HoaDonChiTietServive hoaDonChiTietServive;
 
     @Autowired
     private HttpSession session;
@@ -31,7 +36,12 @@ public class RestControllerHoaDon {
 
     @GetMapping("/deleteSession/{name}")
     public void delete(@PathVariable("name") String name){
-        System.out.println("ten: " +name);
         session.removeAttribute(name);
+    }
+
+
+    @GetMapping("/getTongTien/{idHD}")
+    public Double getTongTien(@PathVariable("idHD") String idHD){
+        return hoaDonChiTietServive.tongTienHD(idHD);
     }
 }
