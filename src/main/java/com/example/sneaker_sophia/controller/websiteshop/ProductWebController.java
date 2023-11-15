@@ -74,6 +74,7 @@ public class ProductWebController {
         model.addAttribute("danhSachProduct", filteredChiTietGiay.getContent()); // Lấy danh sách sản phẩm từ Page
         model.addAttribute("totalPages", filteredChiTietGiay.getTotalPages()); // Tổng số trang
         model.addAttribute("currentPage", page); // Trang hiện tại
+        model.addAttribute("sortField", sortField);
         //giữ giá trị checkbox đã chọn
         model.addAttribute("loaiGiayTen", loaiGiayTen);
         model.addAttribute("hangTen", hangTen);
@@ -82,6 +83,8 @@ public class ProductWebController {
         model.addAttribute("mauSacTen", mauSacTen);
         model.addAttribute("giayTen", giayTen);
         model.addAttribute("minPrice", minPrice);
+        //giữ giá trị combobox đã chọn
+        model.addAttribute("selectedSortField", sortField);
 
         return "website/productwebsite/shop-grid-sidebar-left";
     }

@@ -253,14 +253,12 @@ public class ChiTietGiayService {
         Sort sort = Sort.unsorted();
 
         if ("lowPrice".equals(sortField)) {
-            sort = JpaSort.unsafe(Sort.Direction.ASC, "CAST(gia AS DECIMAL)");
+            sort = Sort.by("gia").ascending();
         } else if ("hightPrice".equals(sortField)) {
-            sort = JpaSort.unsafe(Sort.Direction.DESC, "CAST(gia AS DECIMAL)");
-        }
-//        else if ("ten".equals(sortField)) {
-//            sort = Sort.by("ten").ascending();
-//        }
-        else if ("newest".equals(sortField)) {
+            sort = Sort.by("gia").descending();
+        } else if ("ten".equals(sortField)) {
+            sort = Sort.by("ten").ascending();
+        } else if ("newest".equals(sortField)) {
             sort = Sort.by("ngayTao").descending();
         }
 

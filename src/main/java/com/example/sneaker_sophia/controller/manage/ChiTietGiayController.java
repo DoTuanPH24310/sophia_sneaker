@@ -48,10 +48,6 @@ public class ChiTietGiayController {
 
     @GetMapping("chi-tiet-giay")
     public String listFirstPage(Model model){
-//        HttpSession session = request.getSession();
-//        if(session.getAttribute("admin") == null ){
-//            return "redirect:/login-admin" ;
-//        }
         return listByPage(1,model,"gia","asc",null,null,null,null,null,null,null,null,-1,null,null,null);
     }
     @GetMapping("chi-tiet-giay/page/{pageNum}")
@@ -93,10 +89,6 @@ public class ChiTietGiayController {
 
         List<ChiTietGiay> listChiTietSanPham = page.getContent();
 
-
-
-
-        
 
 
         int startCount = (pageNum - 1) * chiTietGiayService.PRODUCT_DETAIL_PER_PAGE + 1;
