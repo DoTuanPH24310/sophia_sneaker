@@ -48,11 +48,7 @@ public class ChiTietGiayController {
 
     @GetMapping("chi-tiet-giay")
     public String listFirstPage(Model model){
-//        HttpSession session = request.getSession();
-//        if(session.getAttribute("admin") == null ){
-//            return "redirect:/login-admin" ;
-//        }
-        return listByPage(1,model,"gia","asc",null,null,null,null,null,null,null,null,null,null,null);
+        return listByPage(1,model,"gia","asc",null,null,null,null,null,null,null,null,-1,null,null,null);
     }
     @GetMapping("chi-tiet-giay/page/{pageNum}")
     private String listByPage(@PathVariable(name = "pageNum") int pageNum, Model model,
@@ -66,6 +62,7 @@ public class ChiTietGiayController {
                               @RequestParam(name = "loaiGiay", required = false, defaultValue = "defaultLoaiGiay") String loaiGiay,
                               @RequestParam(name = "mauSac", required = false, defaultValue = "defaultMauSac") String mauSac,
                               @RequestParam(name = "kichCo", required = false, defaultValue = "defaultKichCo") String kichCo,
+                              @RequestParam(name = "trangThai", required = false, defaultValue = "-1") int trangThai,
                               @Param("giaMin") Double giaMin,
                               @Param("giaMax") Double giaMax,
                               @RequestParam Map<String, String> params) {
@@ -82,7 +79,8 @@ public class ChiTietGiayController {
                     mauSacService.findByTen(mauSac),
                     kichCoService.findByTen(kichCo),
                     giaMin,
-                    giaMax
+                    giaMax,
+                    trangThai
             );
         } else {
             page = chiTietGiayService.listByPageAndProductName(pageNum, sortField, sortDir, keyword, productName);
@@ -90,6 +88,7 @@ public class ChiTietGiayController {
 
 
         List<ChiTietGiay> listChiTietSanPham = page.getContent();
+
 
 
         int startCount = (pageNum - 1) * chiTietGiayService.PRODUCT_DETAIL_PER_PAGE + 1;
@@ -126,7 +125,7 @@ public class ChiTietGiayController {
         model.addAttribute("giay", params != null ? params.get("giay") : null);
         model.addAttribute("giaMin", params != null ? params.get("giaMin") : null);
         model.addAttribute("giaMax", params != null ? params.get("giaMax") : null);
-
+        model.addAttribute("trangThai", params != null ? params.get("trangThai") : null);
         return "admin/chiTietGiay/chiTietGiay";
     }
 

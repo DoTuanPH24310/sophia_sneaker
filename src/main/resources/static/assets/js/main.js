@@ -1,4 +1,4 @@
-(function($) {
+(function ($) {
     "use strict";
 
     /*****************************
@@ -10,7 +10,7 @@
     /****************************
      * Sticky Menu
      *****************************/
-    $(window).on('scroll', function() {
+    $(window).on('scroll', function () {
         var scroll = $(window).scrollTop();
         if (scroll < 100) {
             $(".sticky-header").removeClass("sticky");
@@ -19,7 +19,7 @@
         }
     });
 
-    $(window).on('scroll', function() {
+    $(window).on('scroll', function () {
         var scroll = $(window).scrollTop();
         if (scroll < 100) {
             $(".seperate-sticky-bar").removeClass("sticky");
@@ -29,16 +29,16 @@
     });
 
     /************************************************
-     * Modal Search 
+     * Modal Search
      ***********************************************/
-    $('a[href="#search"]').on('click', function(event) {
+    $('a[href="#search"]').on('click', function (event) {
         event.preventDefault();
         $('#search').addClass('open');
         $('#search > form > input[type="search"]').focus();
     });
 
-    $('#search, #search button.close').on('click', function(event) {
-        if ( event.target.className == 'close' ) {
+    $('#search, #search button.close').on('click', function (event) {
+        if (event.target.className == 'close') {
             $(this).removeClass('open');
         }
     });
@@ -46,12 +46,12 @@
     /*****************************
      * Off Canvas Function
      *****************************/
-    (function() {
+    (function () {
         var $offCanvasToggle = $('.offcanvas-toggle'),
             $offCanvas = $('.offcanvas'),
             $offCanvasOverlay = $('.offcanvas-overlay'),
             $mobileMenuToggle = $('.mobile-menu-toggle');
-        $offCanvasToggle.on('click', function(e) {
+        $offCanvasToggle.on('click', function (e) {
             e.preventDefault();
             var $this = $(this),
                 $target = $this.attr('href');
@@ -62,7 +62,7 @@
                 $this.addClass('close');
             }
         });
-        $('.offcanvas-close, .offcanvas-overlay').on('click', function(e) {
+        $('.offcanvas-close, .offcanvas-overlay').on('click', function (e) {
             e.preventDefault();
             $body.removeClass('offcanvas-open');
             $offCanvas.removeClass('offcanvas-open');
@@ -83,7 +83,7 @@
         $offCanvasNavSubMenu.parent().prepend('<div class="offcanvas-menu-expand"></div>');
 
         /*Category Sub Menu Toggle*/
-        $offCanvasNav.on('click', 'li a, .offcanvas-menu-expand', function(e) {
+        $offCanvasNav.on('click', 'li a, .offcanvas-menu-expand', function (e) {
             var $this = $(this);
             if ($this.attr('href') === '#' || $this.hasClass('offcanvas-menu-expand')) {
                 e.preventDefault();
@@ -101,6 +101,7 @@
             }
         });
     }
+
     mobileOffCanvasMenu();
 
     /************************************************
@@ -392,16 +393,16 @@
         watchSlidesVisibility: true,
         watchSlidesProgress: true,
         navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev',
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
         },
-      });
+    });
 
-      var modalGalleryTop = new Swiper('.modal-product-image-large', { 
+    var modalGalleryTop = new Swiper('.modal-product-image-large', {
         thumbs: {
-          swiper: modalGalleryThumbs
+            swiper: modalGalleryThumbs
         }
-      });
+    });
 
     /********************************
      * Blog List Slider - Single Slide
@@ -431,7 +432,7 @@
         min: 0,
         max: 500,
         values: [75, 300],
-        slide: function(event, ui) {
+        slide: function (event, ui) {
             $("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
         }
     });
@@ -439,22 +440,21 @@
         " - $" + $("#slider-range").slider("values", 1));
 
 
-
     /************************************************
      * Animate on Scroll
      ***********************************************/
     AOS.init({
-       
-        duration: 1000, 
-        once: true, 
+
+        duration: 1000,
+        once: true,
         easing: 'ease',
     });
-    window.addEventListener('load', AOS.refresh);    
+    window.addEventListener('load', AOS.refresh);
 
     /************************************************
      * Video  Popup
      ***********************************************/
-    $('.video-play-btn').venobox(); 
+    $('.video-play-btn').venobox();
 
     /************************************************
      * Scroll Top
@@ -469,9 +469,10 @@ function openModal() {
     var modal = document.getElementById("modalAddcart");
     modal.style.display = "block";
 }
+
 // Lắng nghe sự kiện khi người dùng nhấn vào nút "Add to Cart"
-document.querySelectorAll(".add-to-cart").forEach(function(addToCartButton) {
-    addToCartButton.addEventListener("click", function(e) {
+document.querySelectorAll(".add-to-cart").forEach(function (addToCartButton) {
+    addToCartButton.addEventListener("click", function (e) {
         e.preventDefault(); // Ngăn chặn điều hướng mặc định
 
         // Lấy product id từ data-product-id
@@ -479,7 +480,7 @@ document.querySelectorAll(".add-to-cart").forEach(function(addToCartButton) {
 
         // Gửi yêu cầu AJAX với productId và thực hiện các hành động cần thiết
         var addToCartUrl = "/cart/add-to-cart/" + productId;
-        $.get(addToCartUrl, function(data) {
+        $.get(addToCartUrl, function (data) {
             // Khi yêu cầu hoàn thành, mở modal
             openModal();
         });
@@ -487,24 +488,35 @@ document.querySelectorAll(".add-to-cart").forEach(function(addToCartButton) {
 });
 
 //filter shop product
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     var filterInputs = document.querySelectorAll('input[data-name]');
+    var sortSelect = document.getElementById('sortField');
     var timeout;
 
-    filterInputs.forEach(function(input) {
-        input.addEventListener("change", function() {
+    filterInputs.forEach(function (input) {
+        input.addEventListener("change", function () {
             // Hủy bỏ độ trễ hiện có nếu có
             if (timeout) {
                 clearTimeout(timeout);
             }
 
             // Đặt một độ trễ mới 2 giây trước khi gửi yêu cầu lọc
-            timeout = setTimeout(function() {
-                document.getElementById("filterForm").submit();
-            }, 1000); // 2 giây
+            timeout = setTimeout(submitForms, 2000); // 2 giây
         });
     });
 
+    sortSelect.addEventListener("change", function () {
+        // Hủy bỏ độ trễ hiện có nếu có
+        if (timeout) {
+            clearTimeout(timeout);
+        }
+        // Đặt một độ trễ mới 2 giây trước khi gửi yêu cầu lọc
+        timeout = setTimeout(submitForms, 2000); // 2 giây
+    });
+
+    function submitForms() {
+        document.getElementById("filterForm").submit();
+    }
     // Gọi hàm lướt xuống phần tử có class "shop-section" ngay sau khi trang tải xong
     scrollToShopSection();
 });
@@ -513,7 +525,7 @@ document.addEventListener("DOMContentLoaded", function() {
 function scrollToShopSection() {
     var shopSection = document.querySelector('.shop-section');
     if (shopSection) {
-        shopSection.scrollIntoView({ behavior: 'smooth' });
+        shopSection.scrollIntoView({behavior: 'smooth'});
     }
 }
 
