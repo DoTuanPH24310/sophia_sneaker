@@ -5,6 +5,7 @@ import com.example.sneaker_sophia.dto.TaiKhoanDTO;
 import com.example.sneaker_sophia.entity.*;
 import com.example.sneaker_sophia.repository.*;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
@@ -20,6 +21,8 @@ public class EmailService {
 
     @Resource(name = "vaiTroRepository")
     VaiTroRepository vaiTroRepository;
+    @Autowired
+    HttpSession session;
     @Autowired
     private LoginRepository taiKhoanRepository;
 
@@ -165,6 +168,12 @@ public class EmailService {
 
     public HoaDon taoHoaDonMoi(TaiKhoan taiKhoan, Integer hinhThucThanhToan) {
         Integer i = 0;
+        double total = 0.0;
+        Cart cart = (Cart) session.getAttribute("cart");
+        List<CartItem> cartItems = cart.getItems();
+        for (CartItem cartItem : cartItems) {
+            total += cartItem.getGia() * cartItem.getSoLuong();
+        }
         HoaDon hoaDonMoi = new HoaDon();
         hoaDonMoi.setMaHoaDOn("HD" + i++);
         hoaDonMoi.setTaiKhoan(taiKhoan);
@@ -173,6 +182,8 @@ public class EmailService {
         hoaDonMoi.setSoDienThoai(taiKhoan.getSdt());
         hoaDonMoi.setDiaChi(diaChiTamChu.taoDiaChiString(taiKhoan.getDiaChiList()));
         hoaDonMoi.setPhiShip(20000.0);
+        hoaDonMoi.setTongTien(total);
+        hoaDonMoi.setTienThua(0.0);
         hoaDonMoi.setTrangThai(1);
 
         hoaDonMoi = this.hoaDonWebRepository.save(hoaDonMoi);

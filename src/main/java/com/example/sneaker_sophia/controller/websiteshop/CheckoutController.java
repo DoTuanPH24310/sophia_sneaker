@@ -111,25 +111,18 @@ public class CheckoutController {
 
     @PostMapping("/thanh-toan")
     public String thanhToan(Model model, @RequestParam("hinhThucThanhToan") Integer hinhThucThanhToan) {
-        // Lấy thông tin tài khoản đang đăng nhập
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String email = userDetails.getUsername();
 
-            // Lấy danh sách sản phẩm từ giỏ hàng của tài khoản đang đăng nhập
             List<GioHangChiTiet> cartItems = thanhToanService.getCartItemsByEmail(email);
 
             if (cartItems != null && !cartItems.isEmpty()) {
-                // Gọi dịch vụ để thực hiện thanh toán
                 thanhToanService.thucHienThanhToan(email, cartItems, hinhThucThanhToan);
-
-                // Redirect hoặc hiển thị thông báo thanh toán thành công
-                return "website/404"; // Hoặc trang kết quả thanh toán
+                return "website/404";
             }
         }
-
-        // Trả về trang giỏ hàng nếu không có sản phẩm trong giỏ
         return "redirect:/cart/hien-thi";
     }
 

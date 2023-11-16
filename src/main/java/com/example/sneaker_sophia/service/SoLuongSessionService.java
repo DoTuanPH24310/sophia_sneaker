@@ -5,6 +5,7 @@ import com.example.sneaker_sophia.entity.CartItem;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -65,5 +66,18 @@ public class SoLuongSessionService {
     private void updateCartInSession(Cart cart, HttpSession session) {
         session.setAttribute("cart", cart);
     }
+
+
+    @SuppressWarnings("unchecked")
+    public void removeItem(UUID chiTietGiayId, HttpSession session) {
+        Cart cart = getCartFromSession(session);
+        List<CartItem> cartItems = cart.getItems();
+
+        // Remove the item with the specified chiTietGiayId
+        cartItems.removeIf(item -> item.getId().equals(chiTietGiayId));
+
+        updateCartInSession(cart, session);
+    }
+
 
 }
