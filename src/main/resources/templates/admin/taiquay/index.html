@@ -890,12 +890,16 @@
                     if (tongTien != null) {
                         tienKhachDua = tienKhachDua.replace(/[^\d.]/g, '');
                         tienKhachDua = parseFloat(tienKhachDua.replace(/\./g, ''));
-                        if (tienKhachDua - (data + phiShip) < 0) {
+                        if (tienKhachDua - (tongTien + phiShip) < 0) {
                             alert("Số tiền khách đưa còn thiếu");
+
                         } else {
-                            document.getElementById('formXacNhanDonHang').submit();
+                            if(confirm('Xác nhận thanh toán đơn hàng')){
+                                document.getElementById('formXacNhanDonHang').submit();
+                            }
                         }
                     }
+
 
 
         });
