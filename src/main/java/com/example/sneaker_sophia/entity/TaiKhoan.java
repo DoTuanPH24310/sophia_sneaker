@@ -82,7 +82,6 @@ public class TaiKhoan {
     @OneToMany(mappedBy = "taiKhoan", fetch = FetchType.LAZY)
     private List<DiaChi> diaChiList = new ArrayList<>();
 
-
     public TaiKhoan(NhanVienRequest nhanVienRequest) {
         this.setTen(nhanVienRequest.getTen());
         this.setEmail(nhanVienRequest.getEmail());
