@@ -48,7 +48,7 @@ public class ChiTietGiayController {
 
     @GetMapping("chi-tiet-giay")
     public String listFirstPage(Model model){
-        return listByPage(1,model,"gia","asc",null,null,null,null,null,null,null,null,-1,null,null,null);
+        return listByPage(1,model,"gia","asc",null,null,null,null,null,null,null,null,null,null,null);
     }
     @GetMapping("chi-tiet-giay/page/{pageNum}")
     private String listByPage(@PathVariable(name = "pageNum") int pageNum, Model model,
@@ -62,7 +62,6 @@ public class ChiTietGiayController {
                               @RequestParam(name = "loaiGiay", required = false, defaultValue = "defaultLoaiGiay") String loaiGiay,
                               @RequestParam(name = "mauSac", required = false, defaultValue = "defaultMauSac") String mauSac,
                               @RequestParam(name = "kichCo", required = false, defaultValue = "defaultKichCo") String kichCo,
-                              @RequestParam(name = "trangThai", required = false, defaultValue = "-1") int trangThai,
                               @Param("giaMin") Double giaMin,
                               @Param("giaMax") Double giaMax,
                               @RequestParam Map<String, String> params) {
@@ -70,7 +69,13 @@ public class ChiTietGiayController {
 
         if ((keyword != null && !keyword.isEmpty()) || (productName != null && !productName.isEmpty())) {
             page = chiTietGiayService.listByPageAndProductName(pageNum, sortField, sortDir, keyword, productName);
-        } else if ((giay != null && !giay.equals("defaultGiay")) || (deGiay != null && !deGiay.equals("defaultDeGiay")) || (hang != null && !hang.equals("defaultHang")) || (loaiGiay != null && !loaiGiay.equals("defaultLoaiGiay")) || (mauSac != null && !mauSac.equals("defaultMauSac")) || (kichCo != null && !kichCo.equals("defaultKichCo")) || (giaMin != null && giaMax != null)) {
+        } else if ((giay != null && !giay.equals("defaultGiay"))
+                || (deGiay != null && !deGiay.equals("defaultDeGiay"))
+                || (hang != null && !hang.equals("defaultHang"))
+                || (loaiGiay != null && !loaiGiay.equals("defaultLoaiGiay"))
+                || (mauSac != null && !mauSac.equals("defaultMauSac"))
+                || (kichCo != null && !kichCo.equals("defaultKichCo"))
+                || (giaMin != null && giaMax != null)) {
             page = chiTietGiayService.filterCombobox(pageNum, sortField, sortDir,
                     giayService.findByTen(giay),
                     deGiayService.findByTen(deGiay),
@@ -79,8 +84,7 @@ public class ChiTietGiayController {
                     mauSacService.findByTen(mauSac),
                     kichCoService.findByTen(kichCo),
                     giaMin,
-                    giaMax,
-                    trangThai
+                    giaMax
             );
         } else {
             page = chiTietGiayService.listByPageAndProductName(pageNum, sortField, sortDir, keyword, productName);
@@ -114,6 +118,7 @@ public class ChiTietGiayController {
         model.addAttribute("mauSacList", mauSacService.getAll());
         model.addAttribute("kichCoList", kichCoService.getAll());
         model.addAttribute("giayList", giayService.getAll());
+        model.addAttribute("hangList", hangService.getAll());
         model.addAttribute("hangList", hangService.getAll());
 
 // để giữ cac giá trị combobõx

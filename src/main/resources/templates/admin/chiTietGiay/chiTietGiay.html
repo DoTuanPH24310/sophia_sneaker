@@ -85,13 +85,13 @@
 
                             <div class="col-3">
                                 <label>Trạng thái</label>
-                                <select style="border-radius: 10px;" class="form-select" name="trangThai" id="trangThaiSelect" onchange="this.form.submit()">
+                                <label for="trangThaiSelect"></label><select style="border-radius: 10px;" class="form-select" name="trangThai" id="trangThaiSelect" onchange="this.form.submit()">
                                     <div style="border: 10px">
-                                        <option th:selected="${trangThai}  == -1 ? true:false" value="-1"> Tất cả
+                                        <option th:selected="${trangThai}  == -1 ? true:false" value="-1" th:value="-1" > Tất cả
                                         </option>
-                                        <option th:selected="${trangThai} == 0 ? true:false" value="0"> Còn hạn
+                                        <option th:selected="${trangThai} == 0 ? true:false" value="0" th:value="0"> Còn hạn
                                         </option>
-                                        <option th:selected="${trangThai} == 1 ? true:false" value="1">Hết hạn
+                                        <option th:selected="${trangThai} == 1 ? true:false" value="1" th:value="1">Hết hạn
                                         </option>
                                     </div>
                                 </select>
