@@ -1,6 +1,7 @@
 package com.example.sneaker_sophia.entity;
 
-import com.example.sneaker_sophia.request.NhanVienRequest;
+import com.example.sneaker_sophia.request.TaiKhoanRequest;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -81,11 +82,11 @@ public class TaiKhoan {
     @Column(name = "ngaySua")
     private LocalDateTime updatedDate;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "taiKhoan", fetch = FetchType.LAZY)
     private List<DiaChi> diaChiList = new ArrayList<>();
 
-
-    public TaiKhoan(NhanVienRequest nhanVienRequest) {
+    public TaiKhoan(TaiKhoanRequest nhanVienRequest) {
         this.setTen(nhanVienRequest.getTen());
         this.setEmail(nhanVienRequest.getEmail());
         this.setNgaySinh(nhanVienRequest.getNgaySinh());

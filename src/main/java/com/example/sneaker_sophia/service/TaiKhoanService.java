@@ -7,7 +7,7 @@ import com.example.sneaker_sophia.entity.TaiKhoan;
 import com.example.sneaker_sophia.entity.VaiTro;
 import com.example.sneaker_sophia.repository.DiaChiRepository;
 import com.example.sneaker_sophia.repository.TaiKhoanRepository;
-import com.example.sneaker_sophia.request.NhanVienRequest;
+import com.example.sneaker_sophia.request.TaiKhoanRequest;
 import jakarta.annotation.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -36,11 +36,18 @@ public class TaiKhoanService {
         return nhanVienPage;
     }
 
-    public NhanVienRequest getTaiKhoanById(String id) {
+    public Page<NhanVienDTO> getAllKhachHang(String search, Integer trangThai, Pageable pageable) {
+        Page<TaiKhoan> taiKhoanPage = taiKhoanRepository.getALlKhachHang(search, trangThai, pageable);
+        List<NhanVienDTO> khachHangDTOS = taiKhoanPage.getContent().stream().map(NhanVienDTO::new).collect(Collectors.toList());
+        Page<NhanVienDTO> khachHangPage = new PageImpl<>(khachHangDTOS, pageable, taiKhoanPage.getTotalElements());
+        return khachHangPage;
+    }
+
+    public TaiKhoanRequest getTaiKhoanById(String id) {
         TaiKhoan taiKhoan = taiKhoanRepository.findById(id).orElse(null);
         DiaChi diaChi = diaChiRepository.getDiaChiByIdTaiKhoan(id);
         TaiKhoanDiaChi taiKhoanDiaChi = new TaiKhoanDiaChi(taiKhoan, diaChi);
-        NhanVienRequest nhanVienRequest = new NhanVienRequest(taiKhoanDiaChi);
+        TaiKhoanRequest nhanVienRequest = new TaiKhoanRequest(taiKhoanDiaChi);
         return nhanVienRequest;
     }
 
@@ -49,7 +56,7 @@ public class TaiKhoanService {
 //        return taiKhoan;
 //    }
 
-    public boolean save(NhanVienRequest nhanVienRequest, Model model) {
+    public boolean save(TaiKhoanRequest nhanVienRequest, Model model) {
         int check = 0;
         TaiKhoan taiKhoan = new TaiKhoan(nhanVienRequest);
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -57,8 +64,12 @@ public class TaiKhoanService {
         String encodedPassword = passwordEncoder.encode(rawPassword);
         taiKhoan.setMatKhau(encodedPassword);
         taiKhoan.setAnhDaiDien(nhanVienRequest.getAnhDaiDien());
+
         DiaChi diaChi = new DiaChi(nhanVienRequest);
         diaChi.setTaiKhoan(taiKhoan);
+        diaChi.setDiaChiMacDinh(1);
+        diaChi.setTen(nhanVienRequest.getTen());
+        diaChi.setSdt(nhanVienRequest.getSdt());
         if (validate(nhanVienRequest, model)) {
             if(nhanVienRequest.getAnhDaiDien().equals("")){
                 taiKhoan.setAnhDaiDien("thumbnail.png");
@@ -70,7 +81,7 @@ public class TaiKhoanService {
         return true;
     }
 
-    public void update(String id, NhanVienRequest nhanVienRequest, Model model) {
+    public void update(String id, TaiKhoanRequest nhanVienRequest, Model model) {
         TaiKhoan taiKhoan = taiKhoanRepository.findById(id).orElse(null);
         DiaChi diaChi = diaChiRepository.getDiaChiByIdTaiKhoan(id);
         if (taiKhoan != null && diaChi != null) {
@@ -102,7 +113,7 @@ public class TaiKhoanService {
         }
     }
 
-    public boolean validate(NhanVienRequest nhanVienRequest, Model model) {
+    public boolean validate(TaiKhoanRequest nhanVienRequest, Model model) {
         int i = 0;
         String errTen = null, errEmail = null, errCCCD = null, errSDT = null, errGT = null, errTrangThai = null, errTinh = null, errQuanHuyen = null, errPhuongXa = null, errDCCuThe = null, errNgaySinh = null;
         LocalDate gioHT = LocalDate.now();
@@ -169,5 +180,7 @@ public class TaiKhoanService {
         return i == 0;
     }
 
-
+    public TaiKhoan getTaiKhoanByIdKH(String idkh){
+        return taiKhoanRepository.findById(idkh).orElse(null);
+    }
 }

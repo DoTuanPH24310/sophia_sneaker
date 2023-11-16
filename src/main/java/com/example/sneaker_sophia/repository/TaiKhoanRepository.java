@@ -26,6 +26,13 @@ public interface TaiKhoanRepository extends JpaRepository<TaiKhoan, String> {
         "and (:search is null or tk.ten like %:search% or tk.sdt like %:search%)")
 Page<TaiKhoan> getALlNhanVienTT(@Param("search") String search, @Param("trangThai") Integer trangThai, Pageable pageable);
 
+    @Query(value = "select tk from TaiKhoan tk " +
+            "join VaiTro vt on tk.vaiTro.id = vt.id " +
+            "where (vt.ma = 'VT001' and (:trangThai is null or :trangThai = -1 or tk.trangThai = :trangThai)) " +
+            "and (:search is null or tk.ten like %:search% or tk.sdt like %:search%)")
+    Page<TaiKhoan> getALlKhachHang(@Param("search") String search, @Param("trangThai") Integer trangThai, Pageable pageable);
+
+
     @Query(value = "select anhDaiDien from TaiKhoan where Id = ?1", nativeQuery = true)
     String getAnhById(String id);
 }

@@ -1,5 +1,6 @@
 package com.example.sneaker_sophia.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -56,6 +57,7 @@ public class VaiTro {
     @Column(name = "ngaySua")
     private LocalDateTime updatedDate;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "vaiTro", fetch = FetchType.LAZY)
     private List<TaiKhoan> taiKhoans = new ArrayList<>();
 }
