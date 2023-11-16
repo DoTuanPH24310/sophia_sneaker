@@ -658,10 +658,11 @@
 
                                     <td class="product_quantity">
                                         <label for="quantity">Số lượng:</label>
-                                        <button class="buttonCT decreaseQuantity" >-</button>
-                                        <input min="1" max="100" id="quantity" type="text" th:value="${item.soLuong}" onchange="updateQuantity(this)">
-                                        <button class="buttonCT increaseQuantity" >+</button>
+                                        <button class="buttonCT decreaseQuantity" th:data-id="${item.id}">-</button>
+                                        <input min="1" max="100" id="quantity" th:data-id="${item.id}" type="text" th:value="${item.soLuong}" onchange="updateQuantity(this)">
+                                        <button class="buttonCT increaseQuantity" th:data-id="${item.id}">+</button>
                                     </td>
+
 
                                     <td class="product_total">
                                         <span class="productTotalAmount" style="font-size: 15px" th:text="${#numbers.formatCurrency(item.gia * item.soLuong)}"></span>
@@ -1112,124 +1113,54 @@
 <script src="/assets/js/main.js"></script>
 <script>
 
-    $(document).ready(function () {
-        $(".increaseQuantity").click(function () {
-            var id = $(this).data("id");
-            var button = $(this);
-
-            if (id) {
-                var quantityInput = button.siblings("input[type='text']");
-                var currentQuantity = parseInt(quantityInput.val());
-
-                // Lấy giá sản phẩm gốc từ giá trị th:value
-                var giaSanPhamString = button.parents("tr").find(".product-price").data("gia");
-                var giaSanPham = parseFloat(giaSanPhamString);
-                console.log(giaSanPhamString);
-                console.log(giaSanPham);
-                // Tính giá mới dựa trên số lượng
-                var giaMoi = giaSanPham * (currentQuantity + 1);
-
-                $.get("/giohangchitiet/" + id + "/increase", function (data) {
-                    // Tăng số lượng
-                    quantityInput.val(currentQuantity + 1);
-
-                    // Cập nhật giá mới vào giao diện
-                    updatePrice(button, giaMoi);
-                });
+    function updateCart(productId, action, quantity) {
+        var url = `/giohangchitiet/session/${productId}/${action}`;
+        if (action === 'updatequantity') {
+            url += `?newQuantity=${quantity}`;
+        }
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
             }
-        });
-
-        $(".decreaseQuantity").click(function () {
-            var id = $(this).data("id");
-            var button = $(this);
-
-            if (id) {
-                var quantityInput = button.siblings("input[type='text']");
-                var currentQuantity = parseInt(quantityInput.val());
-
-                if (currentQuantity > 1) {
-                    // Lấy giá sản phẩm gốc từ giá trị th:value
-                    var giaSanPhamString = button.parents("tr").find(".product-price").data("gia");
-                    var giaSanPham = parseFloat(giaSanPhamString);
-
-                    // Tính giá mới dựa trên số lượng
-                    var giaMoi = giaSanPham * (currentQuantity - 1);
-                    console.log('giaSanPham:', giaSanPham);
-                    $.get("/giohangchitiet/" + id + "/decrease", function (data) {
-                        // Giảm số lượng
-                        quantityInput.val(currentQuantity - 1);
-
-                        // Cập nhật giá mới vào giao diện
-                        updatePrice(button, giaMoi);
-                    });
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
                 }
-            }
-        });
+                return response.text();
+            })
+            .then(data => {
+                console.log(data);
+                var currentQuantity = parseInt($(`#quantity[data-id='${productId}']`).val(), 10);
+                var newQuantity = action === 'increase' ? currentQuantity + 1 : currentQuantity - 1;
+
+                newQuantity = Math.max(newQuantity, 1);
+                $(`#quantity[data-id='${productId}']`).val(newQuantity);
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
+            });
+    }
+
+
+    $('.increaseQuantity').on('click', function() {
+        var productId = $(this).data('id');
+        updateCart(productId, 'increase');
     });
 
+    $('.decreaseQuantity').on('click', function() {
+        var productId = $(this).data('id');
+        updateCart(productId, 'decrease');
+    });
 
-    function updateQuantity(input) {
-        var newQuantity = parseInt(input.value);
-        var productId = input.getAttribute('data-id');
-
-        if (!isNaN(newQuantity) && newQuantity >= 1 && newQuantity <= 100) {
-            $.get("/giohangchitiet/" + productId + "/updatequantity", { newQuantity: newQuantity }, function (data) {
-                // Xử lý dữ liệu trả về ở đây (nếu cần)
-                console.log(data);
-                // Cập nhật giá sản phẩm sau khi cập nhật số lượng (nếu cần)
-                var giaSanPhamString = $(input).parents("tr").find(".product-price").data("gia");
-                console.log(giaSanPhamString);
-                var giaSanPham = parseFloat(giaSanPhamString);
-                var giaMoi = giaSanPham * newQuantity;
-                updatePrice($(input), giaMoi);
-            });
-        }
+    function updateQuantity(element) {
+        var productId = $(element).data('id');
+        var newQuantity = parseInt($(element).val(), 10);
+        updateCart(productId, 'updatequantity', newQuantity);
     }
 
 
-    function updatePrice(input, giaMoi) {
-        // Định dạng giá mới thành chuỗi tiền tệ
-        const formatter = new Intl.NumberFormat('vi-VN', {
-            style: 'currency',
-            currency: 'VND'
-        });
-        const giaMoiFormatted = formatter.format(giaMoi);
-
-        // Thay thế giá trị trong thẻ
-        var productTotal = $(input).parents("tr").find(".productTotalAmount");
-        productTotal.text(giaMoiFormatted);
-
-        // Tính tổng tiền sản phẩm sau cập nhật giá
-        updateTotalPrice();
-    }
-    function updateTotalPrice() {
-        var totalCartPrice = 0;
-        $(".productTotalAmount").each(function () {
-            var giaMoiFormatted = $(this).text().replace('₫', '').replace(/\./g, '').replace('₫', '').replace('₫', '').replace('₫', '').replace('₫', '');
-            totalCartPrice += parseFloat(giaMoiFormatted);
-        });
-
-        // Định dạng tổng tiền thành chuỗi tiền tệ
-        const formatter = new Intl.NumberFormat('vi-VN', {
-            style: 'currency',
-            currency: 'VND'
-        });
-        const totalCartPriceFormatted = formatter.format(totalCartPrice);
-
-        // Cập nhật tổng tiền sản phẩm lên giao diện
-        $(".offcanvas-cart-total-price-value").text(totalCartPriceFormatted);
-    }
-
-
-    // // Lắng nghe sự kiện keyup trên tất cả các ô nhập số lượng
-    // $("input[type='text']").on("keyup", function() {
-    //
-    //     // Đảm bảo rằng giá trị nhập liệu sau khi keyup là một số nguyên dương
-    //     var inputValue = $(this).val();
-    //     if (isNaN(inputValue) || inputValue <= 0) {
-    //         $(this).val(1);
-    //     }
-    // });
 
 </script>
 
