@@ -29,6 +29,10 @@ public class ChiTietGiay {
     @OneToMany(mappedBy = "id.chiTietGiay")
     private List<CTG_KhuyenMai> listCTG_KM;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "IdMauSac", referencedColumnName = "Id")
+    private MauSac mauSac;
+
 
     @Column(name = "ma")
     private String ma;

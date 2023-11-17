@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Repository
 public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> {
-    @Query(value = "SELECT obj FROM ChiTietGiay obj WHERE obj.giay.id IN :listId")
+    @Query(value = "SELECT obj FROM ChiTietGiay obj WHERE obj.giay.id IN :listId and obj.soLuong > 0")
     List<ChiTietGiay> findAllByIdGiay(List<UUID> listId);
 
     @Query(value = "SELECT obj.id FROM ChiTietGiay obj WHERE obj.giay.id IN :listId")

@@ -161,13 +161,12 @@
                                                th:checked="${checkAllCTG}"
                                         >
                                     </th>
-
-                                    <th scope="col" width="15%">Ảnh</th>
-                                    <th scope="col" width="10%">Mã</th>
-                                    <th scope="col" width="20%">Tên sản phẩm</th>
-                                    <th scope="col" width="10%">Kích cỡ</th>
-                                    <th scope="col" width="10%">Màu</th>
-                                    <th scope="col" width="5%">Thao tác</th>
+                                    <th scope="col" >Mã</th>
+                                    <th scope="col">Tên sản phẩm</th>
+                                    <th scope="col" >Kích cỡ</th>
+                                    <th scope="col">Màu</th>
+                                    <th scope="col">S/L Giảm</th>
+                                    <th scope="col" >Thao tác</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -183,29 +182,17 @@
                                         >
                                     </th>
 
-                                    <td><i class="fa fa-check-circle-o green"></i><span class="ms-1"></span></td>
+
                                     <td th:text="${x.ma}"></td>
                                     <td th:text="${x.giay.ten}"></td>
                                     <td th:text="${x.kichCo.ten}"></td>
-                                    <td></td>
-<!--                                    <td th:if="${x.trangThai == 0}">-->
-<!--                                        <button type="button" class="btn btn-success"-->
-<!--                                                style="border-radius: 30px; font-size: 11px; height: 40px">-->
-<!--                                            Đang kinh doanh-->
-<!--                                        </button>-->
-<!--                                    </td>-->
-<!--                                    <td th:unless="${x.trangThai == 0}">-->
-<!--                                        <button type="button" class="btn btn-danger"-->
-<!--                                                style="border-radius: 30px; font-size: 11px; height: 40px">-->
-<!--                                            Ngừng kinh doanh-->
-<!--                                        </button>-->
-<!--                                    </td>-->
+                                    <td th:text="${x.mauSac.ten}"></td>
+                                    <td> <input type="number" min="1"  th:value="${x.soLuong}"></td>
                                     <td>
                                         <a type="button" data-toggle="modal" th:attr="data-target='#detail'+${x.id}">
                                             <i class="material-icons text-warning" style="font-size: 23px"
                                                title="Chi tiết">visibility</i>
                                         </a>
-                                        <!-- Modal -->
                                     </td>
                                 </tr>
                                 </tbody>
