@@ -22,7 +22,7 @@
         }
 
         #inputPhiShip:focus,
-        #tienKhachDua:focus{
+        #tienKhachDua:focus {
             border-bottom: 2px solid #007bff;
         }
 
@@ -134,7 +134,6 @@
                         <th>Tên sản phẩm</th>
                         <th>Size</th>
                         <th>Số lượng</th>
-                        <th>Khuyến mại</th>
                         <th>Thành tiền</th>
                         <th>Thao tác</th>
 
@@ -166,8 +165,23 @@
                                 </span>
 
                         </td>
-                        <td th:text="0"></td>
-                        <td th:text="${#numbers.formatCurrency(hdct.soLuong * hdct.donGia)}"></td>
+                        <td>
+                            <span th:if="${hdct.donGia == ((hdct.donGia * (1- ((hdct.phanTramGiam) / 100.0)) * hdct.soLuongGiam)
+                                              + (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}">
+
+                                                 <span th:text="${#numbers.formatCurrency((hdct.donGia * (1- ((hdct.phanTramGiam) / 100.0)) * hdct.soLuongGiam)
+                                              + (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}" style="font-size: 15px"></span>
+                            </span>
+                                                        <span th:if="${hdct.donGia != ((hdct.donGia * (1- ((hdct.phanTramGiam) / 100.0)) * hdct.soLuongGiam)
+                                              + (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}">
+                                <span th:text="${#numbers.formatCurrency(hdct.donGia)}"
+                                      style="text-decoration: line-through; color: red; font-size: 13px"></span>
+                                                            <br>
+<!--                                                            hdct.soLuong * (hdct.donGia - (hdct.donGia * ((hdct.phanTramGiam) / 100.0))) -->
+                                             <span th:text="${#numbers.formatCurrency((hdct.donGia * (1- ((hdct.phanTramGiam) / 100.0)) * hdct.soLuongGiam)
+                                              + (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}" style="font-size: 15px"></span>
+                            </span>
+                        </td>
                         <td>
                             <a class="delete" style="text-decoration: none"
                                th:href="@{/admin/tai-quay/deletehdct/{id}(id=${hdct.chiTietGiay.id})}"
@@ -247,7 +261,7 @@
             </div>
             <hr>
         </form>
-        <form id="formXacNhanDonHang" action="/admin/tai-quay/addhttt" method="get" th:object="${nhanVienRequest}">
+        <form id="formXacNhanDonHang" action="/admin/tai-quay/addhttt" method="post" th:object="${nhanVienRequest}">
             <div class="row mb-5">
                 <th:block th:if="${nhanVienRequest != null}">
                     <div class="col-6">
@@ -874,6 +888,13 @@
             });
         }
 
+        let errhd = [[${session.errTaiQuay}]];
+        if (errhd != null) {
+            window.addEventListener("load", function () {
+                alert(errhd);
+                removeSeesion('errTaiQuay');
+            })
+        }
         window.addEventListener('load', function () {
             validateTienThua();
         })
@@ -883,35 +904,25 @@
             console.log(document.getElementById('formXacNhanDonHang').action);
             let tienKhachDua = document.getElementById('tienKhachDua').value;
             let phiShip = document.getElementById('inputPhiShip') == null ? 0 : parseFloat(document.getElementById('inputPhiShip').value);
-                    if (tongTien == null) {
-                        alert("VUi lòng chọn sản phẩm mua hàng");
-                        return false;
-                    }
-                    if (tongTien != null) {
-                        tienKhachDua = tienKhachDua.replace(/[^\d.]/g, '');
-                        tienKhachDua = parseFloat(tienKhachDua.replace(/\./g, ''));
-                        if (tienKhachDua - (tongTien + phiShip) < 0) {
-                            alert("Số tiền khách đưa còn thiếu");
+            if (tongTien == null) {
+                alert("VUi lòng chọn sản phẩm mua hàng");
+                return false;
+            }
+            if (tongTien != null) {
+                tienKhachDua = tienKhachDua.replace(/[^\d.]/g, '');
+                tienKhachDua = parseFloat(tienKhachDua.replace(/\./g, ''));
+                if (tienKhachDua - (tongTien + phiShip) < 0) {
+                    alert("Số tiền khách đưa còn thiếu");
 
-                        } else {
-                            if(confirm('Xác nhận thanh toán đơn hàng')){
-                                document.getElementById('formXacNhanDonHang').submit();
-                            }
-                        }
+                } else {
+                    if (confirm('Xác nhận thanh toán đơn hàng')) {
+                        document.getElementById('formXacNhanDonHang').submit();
                     }
-
+                }
+            }
 
 
         });
-
-
-        let errhd = [[${session.errTaiQuay}]];
-        if (errhd != null) {
-            window.addEventListener("load", function () {
-                alert(errhd);
-                removeSeesion('errTaiQuay');
-            })
-        }
 
 
         document.getElementById('formSoluong').addEventListener('submit', function (event) {
@@ -933,8 +944,13 @@
             let quan = document.getElementById('districttdc').value;
             let xa = document.getElementById('wardtdc').value;
             let chiTiet = document.getElementById('inputDCCTTDC').value;
+            var bieuThucChu = /[a-zA-Z]/;
+            var bieuThucDacBiet = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/;
             if (ten.trim().length == 0 || sdt.trim().length == 0 || chiTiet.trim().length == 0 || tinh == -1 || quan == -1 || xa == -1) {
                 alert("Vui lòng nhập đủ các trường đánh dấu (*)");
+                event.preventDefault();
+            } else if (bieuThucChu.test(sdt) || bieuThucDacBiet.test(sdt) || (sdt.trim().length != 11 && sdt.trim().length != 10) || !sdt.startwidth('0')) {
+                alert("Số điện thoại gồm 10 - 11 số và bắt đầu bằng 0");
                 event.preventDefault();
             } else {
                 alert("Thêm thành công")
@@ -1616,6 +1632,4 @@
 
 </div>
 </body>
-
-
 </html>

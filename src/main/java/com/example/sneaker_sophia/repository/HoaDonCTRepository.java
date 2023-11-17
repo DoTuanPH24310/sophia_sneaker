@@ -16,7 +16,8 @@ public interface HoaDonCTRepository extends JpaRepository<HoaDonChiTiet, String>
     @Query(value = "select hdct from HoaDonChiTiet hdct where hdct.chiTietGiay.id = ?1 and hdct.hoaDon.id = ?2")
     HoaDonChiTiet getHDCTByIdCTSP(UUID idctsp, String idhd);
     //29-10
-    @Query(value = "select sum(soLuong * donGia) from HoaDonChiTiet where IdHoaDon = ?1", nativeQuery = true)
+    @Query(value = "select sum(((hdct.donGia * (1- ((hdct.phanTramGiam) / 100.0)) * hdct.soLuongGiam)\n" +
+            "                                              + (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))) from HoaDonChiTiet hdct where hdct.hoaDon.id = ?1")
     Double tongTienHD(String idhc);
 
 }

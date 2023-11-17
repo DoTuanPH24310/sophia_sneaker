@@ -1,4 +1,5 @@
 package com.example.sneaker_sophia.controller;
+
 import com.example.sneaker_sophia.entity.*;
 import com.example.sneaker_sophia.repository.AnhRepository;
 import com.example.sneaker_sophia.request.NhanVienRequest;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.*;
 
 // Sửa lại tổng tiền hóa đơn(1 là dùng cách api,2 là seesion)
@@ -43,6 +45,10 @@ public class TaiQuayController {
 
     @Resource(name = "anhRepository")
     AnhRepository anhRepository;
+
+    @Resource(name = "kmService")
+    KMService kmService;
+
     //    alo ôla
     @GetMapping("/hien-thi")
     public String index(Model model) {
@@ -117,12 +123,68 @@ public class TaiQuayController {
 //        idHoaDonCT.setHoaDon(hoaDonService.getHoaDonById(tempIdHD));
 //        idHoaDonCT.setChiTietGiay(chiTietGiay);
 
-        hoaDonChiTiet.setTrangThai(1);
+
+        // giam slt trong km
+        List<Voucher> voucherList = kmService.getAllKMByIdctg(idCTG);
+
+
+        if (chiTietGiayService.tongKMByIdctg(idCTG) != null) {
+//                tienGiam = (chiTietGiayService.tongKMByIdctg(idCTG) / 100.0) * chiTietGiay.getGia();
+            hoaDonChiTiet.setPhanTramGiam(chiTietGiayService.tongKMByIdctg(idCTG));
+        } else {
+            hoaDonChiTiet.setSoLuongGiam(0);
+            hoaDonChiTiet.setPhanTramGiam(0);
+        }
+        for (Voucher voucher : voucherList) {
+
+//
+//            if (soLuong > voucher.getSoLuong() && voucher.getSoLuong() > 0 ) {
+//                hoaDonChiTiet.setSoLuongGiam(voucher.getSoLuong());
+//
+//                Double tongTien = (chiTietGiay.getGia() * (1 - (chiTietGiayService.tongKMByIdctg(idCTG) / 100.0))) +
+//                        (chiTietGiay.getGia() * (soLuong - voucher.getSoLuong()));
+//                model.addAttribute("tongTienVC", tongTien);
+//                voucher.setSoLuong(0);
+//            }else{
+//                hoaDonChiTiet.setSoLuongGiam(soLuong);
+//                voucher.setSoLuong(voucher.getSoLuong() - soLuong);
+//            }
+
+            if (voucher.getSoLuong() > 0) {
+                if (soLuong >= voucher.getSoLuong()) {
+                    if (hoaDonChiTietOld != null) {
+                        hoaDonChiTiet.setSoLuongGiam(voucher.getSoLuong() + hoaDonChiTietOld.getSoLuongGiam());
+                        voucher.setSoLuong(0);
+                    } else {
+                        hoaDonChiTiet.setSoLuongGiam(voucher.getSoLuong());
+                        voucher.setSoLuong(0);
+                    }
+
+                } else {
+
+                    if (hoaDonChiTietOld != null) {
+                        hoaDonChiTiet.setSoLuongGiam(hoaDonChiTietOld.getSoLuongGiam() + soLuong);
+                        voucher.setSoLuong(voucher.getSoLuong() - soLuong);
+                    } else {
+                        hoaDonChiTiet.setSoLuongGiam(soLuong);
+                        voucher.setSoLuong(voucher.getSoLuong() - soLuong);
+                    }
+
+                }
+            }else {
+                hoaDonChiTiet.setSoLuongGiam(0);
+            }
+
+            kmService.saveVC(voucher);
+
+        }
+
         hoaDonChiTiet.setDonGia(chiTietGiay.getGia());
 //        hoaDonChiTiet.setIdHoaDonCT(idHoaDonCT);
         hoaDonChiTiet.setHoaDon(hoaDonService.getHoaDonById(tempIdHD));
         hoaDonChiTiet.setChiTietGiay(chiTietGiay);
         chiTietGiay.setSoLuong(chiTietGiay.getSoLuong() - soLuong);
+        hoaDonChiTiet.setTrangThai(1);
         chiTietGiayService.save(chiTietGiay);
         hoaDonChiTietServive.addhdct(hoaDonChiTiet);
         return "forward:/admin/tai-quay/detail/" + tempIdHD;
@@ -158,22 +220,25 @@ public class TaiQuayController {
         List<HoaDonChiTiet> listhdct = hoaDonChiTietServive.getHDCTByIdHD(id);
         Map<UUID, String> avtctgMap = new HashMap<>();
         List<ChiTietGiay> chiTietGiayList = chiTietGiayService.getAllCTG();
-
-        for (ChiTietGiay ctg : chiTietGiayList){
+        Double tongTien = 0.0;
+        for (ChiTietGiay ctg : chiTietGiayList) {
             UUID idct = ctg.getId();
             String avtct = anhRepository.getAnhChinhByIdctg(idct);
             avtctgMap.put(idct, avtct);
             session.setAttribute("avtctsp", avtctgMap);
         }
-        for (HoaDonChiTiet hdct : listhdct){
+        for (HoaDonChiTiet hdct : listhdct) {
             UUID idctg = hdct.getChiTietGiay().getId();
             String avtctg = anhRepository.getAnhChinhByIdctg(idctg);
+            tongTien += (hdct.getDonGia() * (1 - ((hdct.getPhanTramGiam()) / 100.0)) * hdct.getSoLuongGiam()) +
+                    (hdct.getDonGia() * (hdct.getSoLuong() - hdct.getSoLuongGiam()));
             avtctgMap.put(idctg, avtctg);
+
             model.addAttribute("avtctgMap", avtctgMap);
         }
 
         model.addAttribute("listhdct", listhdct);
-        Double tongTien = hoaDonChiTietServive.tongTienHD(tempIdHD);
+//        Double tongTien = hoaDonChiTietServive.tongTienHD(tempIdHD);
         model.addAttribute("tongTienHD", tongTien);
         // 13-11
         session.setAttribute("tongTienHD", tongTien);
@@ -228,7 +293,7 @@ public class TaiQuayController {
             Model model
     ) {
         hoaDonChiTietServive.deleteHDCT(idctsp, tempIdHD);
-        session.setAttribute("errTaiQuay","Xóa thành công");
+        session.setAttribute("errTaiQuay", "Xóa thành công");
         List<HoaDon> list = hoaDonService.getHoaDonByTrangThai();
         model.addAttribute("listHDC", list);
         return "redirect:/admin/tai-quay/detail/" + tempIdHD;
@@ -324,19 +389,20 @@ public class TaiQuayController {
             @PathVariable("id") String iddc
     ) {
         diaChiService.deleteById(iddc);
-        session.setAttribute("errTaiQuay","Xóa thành công");
+        session.setAttribute("errTaiQuay", "Xóa thành công");
         return "forward:/admin/tai-quay/detail/" + tempIdHD;
     }
 
-    @GetMapping("addhttt")
+    @PostMapping("addhttt")
     public String addhttt(
             Model model,
             @RequestParam("phuongThuc") Integer phuongThuc,
             @RequestParam("tienKhachDua") String tienKhachDua,
-            @RequestParam(value = "xa",required = false) String xa,
-            @RequestParam(value = "quan",required = false) String quan,
-            @RequestParam(value = "tinh",required = false) String tinh,
-            @RequestParam(value = "ghiChu",required = false) String ghiChu,
+            @RequestParam(value = "xa", required = false) String xa,
+            @RequestParam(value = "quan", required = false) String quan,
+            @RequestParam(value = "tinh", required = false) String tinh,
+            @RequestParam(value = "ghiChu", required = false) String ghiChu,
+            @RequestParam(value = "tienDu", required = false) String tienDu,
             @RequestParam(value = "phiVanChuyen", defaultValue = "0") String phiVanChuyen
     ) {
         HinhThucThanhToan hinhThucThanhToan = new HinhThucThanhToan();
@@ -344,24 +410,37 @@ public class TaiQuayController {
             model.addAttribute("errTienKH", "Chưa trả tiền tao");
             return "forward:/admin/tai-quay/detail/" + tempIdHD;
         }
-        HoaDon hoaDon = hoaDonService.getHoaDonById(tempIdHD);
-        NhanVienRequest taiKhoan = taiKhoanService.getTaiKhoanById(tempIdKH);
+
         Double tongTien = hoaDonChiTietServive.tongTienHD(tempIdHD);
+        HoaDon hoaDon = hoaDonService.getHoaDonById(tempIdHD);
         hinhThucThanhToan.setHoaDon(hoaDon);
         hinhThucThanhToan.setTrangThai(phuongThuc);
+        tienKhachDua = tienKhachDua.replaceAll("[^\\d]", "");
         hinhThucThanhToan.setSoTien(Double.parseDouble(tienKhachDua));
         htttService.savehttt(hinhThucThanhToan);
-        hoaDon.setTenKhachHang(taiKhoan.getTen());
-        hoaDon.setSoDienThoai(taiKhoan.getSdt());
-        hoaDon.setDiaChi(taiKhoan.getDiaChiCuThe() + "," + xa + "," + quan + "," + tinh);
-        if (hoaDon.getLoaiHoaDon() == 2){
+        if (!tempIdKH.equals("") && hoaDon.getLoaiHoaDon() == 2) {
+            NhanVienRequest taiKhoan = taiKhoanService.getTaiKhoanById(tempIdKH);
+            hoaDon.setTenKhachHang(taiKhoan.getTen());
+            hoaDon.setSoDienThoai(taiKhoan.getSdt());
+            hoaDon.setDiaChi(taiKhoan.getDiaChiCuThe() + "," + xa + "," + quan + "," + tinh);
+            phiVanChuyen = phiVanChuyen.replaceAll("[^\\d]", "");
             hoaDon.setPhiShip(Double.parseDouble(phiVanChuyen));
         }
+
+//        if (hoaDon.getLoaiHoaDon() == 2){
+//            phiVanChuyen = phiVanChuyen.replaceAll("[^\\d]", "");
+//            hoaDon.setPhiShip(Double.parseDouble(phiVanChuyen));
+//        }
+
+        hoaDon.setTienThua(Double.parseDouble(tienKhachDua) - tongTien - Double.parseDouble(phiVanChuyen));
+
+
         hoaDon.setGhiChu(ghiChu);
         hoaDon.setTongTien(tongTien);
         hoaDon.setTrangThai(1);
         hoaDonService.savehd(hoaDon);
-        return "forward:/admin/tai-quay/hien-thi";
+        session.setAttribute("errTaiQuay", "Thanh toán thành công !");
+        return "redirect:/admin/tai-quay/hien-thi";
     }
 
     @PostMapping("adddc")
@@ -402,7 +481,7 @@ public class TaiQuayController {
         HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
         HoaDonChiTiet hoaDonChiTietOld = hoaDonChiTietServive.getHDCTByIdCTSP(chiTietGiay.getId(), tempIdHD);
 
-        if(chiTietGiay.getSoLuong() == 0){
+        if (chiTietGiay.getSoLuong() == 0) {
             return "redirect:/admin/tai-quay/detail/" + tempIdHD;
         }
 
@@ -429,7 +508,7 @@ public class TaiQuayController {
     // 13-11
 
     @GetMapping("deletekhhd")
-    public String deletekhhd(){
+    public String deletekhhd() {
         HoaDon hoaDon = hoaDonService.getHoaDonById(tempIdHD);
         hoaDon.setTaiKhoan(null);
         hoaDon.setLoaiHoaDon(1);

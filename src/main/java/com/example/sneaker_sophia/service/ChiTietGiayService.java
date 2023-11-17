@@ -186,8 +186,13 @@ public class ChiTietGiayService {
     }
 
 //    14/11
-
     public Integer findSoLuongTonByQrCode(String qr){
         return chiTietGiayRepository.findSoLuongTonByQrCode(qr);
+    }
+
+    // 17/11
+
+    public Integer tongKMByIdctg(UUID idctg){
+        return chiTietGiayRepository.tongKMByIdctg(idctg);
     }
 }

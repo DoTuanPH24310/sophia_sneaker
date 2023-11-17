@@ -179,7 +179,7 @@ public class TaiKhoanService {
     }
 
     public List<DiaChi> findListTKById(String id){
-        return diaChiRepository.findListTKById(UUID.fromString(id));
+        return diaChiRepository.findListDCById(UUID.fromString(id));
     }
 
     // 31-10

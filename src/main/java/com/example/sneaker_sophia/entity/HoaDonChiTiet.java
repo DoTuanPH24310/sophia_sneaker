@@ -33,6 +33,12 @@ public class HoaDonChiTiet {
     @Column(name = "donGia")
     private Double donGia;
 
+    @Column(name = "phanTramGiam")
+    private Integer phanTramGiam;
+
+    @Column(name = "soLuongGiam")
+    private Integer soLuongGiam;
+
     @CreatedBy
     @Column(name = "nguoiTao")
     private String createdBy;

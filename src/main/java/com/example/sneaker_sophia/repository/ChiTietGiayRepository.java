@@ -79,7 +79,7 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
             "(:kichCo IS NULL OR c.kichCo.id = :kichCo) AND ((:textSearch IS NULL OR c.ma like :textSearch) or (:textSearch IS NULL OR c.giay.ten like :textSearch)) AND" +
             "(c.trangThai = 0)")
     List<ChiTietGiay> findChiTietGiayByMultipleParamsAPI(
-            @Param("giay") UUID  idGiay,
+            @Param("giay") UUID idGiay,
             @Param("deGiay") UUID idDeGiay,
             @Param("hang") UUID idHang,
             @Param("loaiGiay") UUID idLoaiGiay,
@@ -91,6 +91,7 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
 
     @Query("SELECT MAX(c.ma) FROM ChiTietGiay c")
     Integer findMaxMa();
+
     // 29/10 cuongdv
     @Query(value = "select Id from ChiTietGiay where ma = ?1", nativeQuery = true)
     UUID getIdCTGByMa(String maCTG);
@@ -100,13 +101,17 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
     Integer findSoLuongTon(String ma);
 
     @Query(value = "select ct from ChiTietGiay ct where ct.qrCode = ?1")
-     ChiTietGiay getChiTietGiayByQrCode(String qrcode);
+    ChiTietGiay getChiTietGiayByQrCode(String qrcode);
 
 
     @Query(value = "select soLuong from ChiTietGiay where qrCode =?1", nativeQuery = true)
     Integer findSoLuongTonByQrCode(String qr);
 
-//    14/11
+    //    17/11
+    @Query(value = "select sum(KM.phanTramGiam) from CTG_KhuyenMai ctg_km\n" +
+            "join KhuyenMai KM on ctg_km.IdKhuyenMai = KM.Id where  IdCTG = ?1 and KM.trangThai = 1", nativeQuery = true)
+    Integer tongKMByIdctg(UUID idctg);
+
 }
 //         OR UPPER(ctsp.kichCo.ten) LIKE %?1%
 //(:kichCo IS NULL OR c.kichCo = :kichCo) AND

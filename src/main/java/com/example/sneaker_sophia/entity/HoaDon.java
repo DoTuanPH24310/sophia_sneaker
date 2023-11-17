@@ -60,6 +60,7 @@ public class HoaDon {
     private Double tongTien;
 
 
+
     @Column(name = "ngayShip")
     private LocalDate ngayShip;
 

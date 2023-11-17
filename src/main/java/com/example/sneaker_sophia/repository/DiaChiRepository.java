@@ -19,7 +19,7 @@ public interface DiaChiRepository extends JpaRepository<DiaChi, String> {
     // 30-10
 
     @Query(value = "select * from DiaChi where IdTaiKhoan =?1",nativeQuery = true)
-    List<DiaChi> findListTKById(UUID id);
+    List<DiaChi> findListDCById(UUID id);
 
     @Query(value = "select * from DiaChi where IdTaiKhoan =?1",nativeQuery = true)
     List<DiaChi> findListTKByIdKH(String id);
