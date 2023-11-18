@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .my-custom-scrollbar {
+            position: relative;
+            height: 400px;
+            overflow: auto;
+        }
+
+        .table-wrapper-scroll-y {
+            display: block;
+        }
+
+        h5.modal-title p {
+            display: inline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="row mt-4">
+        <h5>Quản lý hóa đơn</h5>
+    </div>
+    <div class="row mt-4">
+        <h5>Bộ lọc</h5>
+    </div>
+
+
+    <div class="row mb-5 mt-3">
+        <div class="col-3">
+            <input type="text" class="form-control" id="textSearch"
+                   placeholder="Nhập mã hoặc tên sản phẩm....">
+        </div>
+
+        <div class="col-3">
+            <button type="submit" class="btn btn-primary" onclick="test();">Tìm kiếm</button>
+            <button class="btn btn-danger" onclick="getAllList();">Làm mới</button>
+        </div>
+
+
+        <div class="col-3">
+
+            <input type="date" id="tuNgay" class="form-control">
+        </div>
+
+        <div class="col-3">
+            <input type="date" class="form-control">
+        </div>
+    </div>
+
+
+    <div class="row">
+
+
+        <div class="col-4  d-flex justify-content-center">
+
+            <label>Loại đơn: &nbsp;&nbsp;</label>
+            <select style="border-radius: 7px; min-width: 120px; min-height: 30px;" id="cbbGiay">
+                <option value="">Tất cả</option>
+            </select>
+        </div>
+
+        <div class="col-4  d-flex justify-content-center">
+
+            <label>Sắp xếp: &nbsp;&nbsp;</label>
+            <select style="border-radius: 7px; min-width: 120px; min-height: 30px;" id="cbbGiay">
+                <option value="">Tất cả</option>
+            </select>
+        </div>
+
+        <div class="col-4  d-flex justify-content-center">
+
+            <label>Hiển thị: &nbsp;&nbsp;</label>
+            <select style="border-radius: 7px; min-width: 120px; min-height: 30px;" id="cbbLoaiGiay">
+                <option value="">Tất cả</option>
+            </select>
+        </div>
+    </div>
+
+
+
+
+    <div class="group-tabs mt-4">
+        <div class="row ms-2">
+            <h5>Danh sách hóa đơn</h5>
+        </div>
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="nav-item">
+                <a class="nav-link active" href="#All" aria-controls="ALL" role="tab" data-toggle="tab">Tất cả</a>
+            </li>
+
+            <li role="presentation" class="nav-item">
+                <a class="nav-link  text-dark" href="#choXacNhan" aria-controls="choXacNhan" role="tab"
+                   data-toggle="tab">Chờ xác nhận</a>
+            </li>
+            <li role="presentation" class="nav-item">
+                <a class="nav-link  text-dark" href="#choVanChuyen" aria-controls="choVanChuyen" role="tab"
+                   data-toggle="tab">Chờ Vận chuyển</a>
+            </li>
+            <li role="presentation" class="nav-item">
+                <a class="nav-link  text-dark" href="#vanChuyen" aria-controls="vanChuyen" role="tab"
+                   data-toggle="tab">Vận chuyển</a>
+            </li>
+            <li role="presentation" class="nav-item">
+                <a class="nav-link  text-dark" href="#thanhToan" aria-controls="thanhToan" role="tab"
+                   data-toggle="tab">Thanh toán</a>
+            </li>
+            <li role="presentation" class="nav-item">
+                <a class="nav-link  text-dark" href="#hoanThanh" aria-controls="hoanThanh" role="tab"
+                   data-toggle="tab">Hoàn thành</a>
+            </li>
+            <li role="presentation" class="nav-item">
+                <a class="nav-link  text-dark" href="#huy" aria-controls="huy" role="tab" data-toggle="tab">Hủy</a>
+            </li>
+        </ul>
+
+
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="All">
+                <div class="row mt-4">
+                    <div class="table table-wrapper-scroll-y my-custom-scrollbar">
+                        <table id="tableModal" class="table table-borderless">
+                            <thead>
+                            <tr class="bg-light">
+                                <th>STT</th>
+                                <th>Mã HĐ</th>
+                                <th>Tên khách hàng</th>
+                                <th>Tên nhân viên</th>
+                                <th>Ngày tạo</th>
+                                <th>Khuyến mại</th>
+                                <th>Tổng tiền</th>
+                                <th>Loại đơn</th>
+                                <th>Thao tác</th>
+                            </tr>
+                            </thead>
+                            <tbody id="sinhvien">
+                            <tr>
+                                table Tất cả
+                            </tr>
+                            </tbody>
+                        </table>
+                        <h2 class="text-center mt-4" id="err"></h2>
+                    </div>
+                </div>
+
+            </div>
+            <div role="tabpanel" class="tab-pane" id="choXacNhan">
+                <div class="row mt-4">
+                    <div class="table table-wrapper-scroll-y my-custom-scrollbar">
+                        <table id="tableModal" class="table table-borderless">
+                            <thead>
+                            <tr class="bg-light">
+                                <th>STT</th>
+                                <th>Mã HĐ</th>
+                                <th>Tên khách hàng</th>
+                                <th>Tên nhân viên</th>
+                                <th>Ngày tạo</th>
+                                <th>Khuyến mại</th>
+                                <th>Tổng tiền</th>
+                                <th>Loại đơn</th>
+                                <th>Thao tác</th>
+                            </tr>
+                            </thead>
+                            <tbody id="sinhvien">
+                            table Chờ xác nhận
+                            </tbody>
+                        </table>
+                        <h2 class="text-center mt-4" id="err"></h2>
+                    </div>
+                </div>
+            </div>
+
+
+            <div role="tabpanel" class="tab-pane" id="choVanChuyen">
+                <div class="row mt-4">
+                    <div class="table table-wrapper-scroll-y my-custom-scrollbar">
+                        <table id="tableModal" class="table table-borderless">
+                            <thead>
+                            <tr class="bg-light">
+                                <th>STT</th>
+                                <th>Mã HĐ</th>
+                                <th>Tên khách hàng</th>
+                                <th>Tên nhân viên</th>
+                                <th>Ngày tạo</th>
+                                <th>Khuyến mại</th>
+                                <th>Tổng tiền</th>
+                                <th>Loại đơn</th>
+                                <th>Thao tác</th>
+                            </tr>
+                            </thead>
+                            <tbody id="sinhvien">
+                            table Chờ vận chuyển
+                            </tbody>
+                        </table>
+                        <h2 class="text-center mt-4" id="err"></h2>
+                    </div>
+                </div>
+            </div>
+
+
+            <div role="tabpanel" class="tab-pane" id="vanChuyen">
+                <div class="row mt-4">
+                    <div class="table table-wrapper-scroll-y my-custom-scrollbar">
+                        <table id="tableModal" class="table table-borderless">
+                            <thead>
+                            <tr class="bg-light">
+                                <th>STT</th>
+                                <th>Mã HĐ</th>
+                                <th>Tên khách hàng</th>
+                                <th>Tên nhân viên</th>
+                                <th>Ngày tạo</th>
+                                <th>Khuyến mại</th>
+                                <th>Tổng tiền</th>
+                                <th>Loại đơn</th>
+                                <th>Thao tác</th>
+                            </tr>
+                            </thead>
+                            <tbody id="sinhvien">
+                            table vận chuyển
+                            </tbody>
+                        </table>
+                        <h2 class="text-center mt-4" id="err"></h2>
+                    </div>
+                </div>
+            </div>
+
+
+            <div role="tabpanel" class="tab-pane" id="thanhToan">
+                <div class="row mt-4">
+                    <div class="table table-wrapper-scroll-y my-custom-scrollbar">
+                        <table id="tableModal" class="table table-borderless">
+                            <thead>
+                            <tr class="bg-light">
+                                <th>STT</th>
+                                <th>Mã HĐ</th>
+                                <th>Tên khách hàng</th>
+                                <th>Tên nhân viên</th>
+                                <th>Ngày tạo</th>
+                                <th>Khuyến mại</th>
+                                <th>Tổng tiền</th>
+                                <th>Loại đơn</th>
+                                <th>Thao tác</th>
+                            </tr>
+                            </thead>
+                            <tbody id="sinhvien">
+                            table thanh toán
+                            </tbody>
+                        </table>
+                        <h2 class="text-center mt-4" id="err"></h2>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div role="tabpanel" class="tab-pane" id="hoanThanh">
+                <div class="row mt-4">
+                    <div class="table table-wrapper-scroll-y my-custom-scrollbar">
+                        <table id="tableModal" class="table table-borderless">
+                            <thead>
+                            <tr class="bg-light">
+                                <th>STT</th>
+                                <th>Mã HĐ</th>
+                                <th>Tên khách hàng</th>
+                                <th>Tên nhân viên</th>
+                                <th>Ngày tạo</th>
+                                <th>Khuyến mại</th>
+                                <th>Tổng tiền</th>
+                                <th>Loại đơn</th>
+                                <th>Thao tác</th>
+                            </tr>
+                            </thead>
+                            <tbody id="sinhvien">
+                            table hoanThanh
+                            </tbody>
+                        </table>
+                        <h2 class="text-center mt-4" id="err"></h2>
+                    </div>
+                </div>
+            </div>
+
+
+            <div role="tabpanel" class="tab-pane" id="huy">
+                <div class="row mt-4">
+                    <div class="table table-wrapper-scroll-y my-custom-scrollbar">
+                        <table id="tableModal" class="table table-borderless">
+                            <thead>
+                            <tr class="bg-light">
+                                <th>STT</th>
+                                <th>Mã HĐ</th>
+                                <th>Tên khách hàng</th>
+                                <th>Tên nhân viên</th>
+                                <th>Ngày tạo</th>
+                                <th>Khuyến mại</th>
+                                <th>Tổng tiền</th>
+                                <th>Loại đơn</th>
+                                <th>Thao tác</th>
+                            </tr>
+                            </thead>
+                            <tbody id="sinhvien">
+                            table hủy
+                            </tbody>
+                        </table>
+                        <h2 class="text-center mt-4" id="err"></h2>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+</body>
+</html>
