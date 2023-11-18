@@ -48,10 +48,6 @@ public class ChiTietGiayController {
 
     @GetMapping("chi-tiet-giay")
     public String listFirstPage(Model model){
-//        HttpSession session = request.getSession();
-//        if(session.getAttribute("admin") == null ){
-//            return "redirect:/login-admin" ;
-//        }
         return listByPage(1,model,"gia","asc",null,null,null,null,null,null,null,null,null,null,null);
     }
     @GetMapping("chi-tiet-giay/page/{pageNum}")
@@ -73,7 +69,13 @@ public class ChiTietGiayController {
 
         if ((keyword != null && !keyword.isEmpty()) || (productName != null && !productName.isEmpty())) {
             page = chiTietGiayService.listByPageAndProductName(pageNum, sortField, sortDir, keyword, productName);
-        } else if ((giay != null && !giay.equals("defaultGiay")) || (deGiay != null && !deGiay.equals("defaultDeGiay")) || (hang != null && !hang.equals("defaultHang")) || (loaiGiay != null && !loaiGiay.equals("defaultLoaiGiay")) || (mauSac != null && !mauSac.equals("defaultMauSac")) || (kichCo != null && !kichCo.equals("defaultKichCo")) || (giaMin != null && giaMax != null)) {
+        } else if ((giay != null && !giay.equals("defaultGiay"))
+                || (deGiay != null && !deGiay.equals("defaultDeGiay"))
+                || (hang != null && !hang.equals("defaultHang"))
+                || (loaiGiay != null && !loaiGiay.equals("defaultLoaiGiay"))
+                || (mauSac != null && !mauSac.equals("defaultMauSac"))
+                || (kichCo != null && !kichCo.equals("defaultKichCo"))
+                || (giaMin != null && giaMax != null)) {
             page = chiTietGiayService.filterCombobox(pageNum, sortField, sortDir,
                     giayService.findByTen(giay),
                     deGiayService.findByTen(deGiay),
@@ -90,6 +92,7 @@ public class ChiTietGiayController {
 
 
         List<ChiTietGiay> listChiTietSanPham = page.getContent();
+
 
 
         int startCount = (pageNum - 1) * chiTietGiayService.PRODUCT_DETAIL_PER_PAGE + 1;
@@ -116,6 +119,7 @@ public class ChiTietGiayController {
         model.addAttribute("kichCoList", kichCoService.getAll());
         model.addAttribute("giayList", giayService.getAll());
         model.addAttribute("hangList", hangService.getAll());
+        model.addAttribute("hangList", hangService.getAll());
 
 // để giữ cac giá trị combobõx
         model.addAttribute("loaiGiay", params != null ? params.get("loaiGiay") : null);
@@ -126,7 +130,7 @@ public class ChiTietGiayController {
         model.addAttribute("giay", params != null ? params.get("giay") : null);
         model.addAttribute("giaMin", params != null ? params.get("giaMin") : null);
         model.addAttribute("giaMax", params != null ? params.get("giaMax") : null);
-
+        model.addAttribute("trangThai", params != null ? params.get("trangThai") : null);
         return "admin/chiTietGiay/chiTietGiay";
     }
 

@@ -34,6 +34,16 @@ public class Cart {
         }
     }
 
+    public void updateQuantity(UUID productId, int quantity) {
+        for (CartItem item : items) {
+            if (item.getId().equals(productId)) {
+                item.setSoLuong(quantity);
+                break;
+            }
+        }
+    }
+
+
     public void removeItem(UUID productId) {
         items.removeIf(item -> item.getId().equals(productId));
     }

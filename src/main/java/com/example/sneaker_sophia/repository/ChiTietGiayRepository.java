@@ -55,7 +55,8 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
             "(:mauSac IS NULL OR c.mauSac = :mauSac) AND " +
             "(:kichCo IS NULL OR c.kichCo = :kichCo) AND " +
             "(:giaMin IS NULL OR c.gia >= :giaMin) AND " +
-            "(:giaMax IS NULL OR c.gia <= :giaMax)")
+            "(:giaMax IS NULL OR c.gia <= :giaMax) ")
+
     Page<ChiTietGiay> findChiTietGiayByMultipleParams(
             @Param("giay") Giay giay,
             @Param("deGiay") DeGiay deGiay,

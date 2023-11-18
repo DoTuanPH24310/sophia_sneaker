@@ -2,7 +2,10 @@ package com.example.sneaker_sophia.service;
 
 import com.example.sneaker_sophia.entity.DiaChi;
 import com.example.sneaker_sophia.entity.TaiKhoan;
+import com.example.sneaker_sophia.repository.DiaChiRepository;
+import com.example.sneaker_sophia.repository.DiaChiTamChu;
 import com.example.sneaker_sophia.repository.LoginRepository;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class DiaChiCheckoutService {
+    @Autowired
+    private DiaChiTamChu diaChiTamChu;
     @Autowired
     private LoginRepository loginRepository;
 
@@ -26,4 +31,10 @@ public class DiaChiCheckoutService {
         }
         return null;
     }
+
+//    public void themDiaChiVaoTaiKhoan(DiaChi diaChi, TaiKhoan taiKhoan) {
+//        diaChi.setTaiKhoan(taiKhoan);
+//        taiKhoan.getDiaChiList().add(diaChi);
+//        diaChiTamChu.save(diaChi);
+//    }
 }

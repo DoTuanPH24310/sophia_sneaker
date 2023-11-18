@@ -30,30 +30,91 @@
         .form-group:last-child {
             margin-right: 0;
         }
+
+        .container {
+            background-color: #EAEAEA;
+        }
+
+        .page-link {
+            background-color: #fff;
+            color: #0d6efd;
+
+            border: 1px solid #dee2e6;
+        }
+
+        .form-control {
+            padding-left: 32px;
+        }
+
+        .form-control:focus {
+
+            border: none;
+            box-shadow: none;
+        }
+
+
+        .formTable {
+            background-color: #FFFFFF;
+        }
+
+        .my-custom-scrollbar {
+            position: relative;
+            height: 600px;
+            overflow: auto;
+        }
+
+        .table-wrapper-scroll-y {
+            display: block;
+        }
     </style>
 
 </head>
 <body>
 <section>
-    <div layout:fragment="content" class="col-md-12">
+    <div layout:fragment="content" class="container mt-1 px-2 ">
         <div>
             <div class="row">
-                <div class="col-12">
-                    <form th:action="@{/admin/chi-tiet-giay/page/1}" class="form-inline m-3" id="searchForm">
-                        <div class="d-flex align-items-center">
-                            <input type="hidden" name="sortField" th:value="${sortField}"/>
-                            <input type="hidden" name="sortDir" th:value="${sortDir}"/>
+                <h3 style="font-weight: bold; text-align: center;" class="mt-2">QUẢN LÝ CHI TIẾT GIÀY</h3>
 
-                            <input type="search" name="keyword"
-                                   th:value="${keyword}" placeholder="Nhập từ khóa tìm kiếm"
-                                   class="form-control search"/>
-                            <input type="search" name="productName" th:value="${productName}"
-                                   placeholder="Nhập tên sản phẩm" class="form-control search"/>
-                            <input style="margin-right: 10px" type="submit" value="Search"
-                                   class="btn btn-primary ml-2"/>
-                            <a class="btn btn-danger" href="/admin/chi-tiet-giay">CLEAR</a>
+                <div class="col-1"></div>
+                <div class="col-10 mt-4 formTable">
+                    <h5 style="font-weight: bold;" class="mt-3">Bộ lọc</h5>
+                    <hr>
+                    <form th:action="@{/admin/chi-tiet-giay/page/1}" class="mt-3 mb-3"  id="searchForm">
+                        <div class="row">
+
+                            <div class="col-3">
+                                <label>Trạng thái</label>
+                                <label for="trangThaiSelect"></label><select style="border-radius: 10px;" class="form-select" name="trangThai" id="trangThaiSelect" onchange="this.form.submit()">
+                                    <div style="border: 10px">
+                                        <option th:selected="${trangThai}  == -1 ? true:false" value="-1" th:value="-1" > Tất cả
+                                        </option>
+                                        <option th:selected="${trangThai} == 0 ? true:false" value="0" th:value="0"> Còn hạn
+                                        </option>
+                                        <option th:selected="${trangThai} == 1 ? true:false" value="1" th:value="1">Hết hạn
+                                        </option>
+                                    </div>
+                                </select>
+                            </div>
+                            <div class="col-9">
+                                <label> Tìm kiếm </label>
+                                <div class="d-flex align-items-center">
+                                    <input type="hidden" name="sortField" th:value="${sortField}"/>
+                                    <input type="hidden" name="sortDir" th:value="${sortDir}"/>
+
+                                    <input type="search" name="keyword"
+                                           th:value="${keyword}" placeholder="Nhập từ khóa tìm kiếm"
+                                           class="form-control search"/>
+                                    <input type="search" name="productName" th:value="${productName}"
+                                           placeholder="Nhập tên sản phẩm" class="form-control search"/>
+                                    <input style="margin-right: 10px" type="submit" value="Search"
+                                           class="btn btn-primary ml-2"/>
+                                    <a class="btn btn-danger" href="/admin/chi-tiet-giay">CLEAR</a>
+                                </div>
+
+                                <p class="text-danger"></p>
+                            </div>
                         </div>
-
                     </form>
                 </div>
             </div>
@@ -129,80 +190,74 @@
                 </div>
             </div>
         </div>
+        <div class="row mt-3">
+            <h5 style="font-weight: bold; text-align: center;" class="mt-3">Danh sách Chi Tiết Giày </h5>
+            <hr>
+            <div class="table table-wrapper-scroll-y my-custom-scrollbar">
+                <a class="btn btn-primary mt-1 mb-1 float-right" th:href="@{/admin/chi-tiet-giay/add}">
+                    <i style="font-size: 18px" class="fab fa-plus"></i> Thêm
+                </a>
+                <table id="table" class="table  table-borderless  formTable">
+                    <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Ảnh</th>
+                        <th>Mã chi tiết giày</th>
+                        <th>Tên giày</th>
+                        <th>Size</th>
+                        <th>Loại đế</th>
+                        <th>Hãng</th>
+                        <th>Loại giày</th>
+                        <th>Màu sắc</th>
+                        <th>Giá</th>
+                        <th>Số lượng</th>
+                        <th>Trạng thái</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="ctg, iterStat : ${listChiTietGiay}">
+                        <td th:text="${iterStat.count}"></td>
+                        <td>
+                            <img th:src="@{'/img/' + ${ctg.anhs.get(0).anhChinh}}"
+                                 style="width: 100px; height: 100px" class="img-fluid" alt=""/>
+                        </td>
+                        <td>[[${ctg.ma}]]</td>
+                        <td>[[${ctg.giay.ten}]]</td>
+                        <td>[[${ctg.kichCo.ten}]]</td>
+                        <td>[[${ctg.deGiay.ten}]]</td>
+                        <td>[[${ctg.hang.ten}]]</td>
+                        <td>[[${ctg.loaiGiay.ten}]]</td>
+                        <td>[[${ctg.mauSac.ten}]]</td>
+                        <td>[[${#numbers.formatDecimal(ctg.gia, 0, 'COMMA', 0, 'POINT')}]]</td>
+                        <td>[[${#numbers.formatDecimal(ctg.soLuong, 0, 'COMMA', 0, 'POINT')}]]</td>
+                        <td style="width: 160px;">
+                            <button class="btn"
+                                    th:classappend="${ctg.trangThai == 1} ? 'btn-success' : 'btn-danger'"
+                                    style="border-radius: 30px; font-size: 9px;">
+                                [[${ctg.trangThai} == 1 ? 'Đang hoạt động' : 'Ngưng hoạt động']]
+                            </button>
 
-        <br>
-        <div class="table-wrapper">
-            <div class="table-title">
-                <div class="row">
-                    <div class="col-sm-6 p-0 d-flex  justify-content-center">
-                        <h2 class="ml-lg-2">QUẢN LÍ CHI TIẾT GIÀY</h2>
-                    </div>
-                    <div class="col-sm-6 p-0 d-flex justify-content-lg-end justify-content-center">
-                        <a href="/admin/chi-tiet-giay/add" class="btn btn-success">
-                            <i class="material-icons">&#xE147;</i> <span>THÊM MỚI</span></a>
-                    </div>
-                </div>
+                        </td>
+
+                        <td>
+                            <a class="edit" style="text-decoration: none"
+                               th:href="@{'/admin/chi-tiet-giay/edit/' + ${ctg.id}}" title="Thay đổi thông tin">
+                                <i style="color: #FFC107" class="fas fa-edit"></i>
+                            </a>
+                            <a class="delete" style="text-decoration: none"
+                               th:href="@{'/admin/chi-tiet-giay/delete/' + ${ctg.id}}" title="Xóa"
+                               onclick="return confirm('Bạn có muốn xóa không')">
+                                <i class="fa fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
-            <table class="table  table-hover table-bordered">
-                <thead>
-                <tr>
-                    <th>STT</th>
-                    <th>Ảnh</th>
-                    <th>Mã chi tiết giày</th>
-                    <th>Tên giày</th>
-                    <th>Size</th>
-                    <th>Loại đế</th>
-                    <th>Hãng</th>
-                    <th>Loại giày</th>
-                    <th>Màu sắc</th>
-                    <th>Giá</th>
-                    <th>Số lượng</th>
-                    <th>Trạng thái</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="ctg, iterStat : ${listChiTietGiay}">
-                    <td th:text="${iterStat.count}"></td>
-                    <td>
-                        <img th:src="@{'/img/' + ${ctg.anhs.get(0).anhChinh}}"
-                             style="width: 100px; height: 100px" class="img-fluid" alt=""/>
-                    </td>
-                    <td>[[${ctg.ma}]]</td>
-                    <td>[[${ctg.giay.ten}]]</td>
-                    <td>[[${ctg.kichCo.ten}]]</td>
-                    <td>[[${ctg.deGiay.ten}]]</td>
-                    <td>[[${ctg.hang.ten}]]</td>
-                    <td>[[${ctg.loaiGiay.ten}]]</td>
-                    <td>[[${ctg.mauSac.ten}]]</td>
-                    <td>[[${#numbers.formatDecimal(ctg.gia, 0, 'COMMA', 0, 'POINT')}]]</td>
-                    <td>[[${#numbers.formatDecimal(ctg.soLuong, 0, 'COMMA', 0, 'POINT')}]]</td>
-                    <td style="width: 160px;">
-                        <button class="btn"
-                                th:classappend="${ctg.trangThai == 1} ? 'btn-success' : 'btn-danger'"
-                                style="border-radius: 30px; font-size: 9px;">
-                            [[${ctg.trangThai} == 1 ? 'Đang hoạt động' : 'Ngưng hoạt động']]
-                        </button>
-
-                    </td>
-
-                    <td>
-                        <a class="edit" style="text-decoration: none"
-                           th:href="@{'/admin/chi-tiet-giay/edit/' + ${ctg.id}}" title="Thay đổi thông tin">
-                            <i style="color: #FFC107" class="fas fa-edit"></i>
-                        </a>
-                        <a class="delete" style="text-decoration: none"
-                           th:href="@{'/admin/chi-tiet-giay/delete/' + ${ctg.id}}" title="Xóa"
-                           onclick="return confirm('Bạn có muốn xóa không')">
-                            <i class="fa fa-trash"></i>
-                        </a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
         </div>
-        <!--            phân trang-->
 
+        <!--            phân trang-->
         <div th:if="${totalPages > 1}">
             <nav>
                 <ul class="pagination justify-content-center">
@@ -226,8 +281,8 @@
             </nav>
         </div>
         <div class="r m-1">
-            <span th:if="${totalItem > 0}"> # [[${startCount}]] đến [[${endCount}]] trong tổng số [[${totalItem}]] </span>
-            <span th:unless="${totalItem > 0}">Không có Chi Tiết Sản Phẩm trong trang này</span>
+            <span class="hint-text" th:if="${totalItem > 0}"> # <strong>[[${startCount}]]</strong> đến <strong>[[${endCount}]]</strong> trong tổng số <strong>[[${totalItem}]]</strong> </span>
+            <span class="hint-text" th:unless="${totalItem > 0}">Không có Chi Tiết Sản Phẩm trong trang này</span>
         </div>
     </div>
 </section>
