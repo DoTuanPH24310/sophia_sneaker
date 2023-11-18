@@ -501,6 +501,7 @@ document.addEventListener("DOMContentLoaded", function() {
             // Đặt một độ trễ mới 2 giây trước khi gửi yêu cầu lọc
             timeout = setTimeout(function() {
                 document.getElementById("filterForm").submit();
+                document.getElementById("sortField").submit();
             }, 1000); // 2 giây
         });
     });

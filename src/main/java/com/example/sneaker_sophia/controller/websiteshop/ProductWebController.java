@@ -40,17 +40,18 @@ public class ProductWebController {
     private ChiTietGiayService chiTietGiayService;
 
     @GetMapping("/product")
-    public String home(Model model,  @RequestParam(value = "giayIds", required = false) List<String> giayTen,
-                       @RequestParam(value = "kichCoIds", required = false) List<String> kichCoTen,
-                       @RequestParam(value = "deGiayIds", required = false) List<String> deGiayTen,
-                       @RequestParam(value = "hangIds", required = false) List<String> hangTen,
-                       @RequestParam(value = "loaiGiayIds", required = false) List<String> loaiGiayTen,
-                       @RequestParam(value = "mauSacIds", required = false) List<String> mauSacTen,
-                       @RequestParam(value = "minPrice", required = false) List<String> minPrice,
-                       @RequestParam(value = "page", required = false, defaultValue = "1") int page, // Số trang
-                       @RequestParam(value = "pageSize", required = false, defaultValue = "12") int pageSize,
-                       @RequestParam(value = "sortField", required = false) String sortField
-
+    public String home(
+            Model model,
+            @RequestParam(value = "giayIds", required = false) List<String> giayTen,
+            @RequestParam(value = "kichCoIds", required = false) List<String> kichCoTen,
+            @RequestParam(value = "deGiayIds", required = false) List<String> deGiayTen,
+            @RequestParam(value = "hangIds", required = false) List<String> hangTen,
+            @RequestParam(value = "loaiGiayIds", required = false) List<String> loaiGiayTen,
+            @RequestParam(value = "mauSacIds", required = false) List<String> mauSacTen,
+            @RequestParam(value = "minPrice", required = false) List<String> minPrice,
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "12") int pageSize,
+            @RequestParam(value = "sortField", required = false) String sortField
     ) {
         // Đặt danh sách sản phẩm vào model khi trang ban đầu được tải
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -60,9 +61,13 @@ public class ProductWebController {
                 .mapToDouble(item -> item.getId().getChiTietGiay().getGia() * item.getSoLuong())
                 .sum();
         Long soLuong = this.cartService.countCartItems(authentication.getName());
-        Page<ChiTietGiay> filteredChiTietGiay = chiTietGiayService.filterChiTietGiay(giayTen, kichCoTen, deGiayTen,hangTen, loaiGiayTen, mauSacTen,minPrice,page,pageSize,sortField);
 
-        model.addAttribute("soLuong",soLuong);
+        // Gọi hàm filterChiTietGiay để lọc và sắp xếp dữ liệu
+        Page<ChiTietGiay> filteredChiTietGiay = chiTietGiayService.filterChiTietGiay(
+                giayTen, kichCoTen, deGiayTen, hangTen, loaiGiayTen, mauSacTen, minPrice, page, pageSize, sortField
+        );
+
+        model.addAttribute("soLuong", soLuong);
         model.addAttribute("totalCartPrice", totalCartPrice);
         model.addAttribute("danhSachHang", this.hangRepository.findAll());
         model.addAttribute("danhSachMauSac", this.mauSacRepository.findAll());
@@ -85,6 +90,7 @@ public class ProductWebController {
 
         return "website/productwebsite/shop-grid-sidebar-left";
     }
+
 
 
     @GetMapping("them-modal/{id}")

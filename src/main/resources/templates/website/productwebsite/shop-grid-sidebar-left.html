@@ -625,6 +625,16 @@
                 <!-- Start Sidebar Area -->
                 <div class="siderbar-section" data-aos="fade-up" data-aos-delay="0">
                     <form th:action="@{/sophia-store/product}" id="filterForm">
+                        <fieldset>
+                            <select name="sortField" id="sortField">
+                                <!--                                                <option th:value="">Đánh giá</option>-->
+                                <!--                                                <option th:value="">Lượt bán</option>-->
+                                <option th:value="newest" selected="selected">Mẫu mới nhất</option>
+                                <option th:value="lowPrice">Giá: thấp đến cao</option>
+                                <option th:value="hightPrice">Giá: cao đến thấp</option>
+                                <option th:value="ten">Tên sản phẩm: Z</option>
+                            </select>
+                        </fieldset>
                         <!-- Start Single Sidebar Widget -->
                         <div class="sidebar-single-widget">
                             <h6 class="sidebar-title">HÃNG</h6>
@@ -813,16 +823,16 @@
 
                                 <!-- Start Sort Select Option -->
                                 <div class="sort-select-list d-flex align-items-center">
-                                    <label class="mr-2">Sort By:</label>
+                                    <label class="mr-2">Sắp xếp theo:</label>
                                     <form action="#">
                                         <fieldset>
                                             <select name="speed" id="speed">
-                                                <option>Sort by average rating</option>
-                                                <option>Sort by popularity</option>
-                                                <option selected="selected">Sort by newness</option>
-                                                <option>Sort by price: low to high</option>
-                                                <option>Sort by price: high to low</option>
-                                                <option>Product Name: Z</option>
+<!--                                                <option th:value="">Đánh giá</option>-->
+<!--                                                <option th:value="">Lượt bán</option>-->
+                                                <option th:value="newest" selected="selected">Mẫu mới nhất</option>
+                                                <option th:value="lowPrice">Giá: thấp đến cao</option>
+                                                <option th:value="hightPrice">Giá: cao đến thấp</option>
+                                                <option th:value="ten">Tên sản phẩm: Z</option>
                                             </select>
                                         </fieldset>
                                     </form>
@@ -974,12 +984,15 @@
                     <!-- Start Pagination -->
                     <div class="page-pagination text-center" data-aos="fade-up" data-aos-delay="0">
                         <ul>
-                            <li><a href="?page=1">1</a></li>
-                            <li><a href="?page=2">2</a></li>
-                            <li><a href="?page=3">3</a></li>
-                            <li><a href="?page=4">4</a></li>
-                            <!-- Thêm thêm các trang tùy theo tổng số trang -->
-                            <li><a href="?page=5">5</a></li>
+                            <li th:with="previousPage=${currentPage - 1}" th:if="${previousPage > 0}">
+                                <a th:href="@{'/sophia-store/product?page=' + previousPage}">Previous</a>
+                            </li>
+                            <li th:each="pageNumber : ${#numbers.sequence(1, totalPages)}" th:class="${pageNumber} == ${currentPage} ? 'active'">
+                                <a th:href="@{'/sophia-store/product?page=' + ${pageNumber}}" th:text="${pageNumber}"></a>
+                            </li>
+                            <li th:with="nextPage=${currentPage + 1}" th:if="${nextPage <= totalPages}">
+                                <a th:href="@{'/sophia-store/product?page=' + ${nextPage}}">Next</a>
+                            </li>
                         </ul>
                     </div>
                     <!-- End Pagination -->

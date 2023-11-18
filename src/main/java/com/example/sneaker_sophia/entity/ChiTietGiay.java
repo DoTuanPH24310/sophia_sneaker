@@ -5,6 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 @Entity
@@ -66,5 +72,21 @@ public class ChiTietGiay {
 
     @OneToMany(mappedBy = "chiTietGiay")
     private List<Anh> anhs;
+
+    @CreatedBy
+    @Column(name = "nguoiTao")
+    private String nguoiTao;
+
+    @CreatedDate
+    @Column(name = "ngayTao")
+    private LocalDateTime ngayTao;
+
+    @LastModifiedBy
+    @Column(name = "nguoiSua")
+    private String nguoiSua;
+
+    @LastModifiedDate
+    @Column(name = "ngaySua")
+    private LocalDateTime ngaySua;
 }
 
