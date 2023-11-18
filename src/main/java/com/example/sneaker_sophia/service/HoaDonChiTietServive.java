@@ -2,6 +2,7 @@ package com.example.sneaker_sophia.service;
 
 import com.example.sneaker_sophia.entity.ChiTietGiay;
 import com.example.sneaker_sophia.entity.HoaDonChiTiet;
+import com.example.sneaker_sophia.entity.Voucher;
 import com.example.sneaker_sophia.repository.HoaDonCTRepository;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpSession;
@@ -23,6 +24,9 @@ public class HoaDonChiTietServive {
     @Autowired
     private HttpSession session;
 
+    @Resource(name = "kmService")
+    KMService kmService;
+
     public List<HoaDonChiTiet> getHDCTByIdHD(String idhd){
         return hoaDonCTRepository.getHDCTByIdHD(idhd);
     }
@@ -30,7 +34,16 @@ public class HoaDonChiTietServive {
     public void deleteHDCT(UUID idctsp, String idhd){
         HoaDonChiTiet hdct =  hoaDonCTRepository.getHDCTByIdCTSP(idctsp, idhd);
         ChiTietGiay chiTietGiay = chiTietGiayService.getChiTietGiayByIdctg(idctsp);
+
         if (hdct != null){
+            if(hdct.getSoLuongGiam() >0){
+                List<Voucher> voucherList = kmService.getAllKMByIdctg(chiTietGiay.getId());
+                for (Voucher voucher : voucherList) {
+                    voucher.setSoLuong(hdct.getSoLuongGiam()+voucher.getSoLuong());
+                    kmService.saveVC(voucher);
+                }
+            }
+
             chiTietGiay.setSoLuong(chiTietGiay.getSoLuong() + hdct.getSoLuong());
             chiTietGiayService.save(chiTietGiay);
             hoaDonCTRepository.delete(hdct);
@@ -44,6 +57,13 @@ public class HoaDonChiTietServive {
             hdct.setSoLuong(1);
             session.setAttribute("errTaiQuay", "Số lượng tối thiểu là 1");
         }else{
+            List<Voucher> voucherList = kmService.getAllKMByIdctg(chiTietGiay.getId());
+            for(Voucher voucher : voucherList) {
+                if(hdct.getSoLuong() <= hdct.getSoLuongGiam()){
+                    voucher.setSoLuong(voucher.getSoLuong() + 1);
+                    hdct.setSoLuongGiam(hdct.getSoLuongGiam() - 1);
+                }
+            }
             hdct.setSoLuong(hdct.getSoLuong() - 1);
             chiTietGiay.setSoLuong(chiTietGiay.getSoLuong() + 1);
         }
@@ -59,9 +79,24 @@ public class HoaDonChiTietServive {
             hdct.setSoLuong(hdct.getSoLuong());
             session.setAttribute("errTaiQuay", "Không đủ số lượng tồn");
         }else{
+            if (chiTietGiayService.tongKMByIdctg(chiTietGiay.getId()) != null) {
+                List<Voucher> voucherList = kmService.getAllKMByIdctg(chiTietGiay.getId());
+                for(Voucher voucher : voucherList){
+                    if (voucher.getSoLuong() > 0){
+                        hdct.setSoLuongGiam(hdct.getSoLuongGiam() + 1);
+                        voucher.setSoLuong(voucher.getSoLuong() - 1);
+                        kmService.saveVC(voucher);
+
+                    }else{
+                        hdct.setSoLuongGiam(hdct.getSoLuongGiam());
+                    }
+                    hoaDonCTRepository.save(hdct);
+                }
+            }
             hdct.setSoLuong(hdct.getSoLuong() + 1);
             chiTietGiay.setSoLuong(chiTietGiay.getSoLuong() - 1);
         }
+
         chiTietGiayService.save(chiTietGiay);
         hoaDonCTRepository.save(hdct);
     }

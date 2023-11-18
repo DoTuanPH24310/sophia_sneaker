@@ -155,8 +155,7 @@
                                                       class="" style="width: 10px"> <span
                                                            class="fa fa-minus"></span></a>
                                 </span>
-                            <!--                                <input style="width: 40px" type="text"-->
-                            <!--                                       th:value="${hdct.soLuong}" th:name="soLuong"/>-->
+
                             <span th:text="${hdct.soLuong}" style="margin-left: 10px; margin-right: 10px"></span>
                             <span class="input-group-btn">
                                                     <a th:href="@{/admin/tai-quay/update-up/{id}(id=${hdct.chiTietGiay.id})}"
@@ -165,21 +164,28 @@
                                 </span>
 
                         </td>
+
+                        <span></span>
+
                         <td>
-                            <span th:if="${hdct.donGia == ((hdct.donGia * (1- ((hdct.phanTramGiam) / 100.0)) * hdct.soLuongGiam)
+                            <span th:if="${hdct.donGia * hdct.soLuong == ((hdct.donGia * (1- ((hdct.phanTramGiam) / 100.0)) * hdct.soLuongGiam)
                                               + (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}">
 
                                                  <span th:text="${#numbers.formatCurrency((hdct.donGia * (1- ((hdct.phanTramGiam) / 100.0)) * hdct.soLuongGiam)
-                                              + (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}" style="font-size: 15px"></span>
+                                              + (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}"
+                                                       style="font-size: 15px"></span>
                             </span>
-                                                        <span th:if="${hdct.donGia != ((hdct.donGia * (1- ((hdct.phanTramGiam) / 100.0)) * hdct.soLuongGiam)
+
+
+                            <span th:unless="${hdct.donGia * hdct.soLuong == ((hdct.donGia * (1- ((hdct.phanTramGiam) / 100.0)) * hdct.soLuongGiam)
                                               + (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}">
-                                <span th:text="${#numbers.formatCurrency(hdct.donGia)}"
+                                <span th:text="${#numbers.formatCurrency(hdct.donGia * hdct.soLuong)}"
                                       style="text-decoration: line-through; color: red; font-size: 13px"></span>
                                                             <br>
-<!--                                                            hdct.soLuong * (hdct.donGia - (hdct.donGia * ((hdct.phanTramGiam) / 100.0))) -->
+                                <!--                                                            hdct.soLuong * (hdct.donGia - (hdct.donGia * ((hdct.phanTramGiam) / 100.0))) -->
                                              <span th:text="${#numbers.formatCurrency((hdct.donGia * (1- ((hdct.phanTramGiam) / 100.0)) * hdct.soLuongGiam)
-                                              + (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}" style="font-size: 15px"></span>
+                                              + (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}"
+                                                   style="font-size: 15px"></span>
                             </span>
                         </td>
                         <td>
@@ -984,29 +990,47 @@
             for (let index = 0; index < data.length; index++) {
                 insertTrCTG(data[index]);
             }
-            buttons = document.querySelectorAll("#sinhvien  button");
-            addEventButton();
         }
 
         function insertTrCTG(x) {
-            const avtctsp = [[${session.avtctsp}]];
-            let btn = `<button class="btn btn-warning" data-toggle="modal" data-target="#modalSoLuong" onclick="validateSoLuong('${x.ma}');">Chọn</button>`;
-            const row = tableBody.insertRow();
+            $.ajax({
+                type: 'get',
+                url: 'http://localhost:9090/api/chi-tiet-giay/getSumKhuyenMai/' + x.id,
+                success: function (data) {
+                    const avtctsp = [[${session.avtctsp}]];
+                    let btn = `<button class="btn btn-warning" data-toggle="modal" data-target="#modalSoLuong" onclick="validateSoLuong('${x.ma}');">Chọn</button>`;
+                    const row = tableBody.insertRow();
 
-            row.insertCell().innerHTML = `<img src="${avtctsp[x.id]}" alt="" width="100" height="100">`;
-            row.insertCell().innerHTML = x.ma;
-            row.insertCell().innerHTML = x.giay.ten;
-            row.insertCell().innerHTML = x.deGiay.ten;
-            row.insertCell().innerHTML = x.hang.ten;
-            row.insertCell().innerHTML = x.loaiGiay.ten;
-            row.insertCell().innerHTML = x.soLuong;
-            row.insertCell().innerHTML = 0;
-            let formatteGia = x.gia.toLocaleString('vi-VN', {
-                style: 'currency',
-                currency: 'VND'
-            });
-            row.insertCell().innerHTML = formatteGia;
-            row.insertCell().innerHTML = btn;
+                    row.insertCell().innerHTML = `<img src="${avtctsp[x.id]}" alt="" width="100" height="100">`;
+                    row.insertCell().innerHTML = x.ma;
+                    row.insertCell().innerHTML = x.giay.ten;
+                    row.insertCell().innerHTML = x.deGiay.ten;
+                    row.insertCell().innerHTML = x.hang.ten;
+                    row.insertCell().innerHTML = x.loaiGiay.ten;
+                    row.insertCell().innerHTML = x.soLuong;
+                    row.insertCell().innerHTML = 0;
+                    let formatteGia = x.gia.toLocaleString('vi-VN', {
+                        style: 'currency',
+                        currency: 'VND'
+                    });
+                    let formatteGiaSauGiam = (x.gia * (1 - data / 100)).toLocaleString('vi-VN', {
+                        style: 'currency',
+                        currency: 'VND'
+                    });
+
+                    if(formatteGia == formatteGiaSauGiam){
+                        row.insertCell().innerHTML = `<span style="font-size: 15px">${formatteGia}</span>`;
+                    }else {
+                        row.insertCell().innerHTML = ` <span style="text-decoration: line-through; color: red; font-size: 13px">${formatteGia}</span> <br>
+                                                    <span style="font-size: 15px">${formatteGiaSauGiam}</span>`;
+                    }
+                    row.insertCell().innerHTML = btn;
+                    buttons = document.querySelectorAll("#sinhvien  button");
+                    addEventButton();
+                }
+            })
+
+
         }
 
         // Thêm sự kiện click cho mỗi button
@@ -1014,7 +1038,6 @@
             for (let index = 0; index < buttons.length; index++) {
                 buttons[index].addEventListener("click", function () {
                     let row = index + 1;
-// Điều chỉnh độ mờ của modalContent bằng thuộc tính CSS
                     modalContent.style.opacity = '0.6';
                     maCTG = table.rows[row].cells[1].textContent;
                     document.getElementById("inputMaCTG").value = maCTG;

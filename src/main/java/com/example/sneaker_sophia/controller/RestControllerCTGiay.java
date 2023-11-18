@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @CrossOrigin("*")
@@ -29,6 +30,8 @@ public class RestControllerCTGiay {
 
     @Autowired
     private GiayService giayService;
+
+
 
 
     @Autowired
@@ -85,7 +88,6 @@ public class RestControllerCTGiay {
 
     @PostMapping("/multipleFind")
     public ResponseEntity<?> multipleFind(@RequestBody DTO_API_CTG idGiay) {
-        System.out.println(idGiay + "test");
         return ResponseEntity.ok(chiTietGiayService.findChiTietGiayByMultipleParamsAPI(idGiay));
     }
 
@@ -99,8 +101,12 @@ public class RestControllerCTGiay {
 
     @GetMapping("getSLTBYQR/{qr}")
     public ResponseEntity<?> getSLT(@PathVariable("qr") String qr) {
-        System.out.println("Ma ne: "+ chiTietGiayService.findSoLuongTonByQrCode(qr));
         return ResponseEntity.ok(chiTietGiayService.findSoLuongTonByQrCode(qr));
+    }
+
+    @GetMapping("getSumKhuyenMai/{idCTG}")
+    public ResponseEntity<?> getSumKhuyenMai(@PathVariable("idCTG") String id){
+       return ResponseEntity.ok(chiTietGiayService.tongKMByIdctg(UUID.fromString(id))) ;
     }
 
 }

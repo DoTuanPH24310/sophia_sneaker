@@ -129,27 +129,19 @@ public class TaiQuayController {
 
 
         if (chiTietGiayService.tongKMByIdctg(idCTG) != null) {
-//                tienGiam = (chiTietGiayService.tongKMByIdctg(idCTG) / 100.0) * chiTietGiay.getGia();
             hoaDonChiTiet.setPhanTramGiam(chiTietGiayService.tongKMByIdctg(idCTG));
         } else {
-            hoaDonChiTiet.setSoLuongGiam(0);
-            hoaDonChiTiet.setPhanTramGiam(0);
+            if(hoaDonChiTietOld != null){
+                hoaDonChiTiet.setSoLuongGiam(hoaDonChiTietOld.getSoLuongGiam());
+                hoaDonChiTiet.setPhanTramGiam(hoaDonChiTietOld.getPhanTramGiam());
+            }else {
+                hoaDonChiTiet.setSoLuongGiam(0);
+                hoaDonChiTiet.setPhanTramGiam(0);
+            }
         }
+
+
         for (Voucher voucher : voucherList) {
-
-//
-//            if (soLuong > voucher.getSoLuong() && voucher.getSoLuong() > 0 ) {
-//                hoaDonChiTiet.setSoLuongGiam(voucher.getSoLuong());
-//
-//                Double tongTien = (chiTietGiay.getGia() * (1 - (chiTietGiayService.tongKMByIdctg(idCTG) / 100.0))) +
-//                        (chiTietGiay.getGia() * (soLuong - voucher.getSoLuong()));
-//                model.addAttribute("tongTienVC", tongTien);
-//                voucher.setSoLuong(0);
-//            }else{
-//                hoaDonChiTiet.setSoLuongGiam(soLuong);
-//                voucher.setSoLuong(voucher.getSoLuong() - soLuong);
-//            }
-
             if (voucher.getSoLuong() > 0) {
                 if (soLuong >= voucher.getSoLuong()) {
                     if (hoaDonChiTietOld != null) {
@@ -172,7 +164,12 @@ public class TaiQuayController {
 
                 }
             }else {
-                hoaDonChiTiet.setSoLuongGiam(0);
+                if(hoaDonChiTietOld != null){
+                    hoaDonChiTiet.setSoLuongGiam(hoaDonChiTietOld.getSoLuongGiam());
+                }else{
+                    hoaDonChiTiet.setSoLuongGiam(0);
+                }
+
             }
 
             kmService.saveVC(voucher);
@@ -245,9 +242,6 @@ public class TaiQuayController {
         // 30/10
         HoaDon hoaDon = hoaDonService.getHoaDonById(id);
 
-//        if(hoaDon.getTaiKhoan() != null){
-//            session.setAttribute("loaihdg", hoaDon.getLoaiHoaDon());
-//        }
         if (hoaDon.getTaiKhoan() != null) {
             session.setAttribute("idkh", hoaDon.getTaiKhoan().getId());
             session.setAttribute("countDC", diaChiService.getCountDiaChi(hoaDon.getTaiKhoan().getId()));

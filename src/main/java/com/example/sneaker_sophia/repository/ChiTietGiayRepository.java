@@ -107,9 +107,9 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
     @Query(value = "select soLuong from ChiTietGiay where qrCode =?1", nativeQuery = true)
     Integer findSoLuongTonByQrCode(String qr);
 
-    //    17/11
+    //    17/11 + 18/11
     @Query(value = "select sum(KM.phanTramGiam) from CTG_KhuyenMai ctg_km\n" +
-            "join KhuyenMai KM on ctg_km.IdKhuyenMai = KM.Id where  IdCTG = ?1 and KM.trangThai = 1", nativeQuery = true)
+            "join KhuyenMai KM on ctg_km.IdKhuyenMai = KM.Id where  IdCTG = ?1 and KM.trangThai = 1 and KM.soLuong > 0", nativeQuery = true)
     Integer tongKMByIdctg(UUID idctg);
 
 }
