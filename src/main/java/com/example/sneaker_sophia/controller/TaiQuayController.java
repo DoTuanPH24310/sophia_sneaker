@@ -4,14 +4,28 @@ import com.example.sneaker_sophia.entity.*;
 import com.example.sneaker_sophia.repository.AnhRepository;
 import com.example.sneaker_sophia.request.NhanVienRequest;
 import com.example.sneaker_sophia.service.*;
+import com.lowagie.text.*;
+import com.lowagie.text.Font;
+import com.lowagie.text.pdf.BaseFont;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.*;
+import java.io.IOException;
 import java.util.*;
+import java.util.List;
 
 // Sửa lại tổng tiền hóa đơn(1 là dùng cách api,2 là seesion)
 @Controller
@@ -387,55 +401,7 @@ public class TaiQuayController {
         return "forward:/admin/tai-quay/detail/" + tempIdHD;
     }
 
-    @PostMapping("addhttt")
-    public String addhttt(
-            Model model,
-            @RequestParam("phuongThuc") Integer phuongThuc,
-            @RequestParam("tienKhachDua") String tienKhachDua,
-            @RequestParam(value = "xa", required = false) String xa,
-            @RequestParam(value = "quan", required = false) String quan,
-            @RequestParam(value = "tinh", required = false) String tinh,
-            @RequestParam(value = "ghiChu", required = false) String ghiChu,
-            @RequestParam(value = "tienDu", required = false) String tienDu,
-            @RequestParam(value = "phiVanChuyen", defaultValue = "0") String phiVanChuyen
-    ) {
-        HinhThucThanhToan hinhThucThanhToan = new HinhThucThanhToan();
-        if (tienKhachDua.equals("")) {
-            model.addAttribute("errTienKH", "Chưa trả tiền tao");
-            return "forward:/admin/tai-quay/detail/" + tempIdHD;
-        }
 
-        Double tongTien = hoaDonChiTietServive.tongTienHD(tempIdHD);
-        HoaDon hoaDon = hoaDonService.getHoaDonById(tempIdHD);
-        hinhThucThanhToan.setHoaDon(hoaDon);
-        hinhThucThanhToan.setTrangThai(phuongThuc);
-        tienKhachDua = tienKhachDua.replaceAll("[^\\d]", "");
-        hinhThucThanhToan.setSoTien(Double.parseDouble(tienKhachDua));
-        htttService.savehttt(hinhThucThanhToan);
-        if (!tempIdKH.equals("") && hoaDon.getLoaiHoaDon() == 2) {
-            NhanVienRequest taiKhoan = taiKhoanService.getTaiKhoanById(tempIdKH);
-            hoaDon.setTenKhachHang(taiKhoan.getTen());
-            hoaDon.setSoDienThoai(taiKhoan.getSdt());
-            hoaDon.setDiaChi(taiKhoan.getDiaChiCuThe() + "," + xa + "," + quan + "," + tinh);
-            phiVanChuyen = phiVanChuyen.replaceAll("[^\\d]", "");
-            hoaDon.setPhiShip(Double.parseDouble(phiVanChuyen));
-        }
-
-//        if (hoaDon.getLoaiHoaDon() == 2){
-//            phiVanChuyen = phiVanChuyen.replaceAll("[^\\d]", "");
-//            hoaDon.setPhiShip(Double.parseDouble(phiVanChuyen));
-//        }
-
-        hoaDon.setTienThua(Double.parseDouble(tienKhachDua) - tongTien - Double.parseDouble(phiVanChuyen));
-
-
-        hoaDon.setGhiChu(ghiChu);
-        hoaDon.setTongTien(tongTien);
-        hoaDon.setTrangThai(1);
-        hoaDonService.savehd(hoaDon);
-        session.setAttribute("errTaiQuay", "Thanh toán thành công !");
-        return "redirect:/admin/tai-quay/hien-thi";
-    }
 
     @PostMapping("adddc")
     public String adddc(
@@ -510,134 +476,186 @@ public class TaiQuayController {
         return "redirect:/admin/tai-quay/detail/" + tempIdHD;
     }
 
+    @PostMapping("addhttt")
+    public String addhttt(
+            Model model,
+            @RequestParam("phuongThuc") Integer phuongThuc,
+            @RequestParam("tienKhachDua") String tienKhachDua,
+            @RequestParam(value = "xa", required = false) String xa,
+            @RequestParam(value = "quan", required = false) String quan,
+            @RequestParam(value = "tinh", required = false) String tinh,
+            @RequestParam(value = "ghiChu", required = false) String ghiChu,
+            @RequestParam(value = "tienDu", required = false) String tienDu,
+            @RequestParam(value = "phiVanChuyen", defaultValue = "0") String phiVanChuyen,
+            HttpServletResponse response
+    ) throws IOException {
+        HinhThucThanhToan hinhThucThanhToan = new HinhThucThanhToan();
+        if (tienKhachDua.equals("")) {
+            model.addAttribute("errTienKH", "Chưa trả tiền tao");
+            return "forward:/admin/tai-quay/detail/" + tempIdHD;
+        }
 
-    // =================================================================
-//    @GetMapping("/pdf")
-//    public void pdf(HttpServletResponse response) throws IOException {
-//        SinhVien sv = new SinhVien("1", "Giày riu (32, Đỏ)", 10);
-//        SinhVien sv1 = new SinhVien("100.000", "20.000", 80000);
-//        SinhVien sv2 = new SinhVien("Sv03", "nam", 200000000);
-//        List<SinhVien> list = new ArrayList<>(List.of(sv, sv1, sv2));
-//
-////        Để thiết lập cho trình duyệt
-//        response.setContentType("application/pdf");
-//        String headerKey = "Content-Disposition";
-//        String headerValue = "attachment; filename=users.pdf";
-//        response.setHeader(headerKey, headerValue);
-//        export(response, list);
-//
-//    }
-//
-//    public void export(HttpServletResponse response, List<SinhVien> list) throws IOException {
-//        Document document = new Document(PageSize.A4);
-//        PdfWriter.getInstance(document, response.getOutputStream());
-//        document.open();
-//        PdfPTable table = new PdfPTable(6);
-//        table.setWidthPercentage(100f);
-//        table.setWidths(new float[]{1.2f, 4f, 2f, 3.5f, 3.5f, 3.5f});
-//        table.setSpacingBefore(15);
-//        addContent(document, table, list);
-//        document.close();
-//    }
-//
-//    public void addContent(Document document, PdfPTable table, List<SinhVien> list) {
-//        Paragraph p;
-//        List<String> pdf = new ArrayList<>();
-//        pdf.add("SOPHIA-SNEAKER");
-//        pdf.add("\n\n Số điện thoại: 0123456789 \n" +
-//                "Email: hoangnhph24464@fpt.edu.vn \n" +
-//                "Địa chỉ: Trịnh Văn Bô - Nam Từ Liêm - Hà nội \n" +
-//                "Ngân hàng: MBBank - Số tài khoản: 0001541506626 \n" +
-//                "Chủ tài khoản: NGUYEN HUY HOANG \n");
-//        pdf.add("\nHÓA ĐƠN BÁN HÀNG");
-//        pdf.add("HD0000001");
-//        pdf.add("Ngày mua:   10-10-2023");
-//        pdf.add("Khách hàng:   Đỗ Văn Cường");
-//        pdf.add("Địa chỉ:   Hoài Đức - Hà Nội");
-//        pdf.add("Số điện thoại:   0123456789");
-//        pdf.add("Nhân viên bán hàng:   Lê Đức nam");
-//        pdf.add("DANH SÁCH SẢN PHẨM");
-//        pdf.add("------- Cảm ơn quý khách -------");
-//
-//
-////        Forn chữ
-//        Font font1 = FontFactory.getFont("Times New Roman", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 18, Font.BOLD);
-//        Font font2 = FontFactory.getFont("Times New Roman", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 12, Font.BOLD);
-//        Font font3 = FontFactory.getFont("Times New Roman", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 16, Font.BOLD);
-//        Font font4 = FontFactory.getFont("Times New Roman", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 12, Font.HELVETICA);
-//        Font font5 = FontFactory.getFont("Times New Roman", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 13, Font.BOLD);
-//
-//
-////         header
-//        p = new Paragraph(pdf.get(0), font1);
-//        p.setAlignment(Paragraph.ALIGN_CENTER);
-//        document.add(p);
-//        p = new Paragraph(pdf.get(1), font2);
-//        p.setAlignment(Paragraph.ALIGN_CENTER);
-//        document.add(p);
-//        p = new Paragraph(pdf.get(2), font3);
-//        p.setAlignment(Paragraph.ALIGN_CENTER);
-//        document.add(p);
-//        p = new Paragraph(pdf.get(3) + "\n\n");
-//        p.setAlignment(Paragraph.ALIGN_CENTER);
-//        document.add(p);
-//        p = new Paragraph(pdf.get(4) + "\n" + pdf.get(5) + "\n" + pdf.get(6) + "\n" + pdf.get(7) + "\n" + pdf.get(8) + "\n\n", font4);
-//        document.add(p);
-//        p = new Paragraph(pdf.get(9) + "\n", font5);
-//        p.setAlignment(Paragraph.ALIGN_CENTER);
-//        document.add(p);
-//// Table
-//
-//
-//        PdfPCell cell = new PdfPCell();
-//        cell.setBackgroundColor(Color.LIGHT_GRAY);
-//        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-//        cell.setPadding(5);
-//// setAbsolutePosition() và setFixedHeight() tránh tràn trang
-//        cell.setPhrase(new Phrase("STT"));
-//        table.addCell(cell);
-//        cell.setPhrase(new Phrase("Sản phẩm"));
-//        table.addCell(cell);
-//        cell.setPhrase(new Phrase("Số lượng"));
-//        table.addCell(cell);
-//        cell.setPhrase(new Phrase("Đơn giá"));
-//        table.addCell(cell);
-//        cell.setPhrase(new Phrase("Khuyến mại"));
-//        table.addCell(cell);
-//        cell.setPhrase(new Phrase("Thành tiền"));
-//        table.addCell(cell);
-//        writeTableData(table, list);
-//        document.add(table);
-//
-////        footer
-//
-//        p = new Paragraph("\n\n" + pdf.get(10) + "\n", font4);
-//        p.setAlignment(Paragraph.ALIGN_CENTER);
-//        document.add(p);
-//    }
-//
-//    private void writeTableData(PdfPTable table, List<SinhVien> list) {
-//        for (SinhVien user : list) {
-//            table.addCell(user.getMa());
-//            table.addCell(user.getTên());
-//            table.addCell(user.getTuổi().toString());
+        Double tongTien = hoaDonChiTietServive.tongTienHD(tempIdHD);
+        HoaDon hoaDon = hoaDonService.getHoaDonById(tempIdHD);
+        hinhThucThanhToan.setHoaDon(hoaDon);
+        hinhThucThanhToan.setTrangThai(phuongThuc);
+        tienKhachDua = tienKhachDua.replaceAll("[^\\d]", "");
+        hinhThucThanhToan.setSoTien(Double.parseDouble(tienKhachDua));
+        htttService.savehttt(hinhThucThanhToan);
+        if (!tempIdKH.equals("") && hoaDon.getLoaiHoaDon() == 2) {
+            NhanVienRequest taiKhoan = taiKhoanService.getTaiKhoanById(tempIdKH);
+            hoaDon.setTenKhachHang(taiKhoan.getTen());
+            hoaDon.setSoDienThoai(taiKhoan.getSdt());
+            hoaDon.setDiaChi(taiKhoan.getDiaChiCuThe() + "," + xa + "," + quan + "," + tinh);
+            phiVanChuyen = phiVanChuyen.replaceAll("[^\\d]", "");
+            hoaDon.setPhiShip(Double.parseDouble(phiVanChuyen));
+        }
+
+//        if (hoaDon.getLoaiHoaDon() == 2){
+//            phiVanChuyen = phiVanChuyen.replaceAll("[^\\d]", "");
+//            hoaDon.setPhiShip(Double.parseDouble(phiVanChuyen));
 //        }
-//    }
-//
-//
-//    @Getter
-//    @Setter
-//    @AllArgsConstructor
-//    @NoArgsConstructor
-//    class SinhVien {
-//        String ma;
-//
-//        String tên;
-//
-//        Integer tuổi;
-//
-//
-//    }
+
+        hoaDon.setTienThua(Double.parseDouble(tienKhachDua) - tongTien - Double.parseDouble(phiVanChuyen));
+
+
+        hoaDon.setGhiChu(ghiChu);
+        hoaDon.setTongTien(tongTien);
+        hoaDon.setTrangThai(1);
+        hoaDonService.savehd(hoaDon);
+        session.setAttribute("errTaiQuay", "Thanh toán thành công !");
+        pdf(response);
+
+        return "redirect:/admin/tai-quay/hien-thi";
+    }
+
+
+//     =================================================================
+
+    public void pdf(HttpServletResponse response) throws IOException {
+        SinhVien sv = new SinhVien("1", "Giày riu (32, Đỏ)", 10);
+        SinhVien sv1 = new SinhVien("100.000", "20.000", 80000);
+        SinhVien sv2 = new SinhVien("Sv03", "nam", 200000000);
+        List<SinhVien> list = new ArrayList<>(List.of(sv, sv1, sv2));
+
+//        Để thiết lập cho trình duyệt
+        response.setContentType("application/pdf");
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=users.pdf";
+        response.setHeader(headerKey, headerValue);
+        export(response, list);
+    }
+
+    public void export(HttpServletResponse response, List<SinhVien> list) throws IOException {
+        Document document = new Document(PageSize.A4);
+        PdfWriter.getInstance(document, response.getOutputStream());
+        document.open();
+        PdfPTable table = new PdfPTable(6);
+        table.setWidthPercentage(100f);
+        table.setWidths(new float[]{1.2f, 4f, 2f, 3.5f, 3.5f, 3.5f});
+        table.setSpacingBefore(15);
+        addContent(document, table, list);
+        document.close();
+    }
+
+    public void addContent(Document document, PdfPTable table, List<SinhVien> list) {
+        Paragraph p;
+        List<String> pdf = new ArrayList<>();
+        pdf.add("SOPHIA-SNEAKER");
+        pdf.add("\n\n Số điện thoại: 0123456789 \n" +
+                "Email: hoangnhph24464@fpt.edu.vn \n" +
+                "Địa chỉ: Trịnh Văn Bô - Nam Từ Liêm - Hà nội \n" +
+                "Ngân hàng: MBBank - Số tài khoản: 0001541506626 \n" +
+                "Chủ tài khoản: NGUYEN HUY HOANG \n");
+        pdf.add("\nHÓA ĐƠN BÁN HÀNG");
+        pdf.add("HD0000001");
+        pdf.add("Ngày mua:   10-10-2023");
+        pdf.add("Khách hàng:   Đỗ Văn Cường");
+        pdf.add("Địa chỉ:   Hoài Đức - Hà Nội");
+        pdf.add("Số điện thoại:   0123456789");
+        pdf.add("Nhân viên bán hàng:   Lê Đức nam");
+        pdf.add("DANH SÁCH SẢN PHẨM");
+        pdf.add("------- Cảm ơn quý khách -------");
+
+
+//        Forn chữ
+        Font font1 = FontFactory.getFont("Times New Roman", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 18, Font.BOLD);
+        Font font2 = FontFactory.getFont("Times New Roman", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 12, Font.BOLD);
+        Font font3 = FontFactory.getFont("Times New Roman", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 16, Font.BOLD);
+        Font font4 = FontFactory.getFont("Times New Roman", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 12, Font.HELVETICA);
+        Font font5 = FontFactory.getFont("Times New Roman", BaseFont.IDENTITY_H, BaseFont.EMBEDDED, 13, Font.BOLD);
+
+
+//         header
+        p = new Paragraph(pdf.get(0), font1);
+        p.setAlignment(Paragraph.ALIGN_CENTER);
+        document.add(p);
+        p = new Paragraph(pdf.get(1), font2);
+        p.setAlignment(Paragraph.ALIGN_CENTER);
+        document.add(p);
+        p = new Paragraph(pdf.get(2), font3);
+        p.setAlignment(Paragraph.ALIGN_CENTER);
+        document.add(p);
+        p = new Paragraph(pdf.get(3) + "\n\n");
+        p.setAlignment(Paragraph.ALIGN_CENTER);
+        document.add(p);
+        p = new Paragraph(pdf.get(4) + "\n" + pdf.get(5) + "\n" + pdf.get(6) + "\n" + pdf.get(7) + "\n" + pdf.get(8) + "\n\n", font4);
+        document.add(p);
+        p = new Paragraph(pdf.get(9) + "\n", font5);
+        p.setAlignment(Paragraph.ALIGN_CENTER);
+        document.add(p);
+// Table
+
+
+        PdfPCell cell = new PdfPCell();
+        cell.setBackgroundColor(Color.LIGHT_GRAY);
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell.setPadding(5);
+// setAbsolutePosition() và setFixedHeight() tránh tràn trang
+        cell.setPhrase(new Phrase("STT"));
+        table.addCell(cell);
+        cell.setPhrase(new Phrase("Sản phẩm"));
+        table.addCell(cell);
+        cell.setPhrase(new Phrase("Số lượng"));
+        table.addCell(cell);
+        cell.setPhrase(new Phrase("Đơn giá"));
+        table.addCell(cell);
+        cell.setPhrase(new Phrase("Khuyến mại"));
+        table.addCell(cell);
+        cell.setPhrase(new Phrase("Thành tiền"));
+        table.addCell(cell);
+        writeTableData(table, list);
+        document.add(table);
+
+//        footer
+
+        p = new Paragraph("\n\n" + pdf.get(10) + "\n", font4);
+        p.setAlignment(Paragraph.ALIGN_CENTER);
+        document.add(p);
+    }
+
+    private void writeTableData(PdfPTable table, List<SinhVien> list) {
+        for (SinhVien user : list) {
+            table.addCell(user.getMa());
+            table.addCell(user.getTên());
+            table.addCell(user.getTuổi().toString());
+        }
+    }
+
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    class SinhVien {
+        String ma;
+
+        String tên;
+
+        Integer tuổi;
+
+
+    }
 
 
 }

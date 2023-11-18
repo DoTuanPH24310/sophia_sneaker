@@ -48,6 +48,9 @@
 <body>
 
 <div layout:fragment="content" class="container" style="background-color: white;">
+
+
+    <a class="btn btn-danger" href="/admin/tai-quay/pdf">PDF</a>
     <!--        <form action="/admin/tai-quay/addHD" method="post">-->
 
     <div class="row float-right mr-1">
@@ -565,7 +568,6 @@
                                         <th width="10%">Hãng</th>
                                         <th width="10%">Loại giày</th>
                                         <th width="10%">Số lượng</th>
-                                        <th width="10%">Khuyến mại</th>
                                         <th width="20%">Giá(VNĐ)</th>
                                         <th width="10%">Thao tác</th>
                                     </tr>
@@ -882,7 +884,6 @@
         const tbodyDDC = document.getElementById('tbodyDDC');
         const loaihdg = [[${session.loaihdg}]];
         let slt = -1;
-        let eventTemp;
 
         function validateSoLuong(x) {
             $.ajax({
@@ -907,14 +908,12 @@
 
         document.getElementById('formXacNhanDonHang').addEventListener('submit', function (event) {
             event.preventDefault();
-            console.log(document.getElementById('formXacNhanDonHang').action);
             let tienKhachDua = document.getElementById('tienKhachDua').value;
             let phiShip = document.getElementById('inputPhiShip') == null ? 0 : parseFloat(document.getElementById('inputPhiShip').value);
-            if (tongTien == null) {
+            if (tongTien == null || tongTien == 0) {
                 alert("VUi lòng chọn sản phẩm mua hàng");
-                return false;
             }
-            if (tongTien != null) {
+            if (tongTien != null && tongTien != 0) {
                 tienKhachDua = tienKhachDua.replace(/[^\d.]/g, '');
                 tienKhachDua = parseFloat(tienKhachDua.replace(/\./g, ''));
                 if (tienKhachDua - (tongTien + phiShip) < 0) {
@@ -926,13 +925,10 @@
                     }
                 }
             }
-
-
         });
 
 
         document.getElementById('formSoluong').addEventListener('submit', function (event) {
-            eventTemp = event;
             let inputValue = document.getElementById('inputSoLuong').value;
             if (slt == -1 || (slt - inputValue < 0)) {
                 alert("Không đủ số lượng tồn");
@@ -940,7 +936,6 @@
             } else {
                 alert("Đã thêm vào giỏ hàng");
             }
-
         });
 
         document.getElementById('formThemDiaChi').addEventListener('submit', function (event) {
@@ -1008,7 +1003,6 @@
                     row.insertCell().innerHTML = x.hang.ten;
                     row.insertCell().innerHTML = x.loaiGiay.ten;
                     row.insertCell().innerHTML = x.soLuong;
-                    row.insertCell().innerHTML = 0;
                     let formatteGia = x.gia.toLocaleString('vi-VN', {
                         style: 'currency',
                         currency: 'VND'
@@ -1018,9 +1012,9 @@
                         currency: 'VND'
                     });
 
-                    if(formatteGia == formatteGiaSauGiam){
+                    if (formatteGia == formatteGiaSauGiam) {
                         row.insertCell().innerHTML = `<span style="font-size: 15px">${formatteGia}</span>`;
-                    }else {
+                    } else {
                         row.insertCell().innerHTML = ` <span style="text-decoration: line-through; color: red; font-size: 13px">${formatteGia}</span> <br>
                                                     <span style="font-size: 15px">${formatteGiaSauGiam}</span>`;
                     }
