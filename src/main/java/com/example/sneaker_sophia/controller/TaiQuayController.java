@@ -71,6 +71,10 @@ public class TaiQuayController {
         List<HoaDon> list = hoaDonService.getHoaDonByTrangThai();
         model.addAttribute("listHDC", list);
         session.setAttribute("listhdct", new ArrayList<>());
+        if (session.getAttribute("checkTTHT") != null){
+            session.setAttribute("checkIHD","1");
+            session.removeAttribute("checkTTHT");
+        }
         return "/admin/taiquay/index";
     }
 
@@ -254,7 +258,22 @@ public class TaiQuayController {
         // 13-11
         session.setAttribute("tongTienHD", tongTien);
         // 30/10
+
+        // 18/11
+        Double tongTienTruocGiam = hoaDonChiTietServive.tongTienTruocGiam(id);
+        Double tienGiam = hoaDonChiTietServive.tienGiam(id) == null ? 0 : hoaDonChiTietServive.tienGiam(id);
+
+        model.addAttribute("tongTienTruocGiam", tongTienTruocGiam);
+        model.addAttribute("tienGiam", tienGiam);
+
         HoaDon hoaDon = hoaDonService.getHoaDonById(id);
+        if(hoaDon != null){
+            hoaDon.setTongTien(tongTien);
+            hoaDon.setKhuyenMai(tienGiam);
+            hoaDonService.savehd(hoaDon);
+        }
+
+
 
         if (hoaDon.getTaiKhoan() != null) {
             session.setAttribute("idkh", hoaDon.getTaiKhoan().getId());
@@ -495,7 +514,7 @@ public class TaiQuayController {
             return "forward:/admin/tai-quay/detail/" + tempIdHD;
         }
 
-        Double tongTien = hoaDonChiTietServive.tongTienHD(tempIdHD);
+        Double tongTien = hoaDonChiTietServive.tongTienSauGiam(tempIdHD);
         HoaDon hoaDon = hoaDonService.getHoaDonById(tempIdHD);
         hinhThucThanhToan.setHoaDon(hoaDon);
         hinhThucThanhToan.setTrangThai(phuongThuc);
@@ -517,14 +536,13 @@ public class TaiQuayController {
 //        }
 
         hoaDon.setTienThua(Double.parseDouble(tienKhachDua) - tongTien - Double.parseDouble(phiVanChuyen));
-
-
+        hoaDon.setKhuyenMai(hoaDonChiTietServive.tienGiam(tempIdHD));
         hoaDon.setGhiChu(ghiChu);
         hoaDon.setTongTien(tongTien);
         hoaDon.setTrangThai(1);
         hoaDonService.savehd(hoaDon);
         session.setAttribute("errTaiQuay", "Thanh toán thành công !");
-        pdf(response);
+        session.setAttribute("checkTTHT",true);
 
         return "redirect:/admin/tai-quay/hien-thi";
     }

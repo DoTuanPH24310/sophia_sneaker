@@ -83,16 +83,17 @@ public class HoaDonChiTietServive {
                 List<Voucher> voucherList = kmService.getAllKMByIdctg(chiTietGiay.getId());
                 for(Voucher voucher : voucherList){
                     if (voucher.getSoLuong() > 0){
-                        hdct.setSoLuongGiam(hdct.getSoLuongGiam() + 1);
                         voucher.setSoLuong(voucher.getSoLuong() - 1);
                         kmService.saveVC(voucher);
 
                     }else{
                         hdct.setSoLuongGiam(hdct.getSoLuongGiam());
                     }
-                    hoaDonCTRepository.save(hdct);
                 }
+                hdct.setSoLuongGiam(hdct.getSoLuongGiam() + 1);
+                hoaDonCTRepository.save(hdct);
             }
+
             hdct.setSoLuong(hdct.getSoLuong() + 1);
             chiTietGiay.setSoLuong(chiTietGiay.getSoLuong() - 1);
         }
@@ -110,8 +111,15 @@ public class HoaDonChiTietServive {
     public HoaDonChiTiet getHDCTByIdCTSP(UUID idctsp, String idhd){
         return hoaDonCTRepository.getHDCTByIdCTSP(idctsp, idhd);
     }
-    public Double tongTienHD(String idhd){
-        return hoaDonCTRepository.tongTienHD(idhd);
+    public Double tongTienSauGiam(String idhd){
+        return hoaDonCTRepository.tongTienSauGiam(idhd);
     }
 
+    public Double tongTienTruocGiam(String idhd){
+        return hoaDonCTRepository.tongTienTruocGiam(idhd);
+    }
+
+    public Double tienGiam(String idhd){
+        return hoaDonCTRepository.tienGiam(idhd);
+    }
 }

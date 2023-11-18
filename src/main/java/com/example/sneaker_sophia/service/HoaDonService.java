@@ -39,6 +39,8 @@ public class HoaDonService {
             hoaDon.setMaHoaDOn("HD" + soHD);
             hoaDon.setTrangThai(2);
             hoaDon.setLoaiHoaDon(1);
+            hoaDon.setPhiShip(0.0);
+            hoaDon.setTongTien(0.0);
             return hoaDonRepository.save(hoaDon);
         }
 
@@ -61,5 +63,11 @@ public class HoaDonService {
 
     public void savehd(HoaDon hoaDon){
         hoaDonRepository.save(hoaDon);
+    }
+
+    // 18 - 10
+
+    public List<HoaDon> getALl(){
+        return hoaDonRepository.findAll();
     }
 }

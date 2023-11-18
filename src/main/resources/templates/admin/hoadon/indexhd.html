@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layouts/layout}" th:lang="vi">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -20,8 +21,8 @@
     </style>
 </head>
 <body>
+<div layout:fragment="content" class="container" style="background-color: white;">
 
-<div class="container">
 
     <div class="row mt-4">
         <h5>Quản lý hóa đơn</h5>
@@ -142,8 +143,33 @@
                             </tr>
                             </thead>
                             <tbody id="sinhvien">
-                            <tr>
-                                table Tất cả
+                            <tr th:each="hd, status : ${listhd}">
+                                <td th:text="${status.index + 1}"></td>
+                                <td th:text="${hd.maHoaDOn}"></td>
+                                <td th:text="${hd.tenKhachHang}"></td>
+                                <td th:text="${hd.createdBy}"></td>
+                                <td th:text="${hd.createdDate}"></td>
+                                <td th:text="${#numbers.formatCurrency(hd.khuyenMai)}"></td>
+                                <td th:text="${#numbers.formatCurrency(hd.tongTien + hd.phiShip)}"></td>
+                                <td >
+                                    <button th:if="${hd.loaiHoaDon == 1}" class="btn btn-success "
+                                            style="border-radius: 30px; font-size: 12px; height: 40px">
+                                        Tại quầy
+                                    </button>
+                                    <button th:if="${hd.loaiHoaDon == 2}" class="btn btn-primary "
+                                            style="border-radius: 30px; font-size: 12px; height: 40px">
+                                        Giao hàng
+                                    </button>
+                                </td>
+                                <td>
+                                    <a data-toggle="modal" th:attr="data-target='#detail'+${hd.id}"
+                                       class="btn btn-warning "
+                                       style=" padding: 5px 10px; font-size: 12px;">
+                                        <!--                            <i class="material-icons mt-2" data-toggle="tooltip" title="Delete">&#xE872;</i>-->
+                                        <i class="material-icons text-white mt-1"
+                                           title="Chi tiết">visibility</i>
+                                    </a>
+                                </td>
                             </tr>
                             </tbody>
                         </table>
@@ -318,7 +344,5 @@
     </div>
 
 </div>
-
-
 </body>
 </html>

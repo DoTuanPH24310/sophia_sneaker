@@ -70,6 +70,9 @@ public class HoaDon {
     @Column(name = "NgayNhan")
     private LocalDate ngayNhan;
 
+    @Column(name = "khuyenMai")
+    private Double khuyenMai;
+
     @Column(name = "ghiChu")
     private String ghiChu;
 
