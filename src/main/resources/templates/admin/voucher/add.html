@@ -170,7 +170,6 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-
                                 <tr th:each="x : ${listCTG}">
                                     <th scope="row">
                                         <input class="form-check-input"
@@ -178,8 +177,7 @@
                                                th:value="${x.id}"
                                                th:name="requestIdCTG"
                                                th:onchange="this.form.submit()"
-                                               th:checked="${#strings.contains(listIDCTG, x.id)} ? true:false"
-                                        >
+                                               th:checked="${#strings.contains(listIDCTG, x.id)} ? true:false">
                                     </th>
 
 
