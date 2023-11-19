@@ -167,28 +167,46 @@
 
     <div style="background-color: white;">
         <div class="m-3">
-           <div class="row mt-4">
-               <h5 style="font-size: 17px;" class="mt-2 ms-2">Lịch sử thanh toán</h5>
-               <hr style="width: 1200px;color: black;height: 1px;background-color: black;">
-           </div>
+            <div class="row mt-4">
+                <h5 style="font-size: 17px;" class="mt-2 ms-2">Lịch sử thanh toán</h5>
+                <hr style="width: 300px;color: black;height: 1px;background-color: black;">
+            </div>
             <div class="table table-wrapper-scroll-y my-custom-scrollbar">
-                <table id="tableModal" class="table table-borderless">
-                    <thead>
-                    <tr class="bg-light">
-                        <th>Người xác nhận</th>
-                        <th>Thời gian</th>
-                        <th>Số tiền</th>
-                        <th>Loại giao dịch</th>
-                        <th>Phương thức thanh toán</th>
-                        <th>Ghi chú</th>
-                        <th>Trạng thái</th>
-                    </tr>
-                    </thead>
-                    <tbody id="sinhvien">
-
-                    </tbody>
-                </table>
-                <h2 class="text-center mt-4" id="err"></h2>
+                <div class="table table-wrapper-scroll-y my-custom-scrollbar" th:if="${displayTable}">
+                    <table id="tableModal" class="table table-borderless" th:object="${httt}">
+                        <thead>
+                        <tr class="bg-light">
+                            <th>Người xác nhận</th>
+                            <th>Thời gian</th>
+                            <th>Số tiền</th>
+                            <th>Loại giao dịch</th>
+                            <th>Phương thức thanh toán</th>
+                            <th>Ghi chú</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <td th:text="${httt.updatedBy}"></td>
+                        <td th:text="${#temporals.format(httt.updatedDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
+                        <td th:text="${#numbers.formatCurrency(httt.soTien)}"></td>
+                        <td>
+                            <span th:switch="${httt.hoaDon.loaiHoaDon}">
+                                <span th:case="1">Tại quầy</span>
+                                <span th:case="2">Giao hàng</span>
+                                <span th:case="3">Loại 3</span>
+                            </span>
+                        </td>
+                        <td>
+                            <span th:switch="${httt.trangThai}">
+                                <span th:case="1">Tiền mặt</span>
+                                <span th:case="2">Chuyển khoản</span>
+                                <span th:case="3">Trả sau</span>
+                            </span>
+                        </td>
+                        <td th:text="${httt.hoaDon.ghiChu}"></td>
+                        </tbody>
+                    </table>
+                    <h2 class="text-center mt-4" id="err"></h2>
+                </div>
             </div>
         </div>
 
@@ -238,18 +256,18 @@
                 </div>
 
                 <div class="row mt-4">
-                    <div class="col-1">Tên: </div>
+                    <div class="col-1">Tên:</div>
                     <div class="col-6">
                         <span th:text="${hoaDon.tenKhachHang == null ? '' : hoaDon.tenKhachHang}"></span>
                     </div>
-                    <div class="col-1">Điện thoại: </div>
+                    <div class="col-1">Điện thoại:</div>
                     <div class="col-3">
                         <span th:text="${hoaDon.soDienThoai == null ? '' : hoaDon.soDienThoai}"></span>
                     </div>
                 </div>
 
                 <div class="row mt-4">
-                    <div class="col-1">Địa chỉ: </div>
+                    <div class="col-1">Địa chỉ:</div>
                     <div class="col-7">
                         <span th:text="${hoaDon.diaChi == null ? '' : hoaDon.diaChi}"></span>
                     </div>
@@ -269,8 +287,6 @@
                             <th>Size</th>
                             <th>Số lượng</th>
                             <th>Thành tiền</th>
-                            <th>Thao tác</th>
-
                         </tr>
                         </thead>
                         <tbody>
@@ -305,13 +321,6 @@
                                               + (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}"
                                                    style="font-size: 15px"></span>
                             </span>
-                            </td>
-                            <td>
-                                <a class="delete" style="text-decoration: none"
-                                   th:href="@{/admin/tai-quay/deletehdct/{id}(id=${hdct.chiTietGiay.id})}"
-                                   title="Xóa">
-                                    <i class="fa fa-trash"></i>
-                                </a>
                             </td>
                         </tr>
                         </tbody>

@@ -14,4 +14,8 @@ public class HTTTService {
     public void savehttt(HinhThucThanhToan hinhThucThanhToan){
         htttRepository.save(hinhThucThanhToan);
     }
+
+    public HinhThucThanhToan getHTTTByIdhd(String idhd){
+        return htttRepository.getHTTTByIdhd(idhd);
+    }
 }

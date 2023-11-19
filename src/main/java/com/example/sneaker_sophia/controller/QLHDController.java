@@ -1,8 +1,10 @@
 package com.example.sneaker_sophia.controller;
 
+import com.example.sneaker_sophia.entity.HinhThucThanhToan;
 import com.example.sneaker_sophia.entity.HoaDon;
 import com.example.sneaker_sophia.entity.HoaDonChiTiet;
 import com.example.sneaker_sophia.repository.AnhRepository;
+import com.example.sneaker_sophia.service.HTTTService;
 import com.example.sneaker_sophia.service.HoaDonChiTietServive;
 import com.example.sneaker_sophia.service.HoaDonService;
 import jakarta.annotation.Resource;
@@ -30,6 +32,9 @@ public class QLHDController {
     @Resource(name = "hoaDonChiTietServive")
     HoaDonChiTietServive hoaDonChiTietServive;
 
+    @Resource(name = "htttService")
+    HTTTService htttService;
+
     @GetMapping("/hien-thi")
     public String hienthi(
             Model model
@@ -53,11 +58,14 @@ public class QLHDController {
         for (HoaDonChiTiet hdct : listhdct) {
             UUID idctg = hdct.getChiTietGiay().getId();
             String avtctg = anhRepository.getAnhChinhByIdctg(idctg);
-
             avtctgMap.put(idctg, avtctg);
-
             model.addAttribute("avtctgMap", avtctgMap);
         }
+        HinhThucThanhToan hinhThucThanhToan = htttService.getHTTTByIdhd(idhd);
+        if(hinhThucThanhToan != null){
+            model.addAttribute("httt", hinhThucThanhToan);
+        }
+        model.addAttribute("displayTable", hinhThucThanhToan != null);
         model.addAttribute("listhdct", listhdct);
         model.addAttribute("hoaDon", hoaDon);
         return "admin/hoadon/detailhd";
