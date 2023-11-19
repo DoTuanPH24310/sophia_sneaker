@@ -10,8 +10,12 @@ import java.util.List;
 
 @Repository
 public interface HoaDonChiTietWebRepository extends JpaRepository<HoaDonChiTiet, String> {
-    @Query("SELECT h.chiTietGiay.ten AS tenChiTietGiay, h.soLuong AS soLuong " +
+
+    @Query("SELECT h.chiTietGiay.ten AS tenChiTietGiay, SUM(h.soLuong) AS tongSoLuong " +
             "FROM HoaDonChiTiet h " +
-            "WHERE YEAR(h.createdDate) = :nam")
-    List<Object[]> findChiTietGiayAndSoLuongByNam(@Param("nam") int nam);
+            "WHERE YEAR(h.createdDate) = :nam " +
+            "GROUP BY h.chiTietGiay " +
+            "ORDER BY tongSoLuong DESC")
+    List<Object[]> findTop10BestSellingProductsByNam(@Param("nam") int nam);
+
 }
