@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layouts/layout}" th:lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .my-custom-scrollbar {
+            position: relative;
+            height: 400px;
+            overflow: auto;
+        }
+
+        .table-wrapper-scroll-y {
+            display: block;
+        }
+
+        h5.modal-title p {
+            display: inline;
+        }
+    </style>
+
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+
+    <style>
+        .my-custom-scrollbar {
+            position: relative;
+            height: 400px;
+            overflow: auto;
+        }
+
+        .table-wrapper-scroll-y {
+            display: block;
+        }
+
+        h5.modal-title p {
+            display: inline;
+            /* hoặc display: inline-block; */
+        }
+
+
+
+
+
+        ul {
+            display: flex;
+            margin-top: 80px;
+        }
+
+        ul li {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        ul li .icon {
+            font-size: 35px;
+            margin: 0 80px;
+            color: white;
+        }
+
+        ul li .text {
+            font-size: 20px;
+            /* font-weight: 600; */
+            text-align: center;
+            /* color: #ff4732; */
+        }
+
+        /* Progress Div Css  */
+
+        ul li .progress {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgba(20, 20, 20, 0.781);
+            margin-top: 10px;
+            display: grid;
+            place-items: center;
+            color: #fff;
+            position: relative;
+            cursor: pointer;
+            overflow: au;
+
+        }
+
+
+
+        .progress::after {
+            content: " ";
+            position: absolute;
+            width: 170px;
+            height: 5px;
+            background-color: rgba(68, 68, 68, 0.781);
+            right: 25px;
+        }
+
+        .one::after {
+            width: 0;
+            height: 0;
+        }
+
+        ul li .progress .uil {
+            display: none;
+        }
+
+        ul li .progress p {
+            font-size: 13px;
+        }
+
+        /* Active Css  */
+
+        ul li .active {
+            background-color: #ff4732;
+            display: grid;
+            place-items: center;
+        }
+
+        li .active::after {
+            background-color: #ff4732;
+        }
+
+        ul li .active p {
+            display: none;
+        }
+
+        ul li .active .uil {
+            font-size: 20px;
+            display: flex;
+        }
+    </style>
+</head>
+<body>
+
+<div layout:fragment="content" class="container mt-3">
+
+    <div class="row main" style="height: 300px;">
+        <ul>
+            <li>
+                <i id="icon1" class="icon uil uil-circle"></i>
+                <div class="progress one">
+                    <i class="uil uil-check"></i>
+                </div>
+                <p class="text" id="text1"></p>
+            </li>
+            <li>
+                <i class="icon uil uil-circle"></i>
+                <div class="progress two">
+
+                    <i class="uil uil-check"></i>
+                </div>
+                <p class="text"></p>
+            </li>
+            <li>
+                <i class="icon uil uil-circle"></i>
+                <div class="progress three">
+                    <p></p>
+                    <i class="uil uil-check"></i>
+                </div>
+                <p class="text"></p>
+            </li>
+            <li>
+                <i class="icon uil uil-circle"></i>
+                <div class="progress four">
+                    <p></p>
+                    <i class="uil uil-check"></i>
+                </div>
+                <p class="text"></p>
+            </li>
+            <li>
+                <i class="icon uil uil-circle"></i>
+                <div class="progress five">
+                    <p></p>
+                    <i class="uil uil-check"></i>
+                </div>
+                <p class="text"></p>
+            </li>
+        </ul>
+
+
+    </div>
+
+
+    <div class="row mt-3" style="height: 300px;">
+        <h5>Lịch sử thanh toán</h5>
+        <div class="table table-wrapper-scroll-y my-custom-scrollbar">
+            <table id="tableModal" class="table table-borderless">
+                <thead>
+                <tr class="bg-light">
+                    <th>Người xác nhận</th>
+                    <th>Thời gian</th>
+                    <th>Số tiền</th>
+                    <th>Loại giao dịch</th>
+                    <th>Phương thức thanh toán</th>
+                    <th>Ghi chú</th>
+                    <th>Trạng thái</th>
+                </tr>
+                </thead>
+                <tbody id="sinhvien">
+
+                </tbody>
+            </table>
+            <h2 class="text-center mt-4" id="err"></h2>
+        </div>
+    </div>
+
+
+    <div class="ttdh mb-5">
+
+        <div class="row">
+            <h5>Thông tin đơn hàng</h5>
+        </div>
+        <hr style="background-color: black;" class="me-2">
+
+        <div class="row mt-2">
+            <div class="col-7">
+                    <span>Trạng thái:&ensp;&ensp;&ensp;&ensp; <button class="bg-primary text-light"
+                                                                        style="border-radius: 50px; border: white; width: 100px;">Thành công</button> </span>
+            </div>
+
+            <div class="col-5">
+                    <span>Loại đơn: &ensp;&ensp;&ensp;&ensp; <button class="bg-info text-light"
+                                                                      style="border-radius: 50px; border: white; width: 100px;">Offline</button> </span>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-7">
+                <span>Tên:&ensp;&ensp;&ensp;&ensp; Nguyễn Huy Hoàng </span>
+            </div>
+
+            <div class="col-5">
+                <span>Số điện thoại: &ensp;&ensp;&ensp;&ensp; 0966867608</span>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-7">
+                <span>Địa chỉ:&ensp;&ensp;&ensp;&ensp; 2/33 Văn Trì-Minh Khai-Bắc Từ Liêm</span>
+            </div>
+
+            <div class="col-5">
+                <span>Số điện thoại: &ensp;&ensp;&ensp;&ensp; 0966867608</span>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="ttdh mb-5">
+        CHi tiết sản phẩm đã mua
+    </div>
+
+
+    <!--  Phần table-->
+    <script th:inline="javascript">
+        const one = document.querySelector(".one");
+        const two = document.querySelector(".two");
+        const three = document.querySelector(".three");
+        const four = document.querySelector(".four");
+        const five = document.querySelector(".five");
+
+        window.addEventListener('load', function () {
+            let test = 1;
+            if (test == 1) {
+                one.classList.add("active");
+                two.classList.remove("active");
+                three.classList.remove("active");
+                four.classList.remove("active");
+                five.classList.remove("active");
+                document.getElementById('icon1').style.color = '#ff4732';
+                document.getElementById('icon1').classList.remove ('uil-circle');
+                document.getElementById('icon1').classList.add ('uil-comment-dots');
+                document.getElementById('text1').innerHTML ='<span style="font-weight: 550;">Chờ xác nhận</span>  <br>  <span style="font-size: 12px;  text-align: center;">20-10-2033 19:08:03</span>';
+            }
+
+        })
+
+    </script>
+</div>
+</body>
+
+</html>
