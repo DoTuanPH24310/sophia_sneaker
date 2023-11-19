@@ -65,9 +65,19 @@ public class HoaDonService {
         hoaDonRepository.save(hoaDon);
     }
 
-    // 18 - 10
-
+    // 18 - 11
     public List<HoaDon> getALl(){
         return hoaDonRepository.findAll();
     }
+
+    // 19-11
+
+    public List<HoaDon> getAllHDHT(){
+        return hoaDonRepository.getAllHDHT();
+    }
+    public List<HoaDon> getAllHDC(){
+        return hoaDonRepository.getAllHDC();
+    }
+
+
 }

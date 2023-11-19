@@ -93,24 +93,20 @@
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" class="nav-item">
-                <a class="nav-link active" href="#All" aria-controls="ALL" role="tab" data-toggle="tab">Tất cả</a>
+                <a class="nav-link active" href="#All" aria-controls="ALL" role="tab" data-toggle="tab">Chờ thanh toán</a>
             </li>
 
             <li role="presentation" class="nav-item">
                 <a class="nav-link  text-dark" href="#choXacNhan" aria-controls="choXacNhan" role="tab"
-                   data-toggle="tab">Chờ xác nhận</a>
+                   data-toggle="tab">Chờ xác nhận </a>
             </li>
             <li role="presentation" class="nav-item">
                 <a class="nav-link  text-dark" href="#choVanChuyen" aria-controls="choVanChuyen" role="tab"
-                   data-toggle="tab">Chờ Vận chuyển</a>
+                   data-toggle="tab">Chờ giao</a>
             </li>
             <li role="presentation" class="nav-item">
                 <a class="nav-link  text-dark" href="#vanChuyen" aria-controls="vanChuyen" role="tab"
-                   data-toggle="tab">Vận chuyển</a>
-            </li>
-            <li role="presentation" class="nav-item">
-                <a class="nav-link  text-dark" href="#thanhToan" aria-controls="thanhToan" role="tab"
-                   data-toggle="tab">Thanh toán</a>
+                   data-toggle="tab">Đang giao</a>
             </li>
             <li role="presentation" class="nav-item">
                 <a class="nav-link  text-dark" href="#hoanThanh" aria-controls="hoanThanh" role="tab"
@@ -143,26 +139,26 @@
                             </tr>
                             </thead>
                             <tbody id="sinhvien">
-                            <tr th:each="hd, status : ${listhd}">
+                            <tr th:each="hdc, status : ${listhdc}">
                                 <td th:text="${status.index + 1}"></td>
-                                <td th:text="${hd.maHoaDOn}"></td>
-                                <td th:text="${hd.tenKhachHang}"></td>
-                                <td th:text="${hd.createdBy}"></td>
-                                <td th:text="${hd.createdDate}"></td>
-                                <td th:text="${#numbers.formatCurrency(hd.khuyenMai)}"></td>
-                                <td th:text="${#numbers.formatCurrency(hd.tongTien + hd.phiShip)}"></td>
+                                <td th:text="${hdc.maHoaDOn}"></td>
+                                <td th:text="${hdc.tenKhachHang}"></td>
+                                <td th:text="${hdc.createdBy}"></td>
+                                <td th:text="${hdc.createdDate}"></td>
+                                <td th:text="${#numbers.formatCurrency(hdc.khuyenMai)}"></td>
+                                <td th:text="${#numbers.formatCurrency(hdc.tongTien + hdc.phiShip)}"></td>
                                 <td >
-                                    <button th:if="${hd.loaiHoaDon == 1}" class="btn btn-success "
+                                    <button th:if="${hdc.loaiHoaDon == 1}" class="btn btn-success "
                                             style="border-radius: 30px; font-size: 12px; height: 40px">
                                         Tại quầy
                                     </button>
-                                    <button th:if="${hd.loaiHoaDon == 2}" class="btn btn-primary "
+                                    <button th:if="${hdc.loaiHoaDon == 2}" class="btn btn-primary "
                                             style="border-radius: 30px; font-size: 12px; height: 40px">
                                         Giao hàng
                                     </button>
                                 </td>
                                 <td>
-                                    <a data-toggle="modal" th:attr="data-target='#detail'+${hd.id}"
+                                    <a data-toggle="modal" th:attr="data-target='#detail'+${hdc.id}"
                                        class="btn btn-warning "
                                        style=" padding: 5px 10px; font-size: 12px;">
                                         <!--                            <i class="material-icons mt-2" data-toggle="tooltip" title="Delete">&#xE872;</i>-->
@@ -258,35 +254,6 @@
                 </div>
             </div>
 
-
-            <div role="tabpanel" class="tab-pane" id="thanhToan">
-                <div class="row mt-4">
-                    <div class="table table-wrapper-scroll-y my-custom-scrollbar">
-                        <table id="tableModal" class="table table-borderless">
-                            <thead>
-                            <tr class="bg-light">
-                                <th>STT</th>
-                                <th>Mã HĐ</th>
-                                <th>Tên khách hàng</th>
-                                <th>Tên nhân viên</th>
-                                <th>Ngày tạo</th>
-                                <th>Khuyến mại</th>
-                                <th>Tổng tiền</th>
-                                <th>Loại đơn</th>
-                                <th>Thao tác</th>
-                            </tr>
-                            </thead>
-                            <tbody id="sinhvien">
-                            table thanh toán
-                            </tbody>
-                        </table>
-                        <h2 class="text-center mt-4" id="err"></h2>
-                    </div>
-                </div>
-            </div>
-
-
-
             <div role="tabpanel" class="tab-pane" id="hoanThanh">
                 <div class="row mt-4">
                     <div class="table table-wrapper-scroll-y my-custom-scrollbar">
@@ -306,6 +273,35 @@
                             </thead>
                             <tbody id="sinhvien">
                             table hoanThanh
+
+                            <tr th:each="hdht, status : ${listhdht}">
+                                <td th:text="${status.index + 1}"></td>
+                                <td th:text="${hdht.maHoaDOn}"></td>
+                                <td th:text="${hdht.tenKhachHang}"></td>
+                                <td th:text="${hdht.createdBy}"></td>
+                                <td th:text="${hdht.createdDate}"></td>
+                                <td th:text="${#numbers.formatCurrency(hdht.khuyenMai)}"></td>
+                                <td th:text="${#numbers.formatCurrency(hdht.tongTien + hdht.phiShip)}"></td>
+                                <td >
+                                    <button th:if="${hdht.loaiHoaDon == 1}" class="btn btn-success "
+                                            style="border-radius: 30px; font-size: 12px; height: 40px">
+                                        Tại quầy
+                                    </button>
+                                    <button th:if="${hdht.loaiHoaDon == 2}" class="btn btn-primary "
+                                            style="border-radius: 30px; font-size: 12px; height: 40px">
+                                        Giao hàng
+                                    </button>
+                                </td>
+                                <td>
+                                    <a data-toggle="modal" th:attr="data-target='#detail'+${hdht.id}"
+                                       class="btn btn-warning "
+                                       style=" padding: 5px 10px; font-size: 12px;">
+                                        <!--                            <i class="material-icons mt-2" data-toggle="tooltip" title="Delete">&#xE872;</i>-->
+                                        <i class="material-icons text-white mt-1"
+                                           title="Chi tiết">visibility</i>
+                                    </a>
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
                         <h2 class="text-center mt-4" id="err"></h2>

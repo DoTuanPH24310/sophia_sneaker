@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class NhanVienRequest {
+public class TaiKhoanRequest {
 
     private  String idTaiKhoan;
 
@@ -45,7 +45,7 @@ public class NhanVienRequest {
 
     private String ghiChu;
 
-    public NhanVienRequest(TaiKhoanDiaChi taiKhoanDiaChi) {
+    public TaiKhoanRequest(TaiKhoanDiaChi taiKhoanDiaChi) {
         this.setIdTaiKhoan(taiKhoanDiaChi.getTaiKhoan().getId());
         this.setTen(taiKhoanDiaChi.getTaiKhoan().getTen());
         this.setAnhDaiDien(taiKhoanDiaChi.getTaiKhoan().getAnhDaiDien());

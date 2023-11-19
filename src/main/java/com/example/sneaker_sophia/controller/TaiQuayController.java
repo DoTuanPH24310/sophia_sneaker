@@ -2,7 +2,7 @@ package com.example.sneaker_sophia.controller;
 
 import com.example.sneaker_sophia.entity.*;
 import com.example.sneaker_sophia.repository.AnhRepository;
-import com.example.sneaker_sophia.request.NhanVienRequest;
+import com.example.sneaker_sophia.request.TaiKhoanRequest;
 import com.example.sneaker_sophia.service.*;
 import com.lowagie.text.*;
 import com.lowagie.text.Font;
@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.awt.*;
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.*;
 import java.util.List;
 
@@ -72,8 +73,7 @@ public class TaiQuayController {
         model.addAttribute("listHDC", list);
         session.setAttribute("listhdct", new ArrayList<>());
         if (session.getAttribute("checkTTHT") != null){
-            session.setAttribute("checkIHD","1");
-            session.removeAttribute("checkTTHT");
+            session.setAttribute("checkTTHT","1");
         }
         return "/admin/taiquay/index";
     }
@@ -279,7 +279,7 @@ public class TaiQuayController {
             session.setAttribute("idkh", hoaDon.getTaiKhoan().getId());
             session.setAttribute("countDC", diaChiService.getCountDiaChi(hoaDon.getTaiKhoan().getId()));
             tempIdKH = hoaDon.getTaiKhoan().getId();
-            NhanVienRequest nhanVienRequest = taiKhoanService.getTaiKhoanById(hoaDon.getTaiKhoan().getId());
+            TaiKhoanRequest nhanVienRequest = taiKhoanService.getTaiKhoanById(hoaDon.getTaiKhoan().getId());
             DiaChi diaChiGH = diaChiService.findListTKByIdKHAndDCMD(tempIdKH);
             model.addAttribute("diaChiGH", diaChiGH);
             model.addAttribute("nhanVienRequest", nhanVienRequest);
@@ -356,13 +356,15 @@ public class TaiQuayController {
             , HttpSession session
     ) {
 //        session.setAttribute("idkh", idkh);
-        NhanVienRequest nhanVienRequest = taiKhoanService.getTaiKhoanById(idkh);
+        TaiKhoanRequest nhanVienRequest = taiKhoanService.getTaiKhoanById(idkh);
         model.addAttribute("nhanVienRequest", nhanVienRequest);
         session.setAttribute("tinh", nhanVienRequest.getTinh());
         session.setAttribute("quan", nhanVienRequest.getQuanHuyen());
         session.setAttribute("phuong", nhanVienRequest.getPhuongXa());
         HoaDon hoaDon = hoaDonService.getHoaDonById(tempIdHD);
         hoaDon.setTaiKhoan(TaiKhoan.builder().id(idkh).build());
+        hoaDon.setTenKhachHang(nhanVienRequest.getTen());
+        hoaDon.setSoDienThoai(nhanVienRequest.getSdt());
         hoaDonService.savehd(hoaDon);
         return "forward:/admin/tai-quay/detail/" + tempIdHD;
 
@@ -470,6 +472,52 @@ public class TaiQuayController {
         } else {
             hoaDonChiTiet.setSoLuong(1);
         }
+        if (chiTietGiayService.tongKMByIdctg(chiTietGiay.getId()) != null) {
+            hoaDonChiTiet.setPhanTramGiam(chiTietGiayService.tongKMByIdctg(chiTietGiay.getId()));
+        } else {
+            if(hoaDonChiTietOld != null){
+                hoaDonChiTiet.setSoLuongGiam(hoaDonChiTietOld.getSoLuongGiam());
+                hoaDonChiTiet.setPhanTramGiam(hoaDonChiTietOld.getPhanTramGiam());
+            }else {
+                hoaDonChiTiet.setSoLuongGiam(0);
+                hoaDonChiTiet.setPhanTramGiam(0);
+            }
+        }
+        List<Voucher> voucherList = kmService.getAllKMByIdctg(chiTietGiay.getId());
+        for (Voucher voucher : voucherList) {
+            if (voucher.getSoLuong() > 0) {
+                if (1 >= voucher.getSoLuong()) {
+                    if (hoaDonChiTietOld != null) {
+                        hoaDonChiTiet.setSoLuongGiam(voucher.getSoLuong() + hoaDonChiTietOld.getSoLuongGiam());
+                        voucher.setSoLuong(0);
+                    } else {
+                        hoaDonChiTiet.setSoLuongGiam(voucher.getSoLuong());
+                        voucher.setSoLuong(0);
+                    }
+
+                } else {
+
+                    if (hoaDonChiTietOld != null) {
+                        hoaDonChiTiet.setSoLuongGiam(hoaDonChiTietOld.getSoLuongGiam() + 1);
+                        voucher.setSoLuong(voucher.getSoLuong() - 1);
+                    } else {
+                        hoaDonChiTiet.setSoLuongGiam(1);
+                        voucher.setSoLuong(voucher.getSoLuong() - 1);
+                    }
+
+                }
+            }else {
+                if(hoaDonChiTietOld != null){
+                    hoaDonChiTiet.setSoLuongGiam(hoaDonChiTietOld.getSoLuongGiam());
+                }else{
+                    hoaDonChiTiet.setSoLuongGiam(0);
+                }
+
+            }
+
+            kmService.saveVC(voucher);
+
+        }
 
         hoaDonChiTiet.setDonGia(chiTietGiay.getGia());
         hoaDonChiTiet.setHoaDon(hoaDonService.getHoaDonById(tempIdHD));
@@ -522,7 +570,7 @@ public class TaiQuayController {
         hinhThucThanhToan.setSoTien(Double.parseDouble(tienKhachDua));
         htttService.savehttt(hinhThucThanhToan);
         if (!tempIdKH.equals("") && hoaDon.getLoaiHoaDon() == 2) {
-            NhanVienRequest taiKhoan = taiKhoanService.getTaiKhoanById(tempIdKH);
+            TaiKhoanRequest taiKhoan = taiKhoanService.getTaiKhoanById(tempIdKH);
             hoaDon.setTenKhachHang(taiKhoan.getTen());
             hoaDon.setSoDienThoai(taiKhoan.getSdt());
             hoaDon.setDiaChi(taiKhoan.getDiaChiCuThe() + "," + xa + "," + quan + "," + tinh);
@@ -541,7 +589,6 @@ public class TaiQuayController {
         hoaDon.setTongTien(tongTien);
         hoaDon.setTrangThai(1);
         hoaDonService.savehd(hoaDon);
-        session.setAttribute("errTaiQuay", "Thanh toán thành công !");
         session.setAttribute("checkTTHT",true);
 
         return "redirect:/admin/tai-quay/hien-thi";
@@ -550,33 +597,36 @@ public class TaiQuayController {
 
 //     =================================================================
 
-    public void pdf(HttpServletResponse response) throws IOException {
-        SinhVien sv = new SinhVien("1", "Giày riu (32, Đỏ)", 10);
-        SinhVien sv1 = new SinhVien("100.000", "20.000", 80000);
-        SinhVien sv2 = new SinhVien("Sv03", "nam", 200000000);
-        List<SinhVien> list = new ArrayList<>(List.of(sv, sv1, sv2));
+    @GetMapping("/pdf/{idHD}")
+    public void pdf(HttpServletResponse response, @PathVariable("idHD") String idHD) throws IOException {
 
 //        Để thiết lập cho trình duyệt
         response.setContentType("application/pdf");
         String headerKey = "Content-Disposition";
         String headerValue = "attachment; filename=users.pdf";
         response.setHeader(headerKey, headerValue);
-        export(response, list);
+        export(response, idHD);
     }
 
-    public void export(HttpServletResponse response, List<SinhVien> list) throws IOException {
+    public void export(HttpServletResponse response, String idHD) throws IOException {
+
         Document document = new Document(PageSize.A4);
         PdfWriter.getInstance(document, response.getOutputStream());
         document.open();
         PdfPTable table = new PdfPTable(6);
         table.setWidthPercentage(100f);
-        table.setWidths(new float[]{1.2f, 4f, 2f, 3.5f, 3.5f, 3.5f});
+        table.setWidths(new float[]{1.1f, 4.5f, 1.5f, 3.3f, 3.3f, 4.0f});
         table.setSpacingBefore(15);
-        addContent(document, table, list);
+        addContent(document, table, idHD);
         document.close();
     }
 
-    public void addContent(Document document, PdfPTable table, List<SinhVien> list) {
+    public void addContent(Document document, PdfPTable table, String idHD) {
+
+        HoaDon hd = hoaDonService.getHoaDonById(idHD);
+        if (hd.getTenKhachHang() == null) hd.setTenKhachHang(" ");
+        if (hd.getDiaChi() == null) hd.setDiaChi(" ");
+        if (hd.getSoDienThoai() == null) hd.setSoDienThoai(" ");
         Paragraph p;
         List<String> pdf = new ArrayList<>();
         pdf.add("SOPHIA-SNEAKER");
@@ -586,12 +636,8 @@ public class TaiQuayController {
                 "Ngân hàng: MBBank - Số tài khoản: 0001541506626 \n" +
                 "Chủ tài khoản: NGUYEN HUY HOANG \n");
         pdf.add("\nHÓA ĐƠN BÁN HÀNG");
-        pdf.add("HD0000001");
-        pdf.add("Ngày mua:   10-10-2023");
-        pdf.add("Khách hàng:   Đỗ Văn Cường");
-        pdf.add("Địa chỉ:   Hoài Đức - Hà Nội");
-        pdf.add("Số điện thoại:   0123456789");
-        pdf.add("Nhân viên bán hàng:   Lê Đức nam");
+
+//        3
         pdf.add("DANH SÁCH SẢN PHẨM");
         pdf.add("------- Cảm ơn quý khách -------");
 
@@ -614,15 +660,16 @@ public class TaiQuayController {
         p = new Paragraph(pdf.get(2), font3);
         p.setAlignment(Paragraph.ALIGN_CENTER);
         document.add(p);
-        p = new Paragraph(pdf.get(3) + "\n\n");
+
+        p = new Paragraph(hd.getMaHoaDOn() + "\n\n");
         p.setAlignment(Paragraph.ALIGN_CENTER);
         document.add(p);
-        p = new Paragraph(pdf.get(4) + "\n" + pdf.get(5) + "\n" + pdf.get(6) + "\n" + pdf.get(7) + "\n" + pdf.get(8) + "\n\n", font4);
+        p = new Paragraph("Ngày mua:    "+hd.getCreatedDate() + "\n\n" + "Khách hàng:    "+hd.getTenKhachHang() + "\n\n" +"Địa chỉ:    "+
+                hd.getTenKhachHang()+","+ hd.getSoDienThoai()+"/ "+hd.getDiaChi() + "\n\n" +"Điện thoại:    "+ hd.getSoDienThoai() + "\n\n" + "Người bán:    "+ "Nguyễn Huy Hoàng" + "\n\n", font4);
         document.add(p);
-        p = new Paragraph(pdf.get(9) + "\n", font5);
+        p = new Paragraph(pdf.get(3) + "\n", font5);
         p.setAlignment(Paragraph.ALIGN_CENTER);
         document.add(p);
-// Table
 
 
         PdfPCell cell = new PdfPCell();
@@ -642,36 +689,50 @@ public class TaiQuayController {
         table.addCell(cell);
         cell.setPhrase(new Phrase("Thành tiền"));
         table.addCell(cell);
-        writeTableData(table, list);
+        writeTableData(table, idHD);
         document.add(table);
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
 
-//        footer
+        p = new Paragraph("\n\n" + "Khuyến mại: "  +currencyFormat.format(hoaDonChiTietServive.tienGiam(idHD)) , font4);
+        p.setAlignment(Paragraph.ALIGN_RIGHT);
+        document.add(p);
 
-        p = new Paragraph("\n\n" + pdf.get(10) + "\n", font4);
+        if (hd.getLoaiHoaDon() ==2){
+            p = new Paragraph("\n" + "Phí Ship: "  +currencyFormat.format(hd.getPhiShip())  , font4);
+            p.setAlignment(Paragraph.ALIGN_RIGHT);
+            document.add(p);
+        }
+
+        p = new Paragraph("\n" + "Tổng tiền: "  + currencyFormat.format(hd.getTongTien()), font4);
+        p.setAlignment(Paragraph.ALIGN_RIGHT);
+        document.add(p);
+
+        p = new Paragraph("\n" + "Tiền thừa: "  + currencyFormat.format(hd.getTienThua()), font4);
+        p.setAlignment(Paragraph.ALIGN_RIGHT);
+        document.add(p);
+
+
+        //        footer
+        p = new Paragraph("\n\n" + pdf.get(4) + "\n", font4);
         p.setAlignment(Paragraph.ALIGN_CENTER);
         document.add(p);
     }
 
-    private void writeTableData(PdfPTable table, List<SinhVien> list) {
-        for (SinhVien user : list) {
-            table.addCell(user.getMa());
-            table.addCell(user.getTên());
-            table.addCell(user.getTuổi().toString());
+    private void writeTableData(PdfPTable table, String idHD) {
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        List<HoaDonChiTiet> list = hoaDonChiTietServive.getHDCTByIdHD(idHD);
+        for (int i = 0; i < list.size(); i++) {
+            Double donGia = list.get(i).getDonGia();
+            Double km = ((list.get(i).getPhanTramGiam()/100.0)*list.get(i).getSoLuongGiam() * list.get(i).getDonGia());
+            Double thanhTien = ((list.get(i).getDonGia() * (1 - ((list.get(i).getPhanTramGiam()) / 100.0)) * list.get(i).getSoLuongGiam()) +
+                    (list.get(i).getDonGia() * (list.get(i).getSoLuong() - list.get(i).getSoLuongGiam())));
+            table.addCell((i+1) +"\n");
+            table.addCell("["+list.get(i).getChiTietGiay().getHang().getTen()+"]"+list.get(i).getChiTietGiay().getTen() + list.get(i).getChiTietGiay().getGiay().getTen()+"["+list.get(i).getChiTietGiay().getMauSac().getTen()+"]" +"["+list.get(i).getChiTietGiay().getKichCo().getTen()+"]"+"\n");
+            table.addCell((list.get(i).getSoLuong())+"\n");
+            table.addCell(currencyFormat.format(donGia)+"\n");
+            table.addCell(currencyFormat.format(km)+"\n");
+            table.addCell(currencyFormat.format(thanhTien));
         }
-    }
-
-
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    class SinhVien {
-        String ma;
-
-        String tên;
-
-        Integer tuổi;
-
 
     }
 

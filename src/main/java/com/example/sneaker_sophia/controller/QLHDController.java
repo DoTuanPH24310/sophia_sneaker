@@ -21,10 +21,11 @@ public class QLHDController {
     public String hienthi(
             Model model
     ){
-        List<HoaDon> getALl = hoaDonService.getALl();
-        model.addAttribute("listhd", getALl);
+        List<HoaDon> getAllHDC = hoaDonService.getAllHDC();
+        List<HoaDon> getAllHDHT = hoaDonService.getAllHDHT();
 
-
+        model.addAttribute("listhdc", getAllHDC);
+        model.addAttribute("listhdht", getAllHDHT);
         return "admin/hoadon/indexhd";
     }
 }
