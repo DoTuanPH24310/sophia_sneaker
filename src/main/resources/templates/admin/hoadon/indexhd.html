@@ -144,7 +144,7 @@
                                 <td th:text="${hdc.maHoaDOn}"></td>
                                 <td th:text="${hdc.tenKhachHang}"></td>
                                 <td th:text="${hdc.createdBy}"></td>
-                                <td th:text="${hdc.createdDate}"></td>
+                                <td th:text="${#temporals.format(hdc.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
                                 <td th:text="${#numbers.formatCurrency(hdc.khuyenMai)}"></td>
                                 <td th:text="${#numbers.formatCurrency(hdc.tongTien + hdc.phiShip)}"></td>
                                 <td >
@@ -158,9 +158,17 @@
                                     </button>
                                 </td>
                                 <td>
-                                    <a data-toggle="modal" th:attr="data-target='#detail'+${hdc.id}"
-                                       class="btn btn-warning "
-                                       style=" padding: 5px 10px; font-size: 12px;">
+
+                                    <a
+                                            th:href="@{/admin/tai-quay/detail/{id}(id=${hdc.id})}" class="btn btn-warning edit"
+                                            style=" padding: 5px 10px; font-size: 12px">
+                                        <i class="material-icons text-white mt-1"
+                                           title="Chi tiết">&#xE254;</i>
+                                    </a>
+
+                                    <a  th:href="@{/admin/hoa-don/detail/{id}(id=${hdc.id})}"
+                                        class="btn btn-success "
+                                        style=" padding: 5px 10px; font-size: 12px;">
                                         <!--                            <i class="material-icons mt-2" data-toggle="tooltip" title="Delete">&#xE872;</i>-->
                                         <i class="material-icons text-white mt-1"
                                            title="Chi tiết">visibility</i>
@@ -279,7 +287,7 @@
                                 <td th:text="${hdht.maHoaDOn}"></td>
                                 <td th:text="${hdht.tenKhachHang}"></td>
                                 <td th:text="${hdht.createdBy}"></td>
-                                <td th:text="${hdht.createdDate}"></td>
+                                <td th:text="${#temporals.format(hdht.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
                                 <td th:text="${#numbers.formatCurrency(hdht.khuyenMai)}"></td>
                                 <td th:text="${#numbers.formatCurrency(hdht.tongTien + hdht.phiShip)}"></td>
                                 <td >
@@ -293,7 +301,7 @@
                                     </button>
                                 </td>
                                 <td>
-                                    <a data-toggle="modal" th:attr="data-target='#detail'+${hdht.id}"
+                                    <a  th:href="@{/admin/hoa-don/detail/{id}(id=${hdht.id})}"
                                        class="btn btn-warning "
                                        style=" padding: 5px 10px; font-size: 12px;">
                                         <!--                            <i class="material-icons mt-2" data-toggle="tooltip" title="Delete">&#xE872;</i>-->

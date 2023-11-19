@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import java.awt.*;
 import java.io.IOException;
 import java.text.NumberFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
 
@@ -622,7 +623,7 @@ public class TaiQuayController {
     }
 
     public void addContent(Document document, PdfPTable table, String idHD) {
-
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
         HoaDon hd = hoaDonService.getHoaDonById(idHD);
         if (hd.getTenKhachHang() == null) hd.setTenKhachHang(" ");
         if (hd.getDiaChi() == null) hd.setDiaChi(" ");
@@ -664,7 +665,7 @@ public class TaiQuayController {
         p = new Paragraph(hd.getMaHoaDOn() + "\n\n");
         p.setAlignment(Paragraph.ALIGN_CENTER);
         document.add(p);
-        p = new Paragraph("Ngày mua:    "+hd.getCreatedDate() + "\n\n" + "Khách hàng:    "+hd.getTenKhachHang() + "\n\n" +"Địa chỉ:    "+
+        p = new Paragraph("Ngày mua:    "+formatter.format(hd.getCreatedDate()) + "\n\n" + "Khách hàng:    "+hd.getTenKhachHang() + "\n\n" +"Địa chỉ:    "+
                 hd.getTenKhachHang()+","+ hd.getSoDienThoai()+"/ "+hd.getDiaChi() + "\n\n" +"Điện thoại:    "+ hd.getSoDienThoai() + "\n\n" + "Người bán:    "+ "Nguyễn Huy Hoàng" + "\n\n", font4);
         document.add(p);
         p = new Paragraph(pdf.get(3) + "\n", font5);

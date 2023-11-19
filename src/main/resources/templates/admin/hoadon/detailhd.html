@@ -39,9 +39,6 @@
         }
 
 
-
-
-
         ul {
             display: flex;
             margin-top: 80px;
@@ -83,7 +80,6 @@
             overflow: au;
 
         }
-
 
 
         .progress::after {
@@ -204,8 +200,7 @@
         </div>
     </div>
 
-
-    <div class="ttdh mb-5">
+    <div class="ttdh mb-5" th:object="${hoaDon}">
 
         <div class="row">
             <h5>Thông tin đơn hàng</h5>
@@ -214,42 +209,119 @@
 
         <div class="row mt-2">
             <div class="col-7">
-                    <span>Trạng thái:&ensp;&ensp;&ensp;&ensp; <button class="bg-primary text-light"
-                                                                        style="border-radius: 50px; border: white; width: 100px;">Thành công</button> </span>
+
+                <span>Trạng thái: &ensp;&ensp;&ensp;&ensp;
+                    <button class="bg-info text-light"
+                            style="border-radius: 50px; border: white; width: 150px;">
+                        <span th:if="${hoaDon.trangThai == 1}">Thành công</span>
+                        <span th:if="${hoaDon.trangThai == 2}">Chờ thang toán</span>
+                        <span th:if="${hoaDon.trangThai == 3}">Loại 3</span>
+                        <!-- Add more conditions as needed -->
+                        <span th:if="${hoaDon.trangThai != 1 && hoaDon.trangThai != 2 && hoaDon.trangThai != 3}">
+                            <!-- Default value if none of the conditions are met -->
+                            <span th:text="${hoaDon.trangThai}"></span>
+                        </span>
+                    </button>
+                </span>
             </div>
 
             <div class="col-5">
-                    <span>Loại đơn: &ensp;&ensp;&ensp;&ensp; <button class="bg-info text-light"
-                                                                      style="border-radius: 50px; border: white; width: 100px;">Offline</button> </span>
+                <span>Loại đơn: &ensp;&ensp;&ensp;&ensp;
+                    <button class="bg-info text-light"
+                            style="border-radius: 50px; border: white; width: 100px;">
+                        <span th:if="${hoaDon.loaiHoaDon == 1}">Tại quầy</span>
+                        <span th:if="${hoaDon.loaiHoaDon == 2}">Giao hàng</span>
+                        <span th:if="${hoaDon.loaiHoaDon == 3}">Loại 3</span>
+                        <!-- Add more conditions as needed -->
+                        <span th:if="${hoaDon.loaiHoaDon != 1 && hoaDon.loaiHoaDon != 2 && hoaDon.loaiHoaDon != 3}">
+                            <!-- Default value if none of the conditions are met -->
+                            <span th:text="${hoaDon.loaiHoaDon}"></span>
+                        </span>
+                    </button>
+                </span>
             </div>
         </div>
 
         <div class="row mt-4">
             <div class="col-7">
-                <span>Tên:&ensp;&ensp;&ensp;&ensp; Nguyễn Huy Hoàng </span>
+                <span th:text="'Tên: ' + ${hoaDon.tenKhachHang == null ? '' : hoaDon.tenKhachHang}"></span>
             </div>
 
             <div class="col-5">
-                <span>Số điện thoại: &ensp;&ensp;&ensp;&ensp; 0966867608</span>
+                <span th:text="'Số điện thoại: ' + ${hoaDon.soDienThoai == null ? '' : hoaDon.soDienThoai}"></span>
             </div>
         </div>
 
         <div class="row mt-4">
             <div class="col-7">
-                <span>Địa chỉ:&ensp;&ensp;&ensp;&ensp; 2/33 Văn Trì-Minh Khai-Bắc Từ Liêm</span>
+                <span th:text="'Địa chỉ: ' + ${hoaDon.diaChi == null ? '' : hoaDon.diaChi}"></span>
             </div>
 
-            <div class="col-5">
-                <span>Số điện thoại: &ensp;&ensp;&ensp;&ensp; 0966867608</span>
-            </div>
         </div>
     </div>
 
 
     <div class="ttdh mb-5">
-        CHi tiết sản phẩm đã mua
-    </div>
+        <div class="table table-wrapper-scroll-y my-custom-scrollbar">
+            <table id="table" class="table  table-borderless">
+                <thead>
+                <tr class="bg-light">
+                    <th>Ảnh</th>
+                    <th>Mã</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Size</th>
+                    <th>Số lượng</th>
+                    <th>Thành tiền</th>
+                    <th>Thao tác</th>
 
+                </tr>
+                </thead>
+                <tbody>
+
+                <tr style="line-height: 25px" th:each="hdct : ${listhdct}">
+                    <td><img th:src="${avtctgMap[hdct.chiTietGiay.id]}" alt="" width="100" height="100"></td>
+                    <td th:text="${hdct.chiTietGiay.ma}"></td>
+                    <!--                        <td th:text="${hdct.chiTietGiay.hang.ten}"></td>-->
+                    <td th:text="${'[' +  hdct.chiTietGiay.hang.ten + ']' + ' ' +  hdct.chiTietGiay.giay.ten + ' ' + hdct.chiTietGiay.ten + ' ' + '[' + hdct.chiTietGiay.mauSac.ten + ']'}"></td>
+                    <td th:text="${hdct.chiTietGiay.kichCo.ten}"></td>
+                    <td>
+                        <span th:text="${hdct.soLuong}" style="margin-left: 10px; margin-right: 10px"></span>
+                    </td>
+
+                    <td>
+                            <span th:if="${hdct.donGia * hdct.soLuong == ((hdct.donGia * (1- ((hdct.phanTramGiam) / 100.0)) * hdct.soLuongGiam)
+                                              + (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}">
+
+                                                 <span th:text="${#numbers.formatCurrency((hdct.donGia * (1- ((hdct.phanTramGiam) / 100.0)) * hdct.soLuongGiam)
+                                              + (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}"
+                                                       style="font-size: 15px"></span>
+                            </span>
+
+
+                        <span th:unless="${hdct.donGia * hdct.soLuong == ((hdct.donGia * (1- ((hdct.phanTramGiam) / 100.0)) * hdct.soLuongGiam)
+                                              + (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}">
+                                <span th:text="${#numbers.formatCurrency(hdct.donGia * hdct.soLuong)}"
+                                      style="text-decoration: line-through; color: red; font-size: 13px"></span>
+                                                            <br>
+                            <!--                                                            hdct.soLuong * (hdct.donGia - (hdct.donGia * ((hdct.phanTramGiam) / 100.0))) -->
+                                             <span th:text="${#numbers.formatCurrency((hdct.donGia * (1- ((hdct.phanTramGiam) / 100.0)) * hdct.soLuongGiam)
+                                              + (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}"
+                                                   style="font-size: 15px"></span>
+                            </span>
+                    </td>
+                    <td>
+                        <a class="delete" style="text-decoration: none"
+                           th:href="@{/admin/tai-quay/deletehdct/{id}(id=${hdct.chiTietGiay.id})}"
+                           title="Xóa">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
 
     <!--  Phần table-->
     <script th:inline="javascript">
@@ -268,9 +340,9 @@
                 four.classList.remove("active");
                 five.classList.remove("active");
                 document.getElementById('icon1').style.color = '#ff4732';
-                document.getElementById('icon1').classList.remove ('uil-circle');
-                document.getElementById('icon1').classList.add ('uil-comment-dots');
-                document.getElementById('text1').innerHTML ='<span style="font-weight: 550;">Chờ xác nhận</span>  <br>  <span style="font-size: 12px;  text-align: center;">20-10-2033 19:08:03</span>';
+                document.getElementById('icon1').classList.remove('uil-circle');
+                document.getElementById('icon1').classList.add('uil-comment-dots');
+                document.getElementById('text1').innerHTML = '<span style="font-weight: 550;">Chờ xác nhận</span>  <br>  <span style="font-size: 12px;  text-align: center;">20-10-2033 19:08:03</span>';
             }
 
         })
