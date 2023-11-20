@@ -52,12 +52,43 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
             "(:ngayKetThuc IS NULL OR c.createdDate <= :ngayKetThuc) AND " +
             "(:loaiHoaDon IS NULL OR c.loaiHoaDon = :loaiHoaDon) AND " +
             "(:textSearch IS NULL OR c.maHoaDOn like :textSearch) AND" +
-            "(c.trangThai = :trangThai)")
-    List<HoaDon> findHoaDonByMultipleParamsAPI(
+            "(c.trangThai = :trangThai)" +
+            "order by c.createdDate desc ")
+    List<HoaDon> findHoaDonByMultipleParamsAPIDate(
+            @Param("ngayBatDau") LocalDateTime ngayBatDau,
+            @Param("ngayKetThuc") LocalDateTime ngayKetThuc,
+            @Param("trangThai") Integer trangThai,
+            @Param("loaiHoaDon") Integer loaiHoaDon,
+            @Param("textSearch") String textSearch);
+
+    @Query("SELECT c FROM HoaDon c WHERE" +
+            "(:ngayBatDau IS NULL OR c.createdDate >= :ngayBatDau) AND " +
+            "(:ngayKetThuc IS NULL OR c.createdDate <= :ngayKetThuc) AND " +
+            "(:loaiHoaDon IS NULL OR c.loaiHoaDon = :loaiHoaDon) AND " +
+            "(:textSearch IS NULL OR c.maHoaDOn like :textSearch) AND" +
+            "(c.trangThai = :trangThai)" +
+            "order by c.tongTien desc ")
+    List<HoaDon> findHoaDonByMultipleParamsAPITongTien(
             @Param("ngayBatDau") LocalDateTime ngayBatDau,
             @Param("ngayKetThuc") LocalDateTime ngayKetThuc,
             @Param("trangThai") Integer trangThai,
             @Param("loaiHoaDon") Integer loaiHoaDon,
             @Param("textSearch") String textSearch
-    );
+            );
+
+    @Query("SELECT c FROM HoaDon c WHERE" +
+            "(:ngayBatDau IS NULL OR c.createdDate >= :ngayBatDau) AND " +
+            "(:ngayKetThuc IS NULL OR c.createdDate <= :ngayKetThuc) AND " +
+            "(:loaiHoaDon IS NULL OR c.loaiHoaDon = :loaiHoaDon) AND " +
+            "(:textSearch IS NULL OR c.maHoaDOn like :textSearch) AND" +
+            "(c.trangThai = :trangThai)" +
+            "order by c.maHoaDOn desc ")
+    List<HoaDon> findHoaDonByMultipleParamsAPImaHoaDOn(
+            @Param("ngayBatDau") LocalDateTime ngayBatDau,
+            @Param("ngayKetThuc") LocalDateTime ngayKetThuc,
+            @Param("trangThai") Integer trangThai,
+            @Param("loaiHoaDon") Integer loaiHoaDon,
+            @Param("textSearch") String textSearch
+
+            );
 }

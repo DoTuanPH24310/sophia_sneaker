@@ -169,7 +169,7 @@
         <div class="m-3">
             <div class="row mt-4">
                 <h5 style="font-size: 17px;" class="mt-2 ms-2">Lịch sử thanh toán</h5>
-                <hr style="width: 300px;color: black;height: 1px;background-color: black;">
+                <hr style="width: 1200px;color: black;height: 1px;background-color: black;">
             </div>
             <div class="table">
                 <div class="table" th:if="${displayTable}">
@@ -188,11 +188,11 @@
                         <td th:text="${#temporals.format(httt.updatedDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
                         <td th:text="${#numbers.formatCurrency(httt.soTien)}"></td>
                         <td>
-                            <span th:switch="${httt.trangThai}">
+                            <button class="btn btn-info" style="border-radius: 50px;" th:switch="${httt.trangThai}">
                                         <span th:case="1">Tiền mặt</span>
                                         <span th:case="2">Chuyển khoản</span>
                                         <span th:case="3">Trả sau</span>
-                            </span>
+                            </button>
                         </td>
                         <td th:text="${httt.hoaDon.ghiChu}"></td>
                         </tbody>
@@ -216,7 +216,7 @@
                 <div class="row mt-2">
                     <div class="col-7">
                 <span>Trạng thái: &ensp;&ensp;&ensp;&ensp;
-                    <button class="bg-success text-light"
+                    <button class="bg-info text-light"
                             style="border-radius: 50px; border: white; width: 150px;">
                         <span th:if="${hoaDon.trangThai == 1}">Thành công</span>
                         <span th:if="${hoaDon.trangThai == 2}">Chờ thanh toán</span>
@@ -230,7 +230,7 @@
 
                     <div class="col-5">
                 <span>Loại đơn: &ensp;&ensp;&ensp;&ensp;
-                    <button class="bg-secondary text-light"
+                    <button class="bg-info text-light"
                             style="border-radius: 50px; border: white; width: 150px;">
                         <span th:if="${hoaDon.loaiHoaDon == 1}">Tại quầy</span>
                         <span th:if="${hoaDon.loaiHoaDon == 2}">Giao hàng</span>

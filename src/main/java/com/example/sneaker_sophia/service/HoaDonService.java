@@ -103,9 +103,13 @@ public class HoaDonService {
         LocalDateTime ngayBatDau = hd.getNgayBatDau().equals("") ? null: LocalDateTime.parse(hd.getNgayBatDau());
         LocalDateTime ngayKetThuc = hd.getNgayKetThuc().equals("") || hd.getNgayBatDau().equals("") ? null: LocalDateTime.parse(hd.getNgayKetThuc());
         Integer loaiDon = hd.getLoaiDon().equals("") ? null: Integer.parseInt(hd.getLoaiDon());
-//        Integer trangThai = hd.getTrangThai().equals("") ? null: Integer.parseInt(hd.getTrangThai());
         String txtSearch = hd.getTextSearch().equals("") ? null: "%"+hd.getTextSearch()+"%";
-        return hoaDonRepository.findHoaDonByMultipleParamsAPI(ngayBatDau,ngayKetThuc,Integer.parseInt(hd.getTrangThai()),loaiDon,txtSearch);
+       if (hd.getSapXep().equals("1")){
+           return hoaDonRepository.findHoaDonByMultipleParamsAPIDate(ngayBatDau,ngayKetThuc,Integer.parseInt(hd.getTrangThai()),loaiDon,txtSearch);
+       }else if(hd.getSapXep().equals("2")){
+           return hoaDonRepository.findHoaDonByMultipleParamsAPImaHoaDOn(ngayBatDau,ngayKetThuc,Integer.parseInt(hd.getTrangThai()),loaiDon,txtSearch);
+       }
+        return hoaDonRepository.findHoaDonByMultipleParamsAPITongTien(ngayBatDau,ngayKetThuc,Integer.parseInt(hd.getTrangThai()),loaiDon,txtSearch);
     }
 
     public Integer soHDCG(){
