@@ -2,7 +2,6 @@
 <html lang="zxx" xmlns:th="http://www.thymeleaf.org">
 
 
->
 <meta http-equiv="content-type" content="text/html;charset=UTF-8"/><!-- /Added by HTTrack -->
 <head>
     <meta charset="UTF-8">
@@ -12,8 +11,6 @@
 
     <!-- ::::::::::::::Favicon icon::::::::::::::-->
     <link rel="shortcut icon" href="/assets/images/favicon.ico" type="image/png">
-
-    <!-- Use the minified version files listed below for better performance and remove the files listed above -->
     <link rel="stylesheet" href="/assets/css/vendor/vendor.min.css">
     <link rel="stylesheet" href="/assets/css/plugins/plugins.min.css">
     <link rel="stylesheet" href="/assets/css/style.min.css">
@@ -36,7 +33,6 @@
                             </div>
                         </div>
                         <!-- End Header Logo -->
-
                         <!-- Start Header Main Menu -->
                         <div class="main-menu menu-color--black menu-hover-color--golden">
                             <nav>
@@ -64,7 +60,6 @@
                             </nav>
                         </div>
                         <!-- End Header Main Menu Start -->
-
                         <!-- Start Header Action Link -->
                         <ul class="header-action-link action-color--black action-hover-color--golden">
                             <li>
@@ -338,21 +333,19 @@
 
     <!-- Start  Offcanvas Addcart Wrapper -->
     <div class="offcanvas-add-cart-wrapper">
-        <h4 class="offcanvas-title">Giỏ hàng</h4>
+        <h4 class="offcanvas-title">Shopping Cart</h4>
         <ul class="offcanvas-cart">
-            <li class="offcanvas-cart-item-single" th:each="item : ${cartItem}">
+            <li class="offcanvas-cart-item-single">
                 <div class="offcanvas-cart-item-block">
                     <a href="#" class="offcanvas-cart-item-image-link">
-                        <img class="offcanvas-cart-image" th:src="@{'/img/' + ${item.anh}}"
-                             style="width: 92px; height: 92px" alt="">
+                        <img src="/assets/images/product/default/home-1/default-1.jpg" alt=""
+                             class="offcanvas-cart-image">
                     </a>
                     <div class="offcanvas-cart-item-content">
-                        <a href="#" class="offcanvas-cart-item-link"
-                           th:text="${item.hang + ' ' + item.giay + ' ' + item.loaiGiay + ' ' + item.mauSac}"></a>
+                        <a href="#" class="offcanvas-cart-item-link">Car Wheel</a>
                         <div class="offcanvas-cart-item-details">
-                            <span class="offcanvas-cart-item-details-quantity" th:text="${item.soLuong} + ' x'"></span>
-                            <span class="offcanvas-cart-item-details-price"
-                                  th:text="${#numbers.formatCurrency(item.gia)}"></span>
+                            <span class="offcanvas-cart-item-details-quantity">1 x </span>
+                            <span class="offcanvas-cart-item-details-price">$49.00</span>
                         </div>
                     </div>
                 </div>
@@ -360,20 +353,127 @@
                     <a href="#" class="offcanvas-cart-item-delete"><i class="fa fa-trash-o"></i></a>
                 </div>
             </li>
-
+            <li class="offcanvas-cart-item-single">
+                <div class="offcanvas-cart-item-block">
+                    <a href="#" class="offcanvas-cart-item-image-link">
+                        <img src="/assets/images/product/default/home-2/default-1.jpg" alt=""
+                             class="offcanvas-cart-image">
+                    </a>
+                    <div class="offcanvas-cart-item-content">
+                        <a href="#" class="offcanvas-cart-item-link">Car Vails</a>
+                        <div class="offcanvas-cart-item-details">
+                            <span class="offcanvas-cart-item-details-quantity">3 x </span>
+                            <span class="offcanvas-cart-item-details-price">$500.00</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="offcanvas-cart-item-delete text-right">
+                    <a href="#" class="offcanvas-cart-item-delete"><i class="fa fa-trash-o"></i></a>
+                </div>
+            </li>
+            <li class="offcanvas-cart-item-single">
+                <div class="offcanvas-cart-item-block">
+                    <a href="#" class="offcanvas-cart-item-image-link">
+                        <img src="/assets/images/product/default/home-3/default-1.jpg" alt=""
+                             class="offcanvas-cart-image">
+                    </a>
+                    <div class="offcanvas-cart-item-content">
+                        <a href="#" class="offcanvas-cart-item-link">Shock Absorber</a>
+                        <div class="offcanvas-cart-item-details">
+                            <span class="offcanvas-cart-item-details-quantity">1 x </span>
+                            <span class="offcanvas-cart-item-details-price">$350.00</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="offcanvas-cart-item-delete text-right">
+                    <a href="#" class="offcanvas-cart-item-delete"><i class="fa fa-trash-o"></i></a>
+                </div>
+            </li>
         </ul>
         <div class="offcanvas-cart-total-price">
             <span class="offcanvas-cart-total-price-text">Subtotal:</span>
-            <span class="offcanvas-cart-total-price-value" th:text="${#numbers.formatCurrency(totalCartPrice)}"></span>
+            <span class="offcanvas-cart-total-price-value">$170.00</span>
         </div>
         <ul class="offcanvas-cart-action-button">
-            <li><a th:href="@{/cart/hien-thi}" class="btn btn-block btn-golden">Giỏ hàng</a></li>
-            <li><a href="compare.html" class=" btn btn-block btn-golden mt-5">Checkout</a></li>
+            <li><a href="../cart.html" class="btn btn-block btn-golden">View Cart</a></li>
+            <li><a href="../compare.html" class=" btn btn-block btn-golden mt-5">Checkout</a></li>
         </ul>
     </div> <!-- End  Offcanvas Addcart Wrapper -->
 
-</div><!-- End  Offcanvas Addcart Section -->
+</div> <!-- End  Offcanvas Addcart Section -->
 
+<!-- Start Offcanvas Mobile Menu Section -->
+<div id="offcanvas-wishlish" class="offcanvas offcanvas-rightside offcanvas-add-cart-section">
+    <!-- Start Offcanvas Header -->
+    <div class="offcanvas-header text-right">
+        <button class="offcanvas-close"><i class="ion-android-close"></i></button>
+    </div> <!-- ENd Offcanvas Header -->
+
+    <!-- Start Offcanvas Mobile Menu Wrapper -->
+    <div class="offcanvas-wishlist-wrapper">
+        <h4 class="offcanvas-title">Wishlist</h4>
+        <ul class="offcanvas-wishlist">
+            <li class="offcanvas-wishlist-item-single">
+                <div class="offcanvas-wishlist-item-block">
+                    <a href="#" class="offcanvas-wishlist-item-image-link">
+                        <img src="/assets/images/product/default/home-1/default-1.jpg" alt=""
+                             class="offcanvas-wishlist-image">
+                    </a>
+                    <div class="offcanvas-wishlist-item-content">
+                        <a href="#" class="offcanvas-wishlist-item-link">Car Wheel</a>
+                        <div class="offcanvas-wishlist-item-details">
+                            <span class="offcanvas-wishlist-item-details-quantity">1 x </span>
+                            <span class="offcanvas-wishlist-item-details-price">$49.00</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="offcanvas-wishlist-item-delete text-right">
+                    <a href="#" class="offcanvas-wishlist-item-delete"><i class="fa fa-trash-o"></i></a>
+                </div>
+            </li>
+            <li class="offcanvas-wishlist-item-single">
+                <div class="offcanvas-wishlist-item-block">
+                    <a href="#" class="offcanvas-wishlist-item-image-link">
+                        <img src="/assets/images/product/default/home-2/default-1.jpg" alt=""
+                             class="offcanvas-wishlist-image">
+                    </a>
+                    <div class="offcanvas-wishlist-item-content">
+                        <a href="#" class="offcanvas-wishlist-item-link">Car Vails</a>
+                        <div class="offcanvas-wishlist-item-details">
+                            <span class="offcanvas-wishlist-item-details-quantity">3 x </span>
+                            <span class="offcanvas-wishlist-item-details-price">$500.00</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="offcanvas-wishlist-item-delete text-right">
+                    <a href="#" class="offcanvas-wishlist-item-delete"><i class="fa fa-trash-o"></i></a>
+                </div>
+            </li>
+            <li class="offcanvas-wishlist-item-single">
+                <div class="offcanvas-wishlist-item-block">
+                    <a href="#" class="offcanvas-wishlist-item-image-link">
+                        <img src="/assets/images/product/default/home-3/default-1.jpg" alt=""
+                             class="offcanvas-wishlist-image">
+                    </a>
+                    <div class="offcanvas-wishlist-item-content">
+                        <a href="#" class="offcanvas-wishlist-item-link">Shock Absorber</a>
+                        <div class="offcanvas-wishlist-item-details">
+                            <span class="offcanvas-wishlist-item-details-quantity">1 x </span>
+                            <span class="offcanvas-wishlist-item-details-price">$350.00</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="offcanvas-wishlist-item-delete text-right">
+                    <a href="#" class="offcanvas-wishlist-item-delete"><i class="fa fa-trash-o"></i></a>
+                </div>
+            </li>
+        </ul>
+        <ul class="offcanvas-wishlist-action-button">
+            <li><a href="#" class="btn btn-block btn-golden">View wishlist</a></li>
+        </ul>
+    </div> <!-- End Offcanvas Mobile Menu Wrapper -->
+
+</div> <!-- End Offcanvas Mobile Menu Section -->
 
 <!-- Start Offcanvas Search Bar Section -->
 <div id="search" class="search-modal">
@@ -394,13 +494,13 @@
         <div class="container">
             <div class="row">
                 <div class="col-12">
-                    <h3 class="breadcrumb-title">Empty Cart</h3>
+                    <h3 class="breadcrumb-title">My Account</h3>
                     <div class="breadcrumb-nav breadcrumb-nav-color--black breadcrumb-nav-hover-color--golden">
                         <nav aria-label="breadcrumb">
                             <ul>
                                 <li><a href="../websiteShop/index.html">Home</a></li>
                                 <li><a href="../shop-grid-sidebar-left.html">Shop</a></li>
-                                <li class="active" aria-current="page">Empty Cart</li>
+                                <li class="active" aria-current="page">My Account</li>
                             </ul>
                         </nav>
                     </div>
@@ -410,25 +510,174 @@
     </div>
 </div> <!-- ...:::: End Breadcrumb Section:::... -->
 
-<!-- ...::::Start About Us Center Section:::... -->
-<div class="empty-cart-section section-fluid">
-    <div class="emptycart-wrapper">
-        <div class="container">
-            <div class="row">
-                <div class="col-12 col-md-10 offset-md-1 col-xl-6 offset-xl-3">
-                    <div class="emptycart-content text-center">
-                        <div class="image">
-                            <img class="img-fluid" src="/assets/images/emprt-cart/empty-cart.png" alt="">
+<!-- ...:::: Start Account Dashboard Section:::... -->
+<div class="account-dashboard">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 col-md-3 col-lg-3">
+                <!-- Nav tabs -->
+                <div class="dashboard_tab_button" data-aos="fade-up" data-aos-delay="0">
+                    <ul role="tablist" class="nav flex-column dashboard-list">
+                        <li><a href="#dashboard" data-bs-toggle="tab"
+                               class="nav-link btn btn-block btn-md btn-black-default-hover active">Dashboard</a>
+                        </li>
+                        <li><a href="#orders" data-bs-toggle="tab"
+                               class="nav-link btn btn-block btn-md btn-black-default-hover">Orders</a></li>
+                        <li><a href="#downloads" data-bs-toggle="tab"
+                               class="nav-link btn btn-block btn-md btn-black-default-hover">Downloads</a></li>
+                        <li><a href="#address" data-bs-toggle="tab"
+                               class="nav-link btn btn-block btn-md btn-black-default-hover">Addresses</a></li>
+                        <li><a href="#account-details" data-bs-toggle="tab"
+                               class="nav-link btn btn-block btn-md btn-black-default-hover">Account details</a>
+                        </li>
+                        <li><a href="../login.html"
+                               class="nav-link btn btn-block btn-md btn-black-default-hover">logout</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-9 col-lg-9">
+                <!-- Tab panes -->
+                <div class="tab-content dashboard_content" data-aos="fade-up" data-aos-delay="200">
+                    <div class="tab-pane fade show active" id="dashboard">
+                        <h4>Dashboard </h4>
+                        <p>From your account dashboard. you can easily check &amp; view your <a href="#">recent
+                            orders</a>, manage your <a href="#">shipping and billing addresses</a> and <a
+                                href="#">Edit your password and account details.</a></p>
+                    </div>
+                    <div class="tab-pane fade" id="orders">
+                        <h4>Orders</h4>
+                        <div class="table_page table-responsive">
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>Order</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Total</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>May 10, 2018</td>
+                                    <td><span class="success">Completed</span></td>
+                                    <td>$25.00 for 1 item</td>
+                                    <td><a href="../cart.html" class="view">view</a></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>May 10, 2018</td>
+                                    <td>Processing</td>
+                                    <td>$17.00 for 1 item</td>
+                                    <td><a href="../cart.html" class="view">view</a></td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <h4 class="title">GIỎ HÀNG CỦA BẠN ĐANG TRỐNG</h4>
-                        <h6 class="sub-title">Xin lỗi bạn... Không tìm thấy mặt hàng nào trong giỏ hàng của bạn!</h6>
-                        <a th:href="@{/sophia-store/product}" class="btn btn-lg btn-golden">TIẾP TỤC MUA HÀNG</a>
+                    </div>
+                    <div class="tab-pane fade" id="downloads">
+                        <h4>Downloads</h4>
+                        <div class="table_page table-responsive">
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Downloads</th>
+                                    <th>Expires</th>
+                                    <th>Download</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>Shopnovilla - Free Real Estate PSD Template</td>
+                                    <td>May 10, 2018</td>
+                                    <td><span class="danger">Expired</span></td>
+                                    <td><a href="#" class="view">Click Here To Download Your File</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Organic - ecommerce html template</td>
+                                    <td>Sep 11, 2018</td>
+                                    <td>Never</td>
+                                    <td><a href="#" class="view">Click Here To Download Your File</a></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="address">
+                        <p>The following addresses will be used on the checkout page by default.</p>
+                        <h5 class="billing-address">Billing address</h5>
+                        <a href="#" class="view">Edit</a>
+                        <p><strong>Bobby Jackson</strong></p>
+                        <address>
+                            Address: Your address goes here.
+                        </address>
+                    </div>
+                    <div class="tab-pane fade" id="account-details">
+                        <h3>Account details </h3>
+                        <div class="login">
+                            <div class="login_form_container">
+                                <div class="account_login_form">
+                                    <form action="#">
+                                        <p>Already have an account? <a href="#">Log in instead!</a></p>
+                                        <div class="input-radio">
+                                                <span class="custom-radio"><input type="radio" value="1"
+                                                                                  name="id_gender"> Mr.</span>
+                                            <span class="custom-radio"><input type="radio" value="1"
+                                                                              name="id_gender"> Mrs.</span>
+                                        </div>
+                                        <br>
+                                        <div class="default-form-box mb-20">
+                                            <label>First Name</label>
+                                            <input type="text" name="first-name">
+                                        </div>
+                                        <div class="default-form-box mb-20">
+                                            <label>Last Name</label>
+                                            <input type="text" name="last-name">
+                                        </div>
+                                        <div class="default-form-box mb-20">
+                                            <label>Email</label>
+                                            <input type="text" name="email-name">
+                                        </div>
+                                        <div class="default-form-box mb-20">
+                                            <label>Password</label>
+                                            <input type="password" name="user-password">
+                                        </div>
+                                        <div class="default-form-box mb-20">
+                                            <label>Birthdate</label>
+                                            <input type="date" name="birthday">
+                                        </div>
+                                        <span class="example">
+                                                (E.g.: 05/31/1970)
+                                            </span>
+                                        <br>
+                                        <label class="checkbox-default" for="offer">
+                                            <input type="checkbox" id="offer">
+                                            <span>Receive offers from our partners</span>
+                                        </label>
+                                        <br>
+                                        <label class="checkbox-default checkbox-default-more-text" for="newsletter">
+                                            <input type="checkbox" id="newsletter">
+                                            <span>Sign up for our newsletter<br><em>You may unsubscribe at any
+                                                        moment. For that purpose, please find our contact info in the
+                                                        legal notice.</em></span>
+                                        </label>
+                                        <div class="save_button mt-3">
+                                            <button class="btn btn-md btn-black-default-hover"
+                                                    type="submit">Save
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div> <!-- ...::::End  About Us Center Section:::... -->
+</div> <!-- ...:::: End Account Dashboard Section:::... -->
 
 <!-- Start Footer Section -->
 <footer class="footer-section footer-bg section-top-gap-100">
@@ -734,6 +983,5 @@
 <!-- Main JS -->
 <script src="/assets/js/main.js"></script>
 </body>
-
 
 </html>

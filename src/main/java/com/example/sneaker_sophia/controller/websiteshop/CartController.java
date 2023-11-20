@@ -52,6 +52,7 @@ public class CartController {
             model.addAttribute("soLuong", soLuong);
             model.addAttribute("totalCartPrice", totalCartPrice);
             model.addAttribute("cartItems", cartItems);
+            model.addAttribute("isLoggedIn", true);
             return "website/productwebsite/cart";
         } else {
             Cart cart = (Cart) httpSession.getAttribute("cart");
