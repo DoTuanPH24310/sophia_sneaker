@@ -129,6 +129,12 @@
             <version>4.5.13</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>5.0.0</version> <!-- Hoặc bản phiên bản mới nhất -->
+        </dependency>
+
     </dependencies>
 
     <build>

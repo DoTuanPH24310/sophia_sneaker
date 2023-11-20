@@ -969,9 +969,14 @@
                     <!-- Start Pagination -->
                     <div class="page-pagination text-center" data-aos="fade-up" data-aos-delay="0">
                         <ul>
-                            <li th:each="pageNumber : ${#numbers.sequence(1, totalPages)}">
-                                <a th:href="@{'?page=' + ${pageNumber}}"
-                                   th:class="${pageNumber == currentPage} ? 'active' : ''" th:text="${pageNumber}"></a>
+                            <li th:with="previousPage=${currentPage - 1}" th:if="${previousPage > 0}">
+                                <a th:href="@{'/sophia-store/product?page=' + previousPage}">Previous</a>
+                            </li>
+                            <li th:each="pageNumber : ${#numbers.sequence(1, totalPages)}" th:class="${pageNumber} == ${currentPage} ? 'active'">
+                                <a th:href="@{'/sophia-store/product?page=' + ${pageNumber}}" th:text="${pageNumber}"></a>
+                            </li>
+                            <li th:with="nextPage=${currentPage + 1}" th:if="${nextPage <= totalPages}">
+                                <a th:href="@{'/sophia-store/product?page=' + ${nextPage}}">Next</a>
                             </li>
                         </ul>
                     </div>

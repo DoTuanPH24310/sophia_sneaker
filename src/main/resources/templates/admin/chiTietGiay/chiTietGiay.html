@@ -23,7 +23,8 @@
         }
 
         .form-group input.form-control {
-            width: 40%;
+            width: 90%;
+            text-align: center;
         }
 
         /* Điều chỉnh khoảng cách giữa nút Lọc và các thành phần trước nó */
@@ -67,7 +68,9 @@
             display: block;
         }
     </style>
-
+    <!-- Include xlsx library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+    <script src="/js/chiTietGiay.js"></script>
 </head>
 <body>
 <section>
@@ -80,18 +83,22 @@
                 <div class="col-10 mt-4 formTable">
                     <h5 style="font-weight: bold;" class="mt-3">Bộ lọc</h5>
                     <hr>
-                    <form th:action="@{/admin/chi-tiet-giay/page/1}" class="mt-3 mb-3"  id="searchForm">
+                    <form th:action="@{/admin/chi-tiet-giay/page/1}" class="mt-3 mb-3" id="searchForm">
                         <div class="row">
 
                             <div class="col-3">
-                                <label>Trạng thái</label>
-                                <label for="trangThaiSelect"></label><select style="border-radius: 10px;" class="form-select" name="trangThai" id="trangThaiSelect" onchange="this.form.submit()">
+                                <label for="trangThaiSelect">Trạng thái</label>
+                                <select style="border-radius: 10px;" class="form-select" name="trangThai"
+                                        id="trangThaiSelect" onchange="this.form.submit()">
                                     <div style="border: 10px">
-                                        <option th:selected="${trangThai}  == -1 ? true:false" value="-1" th:value="-1" > Tất cả
+                                        <option th:selected="${trangThai}  == -1 ? true:false" value="-1" th:value="-1">
+                                            Tất cả
                                         </option>
-                                        <option th:selected="${trangThai} == 0 ? true:false" value="0" th:value="0"> Còn hạn
+                                        <option th:selected="${trangThai} == 1 ? true:false" value="0" th:value="1">
+                                            Đang hoạt động
                                         </option>
-                                        <option th:selected="${trangThai} == 1 ? true:false" value="1" th:value="1">Hết hạn
+                                        <option th:selected="${trangThai} == 0 ? true:false" value="1" th:value="0">
+                                            Ngưng hoạt động
                                         </option>
                                     </div>
                                 </select>
@@ -126,9 +133,10 @@
                     <form th:action="@{/admin/chi-tiet-giay/page/1}" class="form-inline m-3" id="">
                         <input type="hidden" name="sortField" th:value="${sortField}"/>
                         <input type="hidden" name="sortDir" th:value="${sortDir}"/>
+                        <input type="hidden" name="trangThai" th:value="${trangThai}"/>
                         <div class="form-group">
                             <label>Loại giày</label>
-                            <select id="loaiGiayCombobox" name="loaiGiay" class="form-control">
+                            <select id="loaiGiayCombobox" name="loaiGiay" class="form-select">
                                 <option value="null" th:selected="${loaiGiay == null}">Tất cả</option>
                                 <option th:each="loaiGiayItem : ${loaiGiayList}" th:value="${loaiGiayItem.ten}"
                                         th:text="${loaiGiayItem.ten}"
@@ -137,7 +145,7 @@
                         </div>
                         <div class="form-group">
                             <label>Đế giày</label>
-                            <select id="deGiayCombobox" name="deGiay" class="form-control">
+                            <select id="deGiayCombobox" name="deGiay" class="form-select">
                                 <option value="null" th:selected="${deGiay == null}">Tất cả</option>
                                 <option th:each="deGiayItem : ${deGiayList}" th:value="${deGiayItem.ten}"
                                         th:text="${deGiayItem.ten}" th:selected="${deGiayItem.ten == deGiay}"></option>
@@ -145,7 +153,7 @@
                         </div>
                         <div class="form-group">
                             <label>Kích cỡ</label>
-                            <select id="kichCoCombobox" name="kichCo" class="form-control">
+                            <select id="kichCoCombobox" name="kichCo" class="form-select">
                                 <option value="null" th:selected="${kichCo == null}">Tất cả</option>
                                 <option th:each="kichCoItem : ${kichCoList}" th:value="${kichCoItem.ten}"
                                         th:text="${kichCoItem.ten}" th:selected="${kichCoItem.ten == kichCo}"></option>
@@ -153,7 +161,7 @@
                         </div>
                         <div class="form-group">
                             <label>Màu sắc</label>
-                            <select id="mauSacCombobox" name="mauSac" class="form-control">
+                            <select id="mauSacCombobox" name="mauSac" class="form-select">
                                 <option value="null" th:selected="${mauSac == null}">Tất cả</option>
                                 <option th:each="mauSacItem : ${mauSacList}" th:value="${mauSacItem.ten}"
                                         th:text="${mauSacItem.ten}" th:selected="${mauSacItem.ten == mauSac}"></option>
@@ -161,7 +169,7 @@
                         </div>
                         <div class="form-group">
                             <label>Hãng</label>
-                            <select id="hangCombobox" name="hang" class="form-control">
+                            <select id="hangCombobox" name="hang" class="form-select">
                                 <option value="null" th:selected="${hang == null}">Tất cả</option>
                                 <option th:each="hangItem : ${hangList}" th:value="${hangItem.ten}"
                                         th:text="${hangItem.ten}" th:selected="${hangItem.ten == hang}"></option>
@@ -169,7 +177,7 @@
                         </div>
                         <div class="form-group">
                             <label>Giày</label>
-                            <select id="giayCombobox" name="giay" class="form-control">
+                            <select id="giayCombobox" name="giay" class="form-select">
                                 <option value="null" th:selected="${giay == null}">Tất cả</option>
                                 <option th:each="giayItem : ${giayList}" th:value="${giayItem.ten}"
                                         th:text="${giayItem.ten}" th:selected="${giayItem.ten == giay}"></option>
@@ -177,7 +185,7 @@
                         </div>
                         <div class="form-group">
                             <label for="giaMin">Giá thấp nhất</label>
-                            <input id="giaMin" name="giaMin" class="form-control" th:value="${giaMin}">
+                            <input id="giaMin" name="giaMin" class="form-control custom-width" th:value="${giaMin}">
                         </div>
                         <div class="form-group">
                             <label for="giaMax">Giá cao nhất</label>
@@ -193,10 +201,13 @@
         <div class="row mt-3">
             <h5 style="font-weight: bold; text-align: center;" class="mt-3">Danh sách Chi Tiết Giày </h5>
             <hr>
-            <div class="table table-wrapper-scroll-y my-custom-scrollbar">
+            <div style="padding-left:        10px">
                 <a class="btn btn-primary mt-1 mb-1 float-right" th:href="@{/admin/chi-tiet-giay/add}">
-                    <i style="font-size: 18px" class="fab fa-plus"></i> Thêm
+                    <i style="font-size: 18px; width: 10px" class="fab fa-plus"></i> Thêm
                 </a>
+                <a class="btn btn-success" th:href="@{/admin/exportToExcel}">Export to Excel</a>
+            </div>
+            <div class="table table-wrapper-scroll-y my-custom-scrollbar">
                 <table id="table" class="table  table-borderless  formTable">
                     <thead>
                     <tr>
@@ -285,6 +296,7 @@
             <span class="hint-text" th:unless="${totalItem > 0}">Không có Chi Tiết Sản Phẩm trong trang này</span>
         </div>
     </div>
+
 </section>
 </body>
 </html>

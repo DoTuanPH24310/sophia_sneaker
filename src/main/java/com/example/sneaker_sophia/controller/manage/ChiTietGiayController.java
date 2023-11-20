@@ -3,23 +3,34 @@ package com.example.sneaker_sophia.controller.manage;
 import com.example.sneaker_sophia.entity.*;
 import com.example.sneaker_sophia.service.*;
 import jakarta.servlet.http.HttpServletRequest;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.awt.*;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 
@@ -47,9 +58,10 @@ public class ChiTietGiayController {
     HttpServletRequest request;
 
     @GetMapping("chi-tiet-giay")
-    public String listFirstPage(Model model){
-        return listByPage(1,model,"gia","asc",null,null,null,null,null,null,null,null,null,null,null);
+    public String listFirstPage(Model model) {
+        return listByPage(1, model, "gia", "asc", null, null, null, null, null, null, null, null, null, null, null, null);
     }
+
     @GetMapping("chi-tiet-giay/page/{pageNum}")
     private String listByPage(@PathVariable(name = "pageNum") int pageNum, Model model,
                               @RequestParam(name = "sortField", required = false, defaultValue = "defaultSortField") String sortField,
@@ -62,6 +74,7 @@ public class ChiTietGiayController {
                               @RequestParam(name = "loaiGiay", required = false, defaultValue = "defaultLoaiGiay") String loaiGiay,
                               @RequestParam(name = "mauSac", required = false, defaultValue = "defaultMauSac") String mauSac,
                               @RequestParam(name = "kichCo", required = false, defaultValue = "defaultKichCo") String kichCo,
+                              @RequestParam(name = "trangThai", required = false, defaultValue = "1") String trangThai,
                               @Param("giaMin") Double giaMin,
                               @Param("giaMax") Double giaMax,
                               @RequestParam Map<String, String> params) {
@@ -75,6 +88,7 @@ public class ChiTietGiayController {
                 || (loaiGiay != null && !loaiGiay.equals("defaultLoaiGiay"))
                 || (mauSac != null && !mauSac.equals("defaultMauSac"))
                 || (kichCo != null && !kichCo.equals("defaultKichCo"))
+                || (trangThai != null && !trangThai.equals("-1"))
                 || (giaMin != null && giaMax != null)) {
             page = chiTietGiayService.filterCombobox(pageNum, sortField, sortDir,
                     giayService.findByTen(giay),
@@ -83,6 +97,7 @@ public class ChiTietGiayController {
                     loaiGiayService.findByTen(loaiGiay),
                     mauSacService.findByTen(mauSac),
                     kichCoService.findByTen(kichCo),
+                    trangThai,
                     giaMin,
                     giaMax
             );
@@ -92,7 +107,6 @@ public class ChiTietGiayController {
 
 
         List<ChiTietGiay> listChiTietSanPham = page.getContent();
-
 
 
         int startCount = (pageNum - 1) * chiTietGiayService.PRODUCT_DETAIL_PER_PAGE + 1;
@@ -120,6 +134,7 @@ public class ChiTietGiayController {
         model.addAttribute("giayList", giayService.getAll());
         model.addAttribute("hangList", hangService.getAll());
         model.addAttribute("hangList", hangService.getAll());
+        model.addAttribute("trangThai", trangThai);
 
 // để giữ cac giá trị combobõx
         model.addAttribute("loaiGiay", params != null ? params.get("loaiGiay") : null);
@@ -150,7 +165,7 @@ public class ChiTietGiayController {
 
 
     @GetMapping("chi-tiet-giay/edit/{id}")
-    public String edit(Model model, @PathVariable("id")UUID id) {
+    public String edit(Model model, @PathVariable("id") UUID id) {
         ChiTietGiay chiTietGiay = chiTietGiayService.getOne(id);
         model.addAttribute("chiTietGiay", chiTietGiay);
         model.addAttribute("giay", giayService.getAll());
@@ -249,9 +264,47 @@ public class ChiTietGiayController {
     }
 
     @GetMapping("chi-tiet-giay/delete-anh/{id}")
-        public String deleteAnhByChiTietGiay(@PathVariable("id") UUID id) {
-            anhService.deleteAnhByChiTietGiay(chiTietGiayService.getOne(id));
-            return "redirect:/admin/chi-tiet-giay/edit/{id}";
-        }
+    public String deleteAnhByChiTietGiay(@PathVariable("id") UUID id) {
+        anhService.deleteAnhByChiTietGiay(chiTietGiayService.getOne(id));
+        return "redirect:/admin/chi-tiet-giay/edit/{id}";
+    }
+
+
+    // import excel
+    @GetMapping("/exportToExcel")
+    public ResponseEntity<byte[]> exportToExcel() throws IOException {
+        // Tạo một workbook mới
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Sheet1");
+
+        // Viết dữ liệu vào sheet (Ví dụ)
+        Row row = sheet.createRow(0);
+        Cell cell = row.createCell(0);
+        cell.setCellValue("Hello");
+        // Thêm các dòng và cột khác nếu cần thiết
+
+        // Ghi workbook vào ByteArrayOutputStream
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        workbook.write(outputStream);
+        workbook.close();
+
+        // Chuẩn bị dữ liệu để trả về
+        byte[] excelBytes = outputStream.toByteArray();
+
+        // Tạo định dạng ngày giờ cho tên file
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss");
+        String formattedDate = dateFormat.format(new Date());
+
+        // Tạo tên file với ngày giờ phút giây
+        String fileName = "exported_chiTietGiay_" + formattedDate + ".xlsx";
+
+        // Thiết lập HttpHeaders
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+        headers.setContentDispositionFormData("attachment", fileName);
+
+        // Trả về ResponseEntity
+        return new ResponseEntity<>(excelBytes, headers, HttpStatus.OK);
+    }
 
 }

@@ -88,6 +88,5 @@ public class ChiTietGiay {
     @LastModifiedDate
     @Column(name = "ngaySua")
     private LocalDateTime ngaySua;
-
 }
 
