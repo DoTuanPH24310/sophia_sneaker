@@ -65,6 +65,9 @@ public class TaiQuayController {
     @Resource(name = "kmService")
     KMService kmService;
 
+    @Resource(name = "lshdService")
+    LSHDService lshdService;
+
     //    alo ôla
     @GetMapping("/hien-thi")
     public String index(Model model) {
@@ -211,6 +214,10 @@ public class TaiQuayController {
             Model model
     ) {
         HoaDon hd = hoaDonService.addHD(model);
+        LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+        lichSuHoaDon.setHoaDon(hd);
+        lichSuHoaDon.setPhuongThuc("tạo mới");
+        lshdService.savelshd(lichSuHoaDon);
         if (hd != null) {
             tempIdHD = hd.getId();
             return "redirect:/admin/tai-quay/detail/" + tempIdHD;
@@ -263,6 +270,11 @@ public class TaiQuayController {
         // 18/11
         Double tongTienTruocGiam = hoaDonChiTietServive.tongTienTruocGiam(id);
         Double tienGiam = hoaDonChiTietServive.tienGiam(id) == null ? 0 : hoaDonChiTietServive.tienGiam(id);
+        // 20/11
+        HinhThucThanhToan hinhThucThanhToan = htttService.getHTTTByIdhd(id);
+        if(hinhThucThanhToan != null){
+            model.addAttribute("tienKhachDua", hinhThucThanhToan.getSoTien());
+        }
 
         model.addAttribute("tongTienTruocGiam", tongTienTruocGiam);
         model.addAttribute("tienGiam", tienGiam);
@@ -557,19 +569,29 @@ public class TaiQuayController {
             @RequestParam(value = "phiVanChuyen", defaultValue = "0") String phiVanChuyen,
             HttpServletResponse response
     ) throws IOException {
-        HinhThucThanhToan hinhThucThanhToan = new HinhThucThanhToan();
+        HinhThucThanhToan hinhThucThanhToan = htttService.getHTTTByIdhd(tempIdHD);
+//        HinhThucThanhToan hinhThucThanhToan1 = htttService.getHTTTByIdhd(tempIdHD);
+
         if (tienKhachDua.equals("")) {
             model.addAttribute("errTienKH", "Chưa trả tiền tao");
             return "forward:/admin/tai-quay/detail/" + tempIdHD;
         }
-
         Double tongTien = hoaDonChiTietServive.tongTienSauGiam(tempIdHD);
         HoaDon hoaDon = hoaDonService.getHoaDonById(tempIdHD);
-        hinhThucThanhToan.setHoaDon(hoaDon);
-        hinhThucThanhToan.setTrangThai(phuongThuc);
-        tienKhachDua = tienKhachDua.replaceAll("[^\\d]", "");
-        hinhThucThanhToan.setSoTien(Double.parseDouble(tienKhachDua));
-        htttService.savehttt(hinhThucThanhToan);
+        if (hinhThucThanhToan != null){
+            tienKhachDua = tienKhachDua.replaceAll("[^\\d]", "");
+            hinhThucThanhToan.setSoTien(Double.parseDouble(tienKhachDua));
+            htttService.savehttt(hinhThucThanhToan);
+        }else{
+            hinhThucThanhToan = new HinhThucThanhToan();
+            hinhThucThanhToan.setHoaDon(hoaDon);
+            hinhThucThanhToan.setTrangThai(phuongThuc);
+            tienKhachDua = tienKhachDua.replaceAll("[^\\d]", "");
+            hinhThucThanhToan.setSoTien(Double.parseDouble(tienKhachDua));
+            htttService.savehttt(hinhThucThanhToan);
+
+        }
+
         if (!tempIdKH.equals("") && hoaDon.getLoaiHoaDon() == 2) {
             TaiKhoanRequest taiKhoan = taiKhoanService.getTaiKhoanById(tempIdKH);
             hoaDon.setTenKhachHang(taiKhoan.getTen());
@@ -588,7 +610,20 @@ public class TaiQuayController {
         hoaDon.setKhuyenMai(hoaDonChiTietServive.tienGiam(tempIdHD));
         hoaDon.setGhiChu(ghiChu);
         hoaDon.setTongTien(tongTien);
-        hoaDon.setTrangThai(1);
+        if(hoaDon.getLoaiHoaDon() == 2){
+            hoaDon.setTrangThai(4);
+            LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+            lichSuHoaDon.setHoaDon(hoaDon);
+            lichSuHoaDon.setPhuongThuc("chờ giao");
+            lshdService.savelshd(lichSuHoaDon);
+        }else{
+            hoaDon.setTrangThai(1);
+            LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+            lichSuHoaDon.setHoaDon(hoaDon);
+            lichSuHoaDon.setPhuongThuc("thanh toán");
+            lshdService.savelshd(lichSuHoaDon);
+        }
+
         hoaDonService.savehd(hoaDon);
         session.setAttribute("checkTTHT",true);
 

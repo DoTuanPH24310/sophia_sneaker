@@ -1,5 +1,6 @@
 package com.example.sneaker_sophia.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -95,9 +96,15 @@ public class HoaDon {
     @Column(name = "trangThai")
     private Integer trangThai;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "hoaDon", fetch = FetchType.LAZY)
     private List<HoaDonChiTiet> listHoaDonChiTiet = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "hoaDon", fetch = FetchType.LAZY)
     private List<HinhThucThanhToan> hinhThucThanhToanList = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "hoaDon", fetch = FetchType.LAZY)
+    private List<LichSuHoaDon> lichSuHoaDons = new ArrayList<>();
 }

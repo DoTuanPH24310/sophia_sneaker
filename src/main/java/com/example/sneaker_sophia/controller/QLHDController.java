@@ -41,9 +41,15 @@ public class QLHDController {
     ) {
         List<HoaDon> getAllHDC = hoaDonService.getAllHDC();
         List<HoaDon> getAllHDHT = hoaDonService.getAllHDHT();
+        List<HoaDon> getAllHDChoGiao = hoaDonService.getAllHDChoGiao();
+        List<HoaDon> getAllHDDangGiao = hoaDonService.getAllHDDangGiao();
+        List<HoaDon> getAllHDHuy = hoaDonService.getAllHDHuy();
 
         model.addAttribute("listhdc", getAllHDC);
         model.addAttribute("listhdht", getAllHDHT);
+        model.addAttribute("listhdcg", getAllHDChoGiao);
+        model.addAttribute("listhddg", getAllHDDangGiao);
+        model.addAttribute("listhdh", getAllHDHuy);
         return "admin/hoadon/indexhd";
     }
 

@@ -28,57 +28,67 @@
         <h5 style="margin: 0px">Quản lý hóa đơn</h5>
     </div>
 
-    <div style="background-color: white; height:230px;">
+    <div style="background-color: white; height:245px;">
         <div class="contentBoLoc mr-3 mb-3 ml-3">
             <div class="row mt-4">
                 <h5 style="font-size: 17px;" class="mt-3">Bộ lọc</h5>
-                <hr  style="width: 1200px;color: black;height: 1px;background-color: black">
+                <hr style="width: 1200px;color: black;height: 1px;background-color: black">
             </div>
 
 
             <div class="row mb-5 mt-3">
                 <div class="col-3">
-                    <input type="text" class="form-control" id="textSearch"
+                    <input type="text" class="form-control ms-3" id="textSearchHoaDOn"
                            placeholder="Nhập mã hoặc tên sản phẩm....">
                 </div>
 
                 <div class="col-3">
-                    <button type="submit" class="btn btn-primary" onclick="test();">Tìm kiếm</button>
-                    <button class="btn btn-danger" onclick="getAllList();">Làm mới</button>
+                    <button type="submit" class="btn btn-primary ms-3" onclick="fillter();">Tìm kiếm</button>
+                    <button class="btn btn-danger" onclick="resetSelectAndTab();">Làm mới</button>
                 </div>
 
-
-                <div class="col-3">
-
-                    <input type="date" id="tuNgay" class="form-control">
+                <div class="col-1"></div>
+                <div class="col-2">
+                    <div class="form-floating">
+                        <input type="datetime-local" class="form-control" name="maGiamGia" id="NBDHoaDon"
+                               placeholder="Nhập mã giày"/>
+                        <label for="NBDHoaDon" class="form-label">Từ ngày</label>
+                    </div>
                 </div>
 
-                <div class="col-3">
-                    <input type="date" class="form-control">
+                <div class="col-2">
+
+                    <div class="form-floating">
+                        <input onchange="fillter();" type="datetime-local" class="form-control" name="maGiamGia"
+                               id="NKTHoaDon"
+                               placeholder="Nhập mã giày"/>
+                        <label for="NKTHoaDon" class="form-label">Đến ngày</label>
+                    </div>
+
                 </div>
             </div>
             <div class="row">
-                <div class="col-4  d-flex justify-content-center">
+                <div class="col-6  d-flex justify-content-center">
 
                     <label>Loại đơn: &nbsp;&nbsp;</label>
-                    <select style="border-radius: 7px; min-width: 120px; min-height: 30px;" id="cbbGiay">
-                        <option value="">Tất cả</option>
+                    <select onchange="fillter();" style="border-radius: 7px; min-width: 190px; min-height: 30px;"
+                            id="cbbLoaiDon">
+                        <option style="text-align: center" value="">---Tất cả---</option>
+                        <option style="text-align: center" value="1">Tại quầy</option>
+                        <option style="text-align: center" value="2">Giao hàng</option>
+                        <option style="text-align: center" value="3">Online</option>
                     </select>
                 </div>
 
-                <div class="col-4  d-flex justify-content-center">
+                <div class="col-5  d-flex justify-content-center">
 
                     <label>Sắp xếp: &nbsp;&nbsp;</label>
-                    <select style="border-radius: 7px; min-width: 120px; min-height: 30px;" id="cbbGiay">
-                        <option value="">Tất cả</option>
-                    </select>
-                </div>
-
-                <div class="col-4  d-flex justify-content-center">
-
-                    <label>Hiển thị: &nbsp;&nbsp;</label>
-                    <select style="border-radius: 7px; min-width: 120px; min-height: 30px;" id="cbbLoaiGiay">
-                        <option value="">Tất cả</option>
+                    <select onchange="fillter();" style="border-radius: 7px; min-width: 190px; min-height: 30px;"
+                            id="cbbSapXep">
+                        <option style="text-align: center" value="0">---Tất cả---</option>
+                        <option style="text-align: center" value="1">Mã</option>
+                        <option style="text-align: center" value="2">Tổng tiền</option>
+                        <option style="text-align: center" value="3">Ngày tạo</option>
                     </select>
                 </div>
             </div>
@@ -90,12 +100,14 @@
             <div class="group-tabs mt-4">
                 <div class="row">
                     <h5 style="font-size: 17px;" class="mt-3 ml-3">Danh sách hóa đơn</h5>
-                    <hr  style="width: 1200px;color: black;height: 1px;background-color: black;margin-left: 14px;">
+                    <hr style="width: 1200px;color: black;height: 1px;background-color: black;margin-left: 14px;">
                 </div>
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs ms-1" role="tablist">
                     <li role="presentation" class="nav-item">
-                        <a class="nav-link active" href="#All" aria-controls="ALL" role="tab" data-toggle="tab">Chờ thanh
+                        <a class="nav-link active" href="#choThanhToan" aria-controls="ALL" role="tab"
+                           data-toggle="tab">Chờ
+                            thanh
                             toán</a>
                     </li>
 
@@ -104,11 +116,11 @@
                            data-toggle="tab">Chờ xác nhận </a>
                     </li>
                     <li role="presentation" class="nav-item">
-                        <a class="nav-link  text-dark" href="#choVanChuyen" aria-controls="choVanChuyen" role="tab"
+                        <a class="nav-link  text-dark" href="#choGiao" aria-controls="choVanChuyen" role="tab"
                            data-toggle="tab">Chờ giao</a>
                     </li>
                     <li role="presentation" class="nav-item">
-                        <a class="nav-link  text-dark" href="#vanChuyen" aria-controls="vanChuyen" role="tab"
+                        <a class="nav-link  text-dark" href="#dangGiao" aria-controls="vanChuyen" role="tab"
                            data-toggle="tab">Đang giao</a>
                     </li>
                     <li role="presentation" class="nav-item">
@@ -116,14 +128,15 @@
                            data-toggle="tab">Hoàn thành</a>
                     </li>
                     <li role="presentation" class="nav-item">
-                        <a class="nav-link  text-dark" href="#huy" aria-controls="huy" role="tab" data-toggle="tab">Hủy</a>
+                        <a class="nav-link  text-dark" href="#huy" aria-controls="huy" role="tab"
+                           data-toggle="tab">Hủy</a>
                     </li>
                 </ul>
 
 
                 <!-- Tab panes -->
                 <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane active" id="All">
+                    <div role="tabpanel" class="tab-pane active" id="choThanhToan">
                         <div class="row mt-4">
                             <div class="table table-wrapper-scroll-y my-custom-scrollbar">
                                 <table id="tableModal" class="table table-borderless ml-2">
@@ -140,7 +153,7 @@
                                         <th>Thao tác</th>
                                     </tr>
                                     </thead>
-                                    <tbody id="sinhvien">
+                                    <tbody id="trchoThanhToan">
                                     <tr th:each="hdc, status : ${listhdc}">
                                         <td th:text="${status.index + 1}"></td>
                                         <td th:text="${hdc.maHoaDOn}"></td>
@@ -161,18 +174,13 @@
                                         </td>
                                         <td>
 
-                                            <a
-                                                    th:href="@{/admin/tai-quay/detail/{id}(id=${hdc.id})}"
-                                                    class="btn btn-warning edit"
-                                                    style=" padding: 5px 10px; font-size: 12px">
-                                                <i class="material-icons text-white mt-1"
-                                                   title="Chi tiết">&#xE254;</i>
+                                            <a th:href="@{/admin/tai-quay/detail/{id}(id=${hdc.id})}"
+                                               class="btn btn-warning edit" style=" padding: 5px 10px; font-size: 12px">
+                                                <i class="material-icons text-white mt-1" title="Chi tiết">&#xE254;</i>
                                             </a>
 
                                             <a th:href="@{/admin/hoa-don/detail/{id}(id=${hdc.id})}"
-                                               class="btn btn-success "
-                                               style=" padding: 5px 10px; font-size: 12px;">
-                                                <!--                            <i class="material-icons mt-2" data-toggle="tooltip" title="Delete">&#xE872;</i>-->
+                                               class="btn btn-success " style=" padding: 5px 10px; font-size: 12px;">
                                                 <i class="material-icons text-white mt-1"
                                                    title="Chi tiết">visibility</i>
                                             </a>
@@ -185,6 +193,7 @@
                         </div>
 
                     </div>
+
                     <div role="tabpanel" class="tab-pane" id="choXacNhan">
                         <div class="row mt-4">
                             <div class="table table-wrapper-scroll-y my-custom-scrollbar">
@@ -202,7 +211,7 @@
                                         <th>Thao tác</th>
                                     </tr>
                                     </thead>
-                                    <tbody id="sinhvien">
+                                    <tbody id="trchoXacNhan">
                                     table Chờ xác nhận
                                     </tbody>
                                 </table>
@@ -212,7 +221,7 @@
                     </div>
 
 
-                    <div role="tabpanel" class="tab-pane" id="choVanChuyen">
+                    <div role="tabpanel" class="tab-pane" id="choGiao">
                         <div class="row mt-4">
                             <div class="table table-wrapper-scroll-y my-custom-scrollbar">
                                 <table id="tableModal" class="table table-borderless ml-2">
@@ -229,8 +238,45 @@
                                         <th>Thao tác</th>
                                     </tr>
                                     </thead>
-                                    <tbody id="sinhvien">
-                                    table Chờ vận chuyển
+                                    <tbody id="trchoGiao">
+                                    <!--                                    table chờ giao-->
+                                    <tr th:each="hdcg, status : ${listhdcg}">
+                                        <td th:text="${status.index + 1}"></td>
+                                        <td th:text="${hdcg.maHoaDOn}"></td>
+                                        <td th:text="${hdcg.tenKhachHang}"></td>
+                                        <td th:text="${hdcg.createdBy}"></td>
+                                        <td th:text="${#temporals.format(hdcg.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
+                                        <td th:text="${#numbers.formatCurrency(hdcg.khuyenMai)}"></td>
+                                        <td th:text="${#numbers.formatCurrency(hdcg.tongTien + hdcg.phiShip)}"></td>
+                                        <td>
+                                            <button th:if="${hdcg.loaiHoaDon == 1}" class="btn btn-success "
+                                                    style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                Tại quầy
+                                            </button>
+                                            <button th:if="${hdcg.loaiHoaDon == 2}" class="btn btn-primary "
+                                                    style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                Giao hàng
+                                            </button>
+                                        </td>
+                                        <td>
+
+                                            <a
+                                                    th:href="@{/admin/tai-quay/detail/{id}(id=${hdcg.id})}"
+                                                    class="btn btn-warning edit"
+                                                    style=" padding: 5px 10px; font-size: 12px">
+                                                <i class="material-icons text-white mt-1"
+                                                   title="Chi tiết">&#xE254;</i>
+                                            </a>
+
+                                            <a th:href="@{/admin/hoa-don/detail/{id}(id=${hdcg.id})}"
+                                               class="btn btn-success "
+                                               style=" padding: 5px 10px; font-size: 12px;">
+                                                <!--                            <i class="material-icons mt-2" data-toggle="tooltip" title="Delete">&#xE872;</i>-->
+                                                <i class="material-icons text-white mt-1"
+                                                   title="Chi tiết">visibility</i>
+                                            </a>
+                                        </td>
+                                    </tr>
                                     </tbody>
                                 </table>
                                 <h2 class="text-center mt-4" id="err"></h2>
@@ -239,7 +285,7 @@
                     </div>
 
 
-                    <div role="tabpanel" class="tab-pane" id="vanChuyen">
+                    <div role="tabpanel" class="tab-pane" id="dangGiao">
                         <div class="row mt-4">
                             <div class="table table-wrapper-scroll-y my-custom-scrollbar">
                                 <table id="tableModal" class="table table-borderless ml-2">
@@ -256,7 +302,7 @@
                                         <th>Thao tác</th>
                                     </tr>
                                     </thead>
-                                    <tbody id="sinhvien">
+                                    <tbody id="trdangGiao">
                                     table vận chuyển
                                     </tbody>
                                 </table>
@@ -282,7 +328,7 @@
                                         <th>Thao tác</th>
                                     </tr>
                                     </thead>
-                                    <tbody id="sinhvien">
+                                    <tbody id="trhoanThanh">
 
                                     <tr th:each="hdht, status : ${listhdht}">
                                         <td th:text="${status.index + 1}"></td>
@@ -337,7 +383,7 @@
                                         <th>Thao tác</th>
                                     </tr>
                                     </thead>
-                                    <tbody id="sinhvien">
+                                    <tbody id="trhuy">
                                     table hủy
                                     </tbody>
                                 </table>
@@ -352,6 +398,131 @@
 
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script th:inline="javascript">
+        let activeTab = '';
+        let textSearch = document.getElementById('textSearchHoaDOn');
+        let NBD = document.getElementById('NBDHoaDon');
+        let NKT = document.getElementById('NKTHoaDon');
+        let ld = document.getElementById('cbbLoaiDon');
+        let sx = document.getElementById('cbbSapXep');
+        let temp = '';
+        let listCTT = [[${listhdc}]];
+        let listHT = [[${listhdht}]];
+
+
+        $(document).ready(function () {
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                activeTab = $(e.target).attr("href");
+                resetSelectAndTab();
+
+            });
+        });
+
+
+        function loadAllTable(data, tab) {
+            console.log(tab);
+            let tempActiveTab = tab;
+            tempActiveTab = tempActiveTab == '' ? "choThanhToan" : tempActiveTab.substring(1, tempActiveTab.length);
+            let id = 'tr' + tempActiveTab;
+            let tbody = document.getElementById(id);
+            tbody.innerHTML = '';
+            for (let index = 0; index < data.length; index++) {
+                loadTr(data[index], tbody, index + 1);
+            }
+        }
+
+        function loadTr(x, tbody, index) {
+            let loaiDonbtn = ''
+
+            const formattedDateTime = moment(x.createdDate).utcOffset(7).format('DD-MM-YYYY HH:mm:ss');
+            let row = tbody.insertRow();
+            let formatteKM = x.khuyenMai.toLocaleString('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            });
+            let formattetongTien = x.tongTien.toLocaleString('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            });
+            row.insertCell().innerHTML = index;
+            row.insertCell().innerHTML = x.maHoaDOn;
+            row.insertCell().innerHTML = x.tenKhachHang;
+            row.insertCell().innerHTML = x.createdBy;
+            row.insertCell().innerHTML = formattedDateTime;
+            row.insertCell().innerHTML = formatteKM;
+            row.insertCell().innerHTML = formattetongTien;
+            let id = x.id;
+            if (x.loaiHoaDon == 1) {
+                loaiDonbtn = '<button class="btn btn-success " style="border-radius: 30px; font-size: 12px; height: 40px">Tại quầy </button>';
+            } else {
+                loaiDonbtn = '<button class="btn btn-primary "style="border-radius: 30px; font-size: 12px; height: 40px">Giao hàng</button>'
+            }
+            row.insertCell().innerHTML = loaiDonbtn;
+
+
+            if (activeTab == '#choThanhToan' || activeTab == '') {
+
+                let button1 = `<a href="/admin/tai-quay/detail/${id}" class="btn btn-warning edit" style=" padding: 5px 10px; font-size: 12px"><i class="material-icons text-white mt-1" title="Chi tiết">&#xE254;</i></a>`
+
+
+                let button2 = `<a href="/admin/tai-quay/detail/${id}" class="btn btn-success ms-1" style=" padding: 5px 10px; font-size: 12px;"><i class="material-icons text-white mt-1" title="Chi tiết">visibility</i></a>`;
+
+                row.insertCell().innerHTML = button1 + button2;
+            } else if (activeTab == '#hoanThanh') {
+                let button = `<a href="/admin/tai-quay/detail/${id}" class="btn btn-success ms-1" style=" padding: 5px 10px; font-size: 12px;"><i class="material-icons text-white mt-1" title="Chi tiết">visibility</i></a>`;
+                row.insertCell().innerHTML = button;
+            }
+        }
+
+
+        function resetSelectAndTab() {
+            textSearch.value = '';
+            NBD.value = '';
+            NKT.value = '';
+            ld.value = '';
+            loadAllTable(listCTT, '#choThanhToan');
+            loadAllTable(listHT, '#hoanThanh');
+
+        }
+
+        function fillter() {
+            let temActiveTab = activeTab;
+            temActiveTab = temActiveTab == '' ? "choThanhToan" : temActiveTab.substring(1, temActiveTab.length);
+            if (temActiveTab == 'choThanhToan') {
+                temActiveTab = 2;
+            } else {
+                temActiveTab = 1;
+            }
+            let params = {
+                ngayBatDau: NBD.value,
+                ngayKetThuc: NKT.value,
+                loaiDon: ld.value,
+                sapXep: sx.value,
+                textSearch: textSearch.value,
+                trangThai: temActiveTab
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "http://localhost:9090/api/hoa-don/multipleFindHoaDon",
+                data: JSON.stringify(params),
+                contentType: 'application/json',
+                success: function (data) {
+                    console.log(data);
+                    if (data.length == 0) {
+                        document.getElementById('err').innerHTML = "Không có dữ liệu phù hợp";
+                        loadAllTable(data, activeTab);
+                    } else {
+                        document.getElementById('err').innerHTML = "";
+                        loadAllTable(data, activeTab);
+                    }
+                }
+            })
+        }
+
+
+    </script>
 
 </div>
 </body>

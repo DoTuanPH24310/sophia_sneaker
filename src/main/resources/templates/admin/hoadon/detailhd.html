@@ -171,8 +171,8 @@
                 <h5 style="font-size: 17px;" class="mt-2 ms-2">Lịch sử thanh toán</h5>
                 <hr style="width: 300px;color: black;height: 1px;background-color: black;">
             </div>
-            <div class="table table-wrapper-scroll-y my-custom-scrollbar">
-                <div class="table table-wrapper-scroll-y my-custom-scrollbar" th:if="${displayTable}">
+            <div class="table">
+                <div class="table" th:if="${displayTable}">
                     <table id="tableModal" class="table table-borderless" th:object="${httt}">
                         <thead>
                         <tr class="bg-light">
@@ -228,12 +228,10 @@
                             style="border-radius: 50px; border: white; width: 150px;">
                         <span th:if="${hoaDon.trangThai == 1}">Thành công</span>
                         <span th:if="${hoaDon.trangThai == 2}">Chờ thanh toán</span>
-                        <span th:if="${hoaDon.trangThai == 3}">Loại 3</span>
-                        <!-- Add more conditions as needed -->
-                        <span th:if="${hoaDon.trangThai != 1 && hoaDon.trangThai != 2 && hoaDon.trangThai != 3}">
-                            <!-- Default value if none of the conditions are met -->
-                            <span th:text="${hoaDon.trangThai}"></span>
-                        </span>
+                        <span th:if="${hoaDon.trangThai == 3}">Chờ xác nhận</span>
+                        <span th:if="${hoaDon.trangThai == 4}">Chờ giao</span>
+                        <span th:if="${hoaDon.trangThai == 5}">Đang giao</span>
+                        <span th:if="${hoaDon.trangThai == 6}">Hủy</span>
                     </button>
                 </span>
                     </div>

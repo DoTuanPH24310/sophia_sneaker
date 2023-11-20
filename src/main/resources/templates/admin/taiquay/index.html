@@ -445,7 +445,7 @@
 
                         <div class="col-3">
                             <input class="float-right  text-right" type="text" id="tienKhachDua"
-                                   name="tienKhachDua" th:value="0">
+                                   name="tienKhachDua" th:value="${#numbers.formatCurrency(tienKhachDua)}">
                             <span th:text="${errTienKH}"></span>
                         </div>
                     </div>

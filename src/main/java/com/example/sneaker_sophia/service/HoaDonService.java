@@ -1,5 +1,6 @@
 package com.example.sneaker_sophia.service;
 
+import com.example.sneaker_sophia.dto.DTO_API_HoaDon;
 import com.example.sneaker_sophia.entity.HoaDon;
 import com.example.sneaker_sophia.repository.HoaDonRepository;
 import jakarta.annotation.Resource;
@@ -9,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service("hoaDonService")
@@ -16,6 +18,7 @@ public class HoaDonService {
 
     @Resource(name = "hoaDonRepository")
     HoaDonRepository hoaDonRepository;
+
 
 
     @Autowired
@@ -75,9 +78,31 @@ public class HoaDonService {
     public List<HoaDon> getAllHDHT(){
         return hoaDonRepository.getAllHDHT();
     }
+
     public List<HoaDon> getAllHDC(){
         return hoaDonRepository.getAllHDC();
     }
 
+    public List<HoaDon> getAllHDChoGiao(){
+        return hoaDonRepository.getAllHDChoGiao();
+    }
+
+    public List<HoaDon> getAllHDDangGiao(){
+        return hoaDonRepository.getAllHDDangGiao();
+    }
+
+    public List<HoaDon> getAllHDHuy(){
+        return hoaDonRepository.getAllHDC();
+    }
+
+    ///////////    20/11
+    public List<HoaDon> findHoaDonByMultipleParamsAPI(DTO_API_HoaDon hd) {
+        LocalDateTime ngayBatDau = hd.getNgayBatDau().equals("") ? null: LocalDateTime.parse(hd.getNgayBatDau());
+        LocalDateTime ngayKetThuc = hd.getNgayKetThuc().equals("") || hd.getNgayBatDau().equals("") ? null: LocalDateTime.parse(hd.getNgayKetThuc());
+        Integer loaiDon = hd.getLoaiDon().equals("") ? null: Integer.parseInt(hd.getLoaiDon());
+//        Integer trangThai = hd.getTrangThai().equals("") ? null: Integer.parseInt(hd.getTrangThai());
+        String txtSearch = hd.getTextSearch().equals("") ? null: hd.getTextSearch();
+        return hoaDonRepository.findHoaDonByMultipleParamsAPI(ngayBatDau,ngayKetThuc,Integer.parseInt(hd.getTrangThai()),loaiDon,txtSearch);
+    }
 
 }
