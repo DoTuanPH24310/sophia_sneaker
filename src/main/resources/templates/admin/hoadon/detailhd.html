@@ -118,7 +118,7 @@
 <div layout:fragment="content" class="container">
     <div style="background-color: white;">
 
-        <div class="main" style="height: 213px;">
+        <div class="main" style="height: 270px;">
             <ul class="ultag mt-3">
                 <li class="litag">
                     <i id="icon1" class="icon uil uil-circle"></i>
@@ -161,8 +161,18 @@
                 </li>
             </ul>
 
-
+            <div th:if="${hoaDon.trangThai == 4}" style="position: relative; right: 40px;" class="row float-right">
+                <a class="btn btn-primary">Xác nhận giao</a>
+            </div>
+            <div th:if="${hoaDon.trangThai == 5}" style="position: relative; right: 40px;" class="row float-right">
+                <a class="btn btn-primary">Xác nhận thành công</a>
+            </div>
+            <div th:if="${hoaDon.trangThai == 3}" style="position: relative; right: 40px;" class="row float-right">
+                <a class="btn btn-primary">Xác nhận đơn hàng</a>
+            </div>
         </div>
+
+
     </div>
 
     <div style="background-color: white;">

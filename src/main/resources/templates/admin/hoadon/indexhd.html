@@ -7,7 +7,7 @@
     <style>
         .my-custom-scrollbar {
             position: relative;
-            height: 400px;
+            height: 500px;
             overflow: auto;
         }
 
@@ -164,6 +164,11 @@
                                 <table id="tableModal" class="table table-borderless ml-2">
                                     <thead>
                                     <tr class="bg-light">
+                                        <th >
+                                            <input th:name="requestId"
+                                                   th:value="AllG" style="width: 20px; height: 18px;"
+                                                   type="checkbox">
+                                        </th>
                                         <th>STT</th>
                                         <th>Mã HĐ</th>
                                         <th>Tên khách hàng</th>
@@ -176,7 +181,15 @@
                                     </tr>
                                     </thead>
                                     <tbody id="trchoThanhToan">
+                                    <form action="">
+
+
                                     <tr th:each="hdc, status : ${listhdc}">
+                                        <th >
+                                            <input th:name="requestId"
+                                                   th:value="AllG" style="width: 20px; height: 18px;"
+                                                   type="checkbox">
+                                        </th>
                                         <td th:text="${status.index + 1}"></td>
                                         <td th:text="${hdc.maHoaDOn}"></td>
                                         <td th:text="${hdc.tenKhachHang}"></td>
@@ -208,6 +221,7 @@
                                             </a>
                                         </td>
                                     </tr>
+                                    </form>
                                     </tbody>
                                 </table>
                                 <h2 class="text-center mt-4" id="errchoThanhToan"></h2>
@@ -217,11 +231,22 @@
                     </div>
 
                     <div role="tabpanel" class="tab-pane" id="choXacNhan">
-                        <div class="row mt-4">
+
+
+
+                        <div class="row">
+                            <div>
+                                <a class="btn btn-primary mb-3 float-right">Xác nhận đơn</a>
+                            </div>
                             <div class="table table-wrapper-scroll-y my-custom-scrollbar">
                                 <table id="tableModal" class="table table-borderless ml-2">
                                     <thead>
                                     <tr class="bg-light">
+                                        <th >
+                                            <input th:name="requestId"
+                                                   th:value="AllG" style="width: 20px; height: 18px;"
+                                                   type="checkbox">
+                                        </th>
                                         <th>STT</th>
                                         <th>Mã HĐ</th>
                                         <th>Tên khách hàng</th>
@@ -235,6 +260,11 @@
                                     </thead>
                                     <tbody id="trchoXacNhan">
                                     <tr th:each="cxn, status : ${listhdhcxn}">
+                                        <th >
+                                            <input th:name="requestId"
+                                                   th:value="AllG" style="width: 20px; height: 18px;"
+                                                   type="checkbox">
+                                        </th>
                                         <td th:text="${status.index + 1}"></td>
                                         <td th:text="${cxn.maHoaDOn}"></td>
                                         <td th:text="${cxn.tenKhachHang}"></td>
@@ -271,11 +301,19 @@
 
 
                     <div role="tabpanel" class="tab-pane" id="choGiao">
-                        <div class="row mt-4">
+                        <div class="row">
+                            <div>
+                                <a class="btn btn-primary mb-3 float-right">Xác nhận giao</a>
+                            </div>
                             <div class="table table-wrapper-scroll-y my-custom-scrollbar">
                                 <table id="tableModal" class="table table-borderless ml-2">
                                     <thead>
                                     <tr class="bg-light">
+                                        <th >
+                                            <input th:name="requestId"
+                                                   th:value="AllG" style="width: 20px; height: 18px;"
+                                                   type="checkbox">
+                                        </th>
                                         <th>STT</th>
                                         <th>Mã HĐ</th>
                                         <th>Tên khách hàng</th>
@@ -290,6 +328,11 @@
                                     <tbody id="trchoGiao">
                                     <!--                                    table chờ giao-->
                                     <tr th:each="hdcg, status : ${listhdcg}">
+                                        <th >
+                                            <input th:name="requestId"
+                                                   th:value="AllG" style="width: 20px; height: 18px;"
+                                                   type="checkbox">
+                                        </th>
                                         <td th:text="${status.index + 1}"></td>
                                         <td th:text="${hdcg.maHoaDOn}"></td>
                                         <td th:text="${hdcg.tenKhachHang}"></td>
@@ -340,6 +383,11 @@
                                 <table id="tableModal" class="table table-borderless ml-2">
                                     <thead>
                                     <tr class="bg-light">
+                                        <th >
+                                            <input th:name="requestId"
+                                                   th:value="AllG" style="width: 20px; height: 18px;"
+                                                   type="checkbox">
+                                        </th>
                                         <th>STT</th>
                                         <th>Mã HĐ</th>
                                         <th>Tên khách hàng</th>
@@ -353,6 +401,11 @@
                                     </thead>
                                     <tbody id="trdangGiao">
                                     <tr th:each="hddg, status : ${listhddg}">
+                                        <th >
+                                            <input th:name="requestId"
+                                                   th:value="AllG" style="width: 20px; height: 18px;"
+                                                   type="checkbox">
+                                        </th>
                                         <td th:text="${status.index + 1}"></td>
                                         <td th:text="${hddg.maHoaDOn}"></td>
                                         <td th:text="${hddg.tenKhachHang}"></td>
@@ -397,6 +450,11 @@
                                 <table id="tableModal" class="table table-borderless ml-2">
                                     <thead>
                                     <tr class="bg-light">
+                                        <th >
+                                            <input th:name="requestId"
+                                                   th:value="AllG" style="width: 20px; height: 18px;"
+                                                   type="checkbox">
+                                        </th>
                                         <th>STT</th>
                                         <th>Mã HĐ</th>
                                         <th>Tên khách hàng</th>
@@ -411,6 +469,11 @@
                                     <tbody id="trhoanThanh">
 
                                     <tr th:each="hdht, status : ${listhdht}">
+                                        <th >
+                                            <input th:name="requestId"
+                                                   th:value="AllG" style="width: 20px; height: 18px;"
+                                                   type="checkbox">
+                                        </th>
                                         <td th:text="${status.index + 1}"></td>
                                         <td th:text="${hdht.maHoaDOn}"></td>
                                         <td th:text="${hdht.tenKhachHang}"></td>
@@ -452,6 +515,11 @@
                                 <table id="tableModal" class="table table-borderless ml-2">
                                     <thead>
                                     <tr class="bg-light">
+                                        <th >
+                                            <input th:name="requestId"
+                                                   th:value="AllG" style="width: 20px; height: 18px;"
+                                                   type="checkbox">
+                                        </th>
                                         <th>STT</th>
                                         <th>Mã HĐ</th>
                                         <th>Tên khách hàng</th>
@@ -465,6 +533,11 @@
                                     </thead>
                                     <tbody id="trhuy">
                                     <tr th:each="hdh, status : ${listhdh}">
+                                        <th >
+                                            <input th:name="requestId"
+                                                   th:value="AllG" style="width: 20px; height: 18px;"
+                                                   type="checkbox">
+                                        </th>
                                         <td th:text="${status.index + 1}"></td>
                                         <td th:text="${hdh.maHoaDOn}"></td>
                                         <td th:text="${hdh.tenKhachHang}"></td>
@@ -568,6 +641,10 @@
                 style: 'currency',
                 currency: 'VND'
             });
+
+            row.insertCell().innerHTML = ` <input th:name="requestId"
+                       th:value="AllG" style="width: 20px; height: 18px;"
+                       type="checkbox">`;
             row.insertCell().innerHTML = index;
             row.insertCell().innerHTML = x.maHoaDOn;
             row.insertCell().innerHTML = x.tenKhachHang;
