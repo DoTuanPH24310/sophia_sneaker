@@ -104,7 +104,7 @@ public class HoaDonService {
         LocalDateTime ngayKetThuc = hd.getNgayKetThuc().equals("") || hd.getNgayBatDau().equals("") ? null: LocalDateTime.parse(hd.getNgayKetThuc());
         Integer loaiDon = hd.getLoaiDon().equals("") ? null: Integer.parseInt(hd.getLoaiDon());
 //        Integer trangThai = hd.getTrangThai().equals("") ? null: Integer.parseInt(hd.getTrangThai());
-        String txtSearch = hd.getTextSearch().equals("") ? null: hd.getTextSearch();
+        String txtSearch = hd.getTextSearch().equals("") ? null: "%"+hd.getTextSearch()+"%";
         return hoaDonRepository.findHoaDonByMultipleParamsAPI(ngayBatDau,ngayKetThuc,Integer.parseInt(hd.getTrangThai()),loaiDon,txtSearch);
     }
 
