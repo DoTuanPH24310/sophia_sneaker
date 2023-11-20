@@ -697,7 +697,7 @@
             <!-- User Quick Action Form -->
         </div>
         <!-- Start User Details Checkout Form -->
-        <form th:object="${diaChi}" method="post" th:action="@{/check-out/thanhtoan}">
+        <form th:object="${diaChi}" method="post" th:action="@{/check-out/thanhtoan}" id="formThanhToan">
 
             <div class="checkout_form" data-aos="fade-up" data-aos-delay="400">
                 <div class="row">
@@ -800,11 +800,12 @@
                                     </tr>
                                     <tr>
                                         <td colspan="4" style="text-align: center;">Phí vận chuyển</td>
-                                        <td id="shipping-cost" th:value="20000">20000</td>
+                                        <td id="shipping-cost" th:text="${feeShipped}"></td>
                                     </tr>
                                     <tr class="order_total">
                                         <td colspan="4" style="text-align: center;">Tổng tiền đơn hàng</td>
-                                        <td><strong th:text="${#numbers.formatCurrency(total) }"></strong></td>
+                                        <td><strong id="totalAmount"
+                                                    th:text="${#numbers.formatCurrency(total) }"></strong></td>
                                     </tr>
                                     </tfoot>
                                 </table>
@@ -827,7 +828,8 @@
                                 <div class="panel-default">
                                     <label class="checkbox-default" for="currencyPaypal" data-bs-toggle="collapse"
                                            data-bs-target="#methodPaypal">
-                                        <input type="radio" id="currencyPaypal" name="hinhThucThanhToan" value="1">
+                                        <input type="radio" id="currencyPaypal" name="hinhThucThanhToan" value="1"
+                                               checked>
                                         <span>PayPal</span>
                                     </label>
                                     <div id="methodPaypal" class="collapse " data-parent="#methodPaypal">
@@ -841,7 +843,8 @@
                             </div>
                         </form>
                         <div class="order_button pt-3">
-                            <button class="btn btn-md btn-black-default-hover" type="submit">Thanh toán
+                            <button id="btnThanhToan" class="btn btn-md btn-black-default-hover" type="submit">Thanh
+                                toán
                             </button>
                         </div>
                     </div>
@@ -1220,108 +1223,201 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js"
         integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
     const host = "https://provinces.open-api.vn/api/";
-    var callAPI = (api) => {
-        return axios.get(api)
-            .then((response) => {
-                renderData(response.data, "province");
-            });
-    }
-    callAPI('https://provinces.open-api.vn/api/?depth=1');
-    var callApiDistrict = (api) => {
-        return axios.get(api)
-            .then((response) => {
-                renderData(response.data.districts, "district");
-            });
-    }
-    var callApiWard = (api) => {
-        return axios.get(api)
-            .then((response) => {
-                renderData(response.data.wards, "ward");
-            });
+
+    async function callAPI(api) {
+        try {
+            const response = await axios.get(api);
+            renderData(response.data, "province");
+        } catch (error) {
+            console.error("Error fetching province data:", error);
+        }
     }
 
-    var renderData = (array, select) => {
-        let row = ' <option disable value="">chọn</option>';
+    async function callApiDistrict(api) {
+        try {
+            const response = await axios.get(api);
+            renderData(response.data.districts, "district");
+        } catch (error) {
+            console.error("Error fetching district data:", error);
+        }
+    }
+
+    async function callApiWard(api) {
+        try {
+            const response = await axios.get(api);
+            renderData(response.data.wards, "ward");
+        } catch (error) {
+            console.error("Error fetching ward data:", error);
+        }
+    }
+
+    function renderData(array, select) {
+        let row = '<option disable value="">chọn</option>';
         array.forEach(element => {
-            row += `<option value="${element.code}">${element.name}</option>`
+            row += `<option value="${element.code}">${element.name}</option>`;
         });
-        document.querySelector("#" + select).innerHTML = row
+        document.querySelector("#" + select).innerHTML = row;
     }
 
-    $("#province").change(() => {
-        callApiDistrict(host + "p/" + $("#province").val() + "?depth=2");
+    $("#province").change(async () => {
+        const provinceApi = host + "p/" + $("#province").val() + "?depth=2";
+        await callApiDistrict(provinceApi);
         printResult();
     });
-    $("#district").change(() => {
-        callApiWard(host + "d/" + $("#district").val() + "?depth=2");
+
+    $("#district").change(async () => {
+        const districtApi = host + "d/" + $("#district").val() + "?depth=2";
+        await callApiWard(districtApi);
         printResult();
     });
+
     $("#ward").change(() => {
         printResult();
-    })
+    });
 
     var printResult = () => {
-        if ($("#district").val() != "" && $("#province").val() != "" &&
-            $("#ward").val() != "") {
-            let result = $("#province option:selected").text() +
-                " | " + $("#district option:selected").text() + " | " +
+        if ($("#district").val() != "" && $("#province").val() != "" && $("#ward").val() != "") {
+            let result =
+                $("#province option:selected").text() +
+                " | " +
+                $("#district option:selected").text() +
+                " | " +
                 $("#ward option:selected").text();
-            $("#result").text(result)
+            $("#result").text(result);
         }
+    };
 
+    document.addEventListener("DOMContentLoaded", function () {
+        var provinceDropdown = document.getElementById("province");
+        var districtDropdown = document.getElementById("district");
+        var wardDropdown = document.getElementById("ward");
+
+        provinceDropdown.addEventListener("change", updateShippingFee);
+        districtDropdown.addEventListener("change", updateShippingFee);
+        wardDropdown.addEventListener("change", updateShippingFee);
+
+        // Initial API call to fetch province data
+        callAPI(host + "?depth=1");
+    });
+
+    function calculateShippingFee() {
+        // Lấy thông tin địa chỉ từ các trường trên trang web
+        var districtId = document.getElementById("district").value;
+
+        // Gọi API tính phí vận chuyển từ backend
+        fetch("/ghn-api/calculateShippingFee?serviceId=2&fromDistrictId=1&toDistrictId=" + districtId)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("API Response:", data); // Log the entire response for debugging
+
+                // Check the structure of the response
+                if (data && data.fee !== undefined) {
+                    // Cập nhật phí vận chuyển trên trang web
+                    var shippingCostElement = document.getElementById("shipping-cost");
+                    if (shippingCostElement) {
+                        shippingCostElement.innerText = formatCurrency(data.fee);
+                    } else {
+                        console.error("Shipping cost element not found!");
+                    }
+                } else {
+                    console.error("Invalid response format: 'fee' property not found in inner data");
+                }
+            })
+            .catch(error => console.error("Error:", error));
     }
 
+    function updateShippingFee() {
+        // Call the calculateShippingFee function or perform the necessary logic
+        calculateShippingFee();
+    }
 
-    // Tạo ứng dụng AngularJS
-    var myApp = angular.module('myApp', []);
+    function formatCurrency(amount) {
+        return new Intl.NumberFormat('vi-VN', {style: 'currency', currency: 'VND'}).format(amount);
+    }
 
-    // Tạo một controller trong ứng dụng
-    myApp.controller('myController', function ($scope, $http) {
-        // Định nghĩa biến feeShipped và khởi tạo giá trị mặc định
-        $scope.feeShipped = 0;
+    var paymentExecuted = false; // Variable to track whether payment has been executed
 
-        // Hàm thay đổi quận
-    //     $scope.districtChange = function (id) {
-    //         $http.get("https://online-gateway.ghn.vn/shiip/public-api/v2/master-data/ward?district_id=" + id)
-    //             .then(function (res) {
-    //                 $scope.wards = res.data.data;
-    //                 console.log(res.data);
-    //             })
-    //             .catch(function (err) {
-    //                 console.log(err);
-    //             });
-    //     };
-    //
-    //     // Hàm lấy phí vận chuyển
-    //     $scope.getFeeShipped = function (idDistrict, wardCode) {
-    //         let data = {
-    //             "service_type_id": 2,
-    //             "to_district_id": parseInt(idDistrict),
-    //             "to_ward_code": wardCode,
-    //             "height": 15,
-    //             "length": 25,
-    //             "weight": 5,
-    //             "width": 10,
-    //         };
-    //
-    //         $http.post("https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee", data)
-    //             .then(function (res) {
-    //                 console.log(res.data.data);
-    //                 $scope.feeShipped = res.data.data.total;
-    //             })
-    //             .catch(function (err) {
-    //                 console.log(err);
-    //             });
-    //     };
-    // });
+    document.getElementById("btnThanhToan").addEventListener("click", function (event) {
+        var paymentMethod = document.querySelector('input[name="hinhThucThanhToan"]:checked').value;
+
+        // Kiểm tra xem đã thực hiện thanh toán chưa
+        if (paymentExecuted) {
+            // Nếu đã thực hiện thanh toán, không làm gì cả
+            return;
+        }
+
+        // Prevent the default form submission behavior
+        event.preventDefault();
+
+        // Get all form data including dropdown selections
+        var formData = {};
+        var formElements = document.getElementById("formThanhToan").elements;
+        for (var i = 0; i < formElements.length; i++) {
+            var element = formElements[i];
+            if (element.name) {
+                formData[element.name] = element.value;
+            }
+        }
+
+        // Store selected values of dropdowns
+        formData["selectedProvince"] = $("#province").val();
+        formData["selectedDistrict"] = $("#district").val();
+        formData["selectedWard"] = $("#ward").val();
+
+        // Check if all required dropdowns are selected
+        var selectedProvince = $("#province").val();
+        var selectedDistrict = $("#district").val();
+        var selectedWard = $("#ward").val();
+
+        if (!selectedProvince || !selectedDistrict || !selectedWard) {
+            // Display an error message or handle it in an appropriate way
+            console.error("Please select values for all dropdowns");
+            return;
+        }
+
+        if (paymentMethod === "0") {
+            // Payment method is "0" (Thanh toán khi nhận hàng)
+            document.getElementById("formThanhToan").action = "/check-out/thanhtoan";
+            document.getElementById("formThanhToan").submit();
+        } else {
+            // Payment method is "1" (Vnpay)
+
+            // Lưu dữ liệu người dùng vào sessionStorage
+            sessionStorage.setItem("checkoutFormData", JSON.stringify(formData));
+
+            // Fetch payment URL and redirect to Vnpay
+            fetch("/api/payment/create_payment?totalAmount=" + encodeURIComponent(document.getElementById("totalAmount").innerText))
+                .then(response => response.text())
+                .then(paymentUrl => {
+                    console.log("Received Payment URL:", paymentUrl);
+                    document.getElementById("formThanhToan").action = paymentUrl;
+
+                    // Đánh dấu đã thực hiện thanh toán
+                    paymentExecuted = true;
+
+                    // Submit the form
+                    document.getElementById("formThanhToan").submit();
+                })
+                .catch(error => {
+                    console.error("Error fetching payment URL:", error);
+                });
+        }
+    });
+
 
 
 
 
 </script>
+
 </body>
 
 

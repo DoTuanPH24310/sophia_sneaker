@@ -501,7 +501,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             // Đặt một độ trễ mới 2 giây trước khi gửi yêu cầu lọc
-            timeout = setTimeout(submitForms, 2000); // 2 giây
+            timeout = setTimeout(submitForms, 0); // 2 giây
         });
     });
 
@@ -511,7 +511,7 @@ document.addEventListener("DOMContentLoaded", function () {
             clearTimeout(timeout);
         }
         // Đặt một độ trễ mới 2 giây trước khi gửi yêu cầu lọc
-        timeout = setTimeout(submitForms, 2000); // 2 giây
+        timeout = setTimeout(submitForms, 0); // 2 giây
     });
 
     function submitForms() {
