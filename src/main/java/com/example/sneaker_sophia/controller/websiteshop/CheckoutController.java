@@ -66,7 +66,7 @@ public class CheckoutController {
                 return "website/productwebsite/checkout";
             }
         }
-        return "website/productwebsite/cart";
+        return "redirect:/cart/hien-thi";
     }
 
 
@@ -128,9 +128,12 @@ public class CheckoutController {
 
 
     @PostMapping("/thanhtoan")
-    public String thanhToan(@ModelAttribute("diaChi") DiaChiDTO diaChi,
-                            @RequestParam("hinhThucThanhToan") Integer hinhThucThanhToan,
+    public String thanhToan(@ModelAttribute(value = "diaChi") DiaChiDTO diaChi,
+                            @RequestParam(value = "hinhThucThanhToan",required = false) Integer hinhThucThanhToan,
                             Model model, HttpSession session) {
+
+
+        System.out.println(diaChi + " :test");
         try {
             Cart cart = (Cart) session.getAttribute("cart");
             List<CartItem> cartItems = cart.getItems();
@@ -143,7 +146,7 @@ public class CheckoutController {
 
             emailService.themDiaChiVaoTaiKhoan(diaChi, taiKhoanMoi);
 
-            HoaDon hoaDonMoi = emailService.taoHoaDonMoi(taiKhoanMoi, hinhThucThanhToan);
+            HoaDon hoaDonMoi = emailService.taoHoaDonMoi(taiKhoanMoi, 1);
             emailService.themSanPhamVaoHoaDonChiTiet(cartItems, hoaDonMoi);
 
             emailService.guiEmailXacNhanThanhToan(taiKhoanMoi.getEmail(), hoaDonMoi);

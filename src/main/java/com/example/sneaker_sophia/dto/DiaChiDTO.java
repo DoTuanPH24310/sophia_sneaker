@@ -4,16 +4,14 @@ package com.example.sneaker_sophia.dto;
 import com.example.sneaker_sophia.entity.DiaChi;
 import com.example.sneaker_sophia.entity.TaiKhoan;
 import com.example.sneaker_sophia.request.NhanVienRequest;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.stereotype.Component;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class DiaChiDTO {
     private String id;
 

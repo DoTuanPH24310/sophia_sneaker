@@ -93,4 +93,7 @@ public class HoaDon {
 
     @OneToMany(mappedBy = "hoaDon", fetch = FetchType.LAZY)
     private List<HinhThucThanhToan> hinhThucThanhToanList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "hoaDon", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<VNPay> vnpays = new ArrayList<>();
 }
