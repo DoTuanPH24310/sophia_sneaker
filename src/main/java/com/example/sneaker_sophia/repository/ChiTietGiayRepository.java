@@ -54,6 +54,7 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
             "(:loaiGiay IS NULL OR c.loaiGiay = :loaiGiay) AND " +
             "(:mauSac IS NULL OR c.mauSac = :mauSac) AND " +
             "(:kichCo IS NULL OR c.kichCo = :kichCo) AND " +
+            "(:trangThai IS NULL OR c.trangThai = :trangThai) AND " +
             "(:giaMin IS NULL OR c.gia >= :giaMin) AND " +
             "(:giaMax IS NULL OR c.gia <= :giaMax) ")
 
@@ -64,6 +65,7 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
             @Param("loaiGiay") LoaiGiay loaiGiay,
             @Param("mauSac") MauSac mauSac,
             @Param("kichCo") KichCo kichCo,
+            @Param("trangThai") String trangThai,
             @Param("giaMin") Double giaMin,
             @Param("giaMax") Double giaMax,
             Pageable pageable

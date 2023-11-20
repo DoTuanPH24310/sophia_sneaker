@@ -149,11 +149,11 @@ public class ChiTietGiayService {
         }
     }
 
-    public Page<ChiTietGiay> filterCombobox(int pageNum, String sortField, String sortDir,Giay giay, DeGiay deGiay, Hang hang, LoaiGiay loaiGiay, MauSac mauSac, KichCo kichCo,Double giaMin,Double giaMax){
+    public Page<ChiTietGiay> filterCombobox(int pageNum, String sortField, String sortDir,Giay giay, DeGiay deGiay, Hang hang, LoaiGiay loaiGiay, MauSac mauSac, KichCo kichCo,String trangThai,Double giaMin,Double giaMax){
         Sort sort = Sort.by(sortField);
         sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
         Pageable pageable = PageRequest.of(pageNum - 1, PRODUCT_DETAIL_PER_PAGE, sort);
-        return chiTietGiayRepository.findChiTietGiayByMultipleParams(giay,deGiay,hang,loaiGiay,mauSac,kichCo,giaMin,giaMax,pageable);
+        return chiTietGiayRepository.findChiTietGiayByMultipleParams(giay,deGiay,hang,loaiGiay,mauSac,kichCo,trangThai,giaMin,giaMax,pageable);
     }
 
     public List<ChiTietGiay> findChiTietGiaysById(UUID uuid){
