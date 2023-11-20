@@ -86,6 +86,9 @@ public class HoaDonService {
     public List<HoaDon> getAllHDChoGiao(){
         return hoaDonRepository.getAllHDChoGiao();
     }
+    public List<HoaDon> getAllHDChoXacNhan(){
+        return hoaDonRepository.getAllHDCXN();
+    }
 
     public List<HoaDon> getAllHDDangGiao(){
         return hoaDonRepository.getAllHDDangGiao();
@@ -105,4 +108,15 @@ public class HoaDonService {
         return hoaDonRepository.findHoaDonByMultipleParamsAPI(ngayBatDau,ngayKetThuc,Integer.parseInt(hd.getTrangThai()),loaiDon,txtSearch);
     }
 
+    public Integer soHDCG(){
+        return hoaDonRepository.soHDCG();
+    }
+
+    public Integer soHDCXN(){
+        return hoaDonRepository.soHDCXN();
+    }
+
+    public Integer soHDC(){
+        return hoaDonRepository.soHDC();
+    }
 }

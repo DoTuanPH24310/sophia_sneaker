@@ -180,7 +180,6 @@
                             <th>Thời gian</th>
                             <th>Số tiền</th>
                             <th>Loại giao dịch</th>
-                            <th>Phương thức thanh toán</th>
                             <th>Ghi chú</th>
                         </tr>
                         </thead>
@@ -189,17 +188,10 @@
                         <td th:text="${#temporals.format(httt.updatedDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
                         <td th:text="${#numbers.formatCurrency(httt.soTien)}"></td>
                         <td>
-                            <span th:switch="${httt.hoaDon.loaiHoaDon}">
-                                <span th:case="1">Tại quầy</span>
-                                <span th:case="2">Giao hàng</span>
-                                <span th:case="3">Loại 3</span>
-                            </span>
-                        </td>
-                        <td>
                             <span th:switch="${httt.trangThai}">
-                                <span th:case="1">Tiền mặt</span>
-                                <span th:case="2">Chuyển khoản</span>
-                                <span th:case="3">Trả sau</span>
+                                        <span th:case="1">Tiền mặt</span>
+                                        <span th:case="2">Chuyển khoản</span>
+                                        <span th:case="3">Trả sau</span>
                             </span>
                         </td>
                         <td th:text="${httt.hoaDon.ghiChu}"></td>
@@ -214,7 +206,7 @@
 
     <div style="background-color: white;" th:object="${hoaDon}">
         <div class="m-3">
-            <div class="ttdh mb-5 mt-4" >
+            <div class="ttdh mb-5 mt-4">
 
                 <div class="row">
                     <h5 style="font-size: 17px;" class="mt-3 ms-2">Thông tin đơn hàng</h5>
@@ -224,7 +216,7 @@
                 <div class="row mt-2">
                     <div class="col-7">
                 <span>Trạng thái: &ensp;&ensp;&ensp;&ensp;
-                    <button class="bg-info text-light"
+                    <button class="bg-success text-light"
                             style="border-radius: 50px; border: white; width: 150px;">
                         <span th:if="${hoaDon.trangThai == 1}">Thành công</span>
                         <span th:if="${hoaDon.trangThai == 2}">Chờ thanh toán</span>
@@ -238,7 +230,7 @@
 
                     <div class="col-5">
                 <span>Loại đơn: &ensp;&ensp;&ensp;&ensp;
-                    <button class="bg-info text-light"
+                    <button class="bg-secondary text-light"
                             style="border-radius: 50px; border: white; width: 150px;">
                         <span th:if="${hoaDon.loaiHoaDon == 1}">Tại quầy</span>
                         <span th:if="${hoaDon.loaiHoaDon == 2}">Giao hàng</span>
@@ -333,30 +325,40 @@
                     <div class="col-6">
                         <div class="row mb-1">
                             <div class="col-6"></div>
-                            <div class="col-6" >
+                            <div class="col-6">
                                 <span style="float: left"> Tiền hàng:</span>
-                                <span style="float: right" th:text="${#numbers.formatCurrency(hoaDon.tongTien + hoaDon.khuyenMai)}"></span>
+                                <span style="float: right"
+                                      th:text="${#numbers.formatCurrency(hoaDon.tongTien + hoaDon.khuyenMai)}"></span>
                             </div>
                         </div>
                         <div class="row  mb-1">
                             <div class="col-6"></div>
                             <div class="col-6">
                                 <span style="float: left"> Khuyến mại:</span>
-                                <span style="float: right" th:text="${hoaDon.khuyenMai > 0 ? '- ' + #numbers.formatCurrency(hoaDon.khuyenMai) : #numbers.formatCurrency(hoaDon.khuyenMai)}"></span>
+                                <span style="float: right"
+                                      th:text="${hoaDon.khuyenMai > 0 ? '- ' + #numbers.formatCurrency(hoaDon.khuyenMai) : #numbers.formatCurrency(hoaDon.khuyenMai)}"></span>
                             </div>
                         </div>
                         <div class="row mb-2">
-                            <div class="col-6"> </div>
+                            <div class="col-6"></div>
                             <div class="col-6">
                                 <span style="float: left">  Phí ship:</span>
                                 <span style="float: right" th:text="${#numbers.formatCurrency(hoaDon.phiShip)}"></span>
                             </div>
                         </div>
+                        <div class="row mb-2">
+                            <div class="col-6"></div>
+                            <div class="col-6">
+                                <span style="float: left">  Tiền thừa:</span>
+                                <span style="float: right" th:text="${#numbers.formatCurrency(hoaDon.tienThua)}"></span>
+                            </div>
+                        </div>
                         <div class="row mb-5">
-                            <div class="col-6" ></div>
+                            <div class="col-6"></div>
                             <div class="col-6">
                                 <h5 style="float: left;"> Thành tiền:</h5>
-                                <span style="float: right; color: red; font-weight: bold; font-size: 18px" th:text="${#numbers.formatCurrency(hoaDon.tongTien + hoaDon.phiShip)}"></span>
+                                <span style="float: right; color: red; font-weight: bold; font-size: 18px"
+                                      th:text="${#numbers.formatCurrency(hoaDon.tongTien + hoaDon.phiShip)}"></span>
                             </div>
                         </div>
                     </div>

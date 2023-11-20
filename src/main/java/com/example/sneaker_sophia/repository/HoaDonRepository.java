@@ -26,14 +26,26 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
     @Query(value = "select hd from HoaDon hd where hd.trangThai = 2 order by hd.createdDate desc ")
     List<HoaDon> getAllHDC();
 
+    @Query(value = "select hd from HoaDon hd where hd.trangThai = 3 order by hd.createdDate desc ")
+    List<HoaDon> getAllHDCXN();
+
     @Query(value = "select hd from HoaDon hd where hd.trangThai = 4 order by hd.createdDate desc ")
     List<HoaDon> getAllHDChoGiao();
 
     @Query(value = "select hd from HoaDon hd where hd.trangThai = 5 order by hd.createdDate desc ")
     List<HoaDon> getAllHDDangGiao();
 
-    @Query(value = "select hd from HoaDon hd where hd.trangThai = 6")
+    @Query(value = "select hd from HoaDon hd where hd.trangThai = 6 order by hd.createdDate desc ")
     List<HoaDon> getAllHDHuy();
+
+    @Query(value = "select count(hd) from HoaDon hd where hd.trangThai = 2")
+    Integer soHDC();
+
+    @Query(value = "select count(hd) from HoaDon hd where hd.trangThai = 3")
+    Integer soHDCXN();
+
+    @Query(value = "select count(hd) from HoaDon hd where hd.trangThai = 4")
+    Integer soHDCG();
 
     @Query("SELECT c FROM HoaDon c WHERE" +
             "(:ngayBatDau IS NULL OR c.createdDate >= :ngayBatDau) AND " +
