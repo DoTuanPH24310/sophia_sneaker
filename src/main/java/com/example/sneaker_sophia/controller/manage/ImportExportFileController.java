@@ -18,9 +18,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+
 @Controller
 @RequestMapping("/admin")
 public class ImportExportFileController {
@@ -151,7 +154,6 @@ public class ImportExportFileController {
         return new ResponseEntity<>(excelBytes, headers, HttpStatus.OK);
     }
 
-    @CrossOrigin
     @RequestMapping(value = "/importFromExcel", method = RequestMethod.POST)
     public String importFromExcel(@RequestParam("file") MultipartFile file) {
         try {
@@ -163,29 +165,28 @@ public class ImportExportFileController {
             for (int rowIndex = 1; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
                 Row row = sheet.getRow(rowIndex);
 
-                // Tạo đối tượng ChiTietGiay mới
                 ChiTietGiay chiTietGiay = new ChiTietGiay();
-                chiTietGiay.setMa( row.getCell(0).getStringCellValue());
-                chiTietGiay.setTen(row.getCell(1).getStringCellValue());
-                chiTietGiay.setGiay(giayService.findByTen(row.getCell(2).getStringCellValue()));
-                chiTietGiay.setDeGiay(deGiayService.findByTen(row.getCell(3).getStringCellValue()));
-                chiTietGiay.setHang(hangService.findByTen(row.getCell(4).getStringCellValue()));
-                chiTietGiay.setKichCo(kichCoService.findByTen(row.getCell(5).getStringCellValue()));
-                chiTietGiay.setLoaiGiay(loaiGiayService.findByTen(row.getCell(6).getStringCellValue()));
-                chiTietGiay.setMauSac(mauSacService.findByTen(row.getCell(7).getStringCellValue()));
-                chiTietGiay.setMoTa( row.getCell(8).getStringCellValue());
-                chiTietGiay.setGia(Double.valueOf(row.getCell(9).getStringCellValue()));
-                chiTietGiay.setTrangThai(Integer.valueOf(row.getCell(10).getStringCellValue()));
-                chiTietGiay.setSoLuong(Integer.valueOf(row.getCell(11).getStringCellValue()));
-                chiTietGiay.setNgayTao(LocalDateTime.parse(row.getCell(12).getStringCellValue()));
-                chiTietGiay.setNgaySua(LocalDateTime.parse(row.getCell(13).getStringCellValue()));
-                chiTietGiay.setNguoiTao( row.getCell(14).getStringCellValue());
-                chiTietGiay.setNguoiSua( row.getCell(15).getStringCellValue());
+                chiTietGiay.setMa(getStringValue(row.getCell(0)));
+                chiTietGiay.setTen(getStringValue(row.getCell(1)));
+                chiTietGiay.setGiay(giayService.findByTen(getStringValue(row.getCell(2))));
+                chiTietGiay.setDeGiay(deGiayService.findByTen(getStringValue(row.getCell(3))));
+                chiTietGiay.setHang(hangService.findByTen(getStringValue(row.getCell(4))));
+                chiTietGiay.setKichCo(kichCoService.findByTen(getStringValue(row.getCell(5))));
+                chiTietGiay.setLoaiGiay(loaiGiayService.findByTen(getStringValue(row.getCell(6))));
+                chiTietGiay.setMauSac(mauSacService.findByTen(getStringValue(row.getCell(7))));
+                chiTietGiay.setMoTa(getStringValue(row.getCell(8)));
+                chiTietGiay.setGia(getDoubleValue(row.getCell(9)));
+                chiTietGiay.setTrangThai(getIntegerValue(row.getCell(10)));
+                chiTietGiay.setSoLuong(getIntegerValue(row.getCell(11)));
+//                chiTietGiay.setNgayTao(parseLocalDateTime(getStringValue(row.getCell(12))));
+//                chiTietGiay.setNgaySua(parseLocalDateTime(getStringValue(row.getCell(13))));
+                chiTietGiay.setNguoiTao(getStringValue(row.getCell(14)));
+                chiTietGiay.setNguoiSua(getStringValue(row.getCell(15)));
 
-                // Gọi service để thêm sản phẩm mới vào cơ sở dữ liệu
                 chiTietGiayService.save(chiTietGiay);
                 System.out.println("ăn");
             }
+
 
             // Đóng workbook
             workbook.close();
@@ -201,8 +202,13 @@ public class ImportExportFileController {
     private void createComboBoxForGiay(Workbook workbook, Sheet sheet, Cell cell, List<Giay> giayList, String defaultValue) {
         DataValidationHelper helper = sheet.getDataValidationHelper();
 
+        // Loại bỏ các giá trị trùng lặp từ deGiayList
+        List<Giay> uniqueDeGiayList = giayList.stream()
+                .distinct()
+                .collect(Collectors.toList());
+
         // Chuyển danh sách giayList thành mảng String
-        String[] giayNames = giayList.stream().map(Giay::getTen).toArray(String[]::new);
+        String[] giayNames = uniqueDeGiayList.stream().map(Giay::getTen).toArray(String[]::new);
 
         // Thêm giá trị mặc định vào danh sách giá trị
         String[] allValues = Arrays.copyOf(giayNames, giayNames.length + 1);
@@ -224,8 +230,13 @@ public class ImportExportFileController {
     private void createComboBoxForDeGiay(Workbook workbook, Sheet sheet, Cell cell, List<DeGiay> deGiayList, String defaultValue) {
         DataValidationHelper helper = sheet.getDataValidationHelper();
 
-        // Chuyển danh sách giayList thành mảng String
-        String[] giayNames = deGiayList.stream().map(DeGiay::getTen).toArray(String[]::new);
+        // Loại bỏ các giá trị trùng lặp từ deGiayList
+        List<DeGiay> uniqueDeGiayList = deGiayList.stream()
+                .distinct()
+                .collect(Collectors.toList());
+
+        // Chuyển uniqueDeGiayList thành mảng String chứa tên
+        String[] giayNames = uniqueDeGiayList.stream().map(DeGiay::getTen).toArray(String[]::new);
 
         // Thêm giá trị mặc định vào danh sách giá trị
         String[] allValues = Arrays.copyOf(giayNames, giayNames.length + 1);
@@ -244,11 +255,17 @@ public class ImportExportFileController {
         cell.setCellValue(defaultValue);
     }
 
+
     private void createComboBoxForHang(Workbook workbook, Sheet sheet, Cell cell, List<Hang> hangList, String defaultValue) {
         DataValidationHelper helper = sheet.getDataValidationHelper();
 
+        // Loại bỏ các giá trị trùng lặp từ deGiayList
+        List<Hang> uniqueDeGiayList = hangList.stream()
+                .distinct()
+                .collect(Collectors.toList());
+
         // Chuyển danh sách giayList thành mảng String
-        String[] giayNames = hangList.stream().map(Hang::getTen).toArray(String[]::new);
+        String[] giayNames = uniqueDeGiayList.stream().map(Hang::getTen).toArray(String[]::new);
 
         // Thêm giá trị mặc định vào danh sách giá trị
         String[] allValues = Arrays.copyOf(giayNames, giayNames.length + 1);
@@ -269,9 +286,12 @@ public class ImportExportFileController {
 
     private void createComboBoxForKichCo(Workbook workbook, Sheet sheet, Cell cell, List<KichCo> kichCoList, String defaultValue) {
         DataValidationHelper helper = sheet.getDataValidationHelper();
-
+// Loại bỏ các giá trị trùng lặp từ deGiayList
+        List<KichCo> uniqueDeGiayList = kichCoList.stream()
+                .distinct()
+                .collect(Collectors.toList());
         // Chuyển danh sách giayList thành mảng String
-        String[] giayNames = kichCoList.stream().map(KichCo::getTen).toArray(String[]::new);
+        String[] giayNames = uniqueDeGiayList.stream().map(KichCo::getTen).toArray(String[]::new);
 
         // Thêm giá trị mặc định vào danh sách giá trị
         String[] allValues = Arrays.copyOf(giayNames, giayNames.length + 1);
@@ -293,8 +313,13 @@ public class ImportExportFileController {
     private void createComboBoxForLoaiGiay(Workbook workbook, Sheet sheet, Cell cell, List<LoaiGiay> loaiGiayList, String defaultValue) {
         DataValidationHelper helper = sheet.getDataValidationHelper();
 
+        // Loại bỏ các giá trị trùng lặp từ deGiayList
+        List<LoaiGiay> uniqueDeGiayList = loaiGiayList.stream()
+                .distinct()
+                .collect(Collectors.toList());
+
         // Chuyển danh sách giayList thành mảng String
-        String[] giayNames = loaiGiayList.stream().map(LoaiGiay::getTen).toArray(String[]::new);
+        String[] giayNames = uniqueDeGiayList.stream().map(LoaiGiay::getTen).toArray(String[]::new);
 
         // Thêm giá trị mặc định vào danh sách giá trị
         String[] allValues = Arrays.copyOf(giayNames, giayNames.length + 1);
@@ -317,8 +342,13 @@ public class ImportExportFileController {
     private void createComboBoxForMauSac(Workbook workbook, Sheet sheet, Cell cell, List<MauSac> mauSacList, String defaultValue) {
         DataValidationHelper helper = sheet.getDataValidationHelper();
 
+        // Loại bỏ các giá trị trùng lặp từ deGiayList
+        List<MauSac> uniqueDeGiayList = mauSacList.stream()
+                .distinct()
+                .collect(Collectors.toList());
+
         // Chuyển danh sách giayList thành mảng String
-        String[] giayNames = mauSacList.stream().map(MauSac::getTen).toArray(String[]::new);
+        String[] giayNames = uniqueDeGiayList.stream().map(MauSac::getTen).toArray(String[]::new);
 
         // Thêm giá trị mặc định vào danh sách giá trị
         String[] allValues = Arrays.copyOf(giayNames, giayNames.length + 1);
@@ -336,4 +366,52 @@ public class ImportExportFileController {
         // Đặt giá trị mặc định cho ô ComboBox
         cell.setCellValue(defaultValue);
     }
+
+    //kiểm tra validate
+    private String getStringValue(Cell cell) {
+        if (cell == null) {
+            return null;
+        }
+        if (cell.getCellType() == CellType.STRING) {
+            return cell.getStringCellValue();
+        } else if (cell.getCellType() == CellType.NUMERIC) {
+            // Chuyển đổi giá trị số thành chuỗi
+            return String.valueOf(cell.getNumericCellValue());
+        }
+        return null;
+    }
+
+    private Double getDoubleValue(Cell cell) {
+        if (cell == null) {
+            return null;
+        }
+        if (cell.getCellType() == CellType.NUMERIC) {
+            return cell.getNumericCellValue();
+        } else if (cell.getCellType() == CellType.STRING) {
+            // Chuyển đổi chuỗi thành số
+            return Double.valueOf(cell.getStringCellValue());
+        }
+        return null;
+    }
+
+    private Integer getIntegerValue(Cell cell) {
+        if (cell == null) {
+            return null;
+        }
+        if (cell.getCellType() == CellType.NUMERIC) {
+            // Chuyển đổi giá trị số thành số nguyên
+            return (int) cell.getNumericCellValue();
+        } else if (cell.getCellType() == CellType.STRING) {
+            // Chuyển đổi chuỗi thành số nguyên
+            return Integer.valueOf(cell.getStringCellValue());
+        }
+        return null;
+    }
+
+    private LocalDateTime parseLocalDateTime(String value) {
+        // Thực hiện chuyển đổi từ chuỗi thành LocalDateTime theo định dạng mong muốn
+        // Ví dụ: DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        return LocalDateTime.parse(value, DateTimeFormatter.ISO_DATE_TIME);
+    }
+
 }
