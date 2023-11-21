@@ -216,7 +216,7 @@ public class TaiQuayController {
         HoaDon hd = hoaDonService.addHD(model);
         LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
         lichSuHoaDon.setHoaDon(hd);
-        lichSuHoaDon.setPhuongThuc("tạo mới");
+        lichSuHoaDon.setPhuongThuc("2");
         lshdService.savelshd(lichSuHoaDon);
         if (hd != null) {
             tempIdHD = hd.getId();
@@ -618,13 +618,13 @@ public class TaiQuayController {
             hoaDon.setTrangThai(4);
             LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
             lichSuHoaDon.setHoaDon(hoaDon);
-            lichSuHoaDon.setPhuongThuc("chờ giao");
+            lichSuHoaDon.setPhuongThuc("4");
             lshdService.savelshd(lichSuHoaDon);
         } else {
             hoaDon.setTrangThai(1);
             LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
             lichSuHoaDon.setHoaDon(hoaDon);
-            lichSuHoaDon.setPhuongThuc("thanh toán");
+            lichSuHoaDon.setPhuongThuc("1");
             lshdService.savelshd(lichSuHoaDon);
         }
 

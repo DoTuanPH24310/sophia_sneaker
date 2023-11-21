@@ -10,6 +10,8 @@ import com.example.sneaker_sophia.service.HoaDonChiTietServive;
 import com.example.sneaker_sophia.service.HoaDonService;
 import com.example.sneaker_sophia.service.LSHDService;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,6 +37,10 @@ public class QLHDController {
 
     @Resource(name = "lshdService")
     LSHDService lshdService;
+
+
+    @Autowired
+    HttpSession session;
 
 
     @GetMapping("/hien-thi")
@@ -85,6 +91,9 @@ public class QLHDController {
         model.addAttribute("displayTable", hinhThucThanhToan != null);
         model.addAttribute("listhdct", listhdct);
         model.addAttribute("hoaDon", hoaDon);
+        System.out.println("test: ");
+        System.out.println(lshdService.getLSHDBYIdhd(idhd).size());
+        session.setAttribute("lichSuHoaDon",lshdService.getLSHDBYIdhd(idhd));
         return "admin/hoadon/detailhd";
     }
 
