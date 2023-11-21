@@ -18,6 +18,7 @@
         h5.modal-title p {
             display: inline;
         }
+
         .countHD {
             color: white;
             background-color: red;
@@ -120,8 +121,6 @@
                     <li role="presentation" class="nav-item">
                         <a class="nav-link active" href="#choThanhToan" aria-controls="ALL" role="tab"
                            data-toggle="tab">Chờ thanh toán
-                            <!--                            Đây-->
-                            <span class="countHD" th:text="${soHDC}"></span>
                         </a>
                     </li>
 
@@ -143,7 +142,11 @@
                     </li>
                     <li role="presentation" class="nav-item">
                         <a class="nav-link  text-dark" href="#dangGiao" aria-controls="vanChuyen" role="tab"
-                           data-toggle="tab">Đang giao</a>
+                           data-toggle="tab">Đang giao
+                            <!--                            Đây-->
+                            <span class="countHD" th:text="${soHDDG}"></span>
+                        </a>
+                        </a>
                     </li>
                     <li role="presentation" class="nav-item">
                         <a class="nav-link  text-dark" href="#hoanThanh" aria-controls="hoanThanh" role="tab"
@@ -164,7 +167,7 @@
                                 <table id="tableModal" class="table table-borderless ml-2">
                                     <thead>
                                     <tr class="bg-light">
-                                        <th >
+                                        <th>
                                             <input th:name="requestId"
                                                    th:value="AllG" style="width: 20px; height: 18px;"
                                                    type="checkbox">
@@ -184,43 +187,45 @@
                                     <form action="">
 
 
-                                    <tr th:each="hdc, status : ${listhdc}">
-                                        <th >
-                                            <input th:name="requestId"
-                                                   th:value="AllG" style="width: 20px; height: 18px;"
-                                                   type="checkbox">
-                                        </th>
-                                        <td th:text="${status.index + 1}"></td>
-                                        <td th:text="${hdc.maHoaDOn}"></td>
-                                        <td th:text="${hdc.tenKhachHang}"></td>
-                                        <td th:text="${hdc.createdBy}"></td>
-                                        <td th:text="${#temporals.format(hdc.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
-                                        <td th:text="${#numbers.formatCurrency(hdc.khuyenMai)}"></td>
-                                        <td th:text="${#numbers.formatCurrency(hdc.tongTien + hdc.phiShip)}"></td>
-                                        <td>
-                                            <button th:if="${hdc.loaiHoaDon == 1}" class="btn btn-success "
-                                                    style="border-radius: 30px; font-size: 12px; height: 40px">
-                                                Tại quầy
-                                            </button>
-                                            <button th:if="${hdc.loaiHoaDon == 2}" class="btn btn-primary "
-                                                    style="border-radius: 30px; font-size: 12px; height: 40px">
-                                                Giao hàng
-                                            </button>
-                                        </td>
-                                        <td>
+                                        <tr th:each="hdc, status : ${listhdc}">
+                                            <th>
+                                                <input th:name="requestId"
+                                                       th:value="AllG" style="width: 20px; height: 18px;"
+                                                       type="checkbox">
+                                            </th>
+                                            <td th:text="${status.index + 1}"></td>
+                                            <td th:text="${hdc.maHoaDOn}"></td>
+                                            <td th:text="${hdc.tenKhachHang}"></td>
+                                            <td th:text="${hdc.createdBy}"></td>
+                                            <td th:text="${#temporals.format(hdc.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
+                                            <td th:text="${#numbers.formatCurrency(hdc.khuyenMai)}"></td>
+                                            <td th:text="${#numbers.formatCurrency(hdc.tongTien + hdc.phiShip)}"></td>
+                                            <td>
+                                                <button th:if="${hdc.loaiHoaDon == 1}" class="btn btn-success "
+                                                        style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                    Tại quầy
+                                                </button>
+                                                <button th:if="${hdc.loaiHoaDon == 2}" class="btn btn-primary "
+                                                        style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                    Giao hàng
+                                                </button>
+                                            </td>
+                                            <td>
 
-                                            <a th:href="@{/admin/tai-quay/detail/{id}(id=${hdc.id})}"
-                                               class="btn btn-warning edit" style=" padding: 5px 10px; font-size: 12px">
-                                                <i class="material-icons text-white mt-1" title="Sửa">&#xE254;</i>
-                                            </a>
+                                                <a th:href="@{/admin/tai-quay/detail/{id}(id=${hdc.id})}"
+                                                   class="btn btn-warning edit"
+                                                   style=" padding: 5px 10px; font-size: 12px">
+                                                    <i class="material-icons text-white mt-1" title="Sửa">&#xE254;</i>
+                                                </a>
 
-                                            <a th:href="@{/admin/hoa-don/detail/{id}(id=${hdc.id})}"
-                                               class="btn btn-success " style=" padding: 5px 10px; font-size: 12px;">
-                                                <i class="material-icons text-white mt-1"
-                                                   title="Chi tiết">visibility</i>
-                                            </a>
-                                        </td>
-                                    </tr>
+                                                <a th:href="@{/admin/hoa-don/detail/{id}(id=${hdc.id})}"
+                                                   class="btn btn-success "
+                                                   style=" padding: 5px 10px; font-size: 12px;">
+                                                    <i class="material-icons text-white mt-1"
+                                                       title="Chi tiết">visibility</i>
+                                                </a>
+                                            </td>
+                                        </tr>
                                     </form>
                                     </tbody>
                                 </table>
@@ -233,214 +238,229 @@
                     <div role="tabpanel" class="tab-pane" id="choXacNhan">
 
 
-
                         <div class="row">
-                            <div>
-                                <a class="btn btn-primary mb-3 float-right">Xác nhận đơn</a>
-                            </div>
-                            <div class="table table-wrapper-scroll-y my-custom-scrollbar">
-                                <table id="tableModal" class="table table-borderless ml-2">
-                                    <thead>
-                                    <tr class="bg-light">
-                                        <th >
-                                            <input th:name="requestId"
-                                                   th:value="AllG" style="width: 20px; height: 18px;"
-                                                   type="checkbox">
-                                        </th>
-                                        <th>STT</th>
-                                        <th>Mã HĐ</th>
-                                        <th>Tên khách hàng</th>
-                                        <th>Tên nhân viên</th>
-                                        <th>Ngày tạo</th>
-                                        <th>Khuyến mại</th>
-                                        <th>Tổng tiền</th>
-                                        <th>Loại đơn</th>
-                                        <th>Thao tác</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody id="trchoXacNhan">
-                                    <tr th:each="cxn, status : ${listhdhcxn}">
-                                        <th >
-                                            <input th:name="requestId"
-                                                   th:value="AllG" style="width: 20px; height: 18px;"
-                                                   type="checkbox">
-                                        </th>
-                                        <td th:text="${status.index + 1}"></td>
-                                        <td th:text="${cxn.maHoaDOn}"></td>
-                                        <td th:text="${cxn.tenKhachHang}"></td>
-                                        <td th:text="${cxn.createdBy}"></td>
-                                        <td th:text="${#temporals.format(cxn.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
-                                        <td th:text="${#numbers.formatCurrency(cxn.khuyenMai)}"></td>
-                                        <td th:text="${#numbers.formatCurrency(cxn.tongTien + cxn.phiShip)}"></td>
-                                        <td>
-                                            <button th:if="${cxn.loaiHoaDon == 3}" class="btn btn-success "
-                                                    style="border-radius: 30px; font-size: 12px; height: 40px">
-                                                Online
-                                            </button>
-                                        </td>
-                                        <td>
+                            <form action="/admin/hoa-don/updatehdcxn" method="post">
+                                <div>
+                                    <button type="submit" class="btn btn-primary mb-3 float-right">Xác nhận đơn
+                                    </button>
+                                </div>
+                                <div class="table table-wrapper-scroll-y my-custom-scrollbar">
+                                    <table id="tableModal" class="table table-borderless ml-2">
+                                        <thead>
+                                        <tr class="bg-light">
+                                            <th>
+                                                <input th:name="requestId"
+                                                       th:value="AllG" style="width: 20px; height: 18px;"
+                                                       type="checkbox">
+                                            </th>
+                                            <th>STT</th>
+                                            <th>Mã HĐ</th>
+                                            <th>Tên khách hàng</th>
+                                            <th>Tên nhân viên</th>
+                                            <th>Ngày tạo</th>
+                                            <th>Khuyến mại</th>
+                                            <th>Tổng tiền</th>
+                                            <th>Loại đơn</th>
+                                            <th>Thao tác</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="trchoXacNhan">
+                                        <tr th:each="cxn, status : ${listhdhcxn}">
+                                            <th>
+                                                <input th:name="idhdhcxn"
+                                                       th:value="${cxn.id}" style="width: 20px; height: 18px;"
+                                                       type="checkbox">
+                                            </th>
+                                            <td th:text="${status.index + 1}"></td>
+                                            <td th:text="${cxn.maHoaDOn}"></td>
+                                            <td th:text="${cxn.tenKhachHang}"></td>
+                                            <td th:text="${cxn.createdBy}"></td>
+                                            <td th:text="${#temporals.format(cxn.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
+                                            <td th:text="${#numbers.formatCurrency(cxn.khuyenMai)}"></td>
+                                            <td th:text="${#numbers.formatCurrency(cxn.tongTien + cxn.phiShip)}"></td>
+                                            <td>
+                                                <button th:if="${cxn.loaiHoaDon == 3}" class="btn btn-success "
+                                                        style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                    Online
+                                                </button>
+                                            </td>
+                                            <td>
 
-                                            <a th:href="@{/admin/tai-quay/detail/{id}(id=${cxn.id})}"
-                                               class="btn btn-warning edit" style=" padding: 5px 10px; font-size: 12px">
-                                                <i class="material-icons text-white mt-1" title="Sửa">&#xE254;</i>
-                                            </a>
+                                                <a th:href="@{/admin/tai-quay/detail/{id}(id=${cxn.id})}"
+                                                   class="btn btn-warning edit"
+                                                   style=" padding: 5px 10px; font-size: 12px">
+                                                    <i class="material-icons text-white mt-1" title="Sửa">&#xE254;</i>
+                                                </a>
 
-                                            <a th:href="@{/admin/hoa-don/detail/{id}(id=${cxn.id})}"
-                                               class="btn btn-success " style=" padding: 5px 10px; font-size: 12px;">
-                                                <i class="material-icons text-white mt-1"
-                                                   title="Chi tiết">visibility</i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <h2 class="text-center mt-4" id="err"></h2>
-                            </div>
+                                                <a th:href="@{/admin/hoa-don/detail/{id}(id=${cxn.id})}"
+                                                   class="btn btn-success "
+                                                   style=" padding: 5px 10px; font-size: 12px;">
+                                                    <i class="material-icons text-white mt-1"
+                                                       title="Chi tiết">visibility</i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <h2 class="text-center mt-4" id="err"></h2>
+                                </div>
+                            </form>
                         </div>
                     </div>
 
 
                     <div role="tabpanel" class="tab-pane" id="choGiao">
                         <div class="row">
-                            <div>
-                                <a class="btn btn-primary mb-3 float-right">Xác nhận giao</a>
-                            </div>
-                            <div class="table table-wrapper-scroll-y my-custom-scrollbar">
-                                <table id="tableModal" class="table table-borderless ml-2">
-                                    <thead>
-                                    <tr class="bg-light">
-                                        <th >
-                                            <input th:name="requestId"
-                                                   th:value="AllG" style="width: 20px; height: 18px;"
-                                                   type="checkbox">
-                                        </th>
-                                        <th>STT</th>
-                                        <th>Mã HĐ</th>
-                                        <th>Tên khách hàng</th>
-                                        <th>Tên nhân viên</th>
-                                        <th>Ngày tạo</th>
-                                        <th>Khuyến mại</th>
-                                        <th>Tổng tiền</th>
-                                        <th>Loại đơn</th>
-                                        <th>Thao tác</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody id="trchoGiao">
-                                    <!--                                    table chờ giao-->
-                                    <tr th:each="hdcg, status : ${listhdcg}">
-                                        <th >
-                                            <input th:name="requestId"
-                                                   th:value="AllG" style="width: 20px; height: 18px;"
-                                                   type="checkbox">
-                                        </th>
-                                        <td th:text="${status.index + 1}"></td>
-                                        <td th:text="${hdcg.maHoaDOn}"></td>
-                                        <td th:text="${hdcg.tenKhachHang}"></td>
-                                        <td th:text="${hdcg.createdBy}"></td>
-                                        <td th:text="${#temporals.format(hdcg.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
-                                        <td th:text="${#numbers.formatCurrency(hdcg.khuyenMai)}"></td>
-                                        <td th:text="${#numbers.formatCurrency(hdcg.tongTien + hdcg.phiShip)}"></td>
-                                        <td>
-                                            <button th:if="${hdcg.loaiHoaDon == 1}" class="btn btn-success "
-                                                    style="border-radius: 30px; font-size: 12px; height: 40px">
-                                                Tại quầy
-                                            </button>
-                                            <button th:if="${hdcg.loaiHoaDon == 2}" class="btn btn-primary "
-                                                    style="border-radius: 30px; font-size: 12px; height: 40px">
-                                                Giao hàng
-                                            </button>
-                                        </td>
-                                        <td>
+                            <form action="/admin/hoa-don/updatehdcg" method="post">
+                                <div>
+                                    <button type="submit" class="btn btn-primary mb-3 float-right">Xác nhận giao
+                                    </button>
+                                </div>
+                                <div class="table table-wrapper-scroll-y my-custom-scrollbar">
+                                    <table id="tableModal" class="table table-borderless ml-2">
+                                        <thead>
+                                        <tr class="bg-light">
+                                            <th>
+                                                <input th:name="requestId"
+                                                       th:value="AllG" style="width: 20px; height: 18px;"
+                                                       type="checkbox">
+                                            </th>
+                                            <th>STT</th>
+                                            <th>Mã HĐ</th>
+                                            <th>Tên khách hàng</th>
+                                            <th>Tên nhân viên</th>
+                                            <th>Ngày tạo</th>
+                                            <th>Khuyến mại</th>
+                                            <th>Tổng tiền</th>
+                                            <th>Loại đơn</th>
+                                            <th>Thao tác</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="trchoGiao">
+                                        <!--                                    table chờ giao-->
+                                        <tr th:each="hdcg, status : ${listhdcg}">
+                                            <th>
+                                                <input th:name="idhdcg"
+                                                       th:value="${hdcg.id}" style="width: 20px; height: 18px;"
+                                                       type="checkbox">
+                                            </th>
+                                            <td th:text="${status.index + 1}"></td>
+                                            <td th:text="${hdcg.maHoaDOn}"></td>
+                                            <td th:text="${hdcg.tenKhachHang}"></td>
+                                            <td th:text="${hdcg.createdBy}"></td>
+                                            <td th:text="${#temporals.format(hdcg.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
+                                            <td th:text="${#numbers.formatCurrency(hdcg.khuyenMai)}"></td>
+                                            <td th:text="${#numbers.formatCurrency(hdcg.tongTien + hdcg.phiShip)}"></td>
+                                            <td>
+                                                <button th:if="${hdcg.loaiHoaDon == 1}" class="btn btn-success "
+                                                        style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                    Tại quầy
+                                                </button>
+                                                <button th:if="${hdcg.loaiHoaDon == 2}" class="btn btn-primary "
+                                                        style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                    Giao hàng
+                                                </button>
+                                            </td>
+                                            <td>
 
-                                            <a
-                                                    th:href="@{/admin/tai-quay/detail/{id}(id=${hdcg.id})}"
-                                                    class="btn btn-warning edit"
-                                                    style=" padding: 5px 10px; font-size: 12px">
-                                                <i class="material-icons text-white mt-1"
-                                                   title="Sửa">&#xE254;</i>
-                                            </a>
+                                                <a
+                                                        th:href="@{/admin/tai-quay/detail/{id}(id=${hdcg.id})}"
+                                                        class="btn btn-warning edit"
+                                                        style=" padding: 5px 10px; font-size: 12px">
+                                                    <i class="material-icons text-white mt-1"
+                                                       title="Sửa">&#xE254;</i>
+                                                </a>
 
-                                            <a th:href="@{/admin/hoa-don/detail/{id}(id=${hdcg.id})}"
-                                               class="btn btn-success "
-                                               style=" padding: 5px 10px; font-size: 12px;">
-                                                <!--                            <i class="material-icons mt-2" data-toggle="tooltip" title="Delete">&#xE872;</i>-->
-                                                <i class="material-icons text-white mt-1"
-                                                   title="Chi tiết">visibility</i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <h2 class="text-center mt-4" id="errchoGiao"></h2>
-                            </div>
+                                                <a th:href="@{/admin/hoa-don/detail/{id}(id=${hdcg.id})}"
+                                                   class="btn btn-success "
+                                                   style=" padding: 5px 10px; font-size: 12px;">
+                                                    <!--                            <i class="material-icons mt-2" data-toggle="tooltip" title="Delete">&#xE872;</i>-->
+                                                    <i class="material-icons text-white mt-1"
+                                                       title="Chi tiết">visibility</i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <h2 class="text-center mt-4" id="errchoGiao"></h2>
+                                </div>
+                            </form>
                         </div>
                     </div>
 
 
                     <div role="tabpanel" class="tab-pane" id="dangGiao">
-                        <div class="row mt-4">
-                            <div class="table table-wrapper-scroll-y my-custom-scrollbar">
-                                <table id="tableModal" class="table table-borderless ml-2">
-                                    <thead>
-                                    <tr class="bg-light">
-                                        <th >
-                                            <input th:name="requestId"
-                                                   th:value="AllG" style="width: 20px; height: 18px;"
-                                                   type="checkbox">
-                                        </th>
-                                        <th>STT</th>
-                                        <th>Mã HĐ</th>
-                                        <th>Tên khách hàng</th>
-                                        <th>Tên nhân viên</th>
-                                        <th>Ngày tạo</th>
-                                        <th>Khuyến mại</th>
-                                        <th>Tổng tiền</th>
-                                        <th>Loại đơn</th>
-                                        <th>Thao tác</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody id="trdangGiao">
-                                    <tr th:each="hddg, status : ${listhddg}">
-                                        <th >
-                                            <input th:name="requestId"
-                                                   th:value="AllG" style="width: 20px; height: 18px;"
-                                                   type="checkbox">
-                                        </th>
-                                        <td th:text="${status.index + 1}"></td>
-                                        <td th:text="${hddg.maHoaDOn}"></td>
-                                        <td th:text="${hddg.tenKhachHang}"></td>
-                                        <td th:text="${hddg.createdBy}"></td>
-                                        <td th:text="${#temporals.format(hddg.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
-                                        <td th:text="${#numbers.formatCurrency(hddg.khuyenMai)}"></td>
-                                        <td th:text="${#numbers.formatCurrency(hddg.tongTien + hddg.phiShip)}"></td>
-                                        <td>
-                                            <button th:if="${hddg.loaiHoaDon == 3}" class="btn btn-success "
-                                                    style="border-radius: 30px; font-size: 12px; height: 40px">
-                                                Online
-                                            </button>
-                                            <button th:if="${hddg.loaiHoaDon == 2}" class="btn btn-primary "
-                                                    style="border-radius: 30px; font-size: 12px; height: 40px">
-                                                Giao hàng
-                                            </button>
-                                        </td>
-                                        <td>
+                        <div class="row">
+                            <form action="/admin/hoa-don/updatehddg" method="post">
+                                <div>
+                                    <button type="submit" class="btn btn-primary mb-3 float-right">Xác nhận thành công
+                                    </button>
+                                </div>
+                                <div class="table table-wrapper-scroll-y my-custom-scrollbar">
+                                    <table id="tableModal" class="table table-borderless ml-2">
+                                        <thead>
+                                        <tr class="bg-light">
+                                            <th>
+                                                <input th:name="requestId"
+                                                       th:value="AllG" style="width: 20px; height: 18px;"
+                                                       type="checkbox">
+                                            </th>
+                                            <th>STT</th>
+                                            <th>Mã HĐ</th>
+                                            <th>Tên khách hàng</th>
+                                            <th>Tên nhân viên</th>
+                                            <th>Ngày tạo</th>
+                                            <th>Khuyến mại</th>
+                                            <th>Tổng tiền</th>
+                                            <th>Loại đơn</th>
+                                            <th>Thao tác</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="trdangGiao">
+                                        <tr th:each="hddg, status : ${listhddg}">
+                                            <th>
+                                                <input th:name="idhddg"
+                                                       th:value="${hddg.id}" style="width: 20px; height: 18px;"
+                                                       type="checkbox">
+                                            </th>
+                                            <td th:text="${status.index + 1}"></td>
+                                            <td th:text="${hddg.maHoaDOn}"></td>
+                                            <td th:text="${hddg.tenKhachHang}"></td>
+                                            <td th:text="${hddg.createdBy}"></td>
+                                            <td th:text="${#temporals.format(hddg.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
+                                            <td th:text="${#numbers.formatCurrency(hddg.khuyenMai)}"></td>
+                                            <td th:text="${#numbers.formatCurrency(hddg.tongTien + hddg.phiShip)}"></td>
+                                            <td>
+                                                <button th:if="${hddg.loaiHoaDon == 3}" class="btn btn-success "
+                                                        style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                    Online
+                                                </button>
+                                                <button th:if="${hddg.loaiHoaDon == 2}" class="btn btn-primary "
+                                                        style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                    Giao hàng
+                                                </button>
+                                            </td>
+                                            <td>
 
-                                            <a th:href="@{/admin/tai-quay/detail/{id}(id=${hddg.id})}"
-                                               class="btn btn-warning edit" style=" padding: 5px 10px; font-size: 12px">
-                                                <i class="material-icons text-white mt-1" title="Sửa">&#xE254;</i>
-                                            </a>
+                                                <a th:href="@{/admin/tai-quay/detail/{id}(id=${hddg.id})}"
+                                                   class="btn btn-warning edit"
+                                                   style=" padding: 5px 10px; font-size: 12px">
+                                                    <i class="material-icons text-white mt-1" title="Sửa">&#xE254;</i>
+                                                </a>
 
-                                            <a th:href="@{/admin/hoa-don/detail/{id}(id=${hddg.id})}"
-                                               class="btn btn-success " style=" padding: 5px 10px; font-size: 12px;">
-                                                <i class="material-icons text-white mt-1"
-                                                   title="Chi tiết">visibility</i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <h2 class="text-center mt-4" id="err"></h2>
-                            </div>
+                                                <a th:href="@{/admin/hoa-don/detail/{id}(id=${hddg.id})}"
+                                                   class="btn btn-success "
+                                                   style=" padding: 5px 10px; font-size: 12px;">
+                                                    <i class="material-icons text-white mt-1"
+                                                       title="Chi tiết">visibility</i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <h2 class="text-center mt-4" id="err"></h2>
+                                </div>
+                            </form>
                         </div>
                     </div>
 
@@ -450,7 +470,7 @@
                                 <table id="tableModal" class="table table-borderless ml-2">
                                     <thead>
                                     <tr class="bg-light">
-                                        <th >
+                                        <th>
                                             <input th:name="requestId"
                                                    th:value="AllG" style="width: 20px; height: 18px;"
                                                    type="checkbox">
@@ -469,7 +489,7 @@
                                     <tbody id="trhoanThanh">
 
                                     <tr th:each="hdht, status : ${listhdht}">
-                                        <th >
+                                        <th>
                                             <input th:name="requestId"
                                                    th:value="AllG" style="width: 20px; height: 18px;"
                                                    type="checkbox">
@@ -515,7 +535,7 @@
                                 <table id="tableModal" class="table table-borderless ml-2">
                                     <thead>
                                     <tr class="bg-light">
-                                        <th >
+                                        <th>
                                             <input th:name="requestId"
                                                    th:value="AllG" style="width: 20px; height: 18px;"
                                                    type="checkbox">
@@ -533,7 +553,7 @@
                                     </thead>
                                     <tbody id="trhuy">
                                     <tr th:each="hdh, status : ${listhdh}">
-                                        <th >
+                                        <th>
                                             <input th:name="requestId"
                                                    th:value="AllG" style="width: 20px; height: 18px;"
                                                    type="checkbox">
@@ -611,7 +631,7 @@
                 errTable = 'errchoThanhToan';
             } else if (tab == '#hoanThanh') {
                 errTable = 'errhoanThanh';
-            }else if (tab == '#choGiao') {
+            } else if (tab == '#choGiao') {
                 errTable = 'errchoGiao';
             }
         }
@@ -679,9 +699,9 @@
             loadAllTable(listCTT, '#choThanhToan');
             loadAllTable(listHT, '#hoanThanh');
             loadAllTable(listHDCG, '#choGiao');
-            document.getElementById('errchoGiao').innerHTML ='';
-            document.getElementById('errhoanThanh').innerHTML ='';
-            document.getElementById('errchoThanhToan').innerHTML ='';
+            document.getElementById('errchoGiao').innerHTML = '';
+            document.getElementById('errhoanThanh').innerHTML = '';
+            document.getElementById('errchoThanhToan').innerHTML = '';
         }
 
         function fillter() {
@@ -691,7 +711,7 @@
                 temActiveTab = 2;
             } else if (temActiveTab == 'hoanThanh') {
                 temActiveTab = 1;
-            }else if (temActiveTab == 'choGiao') {
+            } else if (temActiveTab == 'choGiao') {
                 temActiveTab = 4;
             }
             let params = {
@@ -709,7 +729,7 @@
                 data: JSON.stringify(params),
                 contentType: 'application/json',
                 success: function (data) {
-                    if (errTable == ''){
+                    if (errTable == '') {
                         errTable = 'errchoThanhToan';
                     }
                     if (data.length == 0) {

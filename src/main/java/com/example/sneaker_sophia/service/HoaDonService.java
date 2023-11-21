@@ -120,7 +120,7 @@ public class HoaDonService {
         return hoaDonRepository.soHDCXN();
     }
 
-    public Integer soHDC(){
-        return hoaDonRepository.soHDC();
+    public Integer soHDDG(){
+        return hoaDonRepository.soHDDG();
     }
 }

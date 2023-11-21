@@ -3,16 +3,17 @@ package com.example.sneaker_sophia.controller;
 import com.example.sneaker_sophia.entity.HinhThucThanhToan;
 import com.example.sneaker_sophia.entity.HoaDon;
 import com.example.sneaker_sophia.entity.HoaDonChiTiet;
+import com.example.sneaker_sophia.entity.LichSuHoaDon;
 import com.example.sneaker_sophia.repository.AnhRepository;
 import com.example.sneaker_sophia.service.HTTTService;
 import com.example.sneaker_sophia.service.HoaDonChiTietServive;
 import com.example.sneaker_sophia.service.HoaDonService;
+import com.example.sneaker_sophia.service.LSHDService;
 import jakarta.annotation.Resource;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +36,10 @@ public class QLHDController {
     @Resource(name = "htttService")
     HTTTService htttService;
 
+    @Resource(name = "lshdService")
+    LSHDService lshdService;
+
+
     @GetMapping("/hien-thi")
     public String hienthi(
             Model model
@@ -47,7 +52,7 @@ public class QLHDController {
         List<HoaDon> getAllHDChoXacNhan = hoaDonService.getAllHDChoXacNhan();
         Integer soHDCG = hoaDonService.soHDCG();
         Integer soHDCXN = hoaDonService.soHDCXN();
-        Integer soHDC = hoaDonService.soHDC();
+        Integer soHDDG = hoaDonService.soHDDG();
 
 
 
@@ -59,7 +64,7 @@ public class QLHDController {
         model.addAttribute("listhdhcxn", getAllHDChoXacNhan);
         model.addAttribute("soHDCG", soHDCG);
         model.addAttribute("soHDCXN", soHDCXN);
-        model.addAttribute("soHDC", soHDC);
+        model.addAttribute("soHDDG", soHDDG);
         return "admin/hoadon/indexhd";
     }
 
@@ -85,5 +90,49 @@ public class QLHDController {
         model.addAttribute("listhdct", listhdct);
         model.addAttribute("hoaDon", hoaDon);
         return "admin/hoadon/detailhd";
+    }
+
+    @PostMapping("updatehdcxn")
+    public String updatehdcxn(
+            @RequestParam("idhdhcxn") List<String> listhd
+    ){
+        for (String idhd : listhd){
+            HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
+            hoaDon.setTrangThai(4);
+            LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+            lichSuHoaDon.setHoaDon(hoaDon);
+            lichSuHoaDon.setPhuongThuc("chờ giao");
+            lshdService.savelshd(lichSuHoaDon);
+            hoaDonService.savehd(hoaDon);
+        }
+        return "redirect:/admin/hoa-don/hien-thi";
+    }
+
+    @PostMapping("updatehdcg")
+    public String updatehdcg(
+            @RequestParam("idhdcg") List<String> listhdcg
+    ){
+        for (String idhd : listhdcg){
+            HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
+            hoaDon.setTrangThai(5);
+            hoaDonService.savehd(hoaDon);
+        }
+        return "redirect:/admin/hoa-don/hien-thi";
+    }
+
+    @PostMapping("updatehddg")
+    public String updatehddg(
+            @RequestParam("idhddg") List<String> listhddg
+    ){
+        for (String idhd : listhddg){
+            HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
+            hoaDon.setTrangThai(1);
+            LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+            lichSuHoaDon.setHoaDon(hoaDon);
+            lichSuHoaDon.setPhuongThuc("hoàn thành");
+            lshdService.savelshd(lichSuHoaDon);
+            hoaDonService.savehd(hoaDon);
+        }
+        return "redirect:/admin/hoa-don/hien-thi";
     }
 }
