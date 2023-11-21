@@ -6,12 +6,14 @@ import com.example.sneaker_sophia.entity.*;
 import com.example.sneaker_sophia.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -128,10 +130,39 @@ public class CheckoutController {
 
 
     @PostMapping("/thanhtoan")
-    public String thanhToan(@ModelAttribute(value = "diaChi") DiaChiDTO diaChi,
-                            @RequestParam(value = "hinhThucThanhToan",required = false) Integer hinhThucThanhToan,
+    public String thanhToan(@Valid @ModelAttribute(value = "diaChi") DiaChiDTO diaChi, BindingResult result,
+                            @RequestParam(value = "hinhThucThanhToan", required = false) Integer hinhThucThanhToan,
                             Model model, HttpSession session) {
         try {
+            if (result.hasErrors()) {
+                double total = 0.0;
+                Cart cart = (Cart) session.getAttribute("cart");
+
+                if (cart != null) {
+                    List<CartItem> cartItems = cart.getItems();
+                    if (cartItems != null && !cartItems.isEmpty()) {
+                        for (CartItem item : cartItems) {
+                            if (item != null && item.getId() != null) {
+                                double subtotal = item.getGia() * item.getSoLuong();
+                                total += subtotal;
+                            } else {
+                                return "redirect:/cart/hien-thi";
+                            }
+                        }
+                        model.addAttribute("diaChi", diaChi);
+                        model.addAttribute("cartItems", cartItems);
+                        model.addAttribute("total", total);
+
+                        return "website/productwebsite/checkoutSession";
+                    } else {
+                        // Giỏ hàng không có sản phẩm, chuyển hướng về trang giỏ hàng
+                        return "redirect:/cart/hien-thi";
+                    }
+                } else {
+                    // Trường hợp không tìm thấy giỏ hàng trong session, chuyển hướng về trang giỏ hàng
+                    return "redirect:/cart/hien-thi";
+                }
+            }
             Cart cart = (Cart) session.getAttribute("cart");
             List<CartItem> cartItems = cart.getItems();
             String matKhauNgauNhien = emailService.taoMatKhauNgauNhien();
@@ -149,10 +180,8 @@ public class CheckoutController {
             emailService.guiEmailXacNhanThanhToan(taiKhoanMoi.getEmail(), hoaDonMoi);
             model.addAttribute("hoaDon", hoaDonMoi);
             session.removeAttribute("cart");
-            System.out.println("Cart items: " + cartItems);
-
-
             return "redirect:/thanh-toan-thanh-cong";
+
         } catch (Exception e) {
             e.printStackTrace();
 
@@ -163,7 +192,7 @@ public class CheckoutController {
 
 
     @GetMapping("test")
-    public String test(){
+    public String test() {
         return "website/testPhiShip";
     }
 
