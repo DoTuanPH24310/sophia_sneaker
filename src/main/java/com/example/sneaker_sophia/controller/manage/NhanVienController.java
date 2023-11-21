@@ -64,6 +64,7 @@ public class NhanVienController {
         session.setAttribute("phuong", "-1");
         TaiKhoanRequest nhanVienRequest = new TaiKhoanRequest();
         model.addAttribute("nhanVienRequest", nhanVienRequest);
+        nhanVienRequest.setGioiTinh(1);
         return "admin/nhanvien/createnv";
     }
 
@@ -91,8 +92,14 @@ public class NhanVienController {
             @RequestParam("image") MultipartFile multipartFile,
             @ModelAttribute(value = "nhanVienRequest") TaiKhoanRequest nv_rq, HttpSession session
     ) throws IOException {
+
         nv_rq.setIdVaiTro(vaiTroRepository.getIdByTenNV());
-        String imageURL = fileUpload.uploadFile(multipartFile);
+        String imageURL = "";
+        if(multipartFile.isEmpty()){
+            imageURL = "thumbnail.png";
+        }else{
+            imageURL = fileUpload.uploadFile(multipartFile);
+        }
         nv_rq.setAnhDaiDien(imageURL);
         if (taiKhoanService.save(nv_rq, model)) {
             if (nv_rq.getTinh() == null){

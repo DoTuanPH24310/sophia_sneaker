@@ -28,7 +28,7 @@
 
 <body>
 
-<div layout:fragment="content" class="col-md-12">
+<div style="background-color: white; height: 600px;" layout:fragment="content" class="col-md-12">
     <form th:action="@{/admin/khachhang/update/{id}#tableCTG(id=${khachHang.idTaiKhoan})}"
           method="post" th:object="${khachHang}" enctype="multipart/form-data">
         <div class="row mt-3">

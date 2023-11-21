@@ -65,6 +65,7 @@ public class KhachHangController {
         session.setAttribute("phuong", "-1");
         TaiKhoanRequest khachHang = new TaiKhoanRequest();
         model.addAttribute("khachHangRequest", khachHang);
+        khachHang.setGioiTinh(1);
         return "admin/khachhang/createkh";
     }
 
@@ -88,7 +89,7 @@ public class KhachHangController {
     public String create(
             Model model,
             @RequestParam("image") MultipartFile multipartFile,
-            @ModelAttribute(value = "nhanVienRequest") TaiKhoanRequest kh_rq, HttpSession session
+            @ModelAttribute(value = "khachHangRequest") TaiKhoanRequest kh_rq, HttpSession session
     ) throws IOException {
         kh_rq.setIdVaiTro(vaiTroRepository.getIdByTenKH());
         String imageURL = "";
