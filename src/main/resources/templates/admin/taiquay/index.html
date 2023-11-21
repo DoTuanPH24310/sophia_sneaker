@@ -975,6 +975,7 @@
             let phiShip = document.getElementById('inputPhiShip') == null ? 0 : parseFloat(document.getElementById('inputPhiShip').value);
             if (tongTien == null || tongTien == 0) {
                 alert("VUi lòng chọn sản phẩm mua hàng");
+                return;
             }
 
             console.log(document.getElementById('traSau').checked);
