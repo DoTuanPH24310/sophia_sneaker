@@ -95,7 +95,7 @@ public class HoaDonService {
     }
 
     public List<HoaDon> getAllHDHuy(){
-        return hoaDonRepository.getAllHDC();
+        return hoaDonRepository.getAllHDHuy();
     }
 
     ///////////    20/11

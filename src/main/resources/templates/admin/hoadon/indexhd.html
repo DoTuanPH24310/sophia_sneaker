@@ -180,6 +180,11 @@
                                     </thead>
                                     <tbody id="trchoThanhToan">
                                     <form action="">
+                                        <block th:if="${#lists.isEmpty(listhdc)}">
+                                            <tr>
+                                                <td colspan="9"><h2>Không có hóa đơn đang chờ thanh toán</h2></td>
+                                            </tr>
+                                        </block>
                                         <tr th:each="hdc, status : ${listhdc}">
                                             <td th:text="${status.index + 1}"></td>
                                             <td th:text="${hdc.maHoaDOn}"></td>
@@ -238,7 +243,7 @@
                                         <tr class="bg-light">
                                             <th>
                                                 <input th:name="requestId"
-                                                       th:value="AllG" style="width: 20px; height: 18px;"
+                                                       th:value="AllG" id="selectAllCXN" style="width: 20px; height: 18px;"
                                                        type="checkbox">
                                             </th>
                                             <th>STT</th>
@@ -253,11 +258,6 @@
                                         </tr>
                                         </thead>
                                         <tbody id="trchoXacNhan">
-                                        <th:block th:if="${#lists.isEmpty(listhdhcxn)}">
-                                            <tr>
-                                                <td colspan="9"><h2>Không có hóa đơn đang chờ xác nhận</h2></td>
-                                            </tr>
-                                        </th:block>
                                         <tr th:each="hd, status : ${listhdhcxn}">
                                             <th>
                                                 <input th:name="idhd"
@@ -278,7 +278,6 @@
                                                 </button>
                                             </td>
                                             <td>
-
                                                 <a th:href="@{/admin/tai-quay/detail/{id}(id=${hd.id})}"
                                                    class="btn btn-warning edit"
                                                    style=" padding: 5px 10px; font-size: 12px">
@@ -315,7 +314,7 @@
                                         <tr class="bg-light">
                                             <th>
                                                 <input th:name="requestId"
-                                                       th:value="AllG" style="width: 20px; height: 18px;"
+                                                       th:value="AllG" id="selectAllCG" style="width: 20px; height: 18px;"
                                                        type="checkbox">
                                             </th>
                                             <th>STT</th>
@@ -395,7 +394,7 @@
                                         <tr class="bg-light">
                                             <th>
                                                 <input th:name="requestId"
-                                                       th:value="AllG" style="width: 20px; height: 18px;"
+                                                       th:value="AllG" id="selectAllDG" style="width: 20px; height: 18px;"
                                                        type="checkbox">
                                             </th>
                                             <th>STT</th>
@@ -594,6 +593,10 @@
         let listHDCXN = [[${listhdhcxn}]];
         let listHDDG = [[${listhddg}]];
         let errTable = '';
+        let idSelectAll = '';
+        let classSelectChild = '';
+
+
 
 
         $(document).ready(function () {
@@ -601,8 +604,41 @@
                 activeTab = $(e.target).attr("href");
                 findErrTable(activeTab);
                 resetSelectAndTab();
+                eventCheckbox();
             });
         });
+
+        function eventCheckbox() {
+            if (activeTab ==  '#choXacNhan' ) {
+                idSelectAll = 'selectAllCXN';
+                classSelectChild ='.checkboxCXN'
+            }else if (activeTab == '#choGiao') {
+                idSelectAll = 'selectAllCG';
+                classSelectChild ='.checkboxCG'
+            } else if (activeTab == '#dangGiao') {
+                idSelectAll = 'selectAllDG';
+                classSelectChild ='.checkboxDG'
+            }else return;
+
+
+            let selectAllCheckbox = document.getElementById(idSelectAll);
+            let checkboxes = document.querySelectorAll(classSelectChild);
+
+            selectAllCheckbox.addEventListener('click', function () {
+                checkboxes.forEach(function (checkbox) {
+                    checkbox.checked = selectAllCheckbox.checked;
+                });
+            });
+
+            checkboxes.forEach(function (checkbox) {
+                checkbox.addEventListener('click', function () {
+                    selectAllCheckbox.checked = Array.from(checkboxes).every(function (checkbox) {
+                        return checkbox.checked;
+                    });
+                });
+            });
+
+        }
 
 
         function findErrTable(tab) {
@@ -645,9 +681,17 @@
                 currency: 'VND'
             });
 
-            if ( activeTab == '#choGiao' || activeTab == '#choXacNhan' || activeTab == '#dangGiao'){
+            if ( activeTab == '#choGiao' ){
                 row.insertCell().innerHTML = ` <input name="idhd"
-                       value="${x.id}" style="width: 20px; height: 18px;"
+                       value="${x.id}" class="checkboxCG" style="width: 20px; height: 18px;"
+                       type="checkbox">`;
+            }else if (activeTab == '#choXacNhan' ){
+                row.insertCell().innerHTML = ` <input name="idhd"
+                       value="${x.id}" class="checkboxCXN" style="width: 20px; height: 18px;"
+                       type="checkbox">`;
+            }else if (activeTab == '#dangGiao'){
+                row.insertCell().innerHTML = ` <input name="idhd"
+                       value="${x.id}" class="checkboxDG" style="width: 20px; height: 18px;"
                        type="checkbox">`;
             }
             row.insertCell().innerHTML = index;
@@ -738,6 +782,7 @@
                 }
             })
         }
+
 
     </script>
 </div>

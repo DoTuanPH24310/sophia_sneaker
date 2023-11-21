@@ -76,8 +76,8 @@ public class TaiQuayController {
         List<HoaDon> list = hoaDonService.getHoaDonByTrangThai();
         model.addAttribute("listHDC", list);
         session.setAttribute("listhdct", new ArrayList<>());
-        if (session.getAttribute("checkTTHT") != null){
-            session.setAttribute("checkTTHT","1");
+        if (session.getAttribute("checkTTHT") != null) {
+            session.setAttribute("checkTTHT", "1");
         }
         return "/admin/taiquay/index";
     }
@@ -153,10 +153,10 @@ public class TaiQuayController {
         if (chiTietGiayService.tongKMByIdctg(idCTG) != null) {
             hoaDonChiTiet.setPhanTramGiam(chiTietGiayService.tongKMByIdctg(idCTG));
         } else {
-            if(hoaDonChiTietOld != null){
+            if (hoaDonChiTietOld != null) {
                 hoaDonChiTiet.setSoLuongGiam(hoaDonChiTietOld.getSoLuongGiam());
                 hoaDonChiTiet.setPhanTramGiam(hoaDonChiTietOld.getPhanTramGiam());
-            }else {
+            } else {
                 hoaDonChiTiet.setSoLuongGiam(0);
                 hoaDonChiTiet.setPhanTramGiam(0);
             }
@@ -185,10 +185,10 @@ public class TaiQuayController {
                     }
 
                 }
-            }else {
-                if(hoaDonChiTietOld != null){
+            } else {
+                if (hoaDonChiTietOld != null) {
                     hoaDonChiTiet.setSoLuongGiam(hoaDonChiTietOld.getSoLuongGiam());
-                }else{
+                } else {
                     hoaDonChiTiet.setSoLuongGiam(0);
                 }
 
@@ -272,7 +272,7 @@ public class TaiQuayController {
         Double tienGiam = hoaDonChiTietServive.tienGiam(id) == null ? 0 : hoaDonChiTietServive.tienGiam(id);
         // 20/11
         HinhThucThanhToan hinhThucThanhToan = htttService.getHTTTByIdhd(id);
-        if(hinhThucThanhToan != null){
+        if (hinhThucThanhToan != null) {
             model.addAttribute("tienKhachDua", hinhThucThanhToan.getSoTien());
         }
 
@@ -280,12 +280,11 @@ public class TaiQuayController {
         model.addAttribute("tienGiam", tienGiam);
 
         HoaDon hoaDon = hoaDonService.getHoaDonById(id);
-        if(hoaDon != null){
+        if (hoaDon != null) {
             hoaDon.setTongTien(tongTien);
             hoaDon.setKhuyenMai(tienGiam);
             hoaDonService.savehd(hoaDon);
         }
-
 
 
         if (hoaDon.getTaiKhoan() != null) {
@@ -320,7 +319,13 @@ public class TaiQuayController {
             session.setAttribute("errTaiQuay", "Không thể xóa hóa đơn đã thêm sản phẩm");
             return "forward:/admin/tai-quay/detail/" + tempIdHD;
         }
-        hoaDonService.deleteHD(hoaDon);
+
+        LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+        lichSuHoaDon.setHoaDon(hoaDon);
+        lichSuHoaDon.setPhuongThuc("6");
+        lshdService.savelshd(lichSuHoaDon);
+        hoaDon.setTrangThai(6);
+        hoaDonService.savehd(hoaDon);
         List<HoaDon> list = hoaDonService.getHoaDonByTrangThai();
         model.addAttribute("listHDC", list);
         return "redirect:/admin/tai-quay/hien-thi";
@@ -436,7 +441,6 @@ public class TaiQuayController {
     }
 
 
-
     @PostMapping("adddc")
     public String adddc(
             @RequestParam("xa") Integer xa,
@@ -488,10 +492,10 @@ public class TaiQuayController {
         if (chiTietGiayService.tongKMByIdctg(chiTietGiay.getId()) != null) {
             hoaDonChiTiet.setPhanTramGiam(chiTietGiayService.tongKMByIdctg(chiTietGiay.getId()));
         } else {
-            if(hoaDonChiTietOld != null){
+            if (hoaDonChiTietOld != null) {
                 hoaDonChiTiet.setSoLuongGiam(hoaDonChiTietOld.getSoLuongGiam());
                 hoaDonChiTiet.setPhanTramGiam(hoaDonChiTietOld.getPhanTramGiam());
-            }else {
+            } else {
                 hoaDonChiTiet.setSoLuongGiam(0);
                 hoaDonChiTiet.setPhanTramGiam(0);
             }
@@ -519,10 +523,10 @@ public class TaiQuayController {
                     }
 
                 }
-            }else {
-                if(hoaDonChiTietOld != null){
+            } else {
+                if (hoaDonChiTietOld != null) {
                     hoaDonChiTiet.setSoLuongGiam(hoaDonChiTietOld.getSoLuongGiam());
-                }else{
+                } else {
                     hoaDonChiTiet.setSoLuongGiam(0);
                 }
 
@@ -578,11 +582,11 @@ public class TaiQuayController {
         }
         Double tongTien = hoaDonChiTietServive.tongTienSauGiam(tempIdHD);
         HoaDon hoaDon = hoaDonService.getHoaDonById(tempIdHD);
-        if (hinhThucThanhToan != null){
+        if (hinhThucThanhToan != null) {
             tienKhachDua = tienKhachDua.replaceAll("[^\\d]", "");
             hinhThucThanhToan.setSoTien(Double.parseDouble(tienKhachDua));
             htttService.savehttt(hinhThucThanhToan);
-        }else{
+        } else {
             hinhThucThanhToan = new HinhThucThanhToan();
             hinhThucThanhToan.setHoaDon(hoaDon);
             hinhThucThanhToan.setTrangThai(phuongThuc);
@@ -610,13 +614,13 @@ public class TaiQuayController {
         hoaDon.setKhuyenMai(hoaDonChiTietServive.tienGiam(tempIdHD));
         hoaDon.setGhiChu(ghiChu);
         hoaDon.setTongTien(tongTien);
-        if(hoaDon.getLoaiHoaDon() == 2){
+        if (hoaDon.getLoaiHoaDon() == 2) {
             hoaDon.setTrangThai(4);
             LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
             lichSuHoaDon.setHoaDon(hoaDon);
             lichSuHoaDon.setPhuongThuc("chờ giao");
             lshdService.savelshd(lichSuHoaDon);
-        }else{
+        } else {
             hoaDon.setTrangThai(1);
             LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
             lichSuHoaDon.setHoaDon(hoaDon);
@@ -625,7 +629,7 @@ public class TaiQuayController {
         }
 
         hoaDonService.savehd(hoaDon);
-        session.setAttribute("checkTTHT",true);
+        session.setAttribute("checkTTHT", true);
 
         return "redirect:/admin/tai-quay/hien-thi";
     }
@@ -700,8 +704,8 @@ public class TaiQuayController {
         p = new Paragraph(hd.getMaHoaDOn() + "\n\n");
         p.setAlignment(Paragraph.ALIGN_CENTER);
         document.add(p);
-        p = new Paragraph("Ngày mua:    "+formatter.format(hd.getCreatedDate()) + "\n\n" + "Khách hàng:    "+hd.getTenKhachHang() + "\n\n" +"Địa chỉ:    "+
-                hd.getTenKhachHang()+","+ hd.getSoDienThoai()+"/ "+hd.getDiaChi() + "\n\n" +"Điện thoại:    "+ hd.getSoDienThoai() + "\n\n" + "Người bán:    "+ "Nguyễn Huy Hoàng" + "\n\n", font4);
+        p = new Paragraph("Ngày mua:    " + formatter.format(hd.getCreatedDate()) + "\n\n" + "Khách hàng:    " + hd.getTenKhachHang() + "\n\n" + "Địa chỉ:    " +
+                hd.getTenKhachHang() + "," + hd.getSoDienThoai() + "/ " + hd.getDiaChi() + "\n\n" + "Điện thoại:    " + hd.getSoDienThoai() + "\n\n" + "Người bán:    " + "Nguyễn Huy Hoàng" + "\n\n", font4);
         document.add(p);
         p = new Paragraph(pdf.get(3) + "\n", font5);
         p.setAlignment(Paragraph.ALIGN_CENTER);
@@ -729,21 +733,21 @@ public class TaiQuayController {
         document.add(table);
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
 
-        p = new Paragraph("\n\n" + "Khuyến mại: "  +currencyFormat.format(hoaDonChiTietServive.tienGiam(idHD)) , font4);
+        p = new Paragraph("\n\n" + "Khuyến mại: " + currencyFormat.format(hoaDonChiTietServive.tienGiam(idHD)), font4);
         p.setAlignment(Paragraph.ALIGN_RIGHT);
         document.add(p);
 
-        if (hd.getLoaiHoaDon() ==2){
-            p = new Paragraph("\n" + "Phí Ship: "  +currencyFormat.format(hd.getPhiShip())  , font4);
+        if (hd.getLoaiHoaDon() == 2) {
+            p = new Paragraph("\n" + "Phí Ship: " + currencyFormat.format(hd.getPhiShip()), font4);
             p.setAlignment(Paragraph.ALIGN_RIGHT);
             document.add(p);
         }
 
-        p = new Paragraph("\n" + "Tổng tiền: "  + currencyFormat.format(hd.getTongTien()), font4);
+        p = new Paragraph("\n" + "Tổng tiền: " + currencyFormat.format(hd.getTongTien()), font4);
         p.setAlignment(Paragraph.ALIGN_RIGHT);
         document.add(p);
 
-        p = new Paragraph("\n" + "Tiền thừa: "  + currencyFormat.format(hd.getTienThua()), font4);
+        p = new Paragraph("\n" + "Tiền thừa: " + currencyFormat.format(hd.getTienThua()), font4);
         p.setAlignment(Paragraph.ALIGN_RIGHT);
         document.add(p);
 
@@ -759,14 +763,14 @@ public class TaiQuayController {
         List<HoaDonChiTiet> list = hoaDonChiTietServive.getHDCTByIdHD(idHD);
         for (int i = 0; i < list.size(); i++) {
             Double donGia = list.get(i).getDonGia();
-            Double km = ((list.get(i).getPhanTramGiam()/100.0)*list.get(i).getSoLuongGiam() * list.get(i).getDonGia());
+            Double km = ((list.get(i).getPhanTramGiam() / 100.0) * list.get(i).getSoLuongGiam() * list.get(i).getDonGia());
             Double thanhTien = ((list.get(i).getDonGia() * (1 - ((list.get(i).getPhanTramGiam()) / 100.0)) * list.get(i).getSoLuongGiam()) +
                     (list.get(i).getDonGia() * (list.get(i).getSoLuong() - list.get(i).getSoLuongGiam())));
-            table.addCell((i+1) +"\n");
-            table.addCell("["+list.get(i).getChiTietGiay().getHang().getTen()+"]"+list.get(i).getChiTietGiay().getTen() + list.get(i).getChiTietGiay().getGiay().getTen()+"["+list.get(i).getChiTietGiay().getMauSac().getTen()+"]" +"["+list.get(i).getChiTietGiay().getKichCo().getTen()+"]"+"\n");
-            table.addCell((list.get(i).getSoLuong())+"\n");
-            table.addCell(currencyFormat.format(donGia)+"\n");
-            table.addCell(currencyFormat.format(km)+"\n");
+            table.addCell((i + 1) + "\n");
+            table.addCell("[" + list.get(i).getChiTietGiay().getHang().getTen() + "]" + list.get(i).getChiTietGiay().getTen() + list.get(i).getChiTietGiay().getGiay().getTen() + "[" + list.get(i).getChiTietGiay().getMauSac().getTen() + "]" + "[" + list.get(i).getChiTietGiay().getKichCo().getTen() + "]" + "\n");
+            table.addCell((list.get(i).getSoLuong()) + "\n");
+            table.addCell(currencyFormat.format(donGia) + "\n");
+            table.addCell(currencyFormat.format(km) + "\n");
             table.addCell(currencyFormat.format(thanhTien));
         }
 
