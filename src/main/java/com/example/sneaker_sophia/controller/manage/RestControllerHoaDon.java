@@ -41,6 +41,7 @@ public class RestControllerHoaDon {
         session.removeAttribute(name);
     }
     //    20/11
+
     @PostMapping("/multipleFindHoaDon")
     public ResponseEntity<?> multipleFind(@RequestBody DTO_API_HoaDon idGiay) {
         return ResponseEntity.ok(hoaDonService.findHoaDonByMultipleParamsAPI(idGiay));

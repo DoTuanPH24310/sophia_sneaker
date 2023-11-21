@@ -1,5 +1,6 @@
 package com.example.sneaker_sophia.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
@@ -25,6 +26,7 @@ public class Voucher {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "id.voucher")
     private List<CTG_KhuyenMai> listCTG_KM;
 

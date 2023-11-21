@@ -30,6 +30,7 @@ public class ChiTietGiay {
     @JoinColumn(name = "IdKichCo")
     private KichCo kichCo;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "id.chiTietGiay")
     private List<CTG_KhuyenMai> listCTG_KM;
 

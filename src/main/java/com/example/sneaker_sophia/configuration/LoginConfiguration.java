@@ -36,6 +36,8 @@ public class LoginConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+        http.csrf().disable().cors().disable();
         http
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")

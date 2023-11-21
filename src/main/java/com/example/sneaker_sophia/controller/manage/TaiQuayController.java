@@ -1,4 +1,4 @@
-package com.example.sneaker_sophia.controller;
+package com.example.sneaker_sophia.controller.manage;
 
 import com.example.sneaker_sophia.entity.*;
 import com.example.sneaker_sophia.repository.AnhRepository;
@@ -280,6 +280,7 @@ public class TaiQuayController {
         model.addAttribute("tienGiam", tienGiam);
 
         HoaDon hoaDon = hoaDonService.getHoaDonById(id);
+
         if (hoaDon != null) {
             hoaDon.setTongTien(tongTien);
             hoaDon.setKhuyenMai(tienGiam);
