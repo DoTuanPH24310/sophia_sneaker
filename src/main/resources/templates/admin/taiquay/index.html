@@ -86,8 +86,7 @@
                                                 style="background-color: white; border: none; color: red; font-weight: bold;">x
                                         </button>
                                     </a>
-
-                                    <a th:unless="${hdc.maHoaDOn == modelma}" class="nav-link" href="#">
+<a th:unless="${hdc.maHoaDOn == modelma}" class="nav-link" href="#">
                                         <span th:text="${hdc.maHoaDOn}"></span>
                                         <button
                                                 style="background-color: white; border: none; color: red; font-weight: bold;">x
@@ -155,7 +154,6 @@
                                                       class="" style="width: 10px"> <span
                                                            class="fa fa-minus"></span></a>
                                 </span>
-
                             <span th:text="${hdct.soLuong}" style="margin-left: 10px; margin-right: 10px"></span>
                             <span class="input-group-btn">
                                                     <a th:href="@{/admin/tai-quay/update-up/{id}(id=${hdct.chiTietGiay.id})}"
@@ -201,7 +199,6 @@
         </div>
         <div class="row mb-3" th:if="${listhdct != null}">
             <div class="row mb-3" th:if="${#lists.size(listhdct) > 0}">
-
                 <div class="col-10">
                     <h5 style="float: right">Tổng tiền: </h5>
                 </div>
@@ -374,21 +371,27 @@
 
                     <h5 class="text-center">Thông tin thanh toán</h5> <br>
                     <div class="row">
-                        <div class="col-6">
-                            <label for=""><h6>Hình thức thanh toán:</h6></label>
+                        <div class="col-4">
+                            <label for=""><h6>Hình thức thanh toán:</h6></label>
                             <!--                            <button type="button" class="btn btn-primary" data-toggle="modal"-->
                             <!--                                    data-target="#modalThanhToan">-->
                             <!--                                Hình thức thanh toán-->
                             <!--                            </button>-->
                         </div>
                         <div class="col-3">
-                            <label for=""><h6>Tiền mặt:</h6></label>
-                            <input type="radio" value="1" checked name="phuongThuc">
+
+                            <input id="tienMat" onchange="displayTraSau();" type="radio" value="1" checked name="phuongThuc">
+                            <label for="tienMat"><h6>Tiền mặt</h6></label>
                         </div>
                         <div class="col-3">
-                            <label for=""><h6>Chuyển khoản:</h6></label>
-                            <input type="radio" value="2" name="phuongThuc">
 
+                            <input id="chuyenKhoan" onchange="displayTraSau();"  type="radio" value="2" name="phuongThuc">
+                            <label  for="chuyenKhoan"><h6>Chuyển khoản</h6></label>
+                        </div>
+
+                        <div class="col-2" id="phuongThucTraSau" style="display: none;">
+                            <input  id="traSau" onchange="displayTraSau();" type="radio" value="3" name="phuongThuc">
+                            <label for="traSau"><h6>Trả sau</h6></label>
                         </div>
 
                     </div>
@@ -436,7 +439,7 @@
                                   th:text="${#numbers.formatCurrency(tongTienHD)}"></span>
                         </div>
                     </div>
-                    <div class="row mt-4">
+                    <div class="row mt-4" id="blockTienKhachDua">
                         <div class="col-4">
                             <label for=""><h6>Tiền khách đưa:</h6></label>
                         </div>
@@ -449,7 +452,7 @@
                             <span th:text="${errTienKH}"></span>
                         </div>
                     </div>
-                    <div class="row mt-4">
+                    <div class="row mt-4" id="blockTienThua">
 
                         <div class="col-4"><h6>Tiền thừa:</h6></div>
 
@@ -513,7 +516,6 @@
                             </div>
 
                             <div class="col-3">
-
                                 <label>Giày: &nbsp;&nbsp;</label>
                                 <select onchange="test();"
                                         style="border-radius: 7px; min-width: 120px; min-height: 30px;" id="cbbGiay">
@@ -894,7 +896,6 @@
 
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -1351,7 +1352,6 @@
                 });
                 document.querySelector("#" + select).innerHTML = row
             }
-
             $("#provincetdc").change(() => {
                 callApiDistrict(host + "p/" + $("#provincetdc").val() + "?depth=2");
 
@@ -1427,7 +1427,6 @@
                 loadTrDDC(data[index], index);
             }
         }
-
         if (idKh != null) {
             if (loaihdg == 2) {
                 customSwitches.checked = true; // Đánh dấu checkbox là checked
@@ -1448,11 +1447,16 @@
             if (customSwitches.checked) {
                 form.style.display = "block";
                 displayPhiShip();
+                document.getElementById('phuongThucTraSau').style.display ="block";
                 $.ajax({
                     type: 'get',
                     url: 'http://localhost:9090/api/hoa-don/updateGiaoHang/' + idHoaDon,
                 })
             } else {
+                document.getElementById('phuongThucTraSau').style.display ="none";
+                document.getElementById('blockTienKhachDua').style.display = "flex";
+                document.getElementById('blockTienThua').style.display = "flex";
+                document.getElementById('tienMat').checked = true;
                 form.style.display = "none";
                 rowPhiShip.innerHTML = '';
                 let tongTienGoc = tongTien.toLocaleString('vi-VN', {
@@ -1466,6 +1470,18 @@
                     url: 'http://localhost:9090/api/hoa-don/updateTaiQuay/' + idHoaDon,
                 })
             }
+        }
+
+        function displayTraSau() {
+            let checkTraSau = document.getElementById('traSau');
+            if(checkTraSau.checked){
+                document.getElementById('blockTienKhachDua').style.display ="none";
+                document.getElementById('blockTienThua').style.display ="none";
+            }else {
+                document.getElementById('blockTienKhachDua').style.display ="flex";
+                document.getElementById('blockTienThua').style.display ="flex";
+            }
+
         }
 
         function displayPhiShip() {

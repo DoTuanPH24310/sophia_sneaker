@@ -94,7 +94,7 @@ public class QLHDController {
 
     @PostMapping("updatehdcxn")
     public String updatehdcxn(
-            @RequestParam("idhdhcxn") List<String> listhd
+            @RequestParam("idhd") List<String> listhd
     ){
         for (String idhd : listhd){
             HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
@@ -110,11 +110,15 @@ public class QLHDController {
 
     @PostMapping("updatehdcg")
     public String updatehdcg(
-            @RequestParam("idhdcg") List<String> listhdcg
+            @RequestParam("idhd") List<String> listhdcg
     ){
         for (String idhd : listhdcg){
             HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
             hoaDon.setTrangThai(5);
+            LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+            lichSuHoaDon.setHoaDon(hoaDon);
+            lichSuHoaDon.setPhuongThuc("đang giao");
+            lshdService.savelshd(lichSuHoaDon);
             hoaDonService.savehd(hoaDon);
         }
         return "redirect:/admin/hoa-don/hien-thi";
@@ -122,10 +126,58 @@ public class QLHDController {
 
     @PostMapping("updatehddg")
     public String updatehddg(
-            @RequestParam("idhddg") List<String> listhddg
+            @RequestParam("idhd") List<String> listhddg
     ){
         for (String idhd : listhddg){
             HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
+            hoaDon.setTrangThai(1);
+            LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+            lichSuHoaDon.setHoaDon(hoaDon);
+            lichSuHoaDon.setPhuongThuc("hoàn thành");
+            lshdService.savelshd(lichSuHoaDon);
+            hoaDonService.savehd(hoaDon);
+        }
+        return "redirect:/admin/hoa-don/hien-thi";
+    }
+
+    @GetMapping("updatehdcxn/{id}")
+    public String updatehdcxnd(
+        @PathVariable("id") String idhd
+    ){
+        HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
+        if (hoaDon != null){
+            hoaDon.setTrangThai(4);
+            LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+            lichSuHoaDon.setHoaDon(hoaDon);
+            lichSuHoaDon.setPhuongThuc("chờ giao");
+            lshdService.savelshd(lichSuHoaDon);
+            hoaDonService.savehd(hoaDon);
+        }
+        return "redirect:/admin/hoa-don/hien-thi";
+    }
+
+    @GetMapping("updatehdcg/{id}")
+    public String updatehdcg(
+            @PathVariable("id") String idhd
+    ){
+        HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
+        if (hoaDon != null){
+            hoaDon.setTrangThai(5);
+            LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+            lichSuHoaDon.setHoaDon(hoaDon);
+            lichSuHoaDon.setPhuongThuc("đang giao");
+            lshdService.savelshd(lichSuHoaDon);
+            hoaDonService.savehd(hoaDon);
+        }
+        return "redirect:/admin/hoa-don/hien-thi";
+    }
+
+    @GetMapping("updatehddg/{id}")
+    public String updatehddg(
+            @PathVariable("id") String idhd
+    ){
+        HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
+        if (hoaDon != null){
             hoaDon.setTrangThai(1);
             LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
             lichSuHoaDon.setHoaDon(hoaDon);

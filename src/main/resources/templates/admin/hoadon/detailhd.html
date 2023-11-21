@@ -162,13 +162,13 @@
             </ul>
 
             <div th:if="${hoaDon.trangThai == 4}" style="position: relative; right: 40px;" class="row float-right">
-                <a class="btn btn-primary">Xác nhận giao</a>
+                <a th:href="@{/admin/hoa-don/updatehdcg/{id}(id=${hoaDon.id})}" class="btn btn-primary">Xác nhận giao</a>
             </div>
             <div th:if="${hoaDon.trangThai == 5}" style="position: relative; right: 40px;" class="row float-right">
-                <a class="btn btn-primary">Xác nhận thành công</a>
+                <a th:href="@{/admin/hoa-don/updatehddg/{id}(id=${hoaDon.id})}" class="btn btn-primary">Xác nhận thành công</a>
             </div>
             <div th:if="${hoaDon.trangThai == 3}" style="position: relative; right: 40px;" class="row float-right">
-                <a class="btn btn-primary">Xác nhận đơn hàng</a>
+                <a th:href="@{/admin/hoa-don/updatehdcxn/{id}(id=${hoaDon.id})}" class="btn btn-primary">Xác nhận đơn hàng</a>
             </div>
         </div>
 
