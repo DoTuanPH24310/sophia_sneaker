@@ -1,28 +1,28 @@
-async function exportToExcel() {
-    try {
-        // Gọi API để nhận tên file từ backend
-        const response = await fetch('/exportToExcel');
-        const headers = response.headers;
-        const disposition = headers.get('Content-Disposition');
+function uploadExcel() {
+    var fileInput = document.getElementById('fileInput');
+    var file = fileInput.files[0];
 
-        // Trích xuất tên file từ Content-Disposition header
-        const filenameMatch = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/.exec(disposition);
-        const filename = filenameMatch[1];
+    if (file) {
+        var formData = new FormData();
+        formData.append('file', file);
 
-        // Chọn thư mục
-        const directoryHandle = await window.showDirectoryPicker();
-
-        // Tạo file trong thư mục được chọn
-        const fileHandle = await directoryHandle.getFileHandle(filename, { create: true });
-        const writableStream = await fileHandle.createWritable();
-
-        // Ghi dữ liệu từ response blob vào file
-        const blob = await response.blob();
-        await writableStream.write(blob);
-
-        // Đóng stream
-        await writableStream.close();
-    } catch (error) {
-        console.error('Error saving file:', error);
+        fetch('/admin/importFromExcel', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert('Tải lên thành công');
+                    window.location.href = '/admin/chi-tiet-giay';
+                } else {
+                    alert('Tải danh sách thất bại, vui lòng kiểm tra lại');
+                    console.error(response.statusText);
+                }
+            })
+            .catch(error => {
+                console.error('Error during file upload:', error);
+            });
+    } else {
+        alert('Bạn chưa chọn tệp');
     }
 }

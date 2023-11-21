@@ -10,11 +10,12 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
+            align-items: center;
         }
 
         .form-group {
             flex-basis: calc(20% - 10px); /* Điều chỉnh độ rộng của mỗi thành phần */
-            margin-right: 15px; /* Tạo khoảng cách giữa các thành phần */
+            margin-right: 30px; /* Tạo khoảng cách giữa các thành phần */
         }
 
         /* Điều chỉnh kích thước của select box */
@@ -50,6 +51,21 @@
 
         .table-wrapper-scroll-y {
             display: block;
+        }
+        label.file-upload {
+            cursor: pointer;
+            position: relative;
+            display: inline-block;
+        }
+
+        label.file-upload input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
         }
     </style>
     <!-- Include xlsx library -->
@@ -97,9 +113,9 @@
                                            class="form-control search"/>
                                     <input type="search" name="productName" th:value="${productName}"
                                            placeholder="Nhập tên sản phẩm" class="form-control search"/>
-                                    <input style="margin-right: 10px" type="submit" value="Search"
+                                    <input style="margin-right: 10px" type="submit" value="Tìm kiếm"
                                            class="btn btn-primary ml-2"/>
-                                    <a class="btn btn-danger" href="/admin/chi-tiet-giay">CLEAR</a>
+                                    <a class="btn btn-danger" href="/admin/chi-tiet-giay">Làm mới</a>
                                 </div>
 
                                 <p class="text-danger"></p>
@@ -168,11 +184,11 @@
                         </div>
                         <div class="form-group">
                             <label for="giaMin">Giá thấp nhất</label>
-                            <input id="giaMin" name="giaMin" class="form-control custom-width" th:value="${giaMin}">
+                            <input id="giaMin" name="giaMin" class="form-control custom-width" th:value="${giaMin}" placeholder="0">
                         </div>
                         <div class="form-group">
                             <label for="giaMax">Giá cao nhất</label>
-                            <input id="giaMax" name="giaMax" class="form-control" th:value="${giaMax}">
+                            <input id="giaMax" name="giaMax" class="form-control" th:value="${giaMax}" placeholder="10.000.000" >
                         </div>
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary">Lọc</button>
@@ -184,12 +200,22 @@
         <div class="row mt-3">
             <h5 style="font-weight: bold; text-align: center;" class="mt-3">Danh sách Chi Tiết Giày </h5>
             <hr>
-            <div style="padding-left:        10px">
+            <div style="padding-left:10px">
                 <a class="btn btn-primary mt-1 mb-1 float-right" th:href="@{/admin/chi-tiet-giay/add}">
                     <i style="font-size: 18px; width: 10px" class="fab fa-plus"></i> Thêm
                 </a>
-                <a class="btn btn-success" th:href="@{/admin/exportToExcel}">Export to Excel</a>
+                <a class="btn btn-success" th:href="@{/admin/exportToExcel}">
+                    <i class="fa-solid fa-file-export"></i>
+                    Xuất danh sách
+                </a>
+                <div class="mt-1 mb-1 float-right" style="padding-right: 20px">
+                <form id="excelForm" th:action="@{/admin/importFromExcel}" method="post" enctype="multipart/form-data">
+                    <input type="file" name="file" id="fileInput" accept=".xlsx, .xls">
+                    <button type="button" class="btn btn-success" onclick="uploadExcel()"><i class="fa-solid fa-file-import"></i> Nhập danh sách</button>
+                </form>
+                </div>
             </div>
+
             <div class="table table-wrapper-scroll-y my-custom-scrollbar">
                 <table id="table" class="table  table-borderless  formTable">
                     <thead>

@@ -30,4 +30,8 @@ public class HangService {
     public Hang findHangsByIdChiTietGiay(UUID uuid){
         return hangRepository.findHangsByIdChiTietGiay(uuid);
     }
+
+//    public UUID getIdByTen(String ten){
+//        return hangRepository.findIdByName(ten);
+//    }
 }

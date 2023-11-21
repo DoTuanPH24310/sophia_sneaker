@@ -156,19 +156,9 @@ public class GiayService {
         model.addAttribute("listCTG", chiTietGiayService.findAllByIdGiay(temp));
         return temp;
     }
-
-    public Giay getOne(UUID uuid) {
-        return giayRepository.findById(uuid).get();
-    }
-
     public Giay findByTen(String ten){
         return giayRepository.findGiayByTen(ten);
     }
-
-    public List<ChiTietGiay> findChiTietGiaysById(UUID uuid) {
-        return giayRepository.findChiTietGiaysById(uuid);
-    }
-
     public Giay findGiaysByIdChiTietGiay(UUID uuid){
         return giayRepository.findGiaysByIdChiTietGiay(uuid);
     }
