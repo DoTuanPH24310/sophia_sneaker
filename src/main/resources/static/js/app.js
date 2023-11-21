@@ -1,132 +1,79 @@
-/* -----------------------------------------------
-/* How to use? : Check the GitHub README
-/* ----------------------------------------------- */
-
-/* To load a config file (particles.json) you need to host this demo (MAMP/WAMP/local)... */
-/*
-particlesJS.load('particles-js', 'particles.json', function() {
-  console.log('particles.js loaded - callback');
-});
+/* Theme Name: Minia - Minimal Admin & Dashboard Template
+   Author: Themesbrand
+   Version: 1.0.0
+   File Description: Main JS file of the template
 */
+(function ($) {
 
-/* Otherwise just put the config content (json): */
+    'use strict';
 
-particlesJS('particles-js',
-
-    {
-        "particles": {
-            "number": {
-                "value": 80,
-                "density": {
-                    "enable": true,
-                    "value_area": 800
-                }
-            },
-            "color": {
-                "value": "#ffffff"
-            },
-            "shape": {
-                "type": "circle",
-                "stroke": {
-                    "width": 0,
-                    "color": "#000000"
-                },
-                "polygon": {
-                    "nb_sides": 5
-                },
-                "image": {
-                    "src": "img/github.svg",
-                    "width": 100,
-                    "height": 100
-                }
-            },
-            "opacity": {
-                "value": 0.5,
-                "random": false,
-                "anim": {
-                    "enable": false,
-                    "speed": 1,
-                    "opacity_min": 0.1,
-                    "sync": false
-                }
-            },
-            "size": {
-                "value": 5,
-                "random": true,
-                "anim": {
-                    "enable": false,
-                    "speed": 40,
-                    "size_min": 0.1,
-                    "sync": false
-                }
-            },
-            "line_linked": {
-                "enable": true,
-                "distance": 150,
-                "color": "#ffffff",
-                "opacity": 0.4,
-                "width": 1
-            },
-            "move": {
-                "enable": true,
-                "speed": 6,
-                "direction": "none",
-                "random": false,
-                "straight": false,
-                "out_mode": "out",
-                "attract": {
-                    "enable": false,
-                    "rotateX": 600,
-                    "rotateY": 1200
-                }
-            }
-        },
-        "interactivity": {
-            "detect_on": "canvas",
-            "events": {
-                "onhover": {
-                    "enable": true,
-                    "mode": "repulse"
-                },
-                "onclick": {
-                    "enable": true,
-                    "mode": "push"
-                },
-                "resize": true
-            },
-            "modes": {
-                "grab": {
-                    "distance": 400,
-                    "line_linked": {
-                        "opacity": 1
-                    }
-                },
-                "bubble": {
-                    "distance": 400,
-                    "size": 40,
-                    "duration": 2,
-                    "opacity": 8,
-                    "speed": 3
-                },
-                "repulse": {
-                    "distance": 200
-                },
-                "push": {
-                    "particles_nb": 4
-                },
-                "remove": {
-                    "particles_nb": 2
-                }
-            }
-        },
-        "retina_detect": true,
-        "config_demo": {
-            "hide_card": false,
-            "background_color": "#b61924",
-            "background_image": "",
-            "background_position": "50% 50%",
-            "background_repeat": "no-repeat",
-            "background_size": "cover"
-        }
+    // Navbar
+    function initNavbar() {
+  		$('.navbar-nav a').bind('click', function(event) {
+            var $anchor = $(this);
+            $('html, body').stop().animate({
+                scrollTop: $($anchor.attr('href')).offset().top - 0
+            }, 1500, 'easeInOutExpo');
+            event.preventDefault();
+        });
     }
-);
+
+    // Sticky Header
+    function initSticky() {
+        $(".sticky").sticky({
+            topSpacing: 0
+        });
+    }
+
+    // befote after image
+    function initBeforeAfter() {
+        $(".beforeafterdefault").cndkbeforeafter({
+            showText: false,
+            mode: "drag",
+        });
+    }
+
+
+    function initContactForm() {
+    	$('#contact-form').submit(function() {
+
+            var action = $(this).attr('action');
+
+            $("#message").slideUp(750, function() {
+                $('#message').hide();
+
+                $('#submit')
+                    .attr('disabled', 'disabled');
+
+                $.post(action, {
+                        name: $('#name').val(),
+                        email: $('#email').val(),
+                        comments: $('#comments').val(),
+                    },
+                    function(data) {
+                        document.getElementById('message').innerHTML = data;
+                        $('#message').slideDown('slow');
+                        $('#cform img.contact-loader').fadeOut('slow', function() {
+                            $(this).remove()
+                        });
+                        $('#submit').removeAttr('disabled');
+                        if (data.match('success') != null) $('#cform').slideUp('slow');
+                    }
+                );
+
+            });
+
+            return false;
+        });
+    }
+
+    function init() {
+        initNavbar();
+        initSticky();
+        initBeforeAfter();
+        initContactForm();
+    }
+
+    init();
+
+})(jQuery)

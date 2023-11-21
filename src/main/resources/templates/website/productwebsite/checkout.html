@@ -71,7 +71,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="#offcanvas-add-cart" class="offcanvas-toggle">
+                                <a th:href="@{/my-account/home}" class="offcanvas-toggle">
                                     <i class="icon-bag"></i>
                                     <span class="item-count" th:text="${soLuong}"></span>
                                 </a>
@@ -479,63 +479,6 @@
 <!-- ...:::: Start Checkout Section:::... -->
 <div class="checkout-section">
     <div class="container">
-        <div class="row">
-            <!-- User Quick Action Form -->
-            <div class="col-12">
-                <div class="user-actions accordion" data-aos="fade-up" data-aos-delay="0">
-                    <h3>
-                        <i class="fa fa-file-o" aria-hidden="true"></i>
-                        Returning customer?
-                        <a class="Returning" href="#" data-bs-toggle="collapse" data-bs-target="#checkout_login"
-                           aria-expanded="true">Click here to login</a>
-                    </h3>
-                    <div id="checkout_login" class="collapse" data-parent="#checkout_login">
-                        <div class="checkout_info">
-                            <p>If you have shopped with us before, please enter your details in the boxes below. If
-                                you are a new customer please proceed to the Billing &amp; Shipping section.</p>
-                            <form action="#">
-                                <div class="form_group default-form-box">
-                                    <label>Username or email <span>*</span></label>
-                                    <input type="text">
-                                </div>
-                                <div class="form_group default-form-box">
-                                    <label>Password <span>*</span></label>
-                                    <input type="password">
-                                </div>
-                                <div class="form_group group_3 default-form-box">
-                                    <button class="btn btn-md btn-black-default-hover" type="submit">Login</button>
-                                    <label class="checkbox-default">
-                                        <input type="checkbox">
-                                        <span>Remember me</span>
-                                    </label>
-                                </div>
-                                <a href="#">Lost your password?</a>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <div class="user-actions accordion" data-aos="fade-up" data-aos-delay="200">
-                    <h3>
-                        <i class="fa fa-file-o" aria-hidden="true"></i>
-                        Returning customer?
-                        <a class="Returning" href="#" data-bs-toggle="collapse" data-bs-target="#checkout_coupon"
-                           aria-expanded="true">Click here to enter your code</a>
-
-                    </h3>
-                    <div id="checkout_coupon" class="collapse checkout_coupon" data-parent="#checkout_coupon">
-                        <div class="checkout_info">
-                            <form action="#">
-                                <input placeholder="Coupon code" type="text">
-                                <button class="btn btn-md btn-black-default-hover" type="submit">Apply
-                                    coupon
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- User Quick Action Form -->
-        </div>
         <!-- Start User Details Checkout Form -->
         <div class="checkout_form" data-aos="fade-up" data-aos-delay="400">
             <div class="row">
@@ -596,13 +539,9 @@
                             </div>
                         </div>
                     </form>
-
                 </div>
-
-
-
                 <div class="col-lg-6 col-md-6">
-                    <form th:action="@{/check-out/thanh-toan}" method="post">
+                    <form th:action="@{/check-out/thanh-toan}" method="post" id="formThanhToan">
                         <h3>Đơn hàng của bạn</h3>
                         <div class="order_table table-responsive">
                             <table>
@@ -637,7 +576,7 @@
                                 </tr>
                                 <tr class="order_total">
                                     <td colspan="2" style="text-align: center;">Tổng tiền đơn hàng</td>
-                                    <td ><strong th:text="${#numbers.formatCurrency(total) }"></strong></td>
+                                    <td ><strong id="totalAmount" th:text="${#numbers.formatCurrency(total) }"></strong></td>
                                 </tr>
                                 </tfoot>
                             </table>
@@ -660,7 +599,7 @@
                                 <label class="checkbox-default" for="currencyPaypal" data-bs-toggle="collapse"
                                        data-bs-target="#methodPaypal">
                                     <input type="radio" id="currencyPaypal" name="hinhThucThanhToan" value="1">
-                                    <span>PayPal</span>
+                                    <span>VNPay</span>
                                 </label>
                                 <div id="methodPaypal" class="collapse " data-parent="#methodPaypal">
                                     <div class="card-body1">
@@ -670,7 +609,7 @@
                                 </div>
                             </div>
                             <div class="order_button pt-3">
-                                <button class="btn btn-md btn-black-default-hover" type="submit">Thanh toán
+                                <button id="btnThanhToan" class="btn btn-md btn-black-default-hover" type="submit">Thanh toán
                                 </button>
                             </div>
                         </div>
@@ -1087,7 +1026,55 @@
 
     }
 
+    document.getElementById("btnThanhToan").addEventListener("click", function(event) {
+        var paymentMethod = document.querySelector('input[name="hinhThucThanhToan"]:checked').id;
+        var formData = {};
+        var formElements = document.getElementById("formThanhToan").elements;
+        for (var i = 0; i < formElements.length; i++) {
+            var element = formElements[i];
+            if (element.name) {
+                formData[element.name] = element.value;
+            }
+        }
 
+        // Store selected values of dropdowns
+        formData["selectedProvince"] = $("#province").val();
+        formData["selectedDistrict"] = $("#district").val();
+        formData["selectedWard"] = $("#ward").val();
+        sessionStorage.setItem("checkoutFormData", JSON.stringify(formData));
+        if (paymentMethod === "currencyCod") {
+            event.preventDefault();
+            var selectedProvince = $("#province").val();
+            var selectedDistrict = $("#district").val();
+            var selectedWard = $("#ward").val();
+
+            if (!selectedProvince || !selectedDistrict || !selectedWard) {
+                console.error("Please select values for all dropdowns");
+                return;
+            }
+
+            document.getElementById("formThanhToan").submit();
+        } else {
+            fetch("/api/payment/create_payment?totalAmount=" + encodeURIComponent(document.getElementById("totalAmount").innerText))
+                .then(response => response.text())
+                .then(paymentUrl => {
+                    console.log("Received Payment URL:", paymentUrl);
+                    document.getElementById("formThanhToan").action = paymentUrl;
+                    document.getElementById("formThanhToan").submit();
+                })
+                .catch(error => {
+                    console.error("Error fetching payment URL:", error);
+                });
+        }
+    });
+
+    document.getElementById("formThanhToan").addEventListener("submit", function(event) {
+        if (document.getElementById("formThanhToan").action.includes("/api/payment/create_payment")) {
+            event.preventDefault();
+            document.getElementById("formThanhToan").action = "/check-out/thanh-toan";
+            document.getElementById("formThanhToan").submit();
+        }
+    });
 </script>
 </body>
 

@@ -27,6 +27,8 @@ public class EmailService {
     private LoginRepository taiKhoanRepository;
 
     @Autowired
+    private HinhThucThanhToanWebRepository hinhThucThanhToanWebRepository;
+    @Autowired
     private JavaMailSender javaMailSender;
 
     @Autowired
@@ -184,9 +186,14 @@ public class EmailService {
         hoaDonMoi.setPhiShip(20000.0);
         hoaDonMoi.setTongTien(total);
         hoaDonMoi.setTienThua(0.0);
-        hoaDonMoi.setTrangThai(1);
+        hoaDonMoi.setTrangThai(3);
 
         hoaDonMoi = this.hoaDonWebRepository.save(hoaDonMoi);
+
+        HinhThucThanhToan hinhThuc = new HinhThucThanhToan();
+        hinhThuc.setPhuongThuc(hinhThucThanhToan);
+        hinhThuc.setHoaDon(hoaDonMoi);
+        hinhThucThanhToanWebRepository.save(hinhThuc);
 
         return hoaDonMoi;
     }
