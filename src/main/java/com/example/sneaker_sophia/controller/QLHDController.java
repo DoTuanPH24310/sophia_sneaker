@@ -23,7 +23,7 @@ import java.util.UUID;
 @Controller
 @RequestMapping("/admin/hoa-don")
 public class QLHDController {
-
+    public static String tempIdHD = "";
     @Resource(name = "hoaDonService")
     HoaDonService hoaDonService;
 
@@ -73,6 +73,7 @@ public class QLHDController {
             @PathVariable("id") String idhd,
             Model model
     ) {
+        tempIdHD = idhd;
         HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
         List<HoaDonChiTiet> listhdct = hoaDonChiTietServive.getHDCTByIdHD(idhd);
         Map<UUID, String> avtctgMap = new HashMap<>();
@@ -94,7 +95,7 @@ public class QLHDController {
 
     @PostMapping("updatehdcxn")
     public String updatehdcxn(
-            @RequestParam("idhd") List<String> listhd
+            @RequestParam(value = "idhd", defaultValue = "0") List<String> listhd
     ){
         for (String idhd : listhd){
             HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
@@ -153,7 +154,7 @@ public class QLHDController {
             lshdService.savelshd(lichSuHoaDon);
             hoaDonService.savehd(hoaDon);
         }
-        return "redirect:/admin/hoa-don/hien-thi";
+        return "redirect:/admin/hoa-don/detail/" + tempIdHD;
     }
 
     @GetMapping("updatehdcg/{id}")
@@ -169,7 +170,8 @@ public class QLHDController {
             lshdService.savelshd(lichSuHoaDon);
             hoaDonService.savehd(hoaDon);
         }
-        return "redirect:/admin/hoa-don/hien-thi";
+        return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+
     }
 
     @GetMapping("updatehddg/{id}")
@@ -185,6 +187,6 @@ public class QLHDController {
             lshdService.savelshd(lichSuHoaDon);
             hoaDonService.savehd(hoaDon);
         }
-        return "redirect:/admin/hoa-don/hien-thi";
+        return "redirect:/admin/hoa-don/detail/" + tempIdHD;
     }
 }

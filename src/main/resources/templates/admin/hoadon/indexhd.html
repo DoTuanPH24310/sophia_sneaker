@@ -167,11 +167,6 @@
                                 <table id="tableModal" class="table table-borderless ml-2">
                                     <thead>
                                     <tr class="bg-light">
-                                        <th>
-                                            <input th:name="requestId"
-                                                   th:value="AllG" style="width: 20px; height: 18px;"
-                                                   type="checkbox">
-                                        </th>
                                         <th>STT</th>
                                         <th>Mã HĐ</th>
                                         <th>Tên khách hàng</th>
@@ -185,14 +180,7 @@
                                     </thead>
                                     <tbody id="trchoThanhToan">
                                     <form action="">
-
-
                                         <tr th:each="hdc, status : ${listhdc}">
-                                            <th>
-                                                <input th:name="requestId"
-                                                       th:value="AllG" style="width: 20px; height: 18px;"
-                                                       type="checkbox">
-                                            </th>
                                             <td th:text="${status.index + 1}"></td>
                                             <td th:text="${hdc.maHoaDOn}"></td>
                                             <td th:text="${hdc.tenKhachHang}"></td>
@@ -265,6 +253,11 @@
                                         </tr>
                                         </thead>
                                         <tbody id="trchoXacNhan">
+                                        <th:block th:if="${#lists.isEmpty(listhdhcxn)}">
+                                            <tr>
+                                                <td colspan="9"><h2>Không có hóa đơn đang chờ xác nhận</h2></td>
+                                            </tr>
+                                        </th:block>
                                         <tr th:each="hd, status : ${listhdhcxn}">
                                             <th>
                                                 <input th:name="idhd"
@@ -302,7 +295,7 @@
                                         </tr>
                                         </tbody>
                                     </table>
-                                    <h2 class="text-center mt-4" id="err"></h2>
+                                    <h2 class="text-center mt-4" id="errchoXacNhan"></h2>
                                 </div>
                             </form>
                         </div>
@@ -458,7 +451,7 @@
                                         </tr>
                                         </tbody>
                                     </table>
-                                    <h2 class="text-center mt-4" id="err"></h2>
+                                    <h2 class="text-center mt-4" id="errdangGiao"></h2>
                                 </div>
                             </form>
                         </div>
@@ -470,11 +463,6 @@
                                 <table id="tableModal" class="table table-borderless ml-2">
                                     <thead>
                                     <tr class="bg-light">
-                                        <th>
-                                            <input th:name="requestId"
-                                                   th:value="AllG" style="width: 20px; height: 18px;"
-                                                   type="checkbox">
-                                        </th>
                                         <th>STT</th>
                                         <th>Mã HĐ</th>
                                         <th>Tên khách hàng</th>
@@ -489,11 +477,6 @@
                                     <tbody id="trhoanThanh">
 
                                     <tr th:each="hdht, status : ${listhdht}">
-                                        <th>
-                                            <input th:name="requestId"
-                                                   th:value="AllG" style="width: 20px; height: 18px;"
-                                                   type="checkbox">
-                                        </th>
                                         <td th:text="${status.index + 1}"></td>
                                         <td th:text="${hdht.maHoaDOn}"></td>
                                         <td th:text="${hdht.tenKhachHang}"></td>
@@ -509,6 +492,10 @@
                                             <button th:if="${hdht.loaiHoaDon == 2}" class="btn btn-primary "
                                                     style="border-radius: 30px; font-size: 12px; height: 40px">
                                                 Giao hàng
+                                            </button>
+                                            <button th:if="${hdht.loaiHoaDon == 3}" class="btn btn-primary "
+                                                    style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                Online
                                             </button>
                                         </td>
                                         <td>
@@ -535,11 +522,6 @@
                                 <table id="tableModal" class="table table-borderless ml-2">
                                     <thead>
                                     <tr class="bg-light">
-                                        <th>
-                                            <input th:name="requestId"
-                                                   th:value="AllG" style="width: 20px; height: 18px;"
-                                                   type="checkbox">
-                                        </th>
                                         <th>STT</th>
                                         <th>Mã HĐ</th>
                                         <th>Tên khách hàng</th>
@@ -553,11 +535,6 @@
                                     </thead>
                                     <tbody id="trhuy">
                                     <tr th:each="hdh, status : ${listhdh}">
-                                        <th>
-                                            <input th:name="requestId"
-                                                   th:value="AllG" style="width: 20px; height: 18px;"
-                                                   type="checkbox">
-                                        </th>
                                         <td th:text="${status.index + 1}"></td>
                                         <td th:text="${hdh.maHoaDOn}"></td>
                                         <td th:text="${hdh.tenKhachHang}"></td>
@@ -614,6 +591,8 @@
         let listCTT = [[${listhdc}]];
         let listHT = [[${listhdht}]];
         let listHDCG = [[${listhdcg}]];
+        let listHDCXN = [[${listhdhcxn}]];
+        let listHDDG = [[${listhddg}]];
         let errTable = '';
 
 
@@ -633,6 +612,10 @@
                 errTable = 'errhoanThanh';
             } else if (tab == '#choGiao') {
                 errTable = 'errchoGiao';
+            } else if (tab == '#choXacNhan') {
+                errTable = 'errchoXacNhan';
+            } else if (tab == '#dangGiao') {
+                errTable = 'errdangGiao';
             }
         }
 
@@ -662,9 +645,11 @@
                 currency: 'VND'
             });
 
-            row.insertCell().innerHTML = ` <input th:name="idhd"
-                       th:value="${hd.id}" style="width: 20px; height: 18px;"
+            if ( activeTab == '#choGiao' || activeTab == '#choXacNhan' || activeTab == '#dangGiao'){
+                row.insertCell().innerHTML = ` <input name="idhd"
+                       value="${x.id}" style="width: 20px; height: 18px;"
                        type="checkbox">`;
+            }
             row.insertCell().innerHTML = index;
             row.insertCell().innerHTML = x.maHoaDOn;
             row.insertCell().innerHTML = x.tenKhachHang;
@@ -675,15 +660,18 @@
             let id = x.id;
             if (x.loaiHoaDon == 1) {
                 loaiDonbtn = '<button class="btn btn-success " style="border-radius: 30px; font-size: 12px; height: 40px">Tại quầy </button>';
-            } else {
+            } else if (x.loaiHoaDon == 2) {
                 loaiDonbtn = '<button class="btn btn-primary "style="border-radius: 30px; font-size: 12px; height: 40px">Giao hàng</button>'
+            }else{
+                loaiDonbtn = '<button class="btn btn-primary "style="border-radius: 30px; font-size: 12px; height: 40px">Online</button>'
             }
+
             row.insertCell().innerHTML = loaiDonbtn;
-            if (activeTab == '#choThanhToan' || activeTab == '' || activeTab == '#choGiao') {
+            if (activeTab == '#choThanhToan' || activeTab == '' || activeTab == '#choGiao' || activeTab == '#choXacNhan' ) {
                 let button1 = `<a href="/admin/tai-quay/detail/${id}" class="btn btn-warning edit" style=" padding: 5px 10px; font-size: 12px"><i class="material-icons text-white mt-1" title="Chi tiết">&#xE254;</i></a>`
                 let button2 = `<a href="/admin/hoa-don/detail/${id}" class="btn btn-success ms-1" style=" padding: 5px 10px; font-size: 12px;"><i class="material-icons text-white mt-1" title="Chi tiết">visibility</i></a>`;
                 row.insertCell().innerHTML = button1 + button2;
-            } else if (activeTab == '#hoanThanh') {
+            } else if (activeTab == '#hoanThanh' || activeTab == '#dangGiao') {
                 let button = `<a href="/admin/hoa-don/detail/${id}" class="btn btn-success ms-1" style=" padding: 5px 10px; font-size: 12px;"><i class="material-icons text-white mt-1" title="Chi tiết">visibility</i></a>`;
                 row.insertCell().innerHTML = button;
             }
@@ -699,9 +687,13 @@
             loadAllTable(listCTT, '#choThanhToan');
             loadAllTable(listHT, '#hoanThanh');
             loadAllTable(listHDCG, '#choGiao');
+            loadAllTable(listHDCXN, '#choXacNhan');
+            loadAllTable(listHDDG, '#dangGiao');
             document.getElementById('errchoGiao').innerHTML = '';
             document.getElementById('errhoanThanh').innerHTML = '';
             document.getElementById('errchoThanhToan').innerHTML = '';
+            document.getElementById('errchoXacNhan').innerHTML = '';
+            document.getElementById('errdangGiao').innerHTML = '';
         }
 
         function fillter() {
@@ -713,6 +705,10 @@
                 temActiveTab = 1;
             } else if (temActiveTab == 'choGiao') {
                 temActiveTab = 4;
+            }else if (temActiveTab == 'choXacNhan'){
+                temActiveTab = 3;
+            }else if (temActiveTab == 'dangGiao'){
+                temActiveTab = 5;
             }
             let params = {
                 ngayBatDau: NBD.value,
@@ -744,7 +740,6 @@
         }
 
     </script>
-
 </div>
 </body>
 </html>
