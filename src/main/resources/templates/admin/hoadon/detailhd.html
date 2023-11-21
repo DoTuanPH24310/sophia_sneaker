@@ -167,7 +167,7 @@
         <div th:if="${hoaDon.trangThai == 4}"  class="float-right mr-3">
             <a th:href="@{/admin/hoa-don/updatehdcg/{id}(id=${hoaDon.id})}" class="btn btn-primary">Xác nhận
                 giao</a>
-            <a  class="btn btn-danger mr-3">Hủy</a>
+            <a th:href="@{/admin/hoa-don/huyhdcg/{id}(id=${hoaDon.id})}" class="btn btn-danger mr-3">Hủy</a>
         </div>
         <div th:if="${hoaDon.trangThai == 5}"  class="float-right">
             <a th:href="@{/admin/hoa-don/updatehddg/{id}(id=${hoaDon.id})}" class="btn btn-primary">Xác nhận
@@ -176,7 +176,7 @@
         </div>
         <div th:if="${hoaDon.trangThai == 3}"  class="float-right">
             <a th:href="@{/admin/hoa-don/updatehdcxn/{id}(id=${hoaDon.id})}" class="btn btn-primary">Xác nhận đơn</a>
-            <a  class="btn btn-danger mr-3">Hủy</a>
+            <a th:href="@{/admin/hoa-don/huyhdcxn/{id}(id=${hoaDon.id})}" class="btn btn-danger mr-3">Hủy</a>
         </div>
 
     </div>

@@ -202,4 +202,27 @@ public class QLHDController {
         }
         return "redirect:/admin/hoa-don/detail/" + tempIdHD;
     }
+
+    public String handleHuyHd(String idhd) {
+        HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
+        if (hoaDon != null) {
+            hoaDon.setTrangThai(6);
+            LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+            lichSuHoaDon.setHoaDon(hoaDon);
+            lichSuHoaDon.setPhuongThuc("6");
+            lshdService.savelshd(lichSuHoaDon);
+            hoaDonService.savehd(hoaDon);
+        }
+        return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+    }
+
+    @GetMapping("huyhdcxn/{id}")
+    public String huyhdcxn(@PathVariable("id") String idhd) {
+        return handleHuyHd(idhd);
+    }
+
+    @GetMapping("huyhdcg/{id}")
+    public String huyhdcg(@PathVariable("id") String idhd) {
+        return handleHuyHd(idhd);
+    }
 }
