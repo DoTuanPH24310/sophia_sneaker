@@ -338,25 +338,25 @@
                                         </thead>
                                         <tbody id="trchoGiao">
                                         <!--                                    table chờ giao-->
-                                        <tr th:each="hdcg, status : ${listhdcg}">
+                                        <tr th:each="hd, status : ${listhdcg}">
                                             <th>
-                                                <input th:name="idhdcg"
-                                                       th:value="${hdcg.id}" style="width: 20px; height: 18px;"
+                                                <input th:name="idhd"
+                                                       th:value="${hd.id}" style="width: 20px; height: 18px;"
                                                        type="checkbox">
                                             </th>
                                             <td th:text="${status.index + 1}"></td>
-                                            <td th:text="${hdcg.maHoaDOn}"></td>
-                                            <td th:text="${hdcg.tenKhachHang}"></td>
-                                            <td th:text="${hdcg.createdBy}"></td>
-                                            <td th:text="${#temporals.format(hdcg.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
-                                            <td th:text="${#numbers.formatCurrency(hdcg.khuyenMai)}"></td>
-                                            <td th:text="${#numbers.formatCurrency(hdcg.tongTien + hdcg.phiShip)}"></td>
+                                            <td th:text="${hd.maHoaDOn}"></td>
+                                            <td th:text="${hd.tenKhachHang}"></td>
+                                            <td th:text="${hd.createdBy}"></td>
+                                            <td th:text="${#temporals.format(hd.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
+                                            <td th:text="${#numbers.formatCurrency(hd.khuyenMai)}"></td>
+                                            <td th:text="${#numbers.formatCurrency(hd.tongTien + hd.phiShip)}"></td>
                                             <td>
-                                                <button th:if="${hdcg.loaiHoaDon == 1}" class="btn btn-success "
+                                                <button th:if="${hd.loaiHoaDon == 1}" class="btn btn-success "
                                                         style="border-radius: 30px; font-size: 12px; height: 40px">
                                                     Tại quầy
                                                 </button>
-                                                <button th:if="${hdcg.loaiHoaDon == 2}" class="btn btn-primary "
+                                                <button th:if="${hd.loaiHoaDon == 2}" class="btn btn-primary "
                                                         style="border-radius: 30px; font-size: 12px; height: 40px">
                                                     Giao hàng
                                                 </button>
@@ -364,7 +364,7 @@
                                             <td>
 
                                                 <a
-                                                        th:href="@{/admin/tai-quay/detail/{id}(id=${hdcg.id})}"
+                                                        th:href="@{/admin/tai-quay/detail/{id}(id=${hd.id})}"
                                                         class="btn btn-warning edit"
                                                         style=" padding: 5px 10px; font-size: 12px">
                                                     <i class="material-icons text-white mt-1"
@@ -662,8 +662,8 @@
                 currency: 'VND'
             });
 
-            row.insertCell().innerHTML = ` <input th:name="requestId"
-                       th:value="AllG" style="width: 20px; height: 18px;"
+            row.insertCell().innerHTML = ` <input th:name="idhd"
+                       th:value="${hd.id}" style="width: 20px; height: 18px;"
                        type="checkbox">`;
             row.insertCell().innerHTML = index;
             row.insertCell().innerHTML = x.maHoaDOn;
