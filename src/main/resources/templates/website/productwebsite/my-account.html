@@ -14,7 +14,8 @@
     <link rel="stylesheet" href="/assets/css/vendor/vendor.min.css">
     <link rel="stylesheet" href="/assets/css/plugins/plugins.min.css">
     <link rel="stylesheet" href="/assets/css/style.min.css">
-
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+          rel="stylesheet"/>
 </head>
 
 <body>
@@ -62,8 +63,8 @@
                         <!-- Start Header Action Link -->
                         <ul class="header-action-link action-color--black action-hover-color--golden">
                             <li>
-                                <a th:href="@{/my-account/home}" >
-                                    <i class="icon-user" ></i>
+                                <a th:href="@{/my-account/home}">
+                                    <i class="icon-user"></i>
                                     <span class="item-count">3</span>
                                 </a>
                             </li>
@@ -341,13 +342,59 @@
                         </div>
                     </div>
                     <div class="tab-pane" id="address">
-                        <p>The following addresses will be used on the checkout page by default.</p>
-                        <h5 class="billing-address">Billing address</h5>
-                        <a href="#" class="view">Edit</a>
-                        <p><strong>Bobby Jackson</strong></p>
-                        <address>
-                            Address: Your address goes here.
-                        </address>
+                        <div class="container" th:each="listDiaChi : ${diaChiList}">
+                            <div class="mt-5">
+                                <div class="d-style btn btn-brc-tp border-2 bgc-white btn-outline-blue btn-h-outline-blue btn-a-outline-blue w-100 my-2 py-3 shadow-sm">
+                                    <!-- Basic Plan -->
+                                    <div class="row align-items-center">
+                                        <div class="col-12 col-md-4">
+                                            <h4 class="pt-3 text-170 text-600 text-primary-d1 letter-spacing"
+                                                th:text="${listDiaChi.ten}"></h4>
+                                            <div class="text-secondary-d1 text-120">
+                                                <span class="ml-n15 align-text-bottom"></span><span class="text-180"
+                                                                                                    th:text="${listDiaChi.sdt}"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <div class="default-form-box">
+                                                <label>Địa chỉ cụ thể <span>*</span></label>
+                                                <input th:value="${listDiaChi.diaChiCuThe}" readonly="readonly"
+                                                       type="text">
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="default-form-box">
+                                                <label for="ward">Xã <span>*</span></label>
+                                                <input th:value="${listDiaChi.phuongXa}" readonly="readonly" id="ward"
+                                                       type="text">
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="default-form-box">
+                                                <label for="district">Huyện <span>*</span></label>
+                                                <input th:value="${listDiaChi.quanHuyen}" readonly="readonly"
+                                                       id="district"
+                                                       type="text">
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="default-form-box">
+                                                <label for="province">Tỉnh<span>*</span></label>
+                                                <input th:value="${listDiaChi.tinh}" readonly="readonly" type="text"
+                                                       id="province">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12 col-md-4 text-center">
+                                            <a href="#"
+                                               class="f-n-hover btn btn-info btn-raised px-4 py-25 w-75 text-600">Get
+                                                Started</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="tab-pane fade show active" id="account-details">
                         <h3>Account details </h3>
@@ -717,6 +764,83 @@
 
 <!-- Main JS -->
 <script src="/assets/js/main.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+        integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js"
+        integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+    const host = "https://provinces.open-api.vn/api/";
+
+    // Function to fetch provinces
+    async function fetchProvinces() {
+        try {
+            const response = await fetch(`${host}p/`);
+            const provinces = await response.json();
+
+            // Assume you have HTML elements for the input fields
+            const wardInput = document.getElementById('ward');
+            const districtInput = document.getElementById('district');
+            const provinceInput = document.getElementById('province');
+
+            // Process the list of provinces
+            provinces.forEach(province => {
+                // Update the input fields based on your data structure
+                province.districts.forEach(district => {
+                    districtInput.value += `${district.name}, `;
+                });
+                province.wards.forEach(ward => {
+                    wardInput.value += `${ward.name}, `;
+                });
+                provinceInput.value = province.name; // Update with actual data from API
+
+                // You may need to handle the case where a user selects a specific province
+                // and you fetch the corresponding districts and wards for that province.
+            });
+        } catch (error) {
+            console.error('Error fetching provinces:', error);
+        }
+    }
+
+    async function fetchDistricts() {
+        try {
+            const response = await fetch(`${host}d/`);
+            const districts = await response.json();
+            const districtInput = document.getElementById('district');
+
+            // Process the list of districts
+            districts.forEach(district => {
+                districtInput.value += `${district.name}, `;
+            });
+        } catch (error) {
+            console.error('Error fetching districts:', error);
+        }
+    }
+
+    async function fetchWards() {
+        try {
+            const response = await fetch(`${host}w/`);
+            const wards = await response.json();
+
+            // Assume you have an HTML element for the input field
+            const wardInput = document.getElementById('ward');
+
+            // Process the list of wards
+            wards.forEach(ward => {
+                wardInput.value += `${ward.name}, `;
+            });
+        } catch (error) {
+            console.error('Error fetching wards:', error);
+        }
+    }
+
+    fetchProvinces();
+
+
+
+</script>
 </body>
 
 </html>
