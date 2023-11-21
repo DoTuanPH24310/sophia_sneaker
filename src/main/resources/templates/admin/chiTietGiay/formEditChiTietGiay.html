@@ -63,6 +63,20 @@
             color: red; /* Thay đổi màu khi hover */
         }
 
+        .deleteAnh {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: transparent;
+            border: none;
+            color: #5a6268;
+            transition: color 0.2s; /* Hiệu ứng màu khi hover */
+        }
+
+        .deleteAnh:hover {
+            color: red; /* Thay đổi màu khi hover */
+        }
+
         /* Ẩn trường input mặc định */
         input[type="file"] {
             display: none;
@@ -230,10 +244,12 @@
             <h1>Upload Images</h1>
             <div th:with="anhList=${anh}">
                 <ul id="imageList">
-                    <li th:each="anh : ${anh}">
-                        <img th:src="@{'/img/' + ${anh.anhChinh}}"
+                    <li th:each="a : ${anh}">
+                        <img th:src="@{${a.getDuongDan()}}"
                              class="img-fluid" alt="" />
-                        <button ><i class="fa fa-times-circle"></i></button>
+                            <a th:href="@{'/admin/anh/delete-anh/' + ${a.getId()}}" class="deleteAnh">
+                                <i class="fa fa-times-circle"></i>
+                            </a>
                     </li>
                 </ul>
             </div>

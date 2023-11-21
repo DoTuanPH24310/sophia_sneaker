@@ -97,5 +97,8 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
 
 
     Page<ChiTietGiay> findAll(Specification<ChiTietGiay> spec, Pageable pageable);
+
+    @Query("SELECT a.chiTietGiay.id FROM Anh a WHERE a.id = :anhId")
+    UUID findChiTietGiayIdByAnhId(@Param("anhId") String anhId);
 }
 

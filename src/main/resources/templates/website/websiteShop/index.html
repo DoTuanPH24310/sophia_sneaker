@@ -751,9 +751,9 @@
                                         <a th:href="@{'/sophia-store/detail/'+${product.getChiTietGiayList().get(0).getId()}}"
                                            class="image-link"
                                            th:if="${not #lists.isEmpty(product.getChiTietGiayList())}">
-                                            <img th:src="@{'/img/' + ${product.getChiTietGiayList().get(0).getAnhs().get(0).anhChinh}}"
+                                            <img th:src="@{${product.getChiTietGiayList().get(0).getAnhs().get(0).getDuongDan()}}"
                                                  style="width: 320px; height: 370px" class="img-fluid" alt=""/>
-                                            <img th:src="@{'/img/' + ${product.getChiTietGiayList().get(0).getAnhs().get(1).anhChinh}}"
+                                            <img th:src="@{${product.getChiTietGiayList().get(0).getAnhs().get(1).getDuongDan()}}"
                                                  style="width: 320px; height: 370px" class="img-fluid" alt=""/>
                                         </a>
                                         <div class="tag">
@@ -1596,7 +1596,7 @@
                             <div class="row">
                                 <div class="col-md-4"  >
                                     <div class="modal-add-cart-product-img">
-                                        <img th:src="@{'/img/' + ${products.get(0).getChiTietGiayList().get(0).getAnhs().get(0).getAnhChinh()}}"
+                                        <img th:src="@{${products.get(0).getChiTietGiayList().get(0).getAnhs().get(0).getDuongDan()}}"
                                              style="width: 90px; height: 135px" class="img-fluid" alt=""/>
                                     </div>
                                 </div>

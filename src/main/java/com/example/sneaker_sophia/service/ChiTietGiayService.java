@@ -264,5 +264,9 @@ public class ChiTietGiayService {
 
         return pageResult;
     }
+
+    public UUID findChiTietGiayIdByAnhId(String id){
+        return chiTietGiayRepository.findChiTietGiayIdByAnhId(id);
+    }
 }
 

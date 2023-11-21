@@ -1,5 +1,6 @@
 package com.example.sneaker_sophia.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,8 +12,10 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
 @Entity
 @Table(name = "ChiTietGiay")
 @Getter
@@ -33,6 +36,7 @@ public class ChiTietGiay {
     @JoinColumn(name = "IdKichCo")
     private KichCo kichCo;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "id.chiTietGiay")
     private List<CTG_KhuyenMai> listCTG_KM;
 
@@ -70,9 +74,6 @@ public class ChiTietGiay {
     @Column(name = "trangThai")
     private Integer trangThai;
 
-    @OneToMany(mappedBy = "chiTietGiay")
-    private List<Anh> anhs;
-
     @CreatedBy
     @Column(name = "nguoiTao")
     private String nguoiTao;
@@ -88,5 +89,18 @@ public class ChiTietGiay {
     @LastModifiedDate
     @Column(name = "ngaySua")
     private LocalDateTime ngaySua;
+
+    @Column(name = "qrCode")
+    private String qrCode;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "chiTietGiay")
+    private List<Anh> anhs;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "chiTietGiay", fetch = FetchType.LAZY)
+    private List<HoaDonChiTiet> chiTietGiayList = new ArrayList<>();
+
+
 }
 

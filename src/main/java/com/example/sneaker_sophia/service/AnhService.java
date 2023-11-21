@@ -19,11 +19,11 @@ public class AnhService {
     public void save(Anh anh) {
         anhRepository.save(anh);
     }
-    public Anh getOne(UUID id) {
+    public Anh getOne(String id) {
         return anhRepository.findById(id).get();
     }
 
-    public void delete(UUID id) {
+    public void delete(String id) {
         anhRepository.deleteById(id);
     }
 
