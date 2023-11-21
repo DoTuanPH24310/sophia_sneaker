@@ -490,51 +490,64 @@
                                 <div class="default-form-box">
                                     <label>Họ tên người nhận hàng</label>
                                     <input type="text" th:field="*{ten}">
+                                    <span th:errors="*{ten}" style="color: red"></span>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="default-form-box">
                                     <label>Số điện thoại <span>*</span></label>
                                     <input type="text" th:field="*{sdt}">
+                                    <span th:errors="*{sdt}" style="color: red"></span>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="default-form-box">
                                     <label> Địa chỉ email <span>*</span></label>
-                                    <input type="text" th:field="*{taiKhoan.email}">
+                                    <input type="text" th:field="*{email}">
+                                    <span th:errors="*{email}" style="color: red"></span>
                                 </div>
                             </div>
                             <div class="col-4">
                                 <div class="default-form-box">
                                     <label for="province">Tỉnh<span>*</span></label>
-                                    <select class="country_option nice-select wide" id="province" th:field="*{tinh}">
+                                    <select class="country_option nice-select wide" id="province" name="tinh"
+                                            th:field="*{tinh}" placeholder="Chọn tỉnh">
+                                        <option value="">Chọn tỉnh</option>
                                         <option value=""></option>
                                     </select>
+                                    <span th:errors="*{tinh}" style="color: red"></span>
                                 </div>
                             </div>
                             <div class="col-4">
                                 <div class="default-form-box">
                                     <label for="district">Huyện <span>*</span></label>
-                                    <select class="country_option nice-select wide" id="district"
-                                            th:field="*{quanHuyen}">
+                                    <select class="country_option nice-select wide" name="quanHuyen" id="district"
+                                            th:field="*{quanHuyen}" placeholder="Chọn huyện">
+                                        <option value="">Chọn quận huyện</option>
                                         <option value=""></option>
                                     </select>
+                                    <span th:errors="*{quanHuyen}" style="color: red"></span>
                                 </div>
                             </div>
                             <div class="col-4">
                                 <div class="default-form-box">
                                     <label for="ward">Xã <span>*</span></label>
-                                    <select class="country_option nice-select wide" id="ward" th:field="*{phuongXa}">
+                                    <select class="country_option nice-select wide" id="ward" name="phuongXa"
+                                            th:field="*{phuongXa}" placeholder="Chọn xã">
+                                        <option value="">Chọn phường xã</option>
                                         <option value=""></option>
                                     </select>
+                                    <span th:errors="*{phuongXa}" style="color: red"></span>
                                 </div>
                             </div>
+
 
                             <div class="col-12">
                                 <div class="default-form-box">
                                     <label>Địa chỉ cụ thể <span>*</span></label>
                                     <input placeholder="House number and street name" type="text"
                                            th:field="*{diaChiCuThe}">
+                                    <span th:errors="*{diaChiCuThe}" style="color: red"></span>
                                 </div>
                             </div>
                         </div>
