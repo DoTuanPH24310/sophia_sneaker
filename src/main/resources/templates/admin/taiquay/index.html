@@ -973,7 +973,9 @@
             if (tongTien == null || tongTien == 0) {
                 alert("VUi lòng chọn sản phẩm mua hàng");
             }
-            if (tongTien != null && tongTien != 0) {
+
+            console.log(document.getElementById('traSau').checked);
+            if (tongTien != null && tongTien != 0 && document.getElementById('traSau').checked == false) {
                 tienKhachDua = tienKhachDua.replace(/[^\d.]/g, '');
                 tienKhachDua = parseFloat(tienKhachDua.replace(/\./g, ''));
                 if (tienKhachDua - (tongTien + phiShip) < 0) {
@@ -983,6 +985,10 @@
                     if (confirm('Xác nhận thanh toán đơn hàng')) {
                         document.getElementById('formXacNhanDonHang').submit();
                     }
+                }
+            }else {
+                if (confirm('Xác nhận thanh toán đơn hàng')) {
+                    document.getElementById('formXacNhanDonHang').submit();
                 }
             }
         });
