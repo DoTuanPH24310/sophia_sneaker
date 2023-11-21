@@ -92,4 +92,11 @@ public class DeGiayIplm implements DeGiayService {
     public DeGiay findByTen(String ten){
         return deGiayRepository.findDeGiayByTen(ten);
     }
+
+    @Override
+    public  List<DeGiay> findByTrangThaiEquals(Integer trangThai) {
+        return deGiayRepository.findByTrangThaiEquals(trangThai);
+    }
+
+
 }

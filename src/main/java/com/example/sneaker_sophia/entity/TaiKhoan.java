@@ -39,6 +39,10 @@ public class TaiKhoan {
     @ManyToOne(fetch = FetchType.EAGER)
     private VaiTro vaiTro;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "taiKhoan", fetch = FetchType.LAZY)
+    List<HoaDon> hoaDons = new ArrayList<>();
+
     @Column(name = "ten")
     private String ten;
 
@@ -97,4 +101,6 @@ public class TaiKhoan {
         this.setAnhDaiDien(nhanVienRequest.getAnhDaiDien());
         this.setVaiTro(VaiTro.builder().id(nhanVienRequest.getIdVaiTro()).build());
     }
+
+
 }

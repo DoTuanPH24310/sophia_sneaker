@@ -13,19 +13,22 @@ import java.util.UUID;
 public class AnhService {
     @Autowired
     AnhRepository anhRepository;
+
     public List<Anh> getAll() {
         return anhRepository.findAll();
     }
     public void save(Anh anh) {
         anhRepository.save(anh);
     }
-    public Anh getOne(UUID id) {
-        return anhRepository.findById(id).get();
-    }
 
-    public void delete(UUID id) {
-        anhRepository.deleteById(id);
-    }
+    // cuongdv
+//    public Anh getOne(UUID id) {
+//        return anhRepository.findById(id).get();
+//    }
+//
+//    public void delete(UUID id) {
+//        anhRepository.deleteById(id);
+//    }
 
     public List<Anh> anhsFindIdChitietGiay(ChiTietGiay chiTietGiay) {
         return anhRepository.findAnhsByChiTietGiay(chiTietGiay);
@@ -34,4 +37,8 @@ public class AnhService {
     public void deleteAnhByChiTietGiay(ChiTietGiay giay){
         anhRepository.deleteAllByChiTietGiay(giay);
     }
+
+
+
+
 }

@@ -90,4 +90,10 @@ public class HangIplm implements HangService {
     public Hang findByTen(String ten){
         return hangRepository.findHangByTen(ten);
     }
+
+    @Override
+    public List<Hang> findByTrangThaiEquals(Integer trangThai) {
+        return hangRepository.findByTrangThaiEquals(trangThai);
+    }
+
 }

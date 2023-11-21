@@ -18,6 +18,7 @@ import org.springframework.ui.Model;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service("taiKhoanService")
@@ -183,4 +184,22 @@ public class TaiKhoanService {
     public TaiKhoan getTaiKhoanByIdKH(String idkh){
         return taiKhoanRepository.findById(idkh).orElse(null);
     }
+
+    //30/10
+    public List<TaiKhoan> findAllKhachHang(){
+        return taiKhoanRepository.findAllKhachHang();
+    }
+
+    public List<TaiKhoan> findByText(String text){
+        text = text.trim().length() == 0 ?null: "%"+text+"%";
+        return taiKhoanRepository.findByText(text);
+    }
+
+    public List<DiaChi> findListTKById(String id){
+        return diaChiRepository.findListTKByIdKH((id));
+    }
+
+    // 31-10
+
+
 }

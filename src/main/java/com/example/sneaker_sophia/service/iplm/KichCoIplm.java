@@ -89,4 +89,10 @@ public class KichCoIplm implements KichCoService {
     public KichCo findByTen(String ten){
         return kichCoRepository.findKichCoByTen(ten);
     }
+
+    @Override
+    public List<KichCo>  findByTrangThaiEquals(Integer trangThai) {
+        return kichCoRepository.findByTrangThaiEquals(trangThai);
+    }
+
 }

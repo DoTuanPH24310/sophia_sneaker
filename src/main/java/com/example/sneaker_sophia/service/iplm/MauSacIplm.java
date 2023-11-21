@@ -89,4 +89,10 @@ public class MauSacIplm implements MauSacService {
     public MauSac findByTen(String ten){
         return mauSacRepository.findMauSacByTen(ten);
     }
+
+//cuongdv
+    @Override
+    public List<MauSac> findByTrangThaiEquals(Integer trangThai){
+        return mauSacRepository.findByTrangThaiEquals(trangThai);
+    }
 }

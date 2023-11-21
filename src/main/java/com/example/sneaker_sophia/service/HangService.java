@@ -31,4 +31,5 @@ public interface HangService {
 
     Hang findByTen(String ten);
 
+    List<Hang> findByTrangThaiEquals(Integer i);
 }

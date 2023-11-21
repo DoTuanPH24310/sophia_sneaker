@@ -1,10 +1,13 @@
 package com.example.sneaker_sophia.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 @Entity
@@ -49,6 +52,9 @@ public class ChiTietGiay {
     @Column(name = "ma")
     private String ma;
 
+    @Column(name = "ten")
+    private String ten;
+
     @Column(name = "gia")
     private Double gia;
 
@@ -58,9 +64,16 @@ public class ChiTietGiay {
     @Column(name = "trangThai")
     private Integer trangThai;
 
+    @Column(name = "qrCode")
+    private String qrCode;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "chiTietGiay")
     private List<Anh> anhs;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "chiTietGiay", fetch = FetchType.LAZY)
+    private List<HoaDonChiTiet> chiTietGiayList = new ArrayList<>();
 
 }
 

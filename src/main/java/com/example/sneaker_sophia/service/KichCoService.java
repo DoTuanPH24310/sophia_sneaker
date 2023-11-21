@@ -37,4 +37,5 @@ public interface KichCoService {
 
     KichCo findByTen(String ten);
 
+    List<KichCo> findByTrangThaiEquals(Integer trangThai);
 }

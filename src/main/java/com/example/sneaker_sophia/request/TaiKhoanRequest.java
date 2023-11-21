@@ -1,7 +1,6 @@
 package com.example.sneaker_sophia.request;
 
 import com.example.sneaker_sophia.dto.TaiKhoanDiaChi;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -15,7 +14,7 @@ import java.time.LocalDate;
 public class TaiKhoanRequest {
 
     private  String idTaiKhoan;
-    
+
     private String idVaiTro;
 
     private String ten;
@@ -42,6 +41,8 @@ public class TaiKhoanRequest {
     private Integer phuongXa;
 
     private String diaChiCuThe;
+
+    private String ghiChu;
 
     public TaiKhoanRequest(TaiKhoanDiaChi taiKhoanDiaChi) {
         this.setIdTaiKhoan(taiKhoanDiaChi.getTaiKhoan().getId());

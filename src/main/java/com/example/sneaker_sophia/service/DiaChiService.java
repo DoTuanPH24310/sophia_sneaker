@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service("diaChiService")
 public class DiaChiService {
@@ -67,6 +68,40 @@ public class DiaChiService {
 
     public void deleteById(String id) {
         diaChiRepository.deleteById(id);
+    }
+
+
+    // cuongdv
+
+
+    // 31-10
+
+    public DiaChi getDiaChiById(String iddc) {
+        return diaChiRepository.findById(iddc).orElse(null);
+    }
+
+    public void saveDC(DiaChi diaChi) {
+        diaChiRepository.save(diaChi);
+    }
+
+    public List<DiaChi> findListTKById(String idkh) {
+        return diaChiRepository.findListTKByIdKH(idkh);
+    }
+
+    // 3-11
+
+    public DiaChi findDcByIdDc(String iddc) {
+        return diaChiRepository.findById(iddc).orElse(null);
+    }
+
+    public DiaChi findListTKByIdKHAndDCMD(String idkh) {
+        return diaChiRepository.findListTKByIdKHAndDCMD(idkh);
+    }
+
+
+    //    14/11
+    public Integer getCountDiaChi(String idTaiKhoan) {
+        return diaChiRepository.getCountDiaChi(UUID.fromString(idTaiKhoan));
     }
 
 }

@@ -26,4 +26,9 @@ public class LoaiGiayService {
     public LoaiGiay findByTen(String ten){
         return loaiGiayRepository.findLoaiGiayByTen(ten);
     }
+//cuongdv
+    public List<LoaiGiay> findByTrangThaiEquals(Integer tt) {
+        return loaiGiayRepository.findByTrangThaiEquals(tt);
+    }
+
 }

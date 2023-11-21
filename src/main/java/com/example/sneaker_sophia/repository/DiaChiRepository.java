@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Repository("diaChiRepository")
 public interface DiaChiRepository extends JpaRepository<DiaChi, String> {
@@ -19,5 +20,12 @@ public interface DiaChiRepository extends JpaRepository<DiaChi, String> {
     @Query(value = "select * from DiaChi where IdTaiKhoan =?1",nativeQuery = true)
     List<DiaChi> findListDCByIdKH(String id);
 
+    @Query(value = "select * from DiaChi where IdTaiKhoan =?1",nativeQuery = true)
+    List<DiaChi> findListTKByIdKH(String id);
 
+    @Query(value = "select  * from DiaChi where IdTaiKhoan = ?1 and diaChiMacDinh = 1 ",nativeQuery = true)
+    DiaChi findListTKByIdKHAndDCMD(String idkh);
+
+    @Query(value = "select count(Id) from DiaChi where IdTaiKhoan =?1", nativeQuery = true)
+    Integer getCountDiaChi(UUID idTaiKhoan);
 }

@@ -39,4 +39,5 @@ public interface DeGiayService {
 
     DeGiay findByTen(String ten);
 
+    Object findByTrangThaiEquals(Integer i);
 }

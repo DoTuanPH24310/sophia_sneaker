@@ -30,4 +30,5 @@ public interface MauSacService {
 
     MauSac findByTen(String ten);
 
+    List<MauSac> findByTrangThaiEquals(Integer i);
 }
