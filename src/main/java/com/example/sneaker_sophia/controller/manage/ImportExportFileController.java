@@ -68,10 +68,9 @@ public class ImportExportFileController {
         headerRow.createCell(9).setCellValue("Giá");
         headerRow.createCell(10).setCellValue("Số Lượng");
         headerRow.createCell(11).setCellValue("Trạng Thái");
-        headerRow.createCell(12).setCellValue("Ngày Tạo");
-        headerRow.createCell(13).setCellValue("Ngày Sửa");
-        headerRow.createCell(14).setCellValue("Người Tạo");
-        headerRow.createCell(15).setCellValue("Người sửa");
+        headerRow.createCell(12).setCellValue("Ảnh 1");
+        headerRow.createCell(13).setCellValue("Ảnh 2");
+        headerRow.createCell(14).setCellValue("Ảnh 3");
 
         // Lặp qua danh sách và ghi vào sheet
         int rowIndex = 1; // Bắt đầu từ hàng thứ 2 để tránh ghi đè hàng đầu tiên
@@ -114,20 +113,13 @@ public class ImportExportFileController {
             Cell cell11= row.createCell(11);
             cell11.setCellValue(chiTietGiay.getTrangThai());
 
-            Cell cell12 = row.createCell(12);
-            cell12.setCellValue(chiTietGiay.getNgayTao());
+            List<Anh> anhs = anhService.anhsFindIdChitietGiay(chiTietGiay);
 
-            Cell cell13 = row.createCell(13);
-            cell13.setCellValue(chiTietGiay.getNgaySua());
-
-            Cell cell14 = row.createCell(14);
-            cell14.setCellValue(chiTietGiay.getNguoiTao());
-
-            Cell cell15 = row.createCell(15);
-            cell15.setCellValue(chiTietGiay.getNguoiSua());
-
-            Cell cell16 = row.createCell(16);
-            cell16.setCellValue(chiTietGiay.getNguoiTao());
+            for (int i = 0; i < anhs.size(); i++) {
+                Anh anh = anhs.get(i);
+                Cell cell = row.createCell(12 + i);
+                cell.setCellValue(anh.getDuongDan());
+            }
         }
 
         // Ghi workbook vào ByteArrayOutputStream
@@ -159,7 +151,7 @@ public class ImportExportFileController {
         try {
             // Đọc file Excel từ MultipartFile
             Workbook workbook = new XSSFWorkbook(file.getInputStream());
-            Sheet sheet = workbook.getSheetAt(0); // Giả sử dữ liệu ở sheet đầu tiên
+            Sheet sheet = workbook.getSheetAt(0);
 
             // Lặp qua từng hàng trong sheet (bắt đầu từ hàng thứ 1, bỏ qua hàng tiêu đề)
             for (int rowIndex = 1; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
@@ -178,16 +170,19 @@ public class ImportExportFileController {
                 chiTietGiay.setGia(getDoubleValue(row.getCell(9)));
                 chiTietGiay.setTrangThai(getIntegerValue(row.getCell(10)));
                 chiTietGiay.setSoLuong(getIntegerValue(row.getCell(11)));
-//                chiTietGiay.setNgayTao(parseLocalDateTime(getStringValue(row.getCell(12))));
-//                chiTietGiay.setNgaySua(parseLocalDateTime(getStringValue(row.getCell(13))));
-                chiTietGiay.setNguoiTao(getStringValue(row.getCell(14)));
-                chiTietGiay.setNguoiSua(getStringValue(row.getCell(15)));
 
                 chiTietGiayService.save(chiTietGiay);
-                System.out.println("ăn");
+
+                String linkAnh1 = getStringValue(row.getCell(12));
+                String linkAnh2 = getStringValue(row.getCell(13));
+                String linkAnh3 = getStringValue(row.getCell(14));
+
+                // Kiểm tra và lưu link ảnh vào bảng ảnh
+                saveLinkAnh(chiTietGiay, linkAnh1);
+                saveLinkAnh(chiTietGiay, linkAnh2);
+                saveLinkAnh(chiTietGiay, linkAnh3);
+
             }
-
-
             // Đóng workbook
             workbook.close();
 
@@ -198,6 +193,15 @@ public class ImportExportFileController {
         }
     }
 
+    // Phương thức để lưu link ảnh vào bảng ảnh
+    private void saveLinkAnh(ChiTietGiay chiTietGiay, String linkAnh) {
+        if (linkAnh != null && !linkAnh.isEmpty()) {
+            Anh anh = new Anh();
+            anh.setDuongDan(linkAnh);
+            anh.setChiTietGiay(chiTietGiay);
+            anhService.save(anh);
+        }
+    }
 
     private void createComboBoxForGiay(Workbook workbook, Sheet sheet, Cell cell, List<Giay> giayList, String defaultValue) {
         DataValidationHelper helper = sheet.getDataValidationHelper();
