@@ -576,10 +576,6 @@ public class TaiQuayController {
         HinhThucThanhToan hinhThucThanhToan = htttService.getHTTTByIdhd(tempIdHD);
 //        HinhThucThanhToan hinhThucThanhToan1 = htttService.getHTTTByIdhd(tempIdHD);
 
-        if (tienKhachDua.equals("")) {
-            model.addAttribute("errTienKH", "Chưa trả tiền tao");
-            return "forward:/admin/tai-quay/detail/" + tempIdHD;
-        }
         Double tongTien = hoaDonChiTietServive.tongTienSauGiam(tempIdHD);
         HoaDon hoaDon = hoaDonService.getHoaDonById(tempIdHD);
         if (hinhThucThanhToan != null) {

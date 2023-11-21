@@ -51,8 +51,6 @@ public class QLHDController {
         Integer soHDCXN = hoaDonService.soHDCXN();
         Integer soHDDG = hoaDonService.soHDDG();
 
-
-
         model.addAttribute("listhdc", getAllHDC);
         model.addAttribute("listhdht", getAllHDHT);
         model.addAttribute("listhdcg", getAllHDChoGiao);

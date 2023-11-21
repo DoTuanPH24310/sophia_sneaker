@@ -86,6 +86,7 @@ public class HoaDonService {
     public List<HoaDon> getAllHDChoGiao(){
         return hoaDonRepository.getAllHDChoGiao();
     }
+
     public List<HoaDon> getAllHDChoXacNhan(){
         return hoaDonRepository.getAllHDCXN();
     }

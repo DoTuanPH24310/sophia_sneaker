@@ -567,7 +567,7 @@
                                     </tr>
                                     </tbody>
                                 </table>
-                                <h2 class="text-center mt-4" id="err"></h2>
+                                <h2 class="text-center mt-4" id="errhuy"></h2>
                             </div>
                         </div>
                     </div>
@@ -592,6 +592,7 @@
         let listHDCG = [[${listhdcg}]];
         let listHDCXN = [[${listhdhcxn}]];
         let listHDDG = [[${listhddg}]];
+        let listHDH = [[${listhdh}]];
         let errTable = '';
         let idSelectAll = '';
         let classSelectChild = '';
@@ -652,6 +653,8 @@
                 errTable = 'errchoXacNhan';
             } else if (tab == '#dangGiao') {
                 errTable = 'errdangGiao';
+            }else if (tab == '#huy'){
+                errTable = 'errhuy';
             }
         }
 
@@ -715,7 +718,7 @@
                 let button1 = `<a href="/admin/tai-quay/detail/${id}" class="btn btn-warning edit" style=" padding: 5px 10px; font-size: 12px"><i class="material-icons text-white mt-1" title="Chi tiết">&#xE254;</i></a>`
                 let button2 = `<a href="/admin/hoa-don/detail/${id}" class="btn btn-success ms-1" style=" padding: 5px 10px; font-size: 12px;"><i class="material-icons text-white mt-1" title="Chi tiết">visibility</i></a>`;
                 row.insertCell().innerHTML = button1 + button2;
-            } else if (activeTab == '#hoanThanh' || activeTab == '#dangGiao') {
+            } else if (activeTab == '#hoanThanh' || activeTab == '#dangGiao' || activeTab == '#huy') {
                 let button = `<a href="/admin/hoa-don/detail/${id}" class="btn btn-success ms-1" style=" padding: 5px 10px; font-size: 12px;"><i class="material-icons text-white mt-1" title="Chi tiết">visibility</i></a>`;
                 row.insertCell().innerHTML = button;
             }
@@ -733,11 +736,13 @@
             loadAllTable(listHDCG, '#choGiao');
             loadAllTable(listHDCXN, '#choXacNhan');
             loadAllTable(listHDDG, '#dangGiao');
+            loadAllTable(listHDH, '#huy');
             document.getElementById('errchoGiao').innerHTML = '';
             document.getElementById('errhoanThanh').innerHTML = '';
             document.getElementById('errchoThanhToan').innerHTML = '';
             document.getElementById('errchoXacNhan').innerHTML = '';
             document.getElementById('errdangGiao').innerHTML = '';
+            document.getElementById('errhuy').innerHTML = '';
         }
 
         function fillter() {
@@ -753,6 +758,8 @@
                 temActiveTab = 3;
             }else if (temActiveTab == 'dangGiao'){
                 temActiveTab = 5;
+            }else {
+                temActiveTab = 6;
             }
             let params = {
                 ngayBatDau: NBD.value,
