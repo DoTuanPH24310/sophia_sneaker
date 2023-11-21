@@ -469,7 +469,7 @@
                                 <tr th:each="cart : ${cartItems}">
                                     <td class="product_remove">
                                         <a
-                                           th:href="@{'/cart/removeProductCart?gioHangId=' + ${cart.id.gioHang.id} + '&chiTietGiayId=' + ${cart.id.chiTietGiay.id}}">
+                                                th:href="@{'/cart/removeProductCart?gioHangId=' + ${cart.id.gioHang.id} + '&chiTietGiayId=' + ${cart.id.chiTietGiay.id}}">
                                             <i class="fa fa-trash-o"></i>
                                         </a>
                                     </td>
@@ -491,9 +491,15 @@
 
                                     <td class="product_quantity">
                                         <label for="quantity">Số lượng:</label>
-                                        <button class="buttonCT decreaseQuantity" th:data-id="${cart.id.gioHang.id} + '/' +${cart.id.chiTietGiay.id}">-</button>
-                                        <input min="1" max="100" id="quantity" type="text" th:value="${cart.soLuong}" th:data-id="${cart.id.gioHang.id} + '/' +${cart.id.chiTietGiay.id}" onchange="updateQuantity(this)">
-                                        <button class="buttonCT increaseQuantity" th:data-id="${cart.id.gioHang.id} + '/' +${cart.id.chiTietGiay.id}">+</button>
+                                        <button class="buttonCT decreaseQuantity"
+                                                th:data-id="${cart.id.gioHang.id} + '/' +${cart.id.chiTietGiay.id}">-
+                                        </button>
+                                        <input min="1" max="100" id="quantity" type="text" th:value="${cart.soLuong}"
+                                               th:data-id="${cart.id.gioHang.id} + '/' +${cart.id.chiTietGiay.id}"
+                                               onchange="updateQuantity(this)">
+                                        <button class="buttonCT increaseQuantity"
+                                                th:data-id="${cart.id.gioHang.id} + '/' +${cart.id.chiTietGiay.id}">+
+                                        </button>
                                     </td>
 
 
@@ -501,16 +507,9 @@
                                         <span class="productTotalAmount" style="font-size: 15px"
                                               th:text="${#numbers.formatCurrency(cart.id.chiTietGiay.gia * cart.soLuong)}"> </span>
                                     </td>
-
                                 </tr> <!-- End Cart Single Item-->
-
-                                <!-- Start Cart Single Item-->
-                                <!-- End Cart Single Item-->
                                 </tbody>
                             </table>
-                        </div>
-                        <div class="cart_submit">
-                            <button class="btn btn-md btn-golden" type="submit">update cart</button>
                         </div>
                     </div>
                 </div>
@@ -541,18 +540,8 @@
                                 <span class="offcanvas-cart-total-price-value"
                                       th:text="${#numbers.formatCurrency(totalCartPrice)}"></span>
                             </div>
-<!--                            <div class="cart_subtotal ">-->
-<!--                                <p>Giao hàng</p>-->
-<!--                                <p class="cart_amount"><span>Flat Rate:</span> $255.00</p>-->
-<!--                            </div>-->
-<!--                            <a href="#">Calculate shipping</a>-->
-
-<!--                            <div class="cart_subtotal">-->
-<!--                                <p>Tổng tiền</p>-->
-<!--                                <p class="cart_amount">$215.00</p>-->
-<!--                            </div>-->
                             <div class="checkout_btn">
-                                <a th:href="@{/check-out/home}" class="btn btn-md btn-golden">Proceed to Checkout</a>
+                                <a th:href="@{/check-out/home}" class="btn btn-md btn-golden">Thanh Toán</a>
                             </div>
                         </div>
                     </div>
@@ -929,7 +918,7 @@
         var productId = input.getAttribute('data-id');
 
         if (!isNaN(newQuantity) && newQuantity >= 1 && newQuantity <= 100) {
-            $.get("/giohangchitiet/" + productId + "/updatequantity", { newQuantity: newQuantity }, function (data) {
+            $.get("/giohangchitiet/" + productId + "/updatequantity", {newQuantity: newQuantity}, function (data) {
                 // Xử lý dữ liệu trả về ở đây (nếu cần)
                 console.log(data);
                 // Cập nhật giá sản phẩm sau khi cập nhật số lượng (nếu cần)
@@ -958,6 +947,7 @@
         // Tính tổng tiền sản phẩm sau cập nhật giá
         updateTotalPrice();
     }
+
     function updateTotalPrice() {
         var totalCartPrice = 0;
         $(".productTotalAmount").each(function () {

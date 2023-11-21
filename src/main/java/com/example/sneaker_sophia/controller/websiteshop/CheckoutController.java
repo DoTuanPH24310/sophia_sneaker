@@ -131,9 +131,6 @@ public class CheckoutController {
     public String thanhToan(@ModelAttribute(value = "diaChi") DiaChiDTO diaChi,
                             @RequestParam(value = "hinhThucThanhToan",required = false) Integer hinhThucThanhToan,
                             Model model, HttpSession session) {
-
-
-        System.out.println(diaChi + " :test");
         try {
             Cart cart = (Cart) session.getAttribute("cart");
             List<CartItem> cartItems = cart.getItems();
@@ -146,7 +143,7 @@ public class CheckoutController {
 
             emailService.themDiaChiVaoTaiKhoan(diaChi, taiKhoanMoi);
 
-            HoaDon hoaDonMoi = emailService.taoHoaDonMoi(taiKhoanMoi, 1);
+            HoaDon hoaDonMoi = emailService.taoHoaDonMoi(taiKhoanMoi, hinhThucThanhToan);
             emailService.themSanPhamVaoHoaDonChiTiet(cartItems, hoaDonMoi);
 
             emailService.guiEmailXacNhanThanhToan(taiKhoanMoi.getEmail(), hoaDonMoi);
@@ -164,6 +161,11 @@ public class CheckoutController {
         }
     }
 
+
+    @GetMapping("test")
+    public String test(){
+        return "website/testPhiShip";
+    }
 
 
 }
