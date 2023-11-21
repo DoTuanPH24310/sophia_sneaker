@@ -605,8 +605,12 @@ public class TaiQuayController {
 //            phiVanChuyen = phiVanChuyen.replaceAll("[^\\d]", "");
 //            hoaDon.setPhiShip(Double.parseDouble(phiVanChuyen));
 //        }
+        if(phuongThuc == 3){
+            hoaDon.setTienThua(0.0);
+        }else{
+            hoaDon.setTienThua(Double.parseDouble(tienKhachDua) - tongTien - Double.parseDouble(phiVanChuyen));
+        }
 
-        hoaDon.setTienThua(Double.parseDouble(tienKhachDua) - tongTien - Double.parseDouble(phiVanChuyen));
         hoaDon.setKhuyenMai(hoaDonChiTietServive.tienGiam(tempIdHD));
         hoaDon.setGhiChu(ghiChu);
         hoaDon.setTongTien(tongTien);
