@@ -395,7 +395,7 @@
                             <div class="product-image-large-image swiper-slide zoom-image-hover img-responsive"
                                  th:each="anh : ${giay.getAnhs()}">
                                 <img class="img-fluid"
-                                     th:src="@{'/img/' + ${anh.getAnhChinh()}}" alt=""/>
+                                     th:src="@{${anh.getDuongDan()}}" alt=""/>
                             </div>
                         </div>
                     </div>
@@ -407,7 +407,7 @@
                                  th:each="anh : ${giay.getAnhs()}">
                                 <ul class="color-list">
                                     <img class="img-fluid"
-                                         th:src="@{'/img/' + ${anh.getAnhChinh()}}" alt=""/>
+                                         th:src="@{${anh.getDuongDan()}}" alt=""/>
                                 </ul>
                             </div>
                         </div>
@@ -453,7 +453,7 @@
                                     <a
                                        th:href="@{'/sophia-store/detail/' + ${chiTietGiay.getId()}}" class="image-link">
                                         <img class="img-fluid"
-                                             th:src="@{'/img/' + ${chiTietGiay.getAnhs().get(0).getAnhChinh()}}"
+                                             th:src="@{${chiTietGiay.getAnhs().get(0).getDuongDan()}}"
                                              style="width: 70px; height: 80px" alt=""/>
                                     </a>
                                 </li>

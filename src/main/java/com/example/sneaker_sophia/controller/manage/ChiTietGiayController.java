@@ -3,6 +3,7 @@ package com.example.sneaker_sophia.controller.manage;
 import com.example.sneaker_sophia.entity.*;
 import com.example.sneaker_sophia.service.*;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
@@ -20,6 +21,7 @@ import java.util.*;
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/admin/")
 public class ChiTietGiayController {
 
@@ -41,6 +43,10 @@ public class ChiTietGiayController {
     AnhService anhService;
     @Autowired
     HttpServletRequest request;
+
+    private final FileUpload fileUpload;
+
+
 
     @GetMapping("chi-tiet-giay")
     public String listFirstPage(Model model) {
@@ -175,25 +181,18 @@ public class ChiTietGiayController {
             for (MultipartFile imageFile : imageFiles) {
                 String originalFilename = imageFile.getOriginalFilename();
 
-                // Tạo một đối tượng ảnh và thiết lập các thông tin cần thiết
-                Anh anh = new Anh();
-                anh.setAnhChinh(originalFilename);
-                anh.setDuongDan(originalFilename);
-                anh.setChiTietGiay(chiTietGiay);
+                // Tải ảnh lên Cloudinary và nhận URL của ảnh
+                String imageUrl = fileUpload.uploadFile(imageFile);
 
-                // Lưu đối tượng ảnh vào cơ sở dữ liệu
-                anhService.save(anh);
+                if (imageUrl != null) {
+                    // Tạo đối tượng ảnh và thiết lập các thông tin cần thiết
+                    Anh anh = new Anh();
+                    anh.setAnhChinh(1);
+                    anh.setDuongDan(imageUrl); // Lưu URL của ảnh từ Cloudinary
+                    anh.setChiTietGiay(chiTietGiay);
 
-                // Lưu tệp hình ảnh vào thư mục trên máy chủ
-                String projectDir = System.getProperty("user.dir"); // Lấy thư mục gốc của dự án
-                String uploadDir = projectDir + "/src/main/resources/static/img";
-
-                Path uploadPath = Paths.get(uploadDir);
-
-                try (InputStream inputStream = imageFile.getInputStream()) {
-                    Files.copy(inputStream, uploadPath.resolve(originalFilename));
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    // Lưu đối tượng ảnh vào cơ sở dữ liệu
+                    anhService.save(anh);
                 }
             }
         } catch (Exception e) {
@@ -202,7 +201,6 @@ public class ChiTietGiayController {
 
         return "redirect:/admin/chi-tiet-giay";
     }
-
 
     @PostMapping("chi-tiet-giay/update")
     public String update(ChiTietGiay chiTietGiay,
@@ -214,24 +212,18 @@ public class ChiTietGiayController {
             for (MultipartFile imageFile : imageFiles) {
                 String originalFilename = imageFile.getOriginalFilename();
 
-                // Tạo một đối tượng ảnh và thiết lập các thông tin cần thiết
-                Anh anh = new Anh();
-                anh.setAnhChinh(originalFilename);
-                anh.setDuongDan(originalFilename);
-                anh.setChiTietGiay(chiTietGiay);
-                // Lưu đối tượng ảnh vào cơ sở dữ liệu
-                anhService.save(anh);
+                // Tải ảnh lên Cloudinary và nhận URL của ảnh
+                String imageUrl = fileUpload.uploadFile(imageFile);
 
-                // Lưu tệp hình ảnh vào thư mục trên máy chủ
-                String projectDir = System.getProperty("user.dir"); // Lấy thư mục gốc của dự án
-                String uploadDir = projectDir + "/src/main/resources/static/img";
+                if (imageUrl != null) {
+                    // Tạo đối tượng ảnh và thiết lập các thông tin cần thiết
+                    Anh anh = new Anh();
+                    anh.setAnhChinh(1);
+                    anh.setDuongDan(imageUrl); // Lưu URL của ảnh từ Cloudinary
+                    anh.setChiTietGiay(chiTietGiay);
 
-                Path uploadPath = Paths.get(uploadDir);
-
-                try (InputStream inputStream = imageFile.getInputStream()) {
-                    Files.copy(inputStream, uploadPath.resolve(originalFilename));
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    // Lưu đối tượng ảnh vào cơ sở dữ liệu
+                    anhService.save(anh);
                 }
             }
         } catch (Exception e) {
@@ -252,5 +244,12 @@ public class ChiTietGiayController {
     public String deleteAnhByChiTietGiay(@PathVariable("id") UUID id) {
         anhService.deleteAnhByChiTietGiay(chiTietGiayService.getOne(id));
         return "redirect:/admin/chi-tiet-giay/edit/{id}";
+    }
+
+    @GetMapping("anh/delete-anh/{id}")
+    public String deleteAnhById(@PathVariable("id") String id) {
+        UUID uuid = chiTietGiayService.findChiTietGiayIdByAnhId(id);
+        anhService.delete(id);
+        return "redirect:/admin/chi-tiet-giay/edit/"+uuid;
     }
 }

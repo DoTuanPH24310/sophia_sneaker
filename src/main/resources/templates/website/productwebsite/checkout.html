@@ -338,7 +338,7 @@
                 <div class="offcanvas-cart-item-block">
                     <a href="#" class="offcanvas-cart-item-image-link">
                         <img class="offcanvas-cart-image"
-                             th:src="@{'/img/' + ${cart.id.chiTietGiay.anhs.get(0).anhChinh}}"
+                             th:src="@{${cart.id.chiTietGiay.anhs.get(0).getDuongDan()}}"
                              style="width: 92px; height: 92px"
                              alt="">
                     </a>
@@ -556,7 +556,7 @@
                                 <tr th:each="item : ${cartItems}">
                                     <td class="product_thumb">
                                         <img class="offcanvas-cart-image"
-                                             th:src="@{'/img/' + ${item.id.chiTietGiay.anhs.get(0).anhChinh}}"
+                                             th:src="@{${item.id.chiTietGiay.anhs.get(0).getDuongDan()}}"
                                              style="width: 92px; height: 92px"
                                              alt="">
                                     </td>

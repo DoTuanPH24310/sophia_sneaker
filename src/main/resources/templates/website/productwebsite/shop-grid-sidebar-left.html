@@ -340,7 +340,7 @@
                 <div class="offcanvas-cart-item-block">
                     <a href="#" class="offcanvas-cart-item-image-link">
                         <img class="offcanvas-cart-image"
-                             th:src="@{'/img/' + ${cart.id.chiTietGiay.anhs.get(0).anhChinh}}"
+                             th:src="@{${cart.id.chiTietGiay.anhs.get(0).getDuongDan()}}"
                              style="width: 92px; height: 92px"
                              alt="">
                     </a>
@@ -636,11 +636,11 @@
                                                     <div class="image-box">
                                                         <a href="../product-details-default.html" class="image-link">
                                                             <img class="img-fluid"
-                                                                 th:src="@{'/img/' + ${product.anhs.get(0).anhChinh}}"
+                                                                 th:src="@{${product.anhs.get(0).getDuongDan()}}"
                                                                  style="width: 260px; height: 260px"
                                                                  alt="">
                                                             <img class="img-fluid"
-                                                                 th:src="@{'/img/' + ${product.anhs.get(1).anhChinh}}"
+                                                                 th:src="@{${product.anhs.get(1).getDuongDan()}}"
                                                                  style="width: 260px; height: 260px"
                                                                  alt="">
                                                         </a>
@@ -698,11 +698,11 @@
                                                     <a href="../product-details-default.html"
                                                        class="product-list-img-link">
                                                         <img class="img-fluid"
-                                                             th:src="@{'/img/' + ${product.anhs.get(0).anhChinh}}"
+                                                             th:src="@{${product.anhs.get(0).getDuongDan()}}"
                                                              style="width: 260px; height: 260px"
                                                              alt="">
                                                         <img class="img-fluid"
-                                                             th:src="@{'/img/' + ${product.anhs.get(1).anhChinh}}"
+                                                             th:src="@{${product.anhs.get(1).getDuongDan()}}"
                                                              style="width: 260px; height: 260px"
                                                              alt="">
                                                     </a>

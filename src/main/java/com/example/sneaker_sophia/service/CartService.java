@@ -72,7 +72,7 @@ public class CartService {
     public void addToCartNoLogin(UUID id, HttpSession httpSession) {
         Optional<ChiTietGiay> chiTietSanPham = this.chiTietGiayRepository.findById(id);
         CartItem item = new CartItem(chiTietSanPham.get().getId(),
-                chiTietSanPham.get().getAnhs().get(0).getAnhChinh(),
+                chiTietSanPham.get().getAnhs().get(0).getDuongDan(),
                 chiTietSanPham.get().getGiay().getTen(),
                 chiTietSanPham.get().getTen(),
                 chiTietSanPham.get().getHang().getTen(),
