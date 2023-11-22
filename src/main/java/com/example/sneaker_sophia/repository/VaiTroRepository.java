@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface VaiTroRepository extends JpaRepository<VaiTro, String> {
     @Query(value = "select id from VaiTro where ten = N'Nhân Viên'", nativeQuery = true)
     String getIdByTen();
+
+    VaiTro findByTen(String ten);
 }

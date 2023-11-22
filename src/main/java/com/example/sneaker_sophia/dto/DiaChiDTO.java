@@ -30,9 +30,6 @@ public class DiaChiDTO {
     private Integer quanHuyen;
     @NotNull(message = "Vui lòng chọn tỉnh")
     private Integer tinh;
-    @NotBlank(message = "Vui lòng nhập email")
-    @Email(message = "Email không đúng định dạng")
-    private String email;
 
     private Integer diaChiMacDinh;
 
@@ -48,7 +45,6 @@ public class DiaChiDTO {
         diaChi.setPhuongXa(getPhuongXa());
         diaChi.setQuanHuyen(getQuanHuyen());
         diaChi.setTinh(getTinh());
-        diaChi.getTaiKhoan().setEmail(getEmail());
         if (getTaiKhoan() != null) {
             TaiKhoan taiKhoan = new TaiKhoan();
             taiKhoan.setId(getTaiKhoan().getId());

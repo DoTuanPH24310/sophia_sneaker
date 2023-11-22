@@ -58,7 +58,7 @@ public class EmailService {
             taiKhoanMoi.setMatKhau(hashedMatKhau);
             System.out.println("matkhau1"+matKhauNgauNhien);
 
-            VaiTro vaiTro = this.vaiTroRepository.findById("7A76E301-D2CF-42EA-AC77-76C5E2487513").orElse(null);
+            VaiTro vaiTro = this.vaiTroRepository.findByTen("ADMIN");
             taiKhoanMoi.setVaiTro(vaiTro);
             taiKhoanMoi.setSdt(diaChiDTO.getSdt());
             taiKhoanMoi = this.taiKhoanRepository.save(taiKhoanMoi);

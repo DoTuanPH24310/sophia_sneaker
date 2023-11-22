@@ -6,6 +6,8 @@ import com.example.sneaker_sophia.entity.GioHangChiTiet;
 import com.example.sneaker_sophia.entity.Hang;
 import com.example.sneaker_sophia.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,12 +46,12 @@ WebsiteshopController {
         model.addAttribute("products", top16Products);
 
         // cart
-        String userEmail = "namdc@gmail.com";
-        List<GioHangChiTiet> cartItems = cartService.getCartItems(userEmail);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        List<GioHangChiTiet> cartItems = cartService.getCartItems(authentication.getName());
         double totalCartPrice = cartItems.stream()
                 .mapToDouble(item -> item.getId().getChiTietGiay().getGia() * item.getSoLuong())
                 .sum();
-        Long soLuong = this.cartService.countCartItems(userEmail);
+        Long soLuong = this.cartService.countCartItems(authentication.getName());
         model.addAttribute("soLuong", soLuong);
         model.addAttribute("totalCartPrice", totalCartPrice);
         model.addAttribute("cartItems", cartItems);
@@ -70,6 +72,16 @@ WebsiteshopController {
                 loaiGiayService.findHangsByIdChiTietGiay(id),
                 mauSacService.findMauSacsByIdChiTiet(id)
         ));
+        // cart
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        List<GioHangChiTiet> cartItems = cartService.getCartItems(authentication.getName());
+        double totalCartPrice = cartItems.stream()
+                .mapToDouble(item -> item.getId().getChiTietGiay().getGia() * item.getSoLuong())
+                .sum();
+        Long soLuong = this.cartService.countCartItems(authentication.getName());
+        model.addAttribute("soLuong", soLuong);
+        model.addAttribute("totalCartPrice", totalCartPrice);
+        model.addAttribute("cartItems", cartItems);
         return "website/websiteShop/product-details-default";
     }
 

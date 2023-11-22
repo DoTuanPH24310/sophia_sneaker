@@ -1081,30 +1081,9 @@
 
     document.getElementById("btnThanhToan").addEventListener("click", function(event) {
         var paymentMethod = document.querySelector('input[name="hinhThucThanhToan"]:checked').id;
-        // var formData = {};
-        // var formElements = document.getElementById("formThanhToan").elements;
-        // for (var i = 0; i < formElements.length; i++) {
-        //     var element = formElements[i];
-        //     if (element.name) {
-        //         formData[element.name] = element.value;
-        //     }
-        // }
-        //
-        // // Store selected values of dropdowns
-        // formData["selectedProvince"] = $("#province").val();
-        // formData["selectedDistrict"] = $("#district").val();
-        // formData["selectedWard"] = $("#ward").val();
-        sessionStorage.setItem("checkoutFormData", JSON.stringify(formData));
+
         if (paymentMethod === "currencyCod") {
             event.preventDefault();
-            // var selectedProvince = $("#province").val();
-            // var selectedDistrict = $("#district").val();
-            // var selectedWard = $("#ward").val();
-            //
-            // if (!selectedProvince || !selectedDistrict || !selectedWard) {
-            //     console.error("Please select values for all dropdowns");
-            //     return;
-            // }
 
             document.getElementById("formThanhToan").submit();
         } else {
