@@ -55,7 +55,7 @@
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            background-color: rgba(20, 20, 20, 0.781);
+            background-color: rgb(122, 125, 122);
             margin-top: 10px;
             display: grid;
             place-items: center;
@@ -70,10 +70,10 @@
         .progress::after {
             content: " ";
             position: absolute;
-            width: 190px;
+            width: 183px;
             height: 5px;
-            background-color: rgba(68, 68, 68, 0.781);
-            right: 25px;
+            background-color: rgb(122, 125, 122);
+            right: 32px;
         }
 
         .one::after {
@@ -92,13 +92,13 @@
         /* Active Css  */
 
         ul li .active {
-            background-color: #ff4732;
+            background-color: #4ed5c6;
             display: grid;
             place-items: center;
         }
 
         li .active::after {
-            background-color: #ff4732;
+            background-color: #4ed5c6;
         }
 
         ul li .active p {
@@ -403,36 +403,36 @@
         window.addEventListener('DOMContentLoaded', function () {
             value = check('2');
             if (value != null) {
-               fillTimeLine('icon1','text1',value,'Chờ thanh toán');
+               fillTimeLine('icon1','text1',value,'Chờ thanh toán','uil-comment-alt-question');
 
             }
             value = check('4');
             if (value != null && value.hoaDon.loaiHoaDon != 1) {
-                fillTimeLine('icon2','text2',value,'Chờ giao');
+                fillTimeLine('icon2','text2',value,'Chờ giao','uil-clock-nine');
             }
             value = check('5');
             if (value != null && value.hoaDon.loaiHoaDon != 1) {
-                fillTimeLine('icon3','text3',value,'Đang giao');
+                fillTimeLine('icon3','text3',value,'Đang giao','uil-truck');
             }
             value = check('1');
             if (value != null) {
                 if (value.hoaDon.loaiHoaDon == 1){
-                    fillTimeLine('icon2','text2',value,'Thành công');
+                    fillTimeLine('icon2','text2',value,'Thành công','uil-check-circle');
                 }else
-                fillTimeLine('icon4','text4',value,'Thành công');
+                fillTimeLine('icon4','text4',value,'Thành công','uil-check-circle');
             }
             value = check('6');
             if (value != null  && value.hoaDon.loaiHoaDon != 1) {
-                fillTimeLine('icon5','text5',value,'Hủy');
+                fillTimeLine('icon5','text5',value,'Hủy','uil-check-circle');
             }
         })
 
-        function fillTimeLine(icon,text,value,trangThai) {
+        function fillTimeLine(icon,text,value,trangThai,classIcon) {
             date = moment(value.createdDate).utcOffset(7).format('DD-MM-YYYY HH:mm:ss');
             activeTab(value);
-            document.getElementById(icon).style.color = '#ff4732';
+            document.getElementById(icon).style.color = '#4ed5c6';
             document.getElementById(icon).classList.remove('uil-circle');
-            document.getElementById(icon).classList.add('uil-comment-dots');
+            document.getElementById(icon).classList.add(classIcon);
             document.getElementById(text).innerHTML =
                 `<span style="font-weight: 550;">${trangThai}</span> <br>
                         <span style="font-size: 12px;  text-align: center;">${date}</span> <br>
