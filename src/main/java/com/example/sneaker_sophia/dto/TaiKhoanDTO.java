@@ -2,6 +2,8 @@ package com.example.sneaker_sophia.dto;
 
 import com.example.sneaker_sophia.entity.VaiTro;
 import com.example.sneaker_sophia.request.NhanVienRequest;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.time.LocalDate;

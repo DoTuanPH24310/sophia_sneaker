@@ -634,7 +634,7 @@
                                                 <div class="product-default-single-item product-color--golden"
                                                      data-aos="fade-up" data-aos-delay="0">
                                                     <div class="image-box">
-                                                        <a href="../product-details-default.html" class="image-link">
+                                                        <a th:href="@{'/sophia-store/detail/' + ${product.getId()}}" class="image-link">
                                                             <img class="img-fluid"
                                                                  th:src="@{${product.anhs.get(0).getDuongDan()}}"
                                                                  style="width: 260px; height: 260px"
@@ -661,7 +661,7 @@
                                                     <div class="content">
                                                         <div class="content-left">
                                                             <h6 class="title"><a
-                                                                    href="../product-details-default.html"
+                                                                    th:href="@{'/sophia-store/detail/' + ${product.getId()}}"
                                                                     th:text="${product.hang.ten + ' ' + product.giay.ten + ' ' + product.loaiGiay.ten + ' ' + product.mauSac.ten}"></a>
                                                             </h6>
                                                             <ul class="review-star">
@@ -695,7 +695,7 @@
                                             <div class="col-12" th:each="product : ${danhSachProduct}">
                                                 <!-- Start Product Defautlt Single -->
                                                 <div class="product-list-single product-color--golden">
-                                                    <a href="../product-details-default.html"
+                                                    <a th:href="@{'/sophia-store/detail/' + ${product.getId()}}"
                                                        class="product-list-img-link">
                                                         <img class="img-fluid"
                                                              th:src="@{${product.anhs.get(0).getDuongDan()}}"
@@ -708,7 +708,7 @@
                                                     </a>
                                                     <div class="product-list-content">
                                                         <h5 class="product-list-link"><a
-                                                                href="../product-details-default.html"
+                                                                th:href="@{'/sophia-store/detail/' + ${product.getId()}}"
                                                                 th:text="${product.hang.ten + ' ' + product.giay.ten + ' ' + product.loaiGiay.ten + ' ' + product.mauSac.ten}"></a>
                                                         </h5>
                                                         <ul class="review-star">

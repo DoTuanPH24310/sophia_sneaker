@@ -341,7 +341,7 @@
             <li class="offcanvas-cart-item-single" th:each="item : ${cartItem}">
                 <div class="offcanvas-cart-item-block">
                     <a href="#" class="offcanvas-cart-item-image-link">
-                        <img class="offcanvas-cart-image" th:src="@{'/img/' + ${item.anh}}" style="width: 92px; height: 92px" alt="">
+                        <img class="offcanvas-cart-image" th:src="@{${item.anh}}" style="width: 92px; height: 92px" alt="">
                     </a>
                     <div class="offcanvas-cart-item-content">
                         <a href="#" class="offcanvas-cart-item-link"
@@ -507,8 +507,8 @@
                             <div class="col-lg-6">
                                 <div class="default-form-box">
                                     <label> Địa chỉ email <span>*</span></label>
-                                    <input type="text" th:field="*{email}">
-                                    <span th:errors="*{email}" style="color: red"></span>
+                                    <input type="text" th:field="*{taiKhoan.email}">
+                                    <span th:errors="*{taiKhoan.email}" style="color: red"></span>
                                 </div>
                             </div>
                             <div class="col-4">
@@ -576,7 +576,7 @@
                                     <tbody>
                                     <tr th:each="item : ${cartItems}">
                                         <td class="product_thumb">
-                                            <img class="offcanvas-cart-image" th:src="@{'/img/' + ${item.anh}}"
+                                            <img class="offcanvas-cart-image" th:src="@{${item.anh}}"
                                                  style="width: 92px; height: 92px" alt="">
                                         </td>
                                         <td>
