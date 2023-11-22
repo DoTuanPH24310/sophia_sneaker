@@ -50,5 +50,14 @@ public interface TaiKhoanRepository extends JpaRepository<TaiKhoan, String> {
             , nativeQuery = true)
     List<TaiKhoan> findByText(String text);
 
+    // 22/11
 
+    @Query(value = "select tk from TaiKhoan tk where tk.email = ?1")
+    TaiKhoan getTaiKhoanByEmail(String text);
+
+    @Query(value = "select tk from TaiKhoan tk where tk.sdt = ?1 ")
+    TaiKhoan getTaiKhoanBySDT(String text);
+
+    @Query(value = "select tk from TaiKhoan tk where tk.canCuoc = ?1")
+    TaiKhoan getTaiKhoanByCCCD(String text);
 }
