@@ -311,6 +311,7 @@ public class TaiQuayController {
     @GetMapping("deletehd/{id}")
     public String deleteHD(
             @PathVariable("id") String id,
+            @RequestParam(value = "value", required = false) String liDoHuy,
             Model model
     ) {
         HoaDon hoaDon = hoaDonService.getHoaDonById(id);
@@ -325,6 +326,7 @@ public class TaiQuayController {
         lichSuHoaDon.setPhuongThuc("6");
         lshdService.savelshd(lichSuHoaDon);
         hoaDon.setTrangThai(6);
+        hoaDon.setGhiChu(liDoHuy);
         hoaDonService.savehd(hoaDon);
         List<HoaDon> list = hoaDonService.getHoaDonByTrangThai();
         model.addAttribute("listHDC", list);

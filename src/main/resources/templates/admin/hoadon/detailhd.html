@@ -274,10 +274,13 @@
 
                 <div class="row mt-4">
                     <div class="col-1">Địa chỉ:</div>
-                    <div class="col-7">
+                    <div class="col-6">
                         <span th:text="${hoaDon.diaChi == null ? '' : hoaDon.diaChi}"></span>
                     </div>
-
+                    <div th:if="${hoaDon.trangThai == 6}" class="col-1">Lí do hủy:</div>
+                    <div th:if="${hoaDon.trangThai == 6}" class="col-4">
+                        <span th:text="${hoaDon.ghiChu == null ? '' : hoaDon.ghiChu}"></span>
+                    </div>
                 </div>
             </div>
 
