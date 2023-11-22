@@ -130,7 +130,7 @@ public class CheckoutController {
 
 
     @PostMapping("/thanhtoan")
-    public String thanhToan(@Valid @ModelAttribute(value = "diaChi") DiaChiDTO diaChi, BindingResult result,
+    public String thanhToan(@Valid @ModelAttribute("diaChi") DiaChiDTO diaChi, BindingResult result,
                             @RequestParam(value = "hinhThucThanhToan", required = false) Integer hinhThucThanhToan,
                             Model model, HttpSession session) {
         try {
@@ -149,7 +149,6 @@ public class CheckoutController {
                                 return "redirect:/cart/hien-thi";
                             }
                         }
-                        model.addAttribute("diaChi", diaChi);
                         model.addAttribute("cartItems", cartItems);
                         model.addAttribute("total", total);
 
