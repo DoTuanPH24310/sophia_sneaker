@@ -75,7 +75,7 @@
                     <span th:text="${hdc.maHoaDOn}"></span>
                 </a>
                 <a style="background-color: white; border: none; color: red;  font-weight: bold; font-size: 14px; margin-left: 10px; margin-right: 10px"
-                   id="myLinkHUy" th:href="@{/admin/tai-quay/deletehd/{id}(id=${hdc.id})}">X
+                   class="myLinkHuy" th:href="@{/admin/tai-quay/deletehd/{id}(id=${hdc.id})}">X
                 </a>
 
                 <!--
@@ -934,17 +934,7 @@
         const checkIHD = [[${session.checkTTHT}]];
 
 
-        let myLink = document.getElementById('myLinkHUy');
-        myLink.addEventListener('click', function(event) {
-            event.preventDefault();
-            let hrefValue = myLink.getAttribute('href');
-            let mess =  prompt("Nhập lí do hủy: ");
-            if (mess.trim().length == 0){
-                alert("Vui lòng nhập lí do: ");
-            }else {
-                window.location.href = hrefValue +"?value="+mess;
-            }
-        });
+
 
         if (checkIHD != null && checkIHD == 1){
             removeSeesion('checkTTHT');
@@ -957,6 +947,21 @@
             };
 
         }
+
+        let myLinks = document.querySelectorAll('.myLinkHuy');
+
+        myLinks.forEach(function(link) {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                let hrefValue = link.getAttribute('href');
+                let mess =  prompt("Nhập lí do hủy: ");
+                if (mess.trim().length == 0 || mess == null){
+                    alert("Vui lòng nhập lí do");
+                }else {
+                    window.location.href = hrefValue +"?value="+mess;
+                }
+            });
+        });
 
         function validateSoLuong(x) {
             $.ajax({
