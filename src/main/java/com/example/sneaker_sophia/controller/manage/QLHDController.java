@@ -1,4 +1,4 @@
-package com.example.sneaker_sophia.controller;
+package com.example.sneaker_sophia.controller.manage;
 
 import com.example.sneaker_sophia.entity.HinhThucThanhToan;
 import com.example.sneaker_sophia.entity.HoaDon;
@@ -10,7 +10,8 @@ import com.example.sneaker_sophia.service.HoaDonChiTietServive;
 import com.example.sneaker_sophia.service.HoaDonService;
 import com.example.sneaker_sophia.service.LSHDService;
 import jakarta.annotation.Resource;
-import org.springframework.data.repository.query.Param;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +36,10 @@ public class QLHDController {
 
     @Resource(name = "lshdService")
     LSHDService lshdService;
+
+
+    @Autowired
+    HttpSession session;
 
 
     @GetMapping("/hien-thi")
@@ -79,23 +84,26 @@ public class QLHDController {
             model.addAttribute("avtctgMap", avtctgMap);
         }
         HinhThucThanhToan hinhThucThanhToan = htttService.getHTTTByIdhd(idhd);
-        if(hinhThucThanhToan != null){
+        if (hinhThucThanhToan != null) {
             model.addAttribute("httt", hinhThucThanhToan);
         }
         model.addAttribute("displayTable", hinhThucThanhToan != null);
         model.addAttribute("listhdct", listhdct);
         model.addAttribute("hoaDon", hoaDon);
+        System.out.println("test: ");
+        System.out.println(lshdService.getLSHDBYIdhd(idhd).size());
+        session.setAttribute("lichSuHoaDon", lshdService.getLSHDBYIdhd(idhd));
         return "admin/hoadon/detailhd";
     }
 
     @PostMapping("updatehdcxn")
     public String updatehdcxn(
             @RequestParam(value = "idhd", required = false) List<String> listhd
-    ){
-        if(listhd == null){
+    ) {
+        if (listhd == null) {
             return "redirect:/admin/hoa-don/hien-thi";
         }
-        for (String idhd : listhd){
+        for (String idhd : listhd) {
             HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
             hoaDon.setTrangThai(4);
             LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
@@ -110,11 +118,11 @@ public class QLHDController {
     @PostMapping("updatehdcg")
     public String updatehdcg(
             @RequestParam(value = "idhd", required = false) List<String> listhdcg
-    ){
-        if(listhdcg == null){
+    ) {
+        if (listhdcg == null) {
             return "redirect:/admin/hoa-don/hien-thi";
         }
-        for (String idhd : listhdcg){
+        for (String idhd : listhdcg) {
             HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
             hoaDon.setTrangThai(5);
             LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
@@ -129,11 +137,11 @@ public class QLHDController {
     @PostMapping("updatehddg")
     public String updatehddg(
             @RequestParam(value = "idhd", required = false) List<String> listhddg
-    ){
-        if(listhddg == null){
+    ) {
+        if (listhddg == null) {
             return "redirect:/admin/hoa-don/hien-thi";
         }
-        for (String idhd : listhddg){
+        for (String idhd : listhddg) {
             HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
             hoaDon.setTrangThai(1);
             LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
@@ -148,9 +156,9 @@ public class QLHDController {
     @GetMapping("updatehdcxn/{id}")
     public String updatehdcxnd(
             @PathVariable("id") String idhd
-    ){
+    ) {
         HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
-        if (hoaDon != null){
+        if (hoaDon != null) {
             hoaDon.setTrangThai(4);
             LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
             lichSuHoaDon.setHoaDon(hoaDon);
@@ -164,9 +172,9 @@ public class QLHDController {
     @GetMapping("updatehdcg/{id}")
     public String updatehdcg(
             @PathVariable("id") String idhd
-    ){
+    ) {
         HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
-        if (hoaDon != null){
+        if (hoaDon != null) {
             hoaDon.setTrangThai(5);
             LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
             lichSuHoaDon.setHoaDon(hoaDon);
@@ -181,9 +189,9 @@ public class QLHDController {
     @GetMapping("updatehddg/{id}")
     public String updatehddg(
             @PathVariable("id") String idhd
-    ){
+    ) {
         HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
-        if (hoaDon != null){
+        if (hoaDon != null) {
             hoaDon.setTrangThai(1);
             LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
             lichSuHoaDon.setHoaDon(hoaDon);
@@ -192,5 +200,34 @@ public class QLHDController {
             hoaDonService.savehd(hoaDon);
         }
         return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+    }
+
+    public String handleHuyHd(String idhd, String liDoHuy) {
+        HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
+        if (hoaDon != null) {
+            hoaDon.setTrangThai(6);
+            LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+            lichSuHoaDon.setHoaDon(hoaDon);
+            lichSuHoaDon.setPhuongThuc("6");
+            hoaDon.setGhiChu(liDoHuy);
+            lshdService.savelshd(lichSuHoaDon);
+            hoaDonService.savehd(hoaDon);
+        }
+        return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+    }
+
+    @GetMapping("huyhdcxn/{id}")
+    public String huyhdcxn(@PathVariable("id") String idhd,
+                           @RequestParam("value") String liDoHuy
+    ) {
+        return handleHuyHd(idhd, liDoHuy);
+    }
+
+    @GetMapping("huyhdcg/{id}")
+    public String huyhdcg(@PathVariable("id") String idhd,
+                          @RequestParam("value") String liDoHuy
+
+    ) {
+        return handleHuyHd(idhd, liDoHuy);
     }
 }

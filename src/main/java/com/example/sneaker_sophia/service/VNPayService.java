@@ -30,7 +30,7 @@ public class VNPayService {
         HoaDon hoaDon = hoaDonWebRepository.findById(hoaDonId).orElse(null);
         if (hoaDon != null) {
             vnpay.setHoaDon(hoaDon);
-            hoaDon.getVnpays().add(vnpay);
+//            hoaDon.getVnpays().add(vnpay);
             hoaDonWebRepository.save(hoaDon);
         }
 

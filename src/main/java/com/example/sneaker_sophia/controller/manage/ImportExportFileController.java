@@ -168,8 +168,8 @@ public class ImportExportFileController {
                 chiTietGiay.setMauSac(mauSacService.findByTen(getStringValue(row.getCell(7))));
                 chiTietGiay.setMoTa(getStringValue(row.getCell(8)));
                 chiTietGiay.setGia(getDoubleValue(row.getCell(9)));
-                chiTietGiay.setTrangThai(getIntegerValue(row.getCell(10)));
-                chiTietGiay.setSoLuong(getIntegerValue(row.getCell(11)));
+                chiTietGiay.setSoLuong(getIntegerValue(row.getCell(10)));
+                chiTietGiay.setTrangThai(getIntegerValue(row.getCell(11)));
 
                 chiTietGiayService.save(chiTietGiay);
 
@@ -178,9 +178,9 @@ public class ImportExportFileController {
                 String linkAnh3 = getStringValue(row.getCell(14));
 
                 // Kiểm tra và lưu link ảnh vào bảng ảnh
-                saveLinkAnh(chiTietGiay, linkAnh1);
-                saveLinkAnh(chiTietGiay, linkAnh2);
-                saveLinkAnh(chiTietGiay, linkAnh3);
+                saveLinkAnh(chiTietGiay, linkAnh1, 1);
+                saveLinkAnh(chiTietGiay, linkAnh2, 0);
+                saveLinkAnh(chiTietGiay, linkAnh3, 0);
 
             }
             // Đóng workbook
@@ -194,11 +194,12 @@ public class ImportExportFileController {
     }
 
     // Phương thức để lưu link ảnh vào bảng ảnh
-    private void saveLinkAnh(ChiTietGiay chiTietGiay, String linkAnh) {
+    private void saveLinkAnh(ChiTietGiay chiTietGiay, String linkAnh, int anhChinh) {
         if (linkAnh != null && !linkAnh.isEmpty()) {
             Anh anh = new Anh();
             anh.setDuongDan(linkAnh);
             anh.setChiTietGiay(chiTietGiay);
+            anh.setAnhChinh(anhChinh);
             anhService.save(anh);
         }
     }

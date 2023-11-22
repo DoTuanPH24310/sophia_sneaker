@@ -33,7 +33,7 @@ public class ThanhToanService {
 
     public void thucHienThanhToan(String email, List<GioHangChiTiet> cartItems, Integer hinhThucThanhToan) {
         TaiKhoan taiKhoan = this.loginRepository.findByEmail(email);
-        int i = 1;
+        int i = 20;
         double total = 0.0;
         for (GioHangChiTiet cartItem : cartItems) {
             total += cartItem.getId().getChiTietGiay().getGia() * cartItem.getSoLuong();
@@ -41,12 +41,12 @@ public class ThanhToanService {
         HoaDon hoaDon = new HoaDon();
         hoaDon.setMaHoaDOn("HD" + i++);
         hoaDon.setTaiKhoan(taiKhoan);
-        hoaDon.setLoaiHoaDon(1);
+        hoaDon.setLoaiHoaDon(3);
         hoaDon.setTenKhachHang(taiKhoan.getTen());
         hoaDon.setSoDienThoai(taiKhoan.getSdt());
         hoaDon.setDiaChi(diaChiTamChu.taoDiaChiString(taiKhoan.getDiaChiList()));
         hoaDon.setPhiShip(20000.0);
-        hoaDon.setTrangThai(1);
+        hoaDon.setTrangThai(3);
         hoaDon.setTongTien(total);
         hoaDon.setTienThua(0.0);
         HoaDon savedHoaDon = hoaDonRepository.save(hoaDon);
@@ -61,7 +61,7 @@ public class ThanhToanService {
         }
 
         HinhThucThanhToan hinhThuc = new HinhThucThanhToan();
-        hinhThuc.setPhuongThuc(hinhThucThanhToan);
+        hinhThuc.setTrangThai(hinhThucThanhToan);
         hinhThuc.setHoaDon(savedHoaDon);
         hinhThucThanhToanRepository.save(hinhThuc);
 

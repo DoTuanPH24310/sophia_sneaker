@@ -169,7 +169,7 @@ public class EmailService {
 
 
     public HoaDon taoHoaDonMoi(TaiKhoan taiKhoan, Integer hinhThucThanhToan) {
-        Integer i = 0;
+        Integer i = 20;
         double total = 0.0;
         Cart cart = (Cart) session.getAttribute("cart");
         List<CartItem> cartItems = cart.getItems();
@@ -179,7 +179,7 @@ public class EmailService {
         HoaDon hoaDonMoi = new HoaDon();
         hoaDonMoi.setMaHoaDOn("HD" + i++);
         hoaDonMoi.setTaiKhoan(taiKhoan);
-        hoaDonMoi.setLoaiHoaDon(1);
+        hoaDonMoi.setLoaiHoaDon(3);
         hoaDonMoi.setTenKhachHang(taiKhoan.getTen());
         hoaDonMoi.setSoDienThoai(taiKhoan.getSdt());
         hoaDonMoi.setDiaChi(diaChiTamChu.taoDiaChiString(taiKhoan.getDiaChiList()));
@@ -191,7 +191,7 @@ public class EmailService {
         hoaDonMoi = this.hoaDonWebRepository.save(hoaDonMoi);
 
         HinhThucThanhToan hinhThuc = new HinhThucThanhToan();
-        hinhThuc.setPhuongThuc(hinhThucThanhToan);
+        hinhThuc.setTrangThai(hinhThucThanhToan);
         hinhThuc.setHoaDon(hoaDonMoi);
         hinhThucThanhToanWebRepository.save(hinhThuc);
 

@@ -74,8 +74,8 @@
 
                     <span th:text="${hdc.maHoaDOn}"></span>
                 </a>
-                <a style="background-color: white; border: none; color: red; font-weight: bold; font-size: 14px; margin-left: 10px; margin-right: 10px"
-                   th:href="@{/admin/tai-quay/deletehd/{id}(id=${hdc.id})}">X
+                <a style="background-color: white; border: none; color: red;  font-weight: bold; font-size: 14px; margin-left: 10px; margin-right: 10px"
+                   class="myLinkHuy" th:href="@{/admin/tai-quay/deletehd/{id}(id=${hdc.id})}">X
                 </a>
 
                 <!--
@@ -140,7 +140,7 @@
                     </thead>
                     <tbody>
 
-                    <tr th:if="${#lists.size(listhdct) >0}" style="line-height: 25px" th:each="hdct : ${listhdct}">
+                    <tr style="line-height: 25px" th:each="hdct : ${listhdct}">
                         <td><img th:src="${avtctgMap[hdct.chiTietGiay.id]}" alt="" width="100" height="100"></td>
                         <td th:text="${hdct.chiTietGiay.ma}"></td>
                         <!--                        <td th:text="${hdct.chiTietGiay.hang.ten}"></td>-->
@@ -192,11 +192,8 @@
                             </a>
                         </td>
                     </tr>
-
-
                     </tbody>
                 </table>
-                <img class="d-flex align-items-center" style="width: 300px; height: auto;" th:unless="${#lists.size(listhdct) >0}" src="/img/cart_empty.png" alt="">
 
             </div>
         </div>
@@ -936,6 +933,9 @@
 
         const checkIHD = [[${session.checkTTHT}]];
 
+
+
+
         if (checkIHD != null && checkIHD == 1){
             removeSeesion('checkTTHT');
             window.onload = function () {
@@ -947,6 +947,23 @@
             };
 
         }
+
+        let myLinks = document.querySelectorAll('.myLinkHuy');
+        if (myLinks != null){
+            myLinks.forEach(function(link) {
+                link.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    let hrefValue = link.getAttribute('href');
+                    let mess =  prompt("Nhập lí do hủy: ");
+                    if (mess.trim().length == 0 || mess == null){
+                        alert("Vui lòng nhập lí do");
+                    }else {
+                        window.location.href = hrefValue +"?value="+mess;
+                    }
+                });
+            });
+        }
+
 
         function validateSoLuong(x) {
             $.ajax({
@@ -975,7 +992,6 @@
             let phiShip = document.getElementById('inputPhiShip') == null ? 0 : parseFloat(document.getElementById('inputPhiShip').value);
             if (tongTien == null || tongTien == 0) {
                 alert("VUi lòng chọn sản phẩm mua hàng");
-                return;
             }
 
             console.log(document.getElementById('traSau').checked);
@@ -1086,7 +1102,7 @@
                         row.insertCell().innerHTML = `<span style="font-size: 15px">${formatteGia}</span>`;
                     } else {
                         row.insertCell().innerHTML = ` <span style="text-decoration: line-through; color: red; font-size: 13px">${formatteGia}</span> <br>
-                                                    <span style="font-size: 15px">${formatteGiaSauGiam}</span>`;
+<span style="font-size: 15px">${formatteGiaSauGiam}</span>`;
                     }
                     row.insertCell().innerHTML = btn;
                     buttons = document.querySelectorAll("#sinhvien  button");
@@ -1559,7 +1575,6 @@
         let quan = [[${session.quan}]];
         let phuong = [[${session.phuong}]];
         apiDiaChiGender('province', 'district', 'ward', tinh, quan, phuong);
-
         //    qrcode scan
 
         document.addEventListener('DOMContentLoaded', function () {

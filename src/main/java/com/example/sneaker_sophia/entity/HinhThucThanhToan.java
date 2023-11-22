@@ -53,7 +53,7 @@ public class HinhThucThanhToan {
     private LocalDateTime updatedDate;
 
     @Column(name = "phuongThuc")
-    private Integer phuongThuc;
+    private Integer trangThai;
 
 
 }

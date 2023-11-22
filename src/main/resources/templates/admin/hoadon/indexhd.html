@@ -234,7 +234,7 @@
                         <div class="row">
                             <form action="/admin/hoa-don/updatehdcxn" method="post">
                                 <div>
-                                    <button type="submit" class="btn btn-primary mb-3 float-right">Xác nhận đơn
+                                    <button type="submit" class="btn btn-primary mb-3 mr-2 float-right">Xác nhận đơn
                                     </button>
                                 </div>
                                 <div class="table table-wrapper-scroll-y my-custom-scrollbar">
@@ -305,7 +305,7 @@
                         <div class="row">
                             <form action="/admin/hoa-don/updatehdcg" method="post">
                                 <div>
-                                    <button type="submit" class="btn btn-primary mb-3 float-right">Xác nhận giao
+                                    <button type="submit" class="btn btn-primary mb-3 mr-2 float-right">Xác nhận giao
                                     </button>
                                 </div>
                                 <div class="table table-wrapper-scroll-y my-custom-scrollbar">
@@ -608,7 +608,6 @@
                 eventCheckbox();
             });
         });
-
         function eventCheckbox() {
             if (activeTab ==  '#choXacNhan' ) {
                 idSelectAll = 'selectAllCXN';
@@ -687,7 +686,7 @@
             if ( activeTab == '#choGiao' ){
                 row.insertCell().innerHTML = ` <input name="idhd"
                        value="${x.id}" class="checkboxCG" style="width: 20px; height: 18px;"
-                       type="checkbox">`;
+type="checkbox">`;
             }else if (activeTab == '#choXacNhan' ){
                 row.insertCell().innerHTML = ` <input name="idhd"
                        value="${x.id}" class="checkboxCXN" style="width: 20px; height: 18px;"

@@ -3,6 +3,7 @@ package com.example.sneaker_sophia.service;
 import com.example.sneaker_sophia.dto.DTO_API_HoaDon;
 import com.example.sneaker_sophia.entity.HoaDon;
 import com.example.sneaker_sophia.repository.HoaDonRepository;
+import com.example.sneaker_sophia.repository.HoaDonWebRepository;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +16,10 @@ import java.util.List;
 
 @Service("hoaDonService")
 public class HoaDonService {
-
     @Resource(name = "hoaDonRepository")
     HoaDonRepository hoaDonRepository;
-
-
-
+    @Autowired
+    HoaDonWebRepository hoaDonWebRepository;
     @Autowired
     private HttpSession session;
 
@@ -126,6 +125,6 @@ public class HoaDonService {
     }
 
     public List<Object[]> getDoanhThuTheoThang(int nam) {
-        return hoaDonRepository.getDoanhThuTheoThang(nam);
+        return hoaDonWebRepository.getDoanhThuTheoThang(nam);
     }
 }

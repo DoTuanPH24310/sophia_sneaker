@@ -13,15 +13,10 @@ import com.lowagie.text.pdf.PdfWriter;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import java.awt.*;
 import java.io.IOException;
 import java.text.NumberFormat;
@@ -216,7 +211,7 @@ public class TaiQuayController {
         HoaDon hd = hoaDonService.addHD(model);
         LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
         lichSuHoaDon.setHoaDon(hd);
-        lichSuHoaDon.setPhuongThuc("tạo mới");
+        lichSuHoaDon.setPhuongThuc("2");
         lshdService.savelshd(lichSuHoaDon);
         if (hd != null) {
             tempIdHD = hd.getId();
@@ -280,7 +275,6 @@ public class TaiQuayController {
         model.addAttribute("tienGiam", tienGiam);
 
         HoaDon hoaDon = hoaDonService.getHoaDonById(id);
-
         if (hoaDon != null) {
             hoaDon.setTongTien(tongTien);
             hoaDon.setKhuyenMai(tienGiam);
@@ -312,6 +306,7 @@ public class TaiQuayController {
     @GetMapping("deletehd/{id}")
     public String deleteHD(
             @PathVariable("id") String id,
+            @RequestParam(value = "value", required = false) String liDoHuy,
             Model model
     ) {
         HoaDon hoaDon = hoaDonService.getHoaDonById(id);
@@ -326,6 +321,7 @@ public class TaiQuayController {
         lichSuHoaDon.setPhuongThuc("6");
         lshdService.savelshd(lichSuHoaDon);
         hoaDon.setTrangThai(6);
+        hoaDon.setGhiChu(liDoHuy);
         hoaDonService.savehd(hoaDon);
         List<HoaDon> list = hoaDonService.getHoaDonByTrangThai();
         model.addAttribute("listHDC", list);
@@ -619,13 +615,13 @@ public class TaiQuayController {
             hoaDon.setTrangThai(4);
             LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
             lichSuHoaDon.setHoaDon(hoaDon);
-            lichSuHoaDon.setPhuongThuc("chờ giao");
+            lichSuHoaDon.setPhuongThuc("4");
             lshdService.savelshd(lichSuHoaDon);
         } else {
             hoaDon.setTrangThai(1);
             LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
             lichSuHoaDon.setHoaDon(hoaDon);
-            lichSuHoaDon.setPhuongThuc("thanh toán");
+            lichSuHoaDon.setPhuongThuc("1");
             lshdService.savelshd(lichSuHoaDon);
         }
 
@@ -733,7 +729,6 @@ public class TaiQuayController {
         writeTableData(table, idHD);
         document.add(table);
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-
         p = new Paragraph("\n\n" + "Khuyến mại: " + currencyFormat.format(hoaDonChiTietServive.tienGiam(idHD)), font4);
         p.setAlignment(Paragraph.ALIGN_RIGHT);
         document.add(p);

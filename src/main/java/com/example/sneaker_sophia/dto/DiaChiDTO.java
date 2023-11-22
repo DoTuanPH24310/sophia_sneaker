@@ -3,12 +3,9 @@ package com.example.sneaker_sophia.dto;
 
 import com.example.sneaker_sophia.entity.DiaChi;
 import com.example.sneaker_sophia.entity.TaiKhoan;
-import com.example.sneaker_sophia.request.NhanVienRequest;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.springframework.stereotype.Component;
 
 @Getter
 @Setter

@@ -136,7 +136,7 @@ public class ChiTietGiayController {
         model.addAttribute("giay", params != null ? params.get("giay") : null);
         model.addAttribute("giaMin", params != null ? params.get("giaMin") : null);
         model.addAttribute("giaMax", params != null ? params.get("giaMax") : null);
-        model.addAttribute("trangThai", trangThai != null ? trangThai : "1");
+        model.addAttribute("trangThai", trangThai != null ? trangThai : "0");
         return "admin/chiTietGiay/chiTietGiay";
     }
 
@@ -178,6 +178,8 @@ public class ChiTietGiayController {
             // Lưu chi tiết giày vào cơ sở dữ liệu
             chiTietGiayService.save(chiTietGiay);
 
+            boolean isFirstImage = true;
+
             for (MultipartFile imageFile : imageFiles) {
                 String originalFilename = imageFile.getOriginalFilename();
 
@@ -187,7 +189,14 @@ public class ChiTietGiayController {
                 if (imageUrl != null) {
                     // Tạo đối tượng ảnh và thiết lập các thông tin cần thiết
                     Anh anh = new Anh();
-                    anh.setAnhChinh(1);
+
+                    if (isFirstImage) {
+                        anh.setAnhChinh(1);
+                        isFirstImage = false;
+                    } else {
+                        anh.setAnhChinh(0);
+                    }
+
                     anh.setDuongDan(imageUrl); // Lưu URL của ảnh từ Cloudinary
                     anh.setChiTietGiay(chiTietGiay);
 
@@ -208,7 +217,7 @@ public class ChiTietGiayController {
         try {
             // Lưu chi tiết giày vào cơ sở dữ liệu
             chiTietGiayService.save(chiTietGiay);
-
+            boolean isFirstImage = true;
             for (MultipartFile imageFile : imageFiles) {
                 String originalFilename = imageFile.getOriginalFilename();
 
@@ -218,7 +227,14 @@ public class ChiTietGiayController {
                 if (imageUrl != null) {
                     // Tạo đối tượng ảnh và thiết lập các thông tin cần thiết
                     Anh anh = new Anh();
-                    anh.setAnhChinh(1);
+
+                    if (isFirstImage) {
+                        anh.setAnhChinh(1);
+                        isFirstImage = false;
+                    } else {
+                        anh.setAnhChinh(0);
+                    }
+
                     anh.setDuongDan(imageUrl); // Lưu URL của ảnh từ Cloudinary
                     anh.setChiTietGiay(chiTietGiay);
 

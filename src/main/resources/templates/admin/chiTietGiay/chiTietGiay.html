@@ -253,9 +253,9 @@
                         <td>[[${#numbers.formatDecimal(ctg.soLuong, 0, 'COMMA', 0, 'POINT')}]]</td>
                         <td style="width: 160px;">
                             <button class="btn"
-                                    th:classappend="${ctg.trangThai == 1} ? 'btn-success' : 'btn-danger'"
+                                    th:classappend="${ctg.trangThai == 0} ? 'btn-success' : 'btn-danger'"
                                     style="border-radius: 30px; font-size: 9px;">
-                                [[${ctg.trangThai} == 1 ? 'Đang hoạt động' : 'Ngưng hoạt động']]
+                                [[${ctg.trangThai} == 0 ? 'Đang hoạt động' : 'Ngưng hoạt động']]
                             </button>
 
                         </td>

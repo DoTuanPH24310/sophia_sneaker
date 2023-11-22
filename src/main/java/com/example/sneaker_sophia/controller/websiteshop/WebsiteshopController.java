@@ -27,13 +27,13 @@ WebsiteshopController {
     @Autowired
     GiayService giayService;
     @Autowired
-    HangService hangService;
+    HangService2 hangService;
     @Autowired
     KichCoService kichCoService;
     @Autowired
-    DeGiayService deGiayService;
+    DeGiayService2 deGiayService;
     @Autowired
-    MauSacService mauSacService;
+    MauSacService2 mauSacService;
     @Autowired
     LoaiGiayService loaiGiayService;
     @Autowired

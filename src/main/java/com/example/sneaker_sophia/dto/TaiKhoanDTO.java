@@ -1,9 +1,7 @@
 package com.example.sneaker_sophia.dto;
 
 import com.example.sneaker_sophia.entity.VaiTro;
-import com.example.sneaker_sophia.request.NhanVienRequest;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+import com.example.sneaker_sophia.request.TaiKhoanRequest;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -38,7 +36,7 @@ public class TaiKhoanDTO {
 
 
 
-    public TaiKhoanDTO(NhanVienRequest nhanVienRequest) {
+    public TaiKhoanDTO(TaiKhoanRequest nhanVienRequest) {
         this.setTen(nhanVienRequest.getTen());
         this.setEmail(nhanVienRequest.getEmail());
         this.setNgaySinh(nhanVienRequest.getNgaySinh());

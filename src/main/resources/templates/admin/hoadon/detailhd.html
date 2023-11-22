@@ -55,7 +55,7 @@
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            background-color: rgba(20, 20, 20, 0.781);
+            background-color: rgb(122, 125, 122);
             margin-top: 10px;
             display: grid;
             place-items: center;
@@ -70,10 +70,10 @@
         .progress::after {
             content: " ";
             position: absolute;
-            width: 190px;
+            width: 183px;
             height: 5px;
-            background-color: rgba(68, 68, 68, 0.781);
-            right: 25px;
+            background-color: rgb(122, 125, 122);
+            right: 32px;
         }
 
         .one::after {
@@ -92,13 +92,13 @@
         /* Active Css  */
 
         ul li .active {
-            background-color: #ff4732;
+            background-color: #4ed5c6;
             display: grid;
             place-items: center;
         }
 
         li .active::after {
-            background-color: #ff4732;
+            background-color: #4ed5c6;
         }
 
         ul li .active p {
@@ -116,9 +116,9 @@
 <body>
 
 <div layout:fragment="content" class="container">
-    <div style="background-color: white;">
+    <div style="background-color: white; height: 300px;" >
 
-        <div class="main" style="height: 270px;">
+        <div class="main">
             <ul class="ultag mt-3">
                 <li class="litag">
                     <i id="icon1" class="icon uil uil-circle"></i>
@@ -128,50 +128,56 @@
                     <p class="text" id="text1"></p>
                 </li>
                 <li class="litag">
-                    <i class="icon uil uil-circle"></i>
+                    <i id="icon2" class="icon uil uil-circle"></i>
                     <div class="progress two">
 
                         <i class="uil uil-check"></i>
                     </div>
-                    <p class="text"></p>
+                    <p class="text" id="text2"></p>
                 </li>
                 <li class="litag">
-                    <i class="icon uil uil-circle"></i>
+                    <i id="icon3" class="icon uil uil-circle"></i>
                     <div class="progress three">
                         <p></p>
                         <i class="uil uil-check"></i>
                     </div>
-                    <p class="text"></p>
+                    <p class="text" id="text3"></p>
                 </li>
                 <li class="litag">
-                    <i class="icon uil uil-circle"></i>
+                    <i id="icon4" class="icon uil uil-circle"></i>
                     <div class="progress four">
                         <p></p>
                         <i class="uil uil-check"></i>
                     </div>
-                    <p class="text"></p>
+                    <p class="text" id="text4"></p>
                 </li>
                 <li class="litag">
-                    <i class="icon uil uil-circle"></i>
+                    <i id="icon5" class="icon uil uil-circle"></i>
                     <div class="progress five">
                         <p></p>
                         <i class="uil uil-check"></i>
                     </div>
-                    <p class="text"></p>
+                    <p class="text" id="text5"></p>
                 </li>
             </ul>
 
-            <div th:if="${hoaDon.trangThai == 4}" style="position: relative; right: 40px;" class="row float-right">
-                <a th:href="@{/admin/hoa-don/updatehdcg/{id}(id=${hoaDon.id})}" class="btn btn-primary">Xác nhận giao</a>
-            </div>
-            <div th:if="${hoaDon.trangThai == 5}" style="position: relative; right: 40px;" class="row float-right">
-                <a th:href="@{/admin/hoa-don/updatehddg/{id}(id=${hoaDon.id})}" class="btn btn-primary">Xác nhận thành công</a>
-            </div>
-            <div th:if="${hoaDon.trangThai == 3}" style="position: relative; right: 40px;" class="row float-right">
-                <a th:href="@{/admin/hoa-don/updatehdcxn/{id}(id=${hoaDon.id})}" class="btn btn-primary">Xác nhận đơn hàng</a>
-            </div>
+
         </div>
 
+        <div th:if="${hoaDon.trangThai == 4}"  class="float-right mr-3">
+            <a th:href="@{/admin/hoa-don/updatehdcg/{id}(id=${hoaDon.id})}" class="btn btn-primary">Xác nhận
+                giao</a>
+            <a th:href="@{/admin/hoa-don/huyhdcg/{id}(id=${hoaDon.id})}" class=" myLinkHuy btn btn-danger mr-3">Hủy</a>
+        </div>
+        <div th:if="${hoaDon.trangThai == 5}"  class="float-right">
+            <a th:href="@{/admin/hoa-don/updatehddg/{id}(id=${hoaDon.id})}" class="btn btn-primary">Xác nhận
+                thành công</a>
+
+        </div>
+        <div th:if="${hoaDon.trangThai == 3}"  class="float-right">
+            <a th:href="@{/admin/hoa-don/updatehdcxn/{id}(id=${hoaDon.id})}" class="btn btn-primary">Xác nhận đơn</a>
+            <a th:href="@{/admin/hoa-don/huyhdcxn/{id}(id=${hoaDon.id})}" class="myLinkHuy btn btn-danger mr-3">Hủy</a>
+        </div>
 
     </div>
 
@@ -246,7 +252,7 @@
                         <span th:if="${hoaDon.loaiHoaDon == 2}">Giao hàng</span>
                         <span th:if="${hoaDon.loaiHoaDon == 3}">Online</span>
                         <!-- Add more conditions as needed -->
-                        <span th:if="${hoaDon.loaiHoaDon != 1 && hoaDon.loaiHoaDon != 2 && hoaDon.loaiHoaDon != 3}">
+<span th:if="${hoaDon.loaiHoaDon != 1 && hoaDon.loaiHoaDon != 2 && hoaDon.loaiHoaDon != 3}">
                             <!-- Default value if none of the conditions are met -->
                             <span th:text="${hoaDon.loaiHoaDon}"></span>
                         </span>
@@ -268,10 +274,13 @@
 
                 <div class="row mt-4">
                     <div class="col-1">Địa chỉ:</div>
-                    <div class="col-7">
+                    <div class="col-6">
                         <span th:text="${hoaDon.diaChi == null ? '' : hoaDon.diaChi}"></span>
                     </div>
-
+                    <div th:if="${hoaDon.trangThai == 6}" class="col-1">Lí do hủy:</div>
+                    <div th:if="${hoaDon.trangThai == 6}" class="col-4">
+                        <span th:text="${hoaDon.ghiChu == null ? '' : hoaDon.ghiChu}"></span>
+                    </div>
                 </div>
             </div>
 
@@ -302,7 +311,7 @@
                             </td>
 
                             <td>
-                            <span th:if="${hdct.donGia * hdct.soLuong == ((hdct.donGia * (1- ((hdct.phanTramGiam) / 100.0)) * hdct.soLuongGiam)
+<span th:if="${hdct.donGia * hdct.soLuong == ((hdct.donGia * (1- ((hdct.phanTramGiam) / 100.0)) * hdct.soLuongGiam)
                                               + (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}">
 
                                                  <span th:text="${#numbers.formatCurrency((hdct.donGia * (1- ((hdct.phanTramGiam) / 100.0)) * hdct.soLuongGiam)
@@ -381,28 +390,134 @@
 
 
     <!--  Phần table-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script th:inline="javascript">
         const one = document.querySelector(".one");
         const two = document.querySelector(".two");
         const three = document.querySelector(".three");
         const four = document.querySelector(".four");
         const five = document.querySelector(".five");
+        const listLSHD = [[${session.lichSuHoaDon}]];
+        let value = null;
+        let date = null;
 
-        window.addEventListener('load', function () {
-            let test = 1;
-            if (test == 1) {
+
+
+        let myLinks = document.querySelectorAll('.myLinkHuy');
+
+        myLinks.forEach(function(link) {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                let hrefValue = link.getAttribute('href');
+                let mess =  prompt("Nhập lí do hủy: ");
+                if (mess.trim().length == 0){
+                    alert("Vui lòng nhập lí do: ");
+                }else {
+                    window.location.href = hrefValue +"?value="+mess;
+                }
+            });
+        });
+
+
+
+        window.addEventListener('DOMContentLoaded', function () {
+            value = check('2');
+            if (value != null) {
+                fillTimeLine('icon1','text1',value,'Chờ thanh toán','uil-comment-alt-question');
+            }
+            value = check('6');
+            if (value != null && listLSHD.length == 2) {
+                fillTimeLine('icon2','text2',value,'Hủy','uil-trash-alt');
+            }
+            value = check('4');
+            if (value != null && value.hoaDon.loaiHoaDon != 1) {
+                fillTimeLine('icon2','text2',value,'Chờ giao','uil-clock-nine');
+            }
+            value = check('6');
+            if (value != null   && listLSHD.length == 3) {
+                fillTimeLine('icon3','text3',value,'Hủy','uil-trash-alt');
+            }
+            value = check('5');
+            if (value != null && value.hoaDon.loaiHoaDon != 1) {
+                fillTimeLine('icon3','text3',value,'Đang giao','uil-truck');
+            }
+            value = check('1');
+            if (value != null) {
+                if (value.hoaDon.loaiHoaDon == 1){
+                    fillTimeLine('icon2','text2',value,'Thành công','uil-check-circle');
+                }else
+                    fillTimeLine('icon4','text4',value,'Thành công','uil-check-circle');
+            }
+
+        })
+
+        function fillTimeLine(icon,text,value,trangThai,classIcon) {
+            date = moment(value.createdDate).utcOffset(7).format('DD-MM-YYYY HH:mm:ss');
+            activeTab(value);
+            document.getElementById(icon).style.color = '#4ed5c6';
+            document.getElementById(icon).classList.remove('uil-circle');
+            document.getElementById(icon).classList.add(classIcon);
+            document.getElementById(text).innerHTML =
+                `<span style="font-weight: 550;">${trangThai}</span> <br>
+                        <span style="font-size: 12px;  text-align: center;">${date}</span> <br>
+                        <span style="font-size: 12px;  text-align: center;">${value.createdBy}</span>`;
+        }
+
+
+        function activeTab(value) {
+            if (listLSHD.length == 1){
                 one.classList.add("active");
                 two.classList.remove("active");
                 three.classList.remove("active");
                 four.classList.remove("active");
                 five.classList.remove("active");
-                document.getElementById('icon1').style.color = '#ff4732';
-                document.getElementById('icon1').classList.remove('uil-circle');
-                document.getElementById('icon1').classList.add('uil-comment-dots');
-                document.getElementById('text1').innerHTML = '<span style="font-weight: 550;">Chờ xác nhận</span>  <br>  <span style="font-size: 12px;  text-align: center;">20-10-2033 19:08:03</span>';
+                return;
+            }
+            if (listLSHD.length == 2){
+                one.classList.add("active");
+                two.classList.add("active");
+                three.classList.remove("active");
+                four.classList.remove("active");
+                five.classList.remove("active");
+                return;
+            }
+            if (listLSHD.length == 3){
+                one.classList.add("active");
+                two.classList.add("active");
+                three.classList.add("active");
+                four.classList.remove("active");
+                five.classList.remove("active");
+                return;
             }
 
-        })
+            if (listLSHD.length == 4){
+                one.classList.add("active");
+                two.classList.add("active");
+                three.classList.add("active");
+                four.classList.add("active");
+                five.classList.remove("active");
+                return;
+            }
+
+            if (listLSHD.length == 5){
+                one.classList.add("active");
+                two.classList.add("active");
+                three.classList.add("active");
+                four.classList.add("active");
+                five.classList.add("active");
+                return;
+            }
+
+        }
+
+        function check(phuongThuc) {
+            for (let i = 0; i < listLSHD.length; i++) {
+                if (listLSHD[i].phuongThuc == phuongThuc) {
+                    return listLSHD[i];
+                }
+            }
+            return null;
+        }
 
     </script>
 </div>
