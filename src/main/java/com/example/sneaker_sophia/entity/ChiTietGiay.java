@@ -101,6 +101,5 @@ public class ChiTietGiay {
     @OneToMany(mappedBy = "chiTietGiay", fetch = FetchType.LAZY)
     private List<HoaDonChiTiet> chiTietGiayList = new ArrayList<>();
 
-
 }
 

@@ -1,6 +1,7 @@
 package com.example.sneaker_sophia.entity;
 
-import com.example.sneaker_sophia.request.NhanVienRequest;
+import com.example.sneaker_sophia.request.TaiKhoanRequest;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -9,6 +10,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,6 +25,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Component
 public class TaiKhoan {
     @Id
     @GenericGenerator(name = "generator", strategy = "guid", parameters = {})
@@ -35,6 +38,10 @@ public class TaiKhoan {
     @JoinColumn(name = "IdVaiTro")
     @ManyToOne(fetch = FetchType.EAGER)
     private VaiTro vaiTro;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "taiKhoan", fetch = FetchType.LAZY)
+    List<HoaDon> hoaDons = new ArrayList<>();
 
     @Column(name = "ten")
     private String ten;
@@ -79,10 +86,11 @@ public class TaiKhoan {
     @Column(name = "ngaySua")
     private LocalDateTime updatedDate;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "taiKhoan", fetch = FetchType.LAZY)
     private List<DiaChi> diaChiList = new ArrayList<>();
 
-    public TaiKhoan(NhanVienRequest nhanVienRequest) {
+    public TaiKhoan(TaiKhoanRequest nhanVienRequest) {
         this.setTen(nhanVienRequest.getTen());
         this.setEmail(nhanVienRequest.getEmail());
         this.setNgaySinh(nhanVienRequest.getNgaySinh());
@@ -93,4 +101,6 @@ public class TaiKhoan {
         this.setAnhDaiDien(nhanVienRequest.getAnhDaiDien());
         this.setVaiTro(VaiTro.builder().id(nhanVienRequest.getIdVaiTro()).build());
     }
+
+
 }

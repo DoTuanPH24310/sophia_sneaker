@@ -1,5 +1,6 @@
 package com.example.sneaker_sophia.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -60,6 +61,7 @@ public class HoaDon {
     private Double tongTien;
 
 
+
     @Column(name = "ngayShip")
     private LocalDate ngayShip;
 
@@ -68,6 +70,12 @@ public class HoaDon {
 
     @Column(name = "NgayNhan")
     private LocalDate ngayNhan;
+
+    @Column(name = "khuyenMai")
+    private Double khuyenMai;
+
+    @Column(name = "ghiChu")
+    private String ghiChu;
 
     @CreatedBy
     @Column(name = "nguoiTao")
@@ -88,12 +96,15 @@ public class HoaDon {
     @Column(name = "trangThai")
     private Integer trangThai;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "hoaDon", fetch = FetchType.LAZY)
     private List<HoaDonChiTiet> listHoaDonChiTiet = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "hoaDon", fetch = FetchType.LAZY)
     private List<HinhThucThanhToan> hinhThucThanhToanList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "hoaDon", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<VNPay> vnpays = new ArrayList<>();
+    @JsonIgnore
+    @OneToMany(mappedBy = "hoaDon", fetch = FetchType.LAZY)
+    private List<LichSuHoaDon> lichSuHoaDons = new ArrayList<>();
 }

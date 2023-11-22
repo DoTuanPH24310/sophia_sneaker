@@ -13,6 +13,7 @@ import java.util.UUID;
 public class AnhService {
     @Autowired
     AnhRepository anhRepository;
+
     public List<Anh> getAll() {
         return anhRepository.findAll();
     }

@@ -1,5 +1,18 @@
 package com.example.sneaker_sophia.service;
 
+import com.example.sneaker_sophia.dto.DeGiayRequest;
+import com.example.sneaker_sophia.entity.DeGiay;
+import com.example.sneaker_sophia.repository.DeGiayRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+import java.util.UUID;
+
+import com.example.sneaker_sophia.dto.DeGiayRequest;
 import com.example.sneaker_sophia.entity.ChiTietGiay;
 import com.example.sneaker_sophia.entity.DeGiay;
 import com.example.sneaker_sophia.repository.DeGiayRepository;
@@ -10,26 +23,22 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class DeGiayService {
-    @Autowired
-    DeGiayRepository deGiayRepository;
-    public List<DeGiay> getAll() {
-        return deGiayRepository.findAll();
-    }
+public interface DeGiayService {
+    List<DeGiay> getAll();
 
-    public DeGiay getOne(UUID uuid) {
-        return deGiayRepository.findById(uuid).get();
-    }
+    DeGiay add(DeGiayRequest deGiayRequest);
 
-    public DeGiay findByTen(String ten){
-        return deGiayRepository.findDeGiayByTen(ten);
-    }
+    Optional<DeGiay> findOne(UUID id);
 
-    public List<DeGiay> findDeGiaysByIdChiTietGiay(UUID uuid) {
-        return deGiayRepository.findDeGiaysByIdChiTietGiay(uuid);
-    }
+    Page<DeGiay> fillter(String txtSearch, String trangThai, Pageable pageable);
 
-    public DeGiay findDeGiaysByIdChiTiet(UUID uuid){
-        return deGiayRepository.findDeGiaysByIdChiTiet(uuid);
-    }
+    DeGiay update(UUID id, DeGiayRequest deGiayRequest);
+
+    DeGiay delete(UUID id);
+
+    DeGiay getOne(UUID uuid);
+
+    DeGiay findByTen(String ten);
+
+    Object findByTrangThaiEquals(Integer i);
 }

@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layouts/layout}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .container {
+            background-color: #EAEAEA;
+        }
+
+        .page-link {
+            background-color: #fff;
+            color: #0d6efd;
+
+            border: 1px solid #dee2e6;
+        }
+
+        .form-control {
+            padding-left: 32px;
+        }
+
+        .form-control:focus {
+
+            border: none;
+            box-shadow: none;
+        }
+
+
+        .formTable {
+            background-color: #FFFFFF;
+        }
+
+        .my-custom-scrollbar {
+            position: relative;
+            height: 600px;
+            overflow: auto;
+        }
+
+        .table-wrapper-scroll-y {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+<div layout:fragment="content" class="container mt-1 px-2 ">
+    <!--Bộ lọc, tìm kiếm  -->
+
+
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-10 mt-4 formTable">
+            <h5 style="font-weight: bold;" class="mt-3">Bộ lọc</h5>
+            <hr>
+
+            <form th:action="@{/admin/khachhang/hienthi#table}" class="mt-3 mb-3">
+
+                <div class="row">
+                    <div class="col-6">
+                        <label> Tìm kiếm </label>
+                        <input style="border-radius: 10px;" type="text" th:value="${textSearch}" class="form-control"
+                               name="textSearch"
+                               placeholder="Nhập tên, số điện thoại">
+                        <p class="text-danger"></p>
+                    </div>
+
+                    <div class="col-6">
+                        <label>Trạng thái</label>
+                        <select style="border-radius: 10px;" class="form-select" th:onchange="this.form.submit()"
+                                name="trangThai">
+                            <div style="border: 10px">
+                                <option th:selected="${trangThai} == -1 ? true:false" value="-1"> Tất cả
+                                </option>
+                                <option th:selected="${trangThai} == 1 ? true:false" value="1"> Hoạt động
+                                </option>
+                                <option th:selected="${trangThai} == 0 ? true:false" value="0">Ngưng hoạt động
+                                </option>
+                            </div>
+                        </select>
+
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <a th:href="@{/admin/khachhang/hienthi}" class="btn btn-primary">Làm mới</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Danh sách nhân viên -->
+    <div class="row mt-3">
+        <h5 style="font-weight: bold; text-align: center;" class="mt-3">Danh Sách Khách Hàng </h5>
+        <hr>
+        <div class="table table-wrapper-scroll-y my-custom-scrollbar">
+            <a th:href="@{/admin/khachhang/create}" class="btn btn-primary mt-1 mb-3 float-right">
+                <i style="font-size: 18px" class="fab fa-plus"></i> Thêm
+            </a>
+            <table id="table" class="table  table-borderless  formTable">
+                <thead>
+                <tr class="bg-light">
+                    <th>Ảnh đại diện</th>
+                    <th>Tên</th>
+                    <th>Email</th>
+                    <th>CCCD</th>
+                    <th>Số điện thoại</th>
+                    <th>Giới tính</th>
+                    <th>Trạng thái</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <tr th:each="kh : ${listKH.content}" style="line-height: 25px; text-align: center">
+                    <td th:width="80">
+                        <img th:src="@{(${kh.anhDaiDien} eq 'thumbnail.png') ? '/getimage/thumbnail.png' : ${kh.anhDaiDien}}"
+                             alt="" width="80" height="70" style="vertical-align: middle; border-radius: 50px">
+                    </td>
+                    <td th:text="${kh.ten}"></td>
+                    <td th:text="${kh.email}"></td>
+                    <td th:text="${kh.canCuoc}"></td>
+                    <td th:text="${kh.sdt}"></td>
+                    <!--                                        <td th:text="${nv.gioiTinh}"></td>-->
+                    <!--                    <td th:text="${nv.gioiTinh == 1} ? 'Nam' : 'Nữ'"></td>-->
+                    <td>
+                        <span th:if="${kh.gioiTinh == 1}">Nam</span>
+                        <span th:if="${kh.gioiTinh == 0}">Nữ</span>
+                    </td>
+
+                    <td>
+                        <button th:if="${kh.trangThai == 1}" class="btn btn-success "
+                                style="border-radius: 30px; font-size: 12px; height: 40px">
+                            Hoạt động
+                        </button>
+                        <button th:if="${kh.trangThai ==0}" class="btn btn-danger "
+                                style="border-radius: 30px; font-size: 12px; height: 40px">
+                            Ngưng noạt động
+                        </button>
+                    </td>
+
+                    <td>
+
+                        <!--                        <a th:href="@{/admin/nhanvien/edit/{id}(id=${nv.id})}" class="btn btn-danger edit">-->
+                        <!--                            <i class="material-icons mt-2 text-white" data-toggle="tooltip" title="Edit">&#xE254;</i>-->
+                        <!--                        </a>-->
+
+                        <a
+                                th:href="@{/admin/khachhang/edit/{id}(id=${kh.id})}" class="btn btn-warning edit"
+                                style=" padding: 5px 10px; font-size: 12px">
+                            <i class="material-icons text-white mt-1"
+                               title="Sửa">&#xE254;</i>
+                        </a>
+
+                        <a data-toggle="modal" th:attr="data-target='#detail'+${kh.id}"
+                           th:href="@{/admin/khachhang/detail/{id}(id=${kh.id})}" class="btn btn-success delete"
+                           style=" padding: 5px 10px; font-size: 12px;">
+                            <i class="material-icons text-white mt-1"
+                               title="Chi tiết">visibility</i>
+                        </a>
+
+<!--                        <a-->
+<!--                                th:href="@{/admin/khachhang/allDC/{id}(id=${kh.id})}" class="btn btn-info edit"-->
+<!--                                style=" padding: 5px 10px; font-size: 12px">-->
+<!--                            <i class="material-icons text-white mt-1"-->
+<!--                               title="Thêm địa chỉ">&#xef3a;</i>-->
+<!--                        </a>-->
+
+                        <!--                        <a class="edit">-->
+                        <!--                            <i class="material-icons mt-2" title="Edit">&#xE254;</i>-->
+                        <!--                        </a>-->
+
+                        <!--                        <a onclick="return confirm('Bạn có muốn xóa không')"-->
+                        <!--                           class="delete">-->
+                        <!--                            <i class="material-icons" title="Delete">&#xE872;</i>-->
+                        <!--                        </a>-->
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+
+            <div class="row">
+                <div class="col-3">
+                    <div class="hint-text">Tổng Nhân Viên: <b th:text="${tongKH}"></b> &ensp; Xem trang <b
+                            th:text="${pageNo+1}+'/'+${listKH.totalPages}"></b>
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <a class="page-link" th:if="${pageNo > 0}"
+                               th:href="@{/admin/khachhang/hienthi#table(pageNo=${i},trangThai=${trangThai},textSearch=${textSearch})}">Prev</a>
+                            <span class="page-link" th:unless="${pageNo > 0}">Prev</span>
+                        </li>
+                        <li th:each="i: ${#numbers.sequence(0, listKH.totalPages-1)}" class="page-item">
+                            <a th:href="@{/admin/khachhang/hienthi#table(pageNo=${i},trangThai=${trangThai},textSearch=${textSearch})}"
+                               class="page-link"
+                               th:text="${i +1}"></a>
+                        </li>
+
+                        <li class="page-item">
+                            <a class="page-link" th:if="${pageNo < listKH.totalPages -1}"
+                               th:href="@{/admin/khachhang/hienthi#table(pageNo=${i},trangThai=${trangThai},textSearch=${textSearch})}">Next</a>
+                            <span class="page-link" th:unless="${pageNo < listKH.totalPages -1}">Next</span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!--        modal-->
+    <div th:each="kh: ${listKH}">
+        <div th:id="detail+${kh.id}" class="modal fade">
+            <div class="modal-dialog" style="max-width: 800px;">
+                <div class="modal-content">
+                    <div class="modal-header text-light" style="background-color: #aea7a7;">
+                        <h4 class="modal-title">Chi tiết sản phẩm</h4>
+                        <button type="button" class="close" data-dismiss="modal"
+                                aria-hidden="true">&times;
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row mt-3">
+                            <div class="col-2">
+                                <div th:width="80">
+                                    <b>Ảnh đại diện</b>
+                                        <img th:src="@{(${kh.anhDaiDien} eq 'thumbnail.png') ? '/getimage/thumbnail.png' : ${kh.anhDaiDien}}"
+                                             alt="" width="100" height="100" style="vertical-align: middle; border-radius: 50px">
+
+                                </div>
+                            </div>
+                            <div class="col-10">
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <b>Tên nhân viên: </b>
+                                            <span th:text="${kh.ten}"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <b>Email: </b>
+                                            <span th:text="${kh.email}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <b>CCCD: </b>
+                                            <span th:text="${kh.canCuoc}"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6">
+                                        <div class="form-group">
+                                            <b>Ngày sinh: </b>
+                                            <span th:text="${kh.ngaySinh}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-4">
+                                        <div class="form-group">
+                                            <b>SĐT: </b>
+                                            <span th:text="${kh.sdt}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="form-group">
+                                            <b>Giới tính: </b>
+                                            <span th:if="${kh.gioiTinh == 1}">Nam</span>
+                                            <span th:if="${kh.gioiTinh == 0}">Nữ</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-4">
+                                        <div class="form-group">
+                                            <b>Trạng thái: </b>
+                                            <span th:if="${kh.trangThai == 1}">Hoạt động</span>
+                                            <span th:if="${kh.trangThai == 0}">Ngưng hoạt động</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <input type="button" class="btn btn-primary"
+                                   data-dismiss="modal" value="Thoát">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--    Modal thêm địa chỉ-->
+
+    <div class="modal fade" id="modalThemDiaChi" tabindex="-1" data-backdrop="static"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <form action="/admin/khachhang/adddc" method="post">
+            <div class="modal-dialog" style="max-width: 500px;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Thêm địa chỉ</h5>
+                        <a type="button" class="close" onclick="resetModalTDC();" data-dismiss="modal"
+                           aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </a>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-6">
+                                    <label>Họ và Tên</label>
+                                    <input type="text" name="hoTen"
+                                           class="form-control">
+                                </div>
+                                <div class="col-6">
+                                    <label>Số điện thoại</label>
+                                    <input type="text" name="sdt"
+                                           class="form-control  ">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label for="provincetdc">Tỉnh/Thành phố</label>
+                                <select id="provincetdc" name="tinh" class="form-control">
+                                    <option value="">---Chọn Tỉnh/Thành Phố----</option>
+                                </select>
+                            </div>
+
+                            <div class="row">
+                                <label for="districttdc">Quận/Huyện</label>
+                                <select name="quan" class="form-control" id="districttdc">
+                                    <option value="">---Chọn----</option>
+                                </select>
+                            </div>
+
+                            <div class="row">
+                                <label for="wardtdc">Xã/Phường</label>
+                                <select name="xa" class="form-control" id="wardtdc">
+                                    <option value="">---Chọn----</option>
+                                </select>
+                            </div>
+
+                            <div class="row">
+                                <label>Đ/C chi tiết</label>
+                                <input name="dcCuThe" class="form-control" type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <!--                    ?link day nha thang ngiu-->
+                        <button type="submit" class="btn btn-primary">Xác nhận</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

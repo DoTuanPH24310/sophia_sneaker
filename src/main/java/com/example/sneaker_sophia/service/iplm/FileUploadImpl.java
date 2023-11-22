@@ -1,6 +1,7 @@
-package com.example.sneaker_sophia.service;
+package com.example.sneaker_sophia.service.iplm;
 
 import com.cloudinary.Cloudinary;
+import com.example.sneaker_sophia.service.FileUpload;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

@@ -1,7 +1,7 @@
 
 package com.example.sneaker_sophia.entity;
 
-import com.example.sneaker_sophia.request.NhanVienRequest;
+import com.example.sneaker_sophia.request.TaiKhoanRequest;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
@@ -72,7 +72,7 @@ public class DiaChi {
     @JoinColumn(name = "IdTaiKhoan")
     private TaiKhoan taiKhoan;
 
-    public DiaChi(NhanVienRequest nhanVienRequest) {
+    public DiaChi(TaiKhoanRequest nhanVienRequest) {
         this.setDiaChiCuThe(nhanVienRequest.getDiaChiCuThe());
         this.setTinh(nhanVienRequest.getTinh());
         this.setQuanHuyen(nhanVienRequest.getQuanHuyen());

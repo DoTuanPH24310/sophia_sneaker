@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layouts/layout}" th:lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .my-custom-scrollbar {
+            position: relative;
+            height: 500px;
+            overflow: auto;
+        }
+
+        .table-wrapper-scroll-y {
+            display: block;
+        }
+
+        h5.modal-title p {
+            display: inline;
+        }
+
+        .countHD {
+            color: white;
+            background-color: red;
+            border-radius: 50%;
+            border: solid red 4px;
+            font-size: 10px;
+            display: inline-block;
+            text-align: center;
+            font-weight: bold;
+            position: relative;
+            top: -10px;
+            left: 10px;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content" class="container">
+
+
+    <div class="row">
+        <h5 style="margin: 0px">Quản lý hóa đơn</h5>
+    </div>
+
+    <div style="background-color: white; height:245px;">
+        <div class="contentBoLoc mr-3 mb-3 ml-3">
+            <div class="row mt-4">
+                <h5 style="font-size: 17px;" class="mt-3">Bộ lọc</h5>
+                <hr style="width: 1200px;color: black;height: 1px;background-color: black">
+            </div>
+
+
+            <div class="row mb-5 mt-3">
+                <div class="col-3">
+                    <input type="text" class="form-control ms-3" id="textSearchHoaDOn"
+                           placeholder="Nhập mã hóa đơn....">
+                </div>
+
+                <div class="col-3">
+                    <button type="submit" class="btn btn-primary ms-3" onclick="fillter();">Tìm kiếm</button>
+                    <button class="btn btn-danger" onclick="resetSelectAndTab();">Làm mới</button>
+                </div>
+
+                <div class="col-1"></div>
+                <div class="col-2">
+                    <div class="form-floating">
+                        <input type="datetime-local" class="form-control" name="maGiamGia" id="NBDHoaDon"
+                               placeholder="Nhập mã giày"/>
+                        <label for="NBDHoaDon" class="form-label">Từ ngày</label>
+                    </div>
+                </div>
+
+                <div class="col-2">
+
+                    <div class="form-floating">
+                        <input onchange="fillter();" type="datetime-local" class="form-control" name="maGiamGia"
+                               id="NKTHoaDon"
+                               placeholder="Nhập mã giày"/>
+                        <label for="NKTHoaDon" class="form-label">Đến ngày</label>
+                    </div>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6  d-flex justify-content-center">
+
+                    <label>Loại đơn: &nbsp;&nbsp;</label>
+                    <select onchange="fillter();" style="border-radius: 7px; min-width: 190px; min-height: 30px;"
+                            id="cbbLoaiDon">
+                        <option style="text-align: center" value="">---Tất cả---</option>
+                        <option style="text-align: center" value="1">Tại quầy</option>
+                        <option style="text-align: center" value="2">Giao hàng</option>
+                        <option style="text-align: center" value="3">Online</option>
+                    </select>
+                </div>
+
+                <div class="col-5  d-flex justify-content-center">
+
+                    <label>Sắp xếp: &nbsp;&nbsp;</label>
+                    <select onchange="fillter();" style="border-radius: 7px; min-width: 190px; min-height: 30px;"
+                            id="cbbSapXep">
+                        <option style="text-align: center" value="1">Ngày tạo</option>
+                        <option style="text-align: center" value="2">Mã hóa đơn</option>
+                        <option style="text-align: center" value="3">Tổng tiền</option>
+
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="background-color: white;">
+        <div class="contentTab mr-3">
+            <div class="group-tabs mt-4">
+                <div class="row">
+                    <h5 style="font-size: 17px;" class="mt-3 ml-3">Danh sách hóa đơn</h5>
+                    <hr style="width: 1200px;color: black;height: 1px;background-color: black;margin-left: 14px;">
+                </div>
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs ms-1" role="tablist">
+                    <li role="presentation" class="nav-item">
+                        <a class="nav-link active" href="#choThanhToan" aria-controls="ALL" role="tab"
+                           data-toggle="tab">Chờ thanh toán
+                        </a>
+                    </li>
+
+                    <li role="presentation" class="nav-item">
+                        <a class="nav-link  text-dark" href="#choXacNhan" aria-controls="choXacNhan" role="tab"
+                           data-toggle="tab">Chờ xác nhận
+                            <!--                            Đây-->
+                            <span class="countHD" th:text="${soHDCXN}"></span>
+                        </a>
+
+                    </li>
+                    <li role="presentation" class="nav-item">
+                        <a class="nav-link  text-dark" href="#choGiao" aria-controls="choVanChuyen" role="tab"
+                           data-toggle="tab">Chờ giao
+                            <!--                            Đây-->
+                            <span class="countHD" th:text="${soHDCG}"></span>
+                        </a>
+
+                    </li>
+                    <li role="presentation" class="nav-item">
+                        <a class="nav-link  text-dark" href="#dangGiao" aria-controls="vanChuyen" role="tab"
+                           data-toggle="tab">Đang giao
+                            <!--                            Đây-->
+                            <span class="countHD" th:text="${soHDDG}"></span>
+                        </a>
+                        </a>
+                    </li>
+                    <li role="presentation" class="nav-item">
+                        <a class="nav-link  text-dark" href="#hoanThanh" aria-controls="hoanThanh" role="tab"
+                           data-toggle="tab">Hoàn thành</a>
+                    </li>
+                    <li role="presentation" class="nav-item">
+                        <a class="nav-link  text-dark" href="#huy" aria-controls="huy" role="tab"
+                           data-toggle="tab">Hủy</a>
+                    </li>
+                </ul>
+
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="choThanhToan">
+                        <div class="row mt-4">
+                            <div class="table table-wrapper-scroll-y my-custom-scrollbar">
+                                <table id="tableModal" class="table table-borderless ml-2">
+                                    <thead>
+                                    <tr class="bg-light">
+                                        <th>STT</th>
+                                        <th>Mã HĐ</th>
+                                        <th>Tên khách hàng</th>
+                                        <th>Tên nhân viên</th>
+                                        <th>Ngày tạo</th>
+                                        <th>Khuyến mại</th>
+                                        <th>Tổng tiền</th>
+                                        <th>Loại đơn</th>
+                                        <th>Thao tác</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="trchoThanhToan">
+                                    <form action="">
+                                        <block th:if="${#lists.isEmpty(listhdc)}">
+                                            <tr>
+                                                <td colspan="9"><h2>Không có hóa đơn đang chờ thanh toán</h2></td>
+                                            </tr>
+                                        </block>
+                                        <tr th:each="hdc, status : ${listhdc}">
+                                            <td th:text="${status.index + 1}"></td>
+                                            <td th:text="${hdc.maHoaDOn}"></td>
+                                            <td th:text="${hdc.tenKhachHang}"></td>
+                                            <td th:text="${hdc.createdBy}"></td>
+                                            <td th:text="${#temporals.format(hdc.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
+                                            <td th:text="${#numbers.formatCurrency(hdc.khuyenMai)}"></td>
+                                            <td th:text="${#numbers.formatCurrency(hdc.tongTien + hdc.phiShip)}"></td>
+                                            <td>
+                                                <button th:if="${hdc.loaiHoaDon == 1}" class="btn btn-success "
+                                                        style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                    Tại quầy
+                                                </button>
+                                                <button th:if="${hdc.loaiHoaDon == 2}" class="btn btn-primary "
+                                                        style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                    Giao hàng
+                                                </button>
+                                            </td>
+                                            <td>
+
+                                                <a th:href="@{/admin/tai-quay/detail/{id}(id=${hdc.id})}"
+                                                   class="btn btn-warning edit"
+                                                   style=" padding: 5px 10px; font-size: 12px">
+                                                    <i class="material-icons text-white mt-1" title="Sửa">&#xE254;</i>
+                                                </a>
+
+                                                <a th:href="@{/admin/hoa-don/detail/{id}(id=${hdc.id})}"
+                                                   class="btn btn-success "
+                                                   style=" padding: 5px 10px; font-size: 12px;">
+                                                    <i class="material-icons text-white mt-1"
+                                                       title="Chi tiết">visibility</i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </form>
+                                    </tbody>
+                                </table>
+                                <h2 class="text-center mt-4" id="errchoThanhToan"></h2>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div role="tabpanel" class="tab-pane" id="choXacNhan">
+
+
+                        <div class="row">
+                            <form action="/admin/hoa-don/updatehdcxn" method="post">
+                                <div>
+                                    <button type="submit" class="btn btn-primary mb-3 float-right">Xác nhận đơn
+                                    </button>
+                                </div>
+                                <div class="table table-wrapper-scroll-y my-custom-scrollbar">
+                                    <table id="tableModal" class="table table-borderless ml-2">
+                                        <thead>
+                                        <tr class="bg-light">
+                                            <th>
+                                                <input th:name="requestId"
+                                                       th:value="AllG" id="selectAllCXN" style="width: 20px; height: 18px;"
+                                                       type="checkbox">
+                                            </th>
+                                            <th>STT</th>
+                                            <th>Mã HĐ</th>
+                                            <th>Tên khách hàng</th>
+                                            <th>Tên nhân viên</th>
+                                            <th>Ngày tạo</th>
+                                            <th>Khuyến mại</th>
+                                            <th>Tổng tiền</th>
+                                            <th>Loại đơn</th>
+                                            <th>Thao tác</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="trchoXacNhan">
+                                        <tr th:each="hd, status : ${listhdhcxn}">
+                                            <th>
+                                                <input th:name="idhd"
+                                                       th:value="${hd.id}" style="width: 20px; height: 18px;"
+                                                       type="checkbox">
+                                            </th>
+                                            <td th:text="${status.index + 1}"></td>
+                                            <td th:text="${hd.maHoaDOn}"></td>
+                                            <td th:text="${hd.tenKhachHang}"></td>
+                                            <td th:text="${hd.createdBy}"></td>
+                                            <td th:text="${#temporals.format(hd.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
+                                            <td th:text="${#numbers.formatCurrency(hd.khuyenMai)}"></td>
+                                            <td th:text="${#numbers.formatCurrency(hd.tongTien + hd.phiShip)}"></td>
+                                            <td>
+                                                <button th:if="${hd.loaiHoaDon == 3}" class="btn btn-success "
+                                                        style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                    Online
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <a th:href="@{/admin/tai-quay/detail/{id}(id=${hd.id})}"
+                                                   class="btn btn-warning edit"
+                                                   style=" padding: 5px 10px; font-size: 12px">
+                                                    <i class="material-icons text-white mt-1" title="Sửa">&#xE254;</i>
+                                                </a>
+
+                                                <a th:href="@{/admin/hoa-don/detail/{id}(id=${hd.id})}"
+                                                   class="btn btn-success "
+                                                   style=" padding: 5px 10px; font-size: 12px;">
+                                                    <i class="material-icons text-white mt-1"
+                                                       title="Chi tiết">visibility</i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <h2 class="text-center mt-4" id="errchoXacNhan"></h2>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+
+                    <div role="tabpanel" class="tab-pane" id="choGiao">
+                        <div class="row">
+                            <form action="/admin/hoa-don/updatehdcg" method="post">
+                                <div>
+                                    <button type="submit" class="btn btn-primary mb-3 float-right">Xác nhận giao
+                                    </button>
+                                </div>
+                                <div class="table table-wrapper-scroll-y my-custom-scrollbar">
+                                    <table id="tableModal" class="table table-borderless ml-2">
+                                        <thead>
+                                        <tr class="bg-light">
+                                            <th>
+                                                <input th:name="requestId"
+                                                       th:value="AllG" id="selectAllCG" style="width: 20px; height: 18px;"
+                                                       type="checkbox">
+                                            </th>
+                                            <th>STT</th>
+                                            <th>Mã HĐ</th>
+                                            <th>Tên khách hàng</th>
+                                            <th>Tên nhân viên</th>
+                                            <th>Ngày tạo</th>
+                                            <th>Khuyến mại</th>
+                                            <th>Tổng tiền</th>
+                                            <th>Loại đơn</th>
+                                            <th>Thao tác</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="trchoGiao">
+                                        <!--                                    table chờ giao-->
+                                        <tr th:each="hd, status : ${listhdcg}">
+                                            <th>
+                                                <input th:name="idhd"
+                                                       th:value="${hd.id}" style="width: 20px; height: 18px;"
+                                                       type="checkbox">
+                                            </th>
+                                            <td th:text="${status.index + 1}"></td>
+                                            <td th:text="${hd.maHoaDOn}"></td>
+                                            <td th:text="${hd.tenKhachHang}"></td>
+                                            <td th:text="${hd.createdBy}"></td>
+                                            <td th:text="${#temporals.format(hd.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
+                                            <td th:text="${#numbers.formatCurrency(hd.khuyenMai)}"></td>
+                                            <td th:text="${#numbers.formatCurrency(hd.tongTien + hd.phiShip)}"></td>
+                                            <td>
+                                                <button th:if="${hd.loaiHoaDon == 1}" class="btn btn-success "
+                                                        style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                    Tại quầy
+                                                </button>
+                                                <button th:if="${hd.loaiHoaDon == 2}" class="btn btn-primary "
+                                                        style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                    Giao hàng
+                                                </button>
+                                            </td>
+                                            <td>
+
+                                                <a
+                                                        th:href="@{/admin/tai-quay/detail/{id}(id=${hd.id})}"
+                                                        class="btn btn-warning edit"
+                                                        style=" padding: 5px 10px; font-size: 12px">
+                                                    <i class="material-icons text-white mt-1"
+                                                       title="Sửa">&#xE254;</i>
+                                                </a>
+
+                                                <a th:href="@{/admin/hoa-don/detail/{id}(id=${hd.id})}"
+                                                   class="btn btn-success "
+                                                   style=" padding: 5px 10px; font-size: 12px;">
+                                                    <!--                            <i class="material-icons mt-2" data-toggle="tooltip" title="Delete">&#xE872;</i>-->
+                                                    <i class="material-icons text-white mt-1"
+                                                       title="Chi tiết">visibility</i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <h2 class="text-center mt-4" id="errchoGiao"></h2>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+
+                    <div role="tabpanel" class="tab-pane" id="dangGiao">
+                        <div class="row">
+                            <form action="/admin/hoa-don/updatehddg" method="post">
+                                <div>
+                                    <button type="submit" class="btn btn-primary mb-3 float-right">Xác nhận thành công
+                                    </button>
+                                </div>
+                                <div class="table table-wrapper-scroll-y my-custom-scrollbar">
+                                    <table id="tableModal" class="table table-borderless ml-2">
+                                        <thead>
+                                        <tr class="bg-light">
+                                            <th>
+                                                <input th:name="requestId"
+                                                       th:value="AllG" id="selectAllDG" style="width: 20px; height: 18px;"
+                                                       type="checkbox">
+                                            </th>
+                                            <th>STT</th>
+                                            <th>Mã HĐ</th>
+                                            <th>Tên khách hàng</th>
+                                            <th>Tên nhân viên</th>
+                                            <th>Ngày tạo</th>
+                                            <th>Khuyến mại</th>
+                                            <th>Tổng tiền</th>
+                                            <th>Loại đơn</th>
+                                            <th>Thao tác</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="trdangGiao">
+                                        <tr th:each="hd, status : ${listhddg}">
+                                            <th>
+                                                <input th:name="idhd"
+                                                       th:value="${hd.id}" style="width: 20px; height: 18px;"
+                                                       type="checkbox">
+                                            </th>
+                                            <td th:text="${status.index + 1}"></td>
+                                            <td th:text="${hd.maHoaDOn}"></td>
+                                            <td th:text="${hd.tenKhachHang}"></td>
+                                            <td th:text="${hd.createdBy}"></td>
+                                            <td th:text="${#temporals.format(hd.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
+                                            <td th:text="${#numbers.formatCurrency(hd.khuyenMai)}"></td>
+                                            <td th:text="${#numbers.formatCurrency(hd.tongTien + hd.phiShip)}"></td>
+                                            <td>
+                                                <button th:if="${hd.loaiHoaDon == 3}" class="btn btn-success "
+                                                        style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                    Online
+                                                </button>
+                                                <button th:if="${hd.loaiHoaDon == 2}" class="btn btn-primary "
+                                                        style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                    Giao hàng
+                                                </button>
+                                            </td>
+                                            <td>
+
+                                                <a th:href="@{/admin/tai-quay/detail/{id}(id=${hd.id})}"
+                                                   class="btn btn-warning edit"
+                                                   style=" padding: 5px 10px; font-size: 12px">
+                                                    <i class="material-icons text-white mt-1" title="Sửa">&#xE254;</i>
+                                                </a>
+
+                                                <a th:href="@{/admin/hoa-don/detail/{id}(id=${hd.id})}"
+                                                   class="btn btn-success "
+                                                   style=" padding: 5px 10px; font-size: 12px;">
+                                                    <i class="material-icons text-white mt-1"
+                                                       title="Chi tiết">visibility</i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <h2 class="text-center mt-4" id="errdangGiao"></h2>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div role="tabpanel" class="tab-pane" id="hoanThanh">
+                        <div class="row mt-4">
+                            <div class="table table-wrapper-scroll-y my-custom-scrollbar">
+                                <table id="tableModal" class="table table-borderless ml-2">
+                                    <thead>
+                                    <tr class="bg-light">
+                                        <th>STT</th>
+                                        <th>Mã HĐ</th>
+                                        <th>Tên khách hàng</th>
+                                        <th>Tên nhân viên</th>
+                                        <th>Ngày tạo</th>
+                                        <th>Khuyến mại</th>
+                                        <th>Tổng tiền</th>
+                                        <th>Loại đơn</th>
+                                        <th>Thao tác</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="trhoanThanh">
+
+                                    <tr th:each="hdht, status : ${listhdht}">
+                                        <td th:text="${status.index + 1}"></td>
+                                        <td th:text="${hdht.maHoaDOn}"></td>
+                                        <td th:text="${hdht.tenKhachHang}"></td>
+                                        <td th:text="${hdht.createdBy}"></td>
+                                        <td th:text="${#temporals.format(hdht.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
+                                        <td th:text="${#numbers.formatCurrency(hdht.khuyenMai)}"></td>
+                                        <td th:text="${#numbers.formatCurrency(hdht.tongTien + hdht.phiShip)}"></td>
+                                        <td>
+                                            <button th:if="${hdht.loaiHoaDon == 1}" class="btn btn-success "
+                                                    style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                Tại quầy
+                                            </button>
+                                            <button th:if="${hdht.loaiHoaDon == 2}" class="btn btn-primary "
+                                                    style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                Giao hàng
+                                            </button>
+                                            <button th:if="${hdht.loaiHoaDon == 3}" class="btn btn-primary "
+                                                    style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                Online
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <a th:href="@{/admin/hoa-don/detail/{id}(id=${hdht.id})}"
+                                               class="btn btn-warning "
+                                               style=" padding: 5px 10px; font-size: 12px;">
+                                                <!--                            <i class="material-icons mt-2" data-toggle="tooltip" title="Delete">&#xE872;</i>-->
+                                                <i class="material-icons text-white mt-1"
+                                                   title="Chi tiết">visibility</i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <h2 class="text-center mt-4" id="errhoanThanh"></h2>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div role="tabpanel" class="tab-pane" id="huy">
+                        <div class="row mt-4">
+                            <div class="table table-wrapper-scroll-y my-custom-scrollbar">
+                                <table id="tableModal" class="table table-borderless ml-2">
+                                    <thead>
+                                    <tr class="bg-light">
+                                        <th>STT</th>
+                                        <th>Mã HĐ</th>
+                                        <th>Tên khách hàng</th>
+                                        <th>Tên nhân viên</th>
+                                        <th>Ngày tạo</th>
+                                        <th>Khuyến mại</th>
+                                        <th>Tổng tiền</th>
+                                        <th>Loại đơn</th>
+                                        <th>Thao tác</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="trhuy">
+                                    <tr th:each="hdh, status : ${listhdh}">
+                                        <td th:text="${status.index + 1}"></td>
+                                        <td th:text="${hdh.maHoaDOn}"></td>
+                                        <td th:text="${hdh.tenKhachHang}"></td>
+                                        <td th:text="${hdh.createdBy}"></td>
+                                        <td th:text="${#temporals.format(hdh.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
+                                        <td th:text="${#numbers.formatCurrency(hdh.khuyenMai)}"></td>
+                                        <td th:text="${#numbers.formatCurrency(hdh.tongTien + hdh.phiShip)}"></td>
+                                        <td>
+                                            <button th:if="${hdh.loaiHoaDon == 1}" class="btn btn-success "
+                                                    style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                Tại quầy
+                                            </button>
+                                            <button th:if="${hdh.loaiHoaDon == 2}" class="btn btn-primary "
+                                                    style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                Giao hàng
+                                            </button>
+                                        </td>
+                                        <td>
+
+                                            <a th:href="@{/admin/tai-quay/detail/{id}(id=${hdh.id})}"
+                                               class="btn btn-warning edit" style=" padding: 5px 10px; font-size: 12px">
+                                                <i class="material-icons text-white mt-1" title="Sửa">&#xE254;</i>
+                                            </a>
+
+                                            <a th:href="@{/admin/hoa-don/detail/{id}(id=${hdh.id})}"
+                                               class="btn btn-success " style=" padding: 5px 10px; font-size: 12px;">
+                                                <i class="material-icons text-white mt-1"
+                                                   title="Chi tiết">visibility</i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <h2 class="text-center mt-4" id="errhuy"></h2>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script th:inline="javascript">
+        let activeTab = '';
+        let textSearch = document.getElementById('textSearchHoaDOn');
+        let NBD = document.getElementById('NBDHoaDon');
+        let NKT = document.getElementById('NKTHoaDon');
+        let ld = document.getElementById('cbbLoaiDon');
+        let sx = document.getElementById('cbbSapXep');
+        let temp = '';
+        let listCTT = [[${listhdc}]];
+        let listHT = [[${listhdht}]];
+        let listHDCG = [[${listhdcg}]];
+        let listHDCXN = [[${listhdhcxn}]];
+        let listHDDG = [[${listhddg}]];
+        let listHDH = [[${listhdh}]];
+        let errTable = '';
+        let idSelectAll = '';
+        let classSelectChild = '';
+
+
+
+
+        $(document).ready(function () {
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                activeTab = $(e.target).attr("href");
+                findErrTable(activeTab);
+                resetSelectAndTab();
+                eventCheckbox();
+            });
+        });
+
+        function eventCheckbox() {
+            if (activeTab ==  '#choXacNhan' ) {
+                idSelectAll = 'selectAllCXN';
+                classSelectChild ='.checkboxCXN'
+            }else if (activeTab == '#choGiao') {
+                idSelectAll = 'selectAllCG';
+                classSelectChild ='.checkboxCG'
+            } else if (activeTab == '#dangGiao') {
+                idSelectAll = 'selectAllDG';
+                classSelectChild ='.checkboxDG'
+            }else return;
+
+
+            let selectAllCheckbox = document.getElementById(idSelectAll);
+            let checkboxes = document.querySelectorAll(classSelectChild);
+
+            selectAllCheckbox.addEventListener('click', function () {
+                checkboxes.forEach(function (checkbox) {
+                    checkbox.checked = selectAllCheckbox.checked;
+                });
+            });
+
+            checkboxes.forEach(function (checkbox) {
+                checkbox.addEventListener('click', function () {
+                    selectAllCheckbox.checked = Array.from(checkboxes).every(function (checkbox) {
+                        return checkbox.checked;
+                    });
+                });
+            });
+
+        }
+
+
+        function findErrTable(tab) {
+            if (tab == '#choThanhToan') {
+                errTable = 'errchoThanhToan';
+            } else if (tab == '#hoanThanh') {
+                errTable = 'errhoanThanh';
+            } else if (tab == '#choGiao') {
+                errTable = 'errchoGiao';
+            } else if (tab == '#choXacNhan') {
+                errTable = 'errchoXacNhan';
+            } else if (tab == '#dangGiao') {
+                errTable = 'errdangGiao';
+            }else if (tab == '#huy'){
+                errTable = 'errhuy';
+            }
+        }
+
+
+        function loadAllTable(data, tab) {
+            let tempActiveTab = tab;
+            tempActiveTab = tempActiveTab == '' ? "choThanhToan" : tempActiveTab.substring(1, tempActiveTab.length);
+            let id = 'tr' + tempActiveTab;
+            let tbody = document.getElementById(id);
+            tbody.innerHTML = '';
+            for (let index = 0; index < data.length; index++) {
+                loadTr(data[index], tbody, index + 1);
+            }
+        }
+
+        function loadTr(x, tbody, index) {
+            let loaiDonbtn = ''
+
+            const formattedDateTime = moment(x.createdDate).utcOffset(7).format('DD-MM-YYYY HH:mm:ss');
+            let row = tbody.insertRow();
+            let formatteKM = x.khuyenMai.toLocaleString('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            });
+            let formattetongTien = x.tongTien.toLocaleString('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            });
+
+            if ( activeTab == '#choGiao' ){
+                row.insertCell().innerHTML = ` <input name="idhd"
+                       value="${x.id}" class="checkboxCG" style="width: 20px; height: 18px;"
+                       type="checkbox">`;
+            }else if (activeTab == '#choXacNhan' ){
+                row.insertCell().innerHTML = ` <input name="idhd"
+                       value="${x.id}" class="checkboxCXN" style="width: 20px; height: 18px;"
+                       type="checkbox">`;
+            }else if (activeTab == '#dangGiao'){
+                row.insertCell().innerHTML = ` <input name="idhd"
+                       value="${x.id}" class="checkboxDG" style="width: 20px; height: 18px;"
+                       type="checkbox">`;
+            }
+            row.insertCell().innerHTML = index;
+            row.insertCell().innerHTML = x.maHoaDOn;
+            row.insertCell().innerHTML = x.tenKhachHang;
+            row.insertCell().innerHTML = x.createdBy;
+            row.insertCell().innerHTML = formattedDateTime;
+            row.insertCell().innerHTML = formatteKM;
+            row.insertCell().innerHTML = formattetongTien;
+            let id = x.id;
+            if (x.loaiHoaDon == 1) {
+                loaiDonbtn = '<button class="btn btn-success " style="border-radius: 30px; font-size: 12px; height: 40px">Tại quầy </button>';
+            } else if (x.loaiHoaDon == 2) {
+                loaiDonbtn = '<button class="btn btn-primary "style="border-radius: 30px; font-size: 12px; height: 40px">Giao hàng</button>'
+            }else{
+                loaiDonbtn = '<button class="btn btn-primary "style="border-radius: 30px; font-size: 12px; height: 40px">Online</button>'
+            }
+
+            row.insertCell().innerHTML = loaiDonbtn;
+            if (activeTab == '#choThanhToan' || activeTab == '' || activeTab == '#choGiao' || activeTab == '#choXacNhan' ) {
+                let button1 = `<a href="/admin/tai-quay/detail/${id}" class="btn btn-warning edit" style=" padding: 5px 10px; font-size: 12px"><i class="material-icons text-white mt-1" title="Chi tiết">&#xE254;</i></a>`
+                let button2 = `<a href="/admin/hoa-don/detail/${id}" class="btn btn-success ms-1" style=" padding: 5px 10px; font-size: 12px;"><i class="material-icons text-white mt-1" title="Chi tiết">visibility</i></a>`;
+                row.insertCell().innerHTML = button1 + button2;
+            } else if (activeTab == '#hoanThanh' || activeTab == '#dangGiao' || activeTab == '#huy') {
+                let button = `<a href="/admin/hoa-don/detail/${id}" class="btn btn-success ms-1" style=" padding: 5px 10px; font-size: 12px;"><i class="material-icons text-white mt-1" title="Chi tiết">visibility</i></a>`;
+                row.insertCell().innerHTML = button;
+            }
+        }
+
+
+        function resetSelectAndTab() {
+            textSearch.value = '';
+            NBD.value = '';
+            NKT.value = '';
+            ld.value = '';
+            sx.value = 1;
+            loadAllTable(listCTT, '#choThanhToan');
+            loadAllTable(listHT, '#hoanThanh');
+            loadAllTable(listHDCG, '#choGiao');
+            loadAllTable(listHDCXN, '#choXacNhan');
+            loadAllTable(listHDDG, '#dangGiao');
+            loadAllTable(listHDH, '#huy');
+            document.getElementById('errchoGiao').innerHTML = '';
+            document.getElementById('errhoanThanh').innerHTML = '';
+            document.getElementById('errchoThanhToan').innerHTML = '';
+            document.getElementById('errchoXacNhan').innerHTML = '';
+            document.getElementById('errdangGiao').innerHTML = '';
+            document.getElementById('errhuy').innerHTML = '';
+        }
+
+        function fillter() {
+            let temActiveTab = activeTab;
+            temActiveTab = temActiveTab == '' ? "choThanhToan" : temActiveTab.substring(1, temActiveTab.length);
+            if (temActiveTab == 'choThanhToan') {
+                temActiveTab = 2;
+            } else if (temActiveTab == 'hoanThanh') {
+                temActiveTab = 1;
+            } else if (temActiveTab == 'choGiao') {
+                temActiveTab = 4;
+            }else if (temActiveTab == 'choXacNhan'){
+                temActiveTab = 3;
+            }else if (temActiveTab == 'dangGiao'){
+                temActiveTab = 5;
+            }else {
+                temActiveTab = 6;
+            }
+            let params = {
+                ngayBatDau: NBD.value,
+                ngayKetThuc: NKT.value,
+                loaiDon: ld.value,
+                sapXep: sx.value,
+                textSearch: textSearch.value,
+                trangThai: temActiveTab
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "http://localhost:8080/api/hoa-don/multipleFindHoaDon",
+                data: JSON.stringify(params),
+                contentType: 'application/json',
+                success: function (data) {
+                    if (errTable == '') {
+                        errTable = 'errchoThanhToan';
+                    }
+                    if (data.length == 0) {
+                        document.getElementById(errTable).innerHTML = "Không có dữ liệu phù hợp";
+                        loadAllTable(data, activeTab);
+                    } else {
+                        document.getElementById(errTable).innerHTML = "";
+                        loadAllTable(data, activeTab);
+                    }
+                }
+            })
+        }
+
+
+    </script>
+</div>
+</body>
+</html>

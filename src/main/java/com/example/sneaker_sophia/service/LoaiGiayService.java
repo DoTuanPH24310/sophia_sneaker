@@ -31,4 +31,9 @@ public class LoaiGiayService {
     public LoaiGiay findHangsByIdChiTietGiay(UUID uuid){
         return loaiGiayRepository.findLoaiGiaysByIdChiTietGiay(uuid);
     }
+//cuongdv
+    public List<LoaiGiay> findByTrangThaiEquals(Integer tt) {
+        return loaiGiayRepository.findByTrangThaiEquals(tt);
+    }
+
 }

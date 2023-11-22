@@ -1,4 +1,5 @@
 package com.example.sneaker_sophia.repository;
+
 import com.example.sneaker_sophia.entity.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -8,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -21,7 +23,7 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
 
     List<ChiTietGiay> findAllByTrangThaiEquals(Integer trangThai);
 
-    @Query(value = "select ma from ChiTietGiay where id =?1",nativeQuery = true)
+    @Query(value = "select ma from ChiTietGiay where id =?1", nativeQuery = true)
     String findMaByIdCTG(UUID id);
     // Hàm tìm kiếm theo cả keyword và tên sản phẩm
 
@@ -39,6 +41,7 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
     Page<ChiTietGiay> findByKeyword(String keyword, Pageable pageable);
 
     public Page<ChiTietGiay> findByGiay_TenContainingIgnoreCase(String tenSanPham, Pageable pageable);
+
     @Query("""
         SELECT ctsp
         FROM ChiTietGiay ctsp
@@ -100,5 +103,47 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
 
     @Query("SELECT a.chiTietGiay.id FROM Anh a WHERE a.id = :anhId")
     UUID findChiTietGiayIdByAnhId(@Param("anhId") String anhId);
+    //cuongdv
+
+    // 29/10 cuongdv
+    @Query(value = "select Id from ChiTietGiay where ma = ?1", nativeQuery = true)
+    UUID getIdCTGByMa(String maCTG);
+
+
+    @Query(value = "select soLuong from ChiTietGiay where ma =?1", nativeQuery = true)
+    Integer findSoLuongTon(String ma);
+
+    @Query(value = "select ct from ChiTietGiay ct where ct.qrCode = ?1")
+    ChiTietGiay getChiTietGiayByQrCode(String qrcode);
+
+
+    @Query(value = "select soLuong from ChiTietGiay where qrCode =?1", nativeQuery = true)
+    Integer findSoLuongTonByQrCode(String qr);
+
+    //    17/11 + 18/11
+    @Query(value = "select sum(KM.phanTramGiam) from CTG_KhuyenMai ctg_km\n" +
+            "join KhuyenMai KM on ctg_km.IdKhuyenMai = KM.Id where  IdCTG = ?1 and KM.trangThai = 1 and KM.soLuong > 0", nativeQuery = true)
+    Integer tongKMByIdctg(UUID idctg);
+
+
+    @Query("SELECT c FROM ChiTietGiay c WHERE " +
+            "(:giay IS NULL OR c.giay.id = :giay) AND " +
+            "(:deGiay IS NULL OR c.deGiay.id = :deGiay) AND " +
+            "(:hang IS NULL OR c.hang.id = :hang) AND " +
+            "(:loaiGiay IS NULL OR c.loaiGiay.id = :loaiGiay) AND " +
+            "(:mauSac IS NULL OR c.mauSac.id = :mauSac) AND" +
+            "(:kichCo IS NULL OR c.kichCo.id = :kichCo) AND ((:textSearch IS NULL OR c.ma like :textSearch) or (:textSearch IS NULL OR c.giay.ten like :textSearch)) AND" +
+            "(c.trangThai = 0)")
+    List<ChiTietGiay> findChiTietGiayByMultipleParamsAPI(
+            @Param("giay") UUID idGiay,
+            @Param("deGiay") UUID idDeGiay,
+            @Param("hang") UUID idHang,
+            @Param("loaiGiay") UUID idLoaiGiay,
+            @Param("mauSac") UUID idMauSac,
+            @Param("kichCo") UUID idKichCo,
+            @Param("textSearch") String textSearch
+    );
+
+
 }
 

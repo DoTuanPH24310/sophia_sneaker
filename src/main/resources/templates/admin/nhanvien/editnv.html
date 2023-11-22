@@ -7,9 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        .container {
-            background-color: #EAEAEA;
-        }
 
         .page-link {
             background-color: #fff;
@@ -43,17 +40,19 @@
 
 <body>
 
-<div layout:fragment="content" class="col-md-12">
+<div style="background-color: white; height: 600px" layout:fragment="content" class="col-md-12">
     <form th:action="@{/admin/nhanvien/update/{id}#tableCTG(id=${nhanVien.idTaiKhoan})}"
-          method="post" th:object="${nhanVien}">
+          method="post" th:object="${nhanVien}" enctype="multipart/form-data">
         <div class="row mt-3">
             <div class="col-2">
                 <h5 style="font-weight: bold; text-align: center;" class="mt-3">Ảnh đại diện</h5>
-                <img th:src="@{'/getimage/' + ${nhanVien.anhDaiDien}}" class="rounded-circle mb-3 ml-3"
+                <img th:src="@{${nhanVien.anhDaiDien}}" class="rounded-circle mb-3 ml-3"
                      style="width: 160px; height: 150px"
                      alt="Avatar"/>
-                <input type="file" id="fileImage" th:field="*{anhDaiDien}" name="fileImage"
-                       accept="image/png,image/jpg" th:value="${session.anhDaiDien}" onchange="previewImage(event)"/>
+<!--                <input type="file" id="fileImage" th:field="*{anhDaiDien}" name="fileImage"-->
+<!--                       accept="image/png,image/jpg" th:value="${session.anhDaiDien}" onchange="previewImage(event)"/>-->
+                <input type="file" name="image" placeholder="upload file" multiple onchange="previewImage(event)">
+
             </div>
             <div class="col-1">
 
@@ -131,7 +130,7 @@
                     <div class="col-4">
                         <label for="district"><span style="color: #c82333">*</span>Quận/Huyện</label>
                         <select th:field="*{quanHuyen}" id="district" class="form-control">
-                            <option value="">--Chọn Quận/Huyện--</option>
+                            <option value=""></option>
                         </select>
                     </div>
 
@@ -161,7 +160,7 @@
 
             </div>
         </div>
-        <button class="btn btn-primary mt-3" style="margin-left: 46%">
+        <button class="btn btn-primary mt-3" style="float: right">
             Cập nhật
         </button>
     </form>
@@ -179,11 +178,11 @@
         const host = "https://provinces.open-api.vn/api/";
 
         var renderData = (array, select) => {
-            let row = ' <option disable value="">--Chọn Tỉnh/Thành phố--</option';
+            let row;
             array.forEach(element => {
                 if (tinh === element.code) {
                     renderDataDis(element.districts, "district");
-                    row = `<option selected value="${element.code}">${element.name}</option>`;
+                    row += `<option selected value="${element.code}">${element.name}</option>`;
                 } else {
                     row += `<option value="${element.code}">${element.name}</option>`;
                 }
@@ -196,7 +195,7 @@
             array.forEach(element => {
                 if (quan === element.code) {
                     renderDataWar(element.wards, "ward");
-                    row = `<option selected value="${element.code}">${element.name}</option>`;
+                    row += `<option selected value="${element.code}">${element.name}</option>`;
                 } else {
                     row += `<option value="${element.code}">${element.name}</option>`;
                 }
@@ -210,7 +209,7 @@
             let row = ' <option disable value="">--Chọn Phường/Xã--</option>';
             array.forEach(element => {
                 if (phuong === element.code) {
-                    row = `<option selected value="${element.code}">${element.name}</option>`;
+                    row += `<option selected value="${element.code}">${element.name}</option>`;
                     console.log(element);
                 } else {
                     row += `<option value="${element.code}">${element.name}</option>`;
