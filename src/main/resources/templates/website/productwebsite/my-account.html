@@ -342,7 +342,7 @@
                         </div>
                     </div>
                     <div class="tab-pane" id="address">
-                        <div class="container" th:each="listDiaChi : ${diaChiList}">
+                        <div class="container" th:each="listDiaChi, start : ${diaChiList}">
                             <div class="mt-5">
                                 <div class="d-style btn btn-brc-tp border-2 bgc-white btn-outline-blue btn-h-outline-blue btn-a-outline-blue w-100 my-2 py-3 shadow-sm">
                                     <!-- Basic Plan -->
@@ -365,31 +365,35 @@
                                         </div>
                                         <div class="col-4">
                                             <div class="default-form-box">
-                                                <label for="ward">Xã <span>*</span></label>
-                                                <input th:value="${listDiaChi.phuongXa}" readonly="readonly" id="ward"
+                                                <label>Xã <span>*</span></label>
+                                                <input th:value="${listDiaChi.phuongXa}" readonly="readonly"
+                                                       th:id="${'ward'+start.index}"
                                                        type="text">
                                             </div>
                                         </div>
                                         <div class="col-4">
                                             <div class="default-form-box">
-                                                <label for="district">Huyện <span>*</span></label>
+                                                <label>Huyện <span>*</span></label>
                                                 <input th:value="${listDiaChi.quanHuyen}" readonly="readonly"
-                                                       id="district"
+                                                       th:id="${'district'+start.index}"
                                                        type="text">
                                             </div>
                                         </div>
                                         <div class="col-4">
                                             <div class="default-form-box">
-                                                <label for="province">Tỉnh<span>*</span></label>
+                                                <label>Tỉnh<span>*</span></label>
                                                 <input th:value="${listDiaChi.tinh}" readonly="readonly" type="text"
-                                                       id="province">
+                                                       th:id="${'province'+start.index}">
                                             </div>
                                         </div>
 
                                         <div class="col-12 col-md-4 text-center">
                                             <a href="#"
-                                               class="f-n-hover btn btn-info btn-raised px-4 py-25 w-75 text-600">Get
-                                                Started</a>
+                                               class="f-n-hover btn btn-warning btn-raised px-4 py-25 w-75 text-600">Chỉnh
+                                                sửa</a>
+                                            <a href="#"
+                                               class="f-n-hover btn btn-success btn-raised px-4 py-25 w-75 text-600">Chỉnh
+                                                sửa</a>
                                         </div>
                                     </div>
                                 </div>
@@ -774,70 +778,67 @@
 <script>
     const host = "https://provinces.open-api.vn/api/";
 
-    // Function to fetch provinces
-    async function fetchProvinces() {
+    async function fetchProvinceName(code) {
         try {
-            const response = await fetch(`${host}p/`);
-            const provinces = await response.json();
-
-            // Assume you have HTML elements for the input fields
-            const wardInput = document.getElementById('ward');
-            const districtInput = document.getElementById('district');
-            const provinceInput = document.getElementById('province');
-
-            // Process the list of provinces
-            provinces.forEach(province => {
-                // Update the input fields based on your data structure
-                province.districts.forEach(district => {
-                    districtInput.value += `${district.name}, `;
-                });
-                province.wards.forEach(ward => {
-                    wardInput.value += `${ward.name}, `;
-                });
-                provinceInput.value = province.name; // Update with actual data from API
-
-                // You may need to handle the case where a user selects a specific province
-                // and you fetch the corresponding districts and wards for that province.
-            });
+            const response = await fetch(`${host}p/${code}`);
+            const province = await response.json();
+            return province.name;
         } catch (error) {
-            console.error('Error fetching provinces:', error);
+            console.error('Error fetching province name:', error);
+            return null;
         }
     }
 
-    async function fetchDistricts() {
+    // Function to fetch the name of a district based on its code
+    async function fetchDistrictName(code) {
         try {
-            const response = await fetch(`${host}d/`);
-            const districts = await response.json();
-            const districtInput = document.getElementById('district');
-
-            // Process the list of districts
-            districts.forEach(district => {
-                districtInput.value += `${district.name}, `;
-            });
+            const response = await fetch(`${host}d/${code}`);
+            const district = await response.json();
+            return district.name;
         } catch (error) {
-            console.error('Error fetching districts:', error);
+            console.error('Error fetching district name:', error);
+            return null;
         }
     }
 
-    async function fetchWards() {
+    // Function to fetch the name of a ward based on its code
+    async function fetchWardName(code) {
         try {
-            const response = await fetch(`${host}w/`);
-            const wards = await response.json();
-
-            // Assume you have an HTML element for the input field
-            const wardInput = document.getElementById('ward');
-
-            // Process the list of wards
-            wards.forEach(ward => {
-                wardInput.value += `${ward.name}, `;
-            });
+            const response = await fetch(`${host}w/${code}`);
+            const ward = await response.json();
+            return ward.name;
         } catch (error) {
-            console.error('Error fetching wards:', error);
+            console.error('Error fetching ward name:', error);
+            return null;
         }
     }
 
-    fetchProvinces();
+    function checked() {
+        for (let i = 0; i < 5; i++) {
+            let x = 'ward' + i;
+            let y = 'district' + i;
+            let z = 'province' + i;
+            const provinceCode = document.getElementById(z).value;
+            const districtCode = document.getElementById(y).value;
+            const districtInput = document.getElementById(y);
+            const provinceInput = document.getElementById(z);
+            let wardInput = document.getElementById(x);
+            let wardCode = document.getElementById(x).value;
+            fetchWardName(wardCode).then(name => {
+                wardInput.value = name;
+            });
+            fetchProvinceName(provinceCode).then(name => {
+                provinceInput.value = name;
+            });
 
+            fetchDistrictName(districtCode).then(name => {
+                districtInput.value = name;
+            });
+        }
+
+    }
+
+    checked();
 
 
 </script>
