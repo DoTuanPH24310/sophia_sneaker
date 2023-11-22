@@ -424,11 +424,18 @@
             value = check('2');
             if (value != null) {
                fillTimeLine('icon1','text1',value,'Chờ thanh toán','uil-comment-alt-question');
-
+            }
+            value = check('6');
+            if (value != null && listLSHD.length == 2) {
+                fillTimeLine('icon2','text2',value,'Hủy','uil-trash-alt');
             }
             value = check('4');
             if (value != null && value.hoaDon.loaiHoaDon != 1) {
                 fillTimeLine('icon2','text2',value,'Chờ giao','uil-clock-nine');
+            }
+            value = check('6');
+            if (value != null   && listLSHD.length == 3) {
+                fillTimeLine('icon3','text3',value,'Hủy','uil-trash-alt');
             }
             value = check('5');
             if (value != null && value.hoaDon.loaiHoaDon != 1) {
@@ -441,10 +448,7 @@
                 }else
                 fillTimeLine('icon4','text4',value,'Thành công','uil-check-circle');
             }
-            value = check('6');
-            if (value != null  && value.hoaDon.loaiHoaDon != 1) {
-                fillTimeLine('icon5','text5',value,'Hủy','uil-check-circle');
-            }
+
         })
 
         function fillTimeLine(icon,text,value,trangThai,classIcon) {
