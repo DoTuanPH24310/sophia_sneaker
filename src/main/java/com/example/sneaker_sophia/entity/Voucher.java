@@ -19,6 +19,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
+@ToString
 @Table(name = "KhuyenMai")
 public class Voucher {
     @Id
@@ -43,10 +44,10 @@ public class Voucher {
     private Integer phanTramGiam;
 
     @Column(name = "ngayBatDau")
-    private LocalDate ngayBatDau;
+    private LocalDateTime ngayBatDau;
 
     @Column(name = "ngayKetThuc")
-    private LocalDate ngayKetThuc;
+    private LocalDateTime ngayKetThuc;
 
     @CreatedBy
     @Column(name = "nguoiTao")

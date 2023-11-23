@@ -101,12 +101,12 @@
             <table id="table" class="table  table-borderless  formTable">
                 <thead>
                 <tr class="bg-light">
-                    <th scope="col" width="10%">Mã </th>
+                    <th scope="col" width="2%">Mã </th>
                     <th scope="col" width="15%">Tên</th>
                     <th scope="col" width="10%">Giá trị</th>
-                    <th scope="col" width="12%">Ngày bắt đầu</th>
-                    <th scope="col" width="12%">Ngày kết thúc</th>
-                    <th scope="col" width="12%">Ngày cập nhật</th>
+                    <th scope="col" width="14%">Ngày bắt đầu</th>
+                    <th scope="col" width="14%">Ngày kết thúc</th>
+                    <th scope="col" width="12%">Ngày tạo</th>
                     <th scope="col" width="20%">Trạng thái</th>
                     <th scope="col" width="20%">Thao tác</th>
                 </tr>
@@ -118,8 +118,8 @@
                     <td th:text="${vc.ma}"></td>
                     <td th:text="${vc.ten}"></td>
                     <td th:text="${vc.phanTramGiam} +'%'"></td>
-                    <td th:text="${vc.ngayBatDau}"></td>
-                    <td th:text="${vc.ngayKetThuc}"></td>
+                    <td th:text="${#temporals.format(vc.ngayBatDau, 'dd-MM-yyyy HH:mm')}"></td>
+                    <td th:text="${#temporals.format(vc.ngayKetThuc, 'dd-MM-yyyy HH:mm')}"></td>
                     <td th:text="${vc.createdDate}"></td>
                     <td th:if="${vc.trangThai ==0}">
                         <button class="btn btn-primary" style="border-radius: 30px; font-size: 12px; height: 40px">
@@ -139,18 +139,34 @@
                         </button>
                     </td>
                     <td>
-                        <a th:if="${vc.trangThai == 0}" class="edit" th:href="@{/admin/voucher/view-update/{id}#tableCTG(id=${vc.id})}">
-                            <i class="material-icons" title="Cập nhật">&#xE254;</i>
+
+
+                        <a th:if="${vc.trangThai == 0}" th:href="@{/admin/voucher/view-update/{id}#tableCTG(id=${vc.id})}"
+                           class="btn btn-warning edit"
+                           style=" padding: 5px 10px; font-size: 12px">
+                            <i class="material-icons text-white mt-1" title="Sửa">&#xE254;</i>
                         </a>
 
-                        <a th:unless="${vc.trangThai == 0}" class="edit" type="button" onclick="thongBao('Chỉ cập nhật được khuyến mại sắp diễn ra');">
-                            <i class="material-icons" title="Cập nhật">&#xE254;</i>
+                        <a th:unless="${vc.trangThai == 0}" onclick="thongBao('Không sửa được khuyến mại đang diễn ra');"
+                           class="btn btn-success "
+                           style=" padding: 5px 10px; font-size: 12px;">
+                            <i class="material-icons text-white mt-1" title="Sửa">&#xE254;</i>
                         </a>
 
-                        <a  th:href="@{/admin/voucher/delete/{id}(id = ${vc.id})}" onclick="return confirm('Bạn chắc chăn muốn xóa');"
-                           class="delete">
-                            <i class="material-icons" title="Xóa">&#xE872;</i>
+                        <a th:unless="${vc.trangThai == 0}" onclick="thongBao('Không xóa được khuyến mại đang diễn ra');"
+                           class="btn btn-danger "
+                           style=" padding: 5px 10px; font-size: 12px;">
+                            <i class="material-icons text-white mt-1" title="Xóa">delete</i>
                         </a>
+
+                        <a th:if="${vc.trangThai == 0}" th:href="@{/admin/voucher/delete/{id}(id = ${vc.id})}"  onclick="return confirm('Bạn chắc chăn muốn xóa');"
+                           class="btn btn-danger "
+                           style=" padding: 5px 10px; font-size: 12px;">
+                            <i class="material-icons text-white mt-1" title="Xóa">delete</i>
+                        </a>
+
+
+
                     </td>
                 </tr>
 

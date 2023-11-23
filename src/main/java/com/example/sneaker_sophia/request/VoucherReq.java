@@ -16,11 +16,13 @@ public class VoucherReq{
 
     private Integer phanTramGiam;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "dd/mm/yyyy HH:mm")
     private LocalDate ngayBatDau;
 
+    private Integer soLuong;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+
+    @DateTimeFormat(pattern = "dd/mm/yyyy HH:mm")
     private LocalDate ngayKetThuc;
 }
 

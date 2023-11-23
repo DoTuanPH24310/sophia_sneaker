@@ -67,6 +67,10 @@
                     <p th:text="${errGiaTri}" class="text-danger"></p> <br>
 
 
+                    <label><span style="color: #c82333">*</span>Số lượng</label>
+                    <input th:field="*{soLuong}" type="number" min="1" class="form-control">
+                    <p th:text="${errSoLuong}" class="text-danger"></p> <br>
+
                     <label>Ngày bắt đầu</label>
                     <input th:field="*{ngayBatDau}" id="ngayBatDau" type="date" class="form-control">
                     <p th:text="${errNBD}" class="text-danger"></p> <br>
@@ -97,9 +101,9 @@
                     <!-- Bảng sản phẩm -->
                     <div class="row">
                         <h5 style="font-weight: bold; margin-top: 4px;">Danh mục</h5>
-                        <div class="table table-responsive table-wrapper-scroll-y my-custom-scrollbar">
+                        <div class="table table-wrapper-scroll-y my-custom-scrollbar">
 
-                            <table class="table table-responsive table-borderless">
+                            <table class="table  table-borderless">
                                 <thead>
                                 <tr class="bg-light">
                                     <th scope="col" width="10%">
@@ -154,8 +158,9 @@
                     <div class="row mt-4">
                         <h5 style="font-weight: bold; ">Chi tiết sản phẩm</h5>
 
-                        <div class="table table-responsive table-wrapper-scroll-y my-custom-scrollbar mb-3">
-                            <table id="tableCTG" class="table table-responsive table-borderless">
+                        <div class="table table-wrapper-scroll-y my-custom-scrollbar">
+
+                            <table id="tableCTG" class="table  table-borderless">
                                 <thead>
                                 <tr class="bg-light">
                                     <th scope="col" width="10%">
@@ -189,7 +194,7 @@
                                         >
                                     </th>
 
-                                    <td><i class="fa fa-check-circle-o green"></i><span class="ms-1"></span></td>
+                                    <td><img th:src="${avtctgMap[x.id]}" alt="" style="width: 95px; height: auto"></td>
                                     <td th:text="${x.ma}"></td>
                                     <td th:text="${x.giay.ten}"></td>
                                     <td th:text="${x.kichCo.ten}"></td>
@@ -277,7 +282,7 @@
                                 <div class="col-6">
                                     <div class="form-group">
                                         <b>Đế giày: </b>
-                                        <i>Cao su</i>
+                                        <i th:text="${x.deGiay.ten}"></i>
                                     </div>
                                 </div>
                             </div>
@@ -286,14 +291,14 @@
                                 <div class="col-6">
                                     <div class="form-group">
                                         <b>Hãng: </b>
-                                        <i>SOPHIa</i>
+                                        <i th:text="${x.hang.ten}"></i>
                                     </div>
                                 </div>
 
                                 <div class="col-6">
                                     <div class="form-group">
                                         <b>Màu sắc: </b>
-                                        <i>Đỏ</i>
+                                        <i th:text="${x.mauSac.ten}"></i>
                                     </div>
                                 </div>
                             </div>
@@ -307,18 +312,8 @@
                             </div>
                             <div class="row">
                                 <div class="col-4">
-                                    <img style="width: 150px; height: auto"
-                                         src="https://1sneaker.vn/wp-content/uploads/2023/04/giay-nike-air-Jordan-1-low-panda-co-thap-rep-12-2.jpg"
-                                         alt="">
+                                    <img th:src="${avtctgMap[x.id]}" alt="" style="width: auto; height: 150px">
                                 </div>
-
-
-                                <div class="col-4">
-                                    <img style="width: 150px; height: auto"
-                                         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBFzHX36KlCVX29BMD_FlZ3NSDZJ_eTNRDEkJY011DwzUHvxNHxenQVqmSxIza87LcxMs&usqp=CAU"
-                                         alt="">
-                                </div>
-
                             </div>
                         </div>
                         <div class="modal-footer">

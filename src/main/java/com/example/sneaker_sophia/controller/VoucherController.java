@@ -1,13 +1,15 @@
 package com.example.sneaker_sophia.controller;
+
 import com.example.sneaker_sophia.dto.VoucherDTO;
 import com.example.sneaker_sophia.entity.ChiTietGiay;
 import com.example.sneaker_sophia.entity.Voucher;
-import com.example.sneaker_sophia.repository.VoucherRepository;
+import com.example.sneaker_sophia.repository.AnhRepository;
 import com.example.sneaker_sophia.request.VoucherReq;
 import com.example.sneaker_sophia.service.CTG_KhuyenMaiService;
 import com.example.sneaker_sophia.service.ChiTietGiayService;
 import com.example.sneaker_sophia.service.GiayService;
 import com.example.sneaker_sophia.service.VoucherService;
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +20,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import java.util.ArrayList;
-import java.util.List;
+
+import java.util.*;
 
 @Controller
 @RequestMapping("/admin/voucher")
@@ -27,6 +29,9 @@ public class VoucherController {
 
     @Autowired
     private VoucherService voucherService;
+
+    @Resource(name = "anhRepository")
+    AnhRepository anhRepository;
 
 
     @Autowired
@@ -39,13 +44,17 @@ public class VoucherController {
     private CTG_KhuyenMaiService ctg_khuyenMaiService;
 
 
-
     public static int checkSession = 0;
 
 
-//    @Scheduled(cron = "0 0 0 * * ?")
+//    @Scheduled(fixedRate = 60000)
 //    public void test() {
-//        List<Voucher> listUpdate = voucherService.findByTrangThaiNotLike(3);
+//        List<Voucher> listUpdate = voucherService.findByTrangThaiNotLike();
+//        if (listUpdate.size() == 0) {
+//            return;
+//
+//        }
+//        System.out.println("123");
 //        voucherService.jobUpdate(listUpdate);
 //    }
 
@@ -80,10 +89,12 @@ public class VoucherController {
                            @RequestParam(value = "requestIdCTG", defaultValue = "false") List<String> listIDCTG,
                            @RequestParam(value = "button", defaultValue = "false") String button,
                            @ModelAttribute(value = "data") VoucherDTO vc, HttpSession session) {
+
         listId = giayService.checkedGiay(listId, model);
         if (!listId.contains("false") && listId.size() > 0) {
             listIDCTG = chiTietGiayService.checkedCTG(listIDCTG, model, listId);
         }
+
         voucherService.addAttributeModel(model, listId, listIDCTG);
         if (button.equals("button")) {
             if (listIDCTG.size() <= 0 || listIDCTG.contains("false")) {
@@ -103,15 +114,24 @@ public class VoucherController {
     @GetMapping("/view-update/{id}")
     public String viewUpdate(Model model, @PathVariable("id") Voucher vc) {
         VoucherReq voucherReq = new VoucherReq();
-        BeanUtils.copyProperties(vc,voucherReq);
+        BeanUtils.copyProperties(vc, voucherReq);
         List<String> listIDCTG = ctg_khuyenMaiService.findIdCTG(vc);
         List<ChiTietGiay> listCTG = ctg_khuyenMaiService.findCTG(vc);
         List<String> listId = new ArrayList<>();
-        for (ChiTietGiay x: listCTG) {
+        for (ChiTietGiay x : listCTG) {
             listId.add(x.getGiay().getId().toString());
         }
+
+        Map<UUID, String> avtctgMap = new HashMap<>();
+
+        for (ChiTietGiay ctg: listCTG) {
+            String avtct = anhRepository.getAnhChinhByIdctg(ctg.getId());
+            avtctgMap.put(ctg.getId(),avtct);
+        }
+        model.addAttribute("avtctgMap",avtctgMap);
+
         model.addAttribute("listCTG", listCTG);
-        model.addAttribute("checkAllCTG","true");
+        model.addAttribute("checkAllCTG", "true");
         chiTietGiayService.checkCTG = 1;
         model.addAttribute("data", voucherReq);
         voucherService.addAttributeModel(model, listId, listIDCTG);
@@ -124,22 +144,22 @@ public class VoucherController {
             ctg_khuyenMaiService.deleteByIdKM(vc);
             voucherService.delete(vc);
             checkSession = 0;
-            session.setAttribute("mess","Xóa thành công");
+            session.setAttribute("mess", "Xóa thành công");
             return "redirect:/admin/voucher/hien-thi";
         }
         vc.setTrangThai(3);
         checkSession = 0;
-        session.setAttribute("mess","Xóa thành công");
+        session.setAttribute("mess", "Xóa thành công");
         voucherService.update(vc);
         return "redirect:/admin/voucher/hien-thi";
     }
 
 
     @PostMapping("/update/{id}")
-    public String update( @RequestParam(value = "requestId", defaultValue = "false") List<String> listId,
-                          @RequestParam(value = "requestIdCTG", defaultValue = "false") List<String> listIDCTG,
-                          @RequestParam(value = "button", defaultValue = "false") String button,
-                          @ModelAttribute(value = "data") VoucherDTO vc, HttpSession session, Model model ){
+    public String update(@RequestParam(value = "requestId", defaultValue = "false") List<String> listId,
+                         @RequestParam(value = "requestIdCTG", defaultValue = "false") List<String> listIDCTG,
+                         @RequestParam(value = "button", defaultValue = "false") String button,
+                         @ModelAttribute(value = "data") VoucherDTO vc, HttpSession session, Model model) {
 
         listId = giayService.checkedGiay(listId, model);
         if (!listId.contains("false") && listId.size() > 0) {

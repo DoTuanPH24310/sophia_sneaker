@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,9 +47,9 @@ public class VoucherService {
         model.addAttribute("listGiay", giayService.findAllByTrangThaiEquals(0));
     }
 
-//    public List<Voucher> findByTrangThaiNotLike(Integer tt){
-//        return voucherRepository.findByTrangThaiNotLike(tt);
-//    }
+    public List<Voucher> findByTrangThaiNotLike(){
+        return voucherRepository.findByTrangThaiNotLike();
+    }
 
 
     public Page locVaTimKiem(Pageable pageable, Model model) {
@@ -71,7 +72,7 @@ public class VoucherService {
 
     public boolean validate(VoucherDTO vc, Model model, List<String> listIDCTG) {
         int check = 0;
-        String errTen = null, errGiaTri = null, errNBD = null, errNKT = null, err = null;
+        String errTen = null, errGiaTri = null, errNBD = null, errNKT = null, err = null,errSoLuong = null;
 
         if (vc.getTen() == null || vc.getTen().trim().length() == 0) {
             errTen = "Vui lòng nhập tên";
@@ -95,11 +96,18 @@ public class VoucherService {
             }
 
         }
+        if (vc.getSoLuong() == null){
+            errSoLuong = "Vui lòng nhập số lượng";
+
+        }else if (vc.getSoLuong() <= 0){
+            errSoLuong = "Tối thiểu là 1!";
+        }
+        LocalDateTime timeNow = LocalDateTime.now().minusMinutes(3);
 
         if (vc.getNgayBatDau() == null) {
             errNBD = "Vui lòng chọn ngày";
             check++;
-        } else if (vc.getNgayBatDau().isBefore(LocalDate.now())) {
+        } else if (vc.getNgayBatDau().isBefore(timeNow)) {
             errNBD = "Tối thiểu từ hôm nay" ;
             check++;
         }
@@ -117,6 +125,7 @@ public class VoucherService {
         model.addAttribute("errNBD", errNBD);
         model.addAttribute("errNKT", errNKT);
         model.addAttribute("err", err);
+        model.addAttribute("errSoLuong", errSoLuong);
 
 
         return check == 0;
@@ -135,7 +144,7 @@ public class VoucherService {
 //        Ngày bắt đầu ở trước (now)  ngay ket thuc ở sau now -> 1 đang diễn ra
 //        Ngày bắt đầu ở sau now             -> 0 sắp diễn ra
 //        Ngày kết thúc ở trước now                -> 2 kết thúc
-        LocalDate now = LocalDate.now();
+        LocalDateTime now = LocalDateTime.now();
         for (Voucher v : list) {
             if ((v.getNgayBatDau().isBefore(now) || v.getNgayBatDau().isEqual(now))
                     && (v.getNgayKetThuc().isAfter(now) || v.getNgayKetThuc().isEqual(now))) {
@@ -155,7 +164,7 @@ public class VoucherService {
         //        Ngày bắt đầu ở trước (now)  ngay ket thuc ở sau now -> 1 đang diễn ra
 //        Ngày bắt đầu ở sau now             -> 0 sắp diễn ra
 //        Ngày kết thúc ở trước now                -> 2 kết thúc
-        LocalDate now = LocalDate.now();
+        LocalDateTime now = LocalDateTime.now();
         if ((v.getNgayBatDau().isBefore(now) || v.getNgayBatDau().isEqual(now))
                 && (v.getNgayKetThuc().isAfter(now) || v.getNgayKetThuc().isEqual(now))) {
             v.setTrangThai(1);
@@ -169,6 +178,7 @@ public class VoucherService {
     public void saveVoucher(VoucherDTO voucherDTO, List<String> listIDCTG) {
         Voucher voucher = new Voucher();
         BeanUtils.copyProperties(voucherDTO, voucher);
+        System.out.println(voucher+ "test9");
         voucher.setMa("VC31");
         this.testTrangThai(voucher);
         if (voucher.getId() != null){

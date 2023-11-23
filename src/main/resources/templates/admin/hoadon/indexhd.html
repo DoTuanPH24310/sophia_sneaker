@@ -671,10 +671,10 @@
 
         function loadTr(x, tbody, index) {
             let loaiDonbtn = ''
-
             const formattedDateTime = moment(x.createdDate).utcOffset(7).format('DD-MM-YYYY HH:mm:ss');
             let row = tbody.insertRow();
-            let formatteKM = x.khuyenMai.toLocaleString('vi-VN', {
+            let km = x.khuyenMai == null ? 0: x.khuyenMai;
+            let formatteKM = km.toLocaleString('vi-VN', {
                 style: 'currency',
                 currency: 'VND'
             });
