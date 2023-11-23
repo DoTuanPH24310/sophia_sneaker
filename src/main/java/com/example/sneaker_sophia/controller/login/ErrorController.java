@@ -9,7 +9,6 @@ import org.springframework.stereotype.Controller;
 public class ErrorController implements org.springframework.boot.web.server.ErrorPageRegistrar {
     @Override
     public void registerErrorPages(ErrorPageRegistry registry) {
-        registry.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND, "/error/loi"));
-
+        registry.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND, "/login/404"));
     }
 }

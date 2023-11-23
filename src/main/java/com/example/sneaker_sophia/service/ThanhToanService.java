@@ -31,6 +31,9 @@ public class ThanhToanService {
     @Autowired
     private HinhThucThanhToanWebRepository hinhThucThanhToanRepository;
 
+    @Autowired
+    private LichSuHoaDonWebRepository lichSuHoaDonWebRepository;
+
     public void thucHienThanhToan(String email, List<GioHangChiTiet> cartItems, Integer hinhThucThanhToan) {
         TaiKhoan taiKhoan = this.loginRepository.findByEmail(email);
         int i = 20;
@@ -64,6 +67,11 @@ public class ThanhToanService {
         hinhThuc.setTrangThai(hinhThucThanhToan);
         hinhThuc.setHoaDon(savedHoaDon);
         hinhThucThanhToanRepository.save(hinhThuc);
+
+        LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+        lichSuHoaDon.setHoaDon(hoaDon);
+        lichSuHoaDon.setPhuongThuc("3");
+        this.lichSuHoaDonWebRepository.save(lichSuHoaDon);
 
         for (GioHangChiTiet cartItem : cartItems) {
             gioHangChiTietRepository.delete(cartItem);

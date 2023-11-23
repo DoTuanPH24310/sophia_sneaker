@@ -2,6 +2,7 @@ package com.example.sneaker_sophia.service;
 
 import com.example.sneaker_sophia.entity.Cart;
 import com.example.sneaker_sophia.entity.CartItem;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 
@@ -73,11 +74,20 @@ public class SoLuongSessionService {
         Cart cart = getCartFromSession(session);
         List<CartItem> cartItems = cart.getItems();
 
-        // Remove the item with the specified chiTietGiayId
         cartItems.removeIf(item -> item.getId().equals(chiTietGiayId));
 
         updateCartInSession(cart, session);
     }
 
+
+    public void removeAllItems(HttpSession session) {
+        Cart cart = getCartFromSession(session);
+
+        if (cart == null) {
+            throw new EntityNotFoundException("Cart not found in session");
+        }
+        cart.clear();
+        updateCartInSession(cart,session);
+    }
 
 }

@@ -44,6 +44,8 @@ public class EmailService {
     private HoaDonChiTietWebRepository hoaDonChiTietWebRepository;
 
     @Autowired
+    private LichSuHoaDonWebRepository lichSuHoaDonWebRepository;
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     public TaiKhoan taoTaiKhoanMoi(DiaChiDTO diaChiDTO) {
@@ -157,7 +159,6 @@ public class EmailService {
                 hoaDonChiTiet.setHoaDon(hoaDon);
 
                 hoaDon.getListHoaDonChiTiet().add(hoaDonChiTiet);
-                System.out.println("Hoa don chi tiet: " + hoaDon.getListHoaDonChiTiet());
                 this.hoaDonChiTietWebRepository.save(hoaDonChiTiet);
 
             } else {
@@ -184,7 +185,7 @@ public class EmailService {
         hoaDonMoi.setSoDienThoai(taiKhoan.getSdt());
         hoaDonMoi.setDiaChi(diaChiTamChu.taoDiaChiString(taiKhoan.getDiaChiList()));
         hoaDonMoi.setPhiShip(20000.0);
-        hoaDonMoi.setTongTien(total);
+//        hoaDonMoi.setTongTien(total);
         hoaDonMoi.setTienThua(0.0);
         hoaDonMoi.setTrangThai(3);
 
@@ -194,6 +195,11 @@ public class EmailService {
         hinhThuc.setTrangThai(hinhThucThanhToan);
         hinhThuc.setHoaDon(hoaDonMoi);
         hinhThucThanhToanWebRepository.save(hinhThuc);
+
+        LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+        lichSuHoaDon.setHoaDon(hoaDonMoi);
+        lichSuHoaDon.setPhuongThuc("3");
+        this.lichSuHoaDonWebRepository.save(lichSuHoaDon);
 
         return hoaDonMoi;
     }

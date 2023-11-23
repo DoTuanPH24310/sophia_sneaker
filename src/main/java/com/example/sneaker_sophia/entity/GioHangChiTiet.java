@@ -34,10 +34,4 @@ public class GioHangChiTiet {
         this.soLuong = soLuong;
     }
 
-    public void increaseQuantity(int amount) {
-        if (soLuong == null) {
-            soLuong = 0;
-        }
-        soLuong += amount;
-    }
 }

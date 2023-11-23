@@ -25,7 +25,14 @@
             margin: 0; /* Loại bỏ margin mặc định */
             padding: 0; /* Loại bỏ padding mặc định */
         }
+        /*.btn-delete-all {*/
+        /*    background-color: #c85e5e;*/
+        /*    color: white;*/
+        /*}*/
 
+        .cart_submit {
+            text-align: left;
+        }
     </style>
 </head>
 
@@ -494,12 +501,16 @@
 <!-- ...:::: Start Cart Section:::... -->
 <div class="cart-section">
     <!-- Start Cart Table -->
+
     <div class="cart-table-wrapper" data-aos="fade-up" data-aos-delay="0">
         <div class="container">
             <div class="row">
                 <div class="col-12">
                     <div class="table_desc">
                         <div class="table_page table-responsive">
+                            <div class="cart_submit">
+                                <a id="deleteAllButton" class="btn btn-md btn-golden" href="#">Xóa tất cả</a>
+                            </div>
                             <table>
                                 <!-- Start Cart Table Head -->
                                 <thead>
@@ -1032,6 +1043,32 @@
     }
 
 
+    $(document).ready(function () {
+        $("#deleteAllButton").click(async function (event) {
+            event.preventDefault(); // Ngăn chặn chuyển hướng mặc định khi nhấn vào thẻ a
+
+            try {
+                const response = await fetch("/giohangchitiet/session/removeAll", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+
+                $(".cart-table-wrapper tbody tr").remove();
+
+                if ($(".cart-table-wrapper tbody tr").length === 0) {
+                    window.location.href = "/cart/hien-thi";
+                }
+            } catch (error) {
+                console.error("Lỗi khi xóa tất cả: ", error);
+            }
+        });
+    });
 
 
 

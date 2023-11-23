@@ -1,9 +1,6 @@
 package com.example.sneaker_sophia.service;
 
-import com.example.sneaker_sophia.entity.ChiTietGiay;
-import com.example.sneaker_sophia.entity.GioHang;
-import com.example.sneaker_sophia.entity.GioHangChiTiet;
-import com.example.sneaker_sophia.entity.IdGioHangChiTiet;
+import com.example.sneaker_sophia.entity.*;
 import com.example.sneaker_sophia.repository.ChiTietGiayRepository;
 import com.example.sneaker_sophia.repository.GioHangChiTietRepository;
 import com.example.sneaker_sophia.repository.GioHangRepository;
@@ -110,5 +107,19 @@ public class SoluongService {
         gioHangChiTietRepository.save(gioHangChiTiet);
 
     }
+
+    @Transactional
+    public void removeAllItems(TaiKhoan taiKhoan) {
+        GioHang gioHang = gioHangRepository.findByTaiKhoan(taiKhoan);
+        if (gioHang != null) {
+            gioHang.getGioHangChiTiets().clear();
+            entityManager.createQuery("DELETE FROM GioHangChiTiet g WHERE g.id.gioHang = :gioHang")
+                    .setParameter("gioHang", gioHang)
+                    .executeUpdate();
+        }
+    }
+
+
+
 
 }
