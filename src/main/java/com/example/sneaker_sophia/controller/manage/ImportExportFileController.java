@@ -182,24 +182,29 @@ public class ImportExportFileController {
                 Row row = sheet.getRow(rowIndex);
 
                 String ma = getStringValue(row.getCell(0));
+
+                // Kiểm tra điều kiện số lượng và giá trước khi truy cập vào đối tượng
+                int importedSoLuong = getIntegerValue(row.getCell(10));
+                double importedGia = getDoubleValue(row.getCell(9));
+
+                if (importedGia <= 0 || importedSoLuong <= 0 || importedGia >= 1000000000 || importedSoLuong >= 1000000) {
+                    System.out.println("Giá hoặc số lượng không hợp lệ cho sản phẩm có mã: " + ma);
+                    continue; // Chuyển sang sản phẩm tiếp theo
+                }
+
                 ChiTietGiay existingChiTietGiay = chiTietGiayService.findByMa(ma);
 
                 if (existingChiTietGiay != null) {
                     // Nếu mã đã tồn tại, cập nhật số lượng
                     int existingSoLuong = existingChiTietGiay.getSoLuong();
-                    int importedSoLuong = getIntegerValue(row.getCell(10));
 
-                    // Kiểm tra giá và số lượng
-                    double importedGia = getDoubleValue(row.getCell(9));
-                    if (importedGia <= 0 || importedSoLuong <= 0 || importedGia >= 1000000000 || existingSoLuong + importedSoLuong >= 1000000) {
-                        // Nếu giá hoặc số lượng không đúng, có thể thực hiện xử lý tùy ý
-                        System.out.println("Giá hoặc số lượng không hợp lệ cho sản phẩm có mã: " + ma);
-                        continue; // Chuyển sang sản phẩm tiếp theo
+                    // Kiểm tra xem có cần cập nhật không trước khi thực hiện cập nhật
+                    if (existingSoLuong != existingSoLuong + importedSoLuong) {
+                        existingChiTietGiay.setSoLuong(existingSoLuong + importedSoLuong);
+                        existingChiTietGiay.setGia(importedGia); // Cập nhật giá
+                        chiTietGiayService.save(existingChiTietGiay);
                     }
-
-                    existingChiTietGiay.setSoLuong(existingSoLuong + importedSoLuong);
-                    chiTietGiayService.save(existingChiTietGiay);
-                }else {
+                } else {
                     // Nếu mã chưa tồn tại, thêm mới
                     ChiTietGiay chiTietGiay = new ChiTietGiay();
                     chiTietGiay.setMa(getStringValue(row.getCell(0)));
@@ -214,12 +219,11 @@ public class ImportExportFileController {
                     chiTietGiay.setGia(getDoubleValue(row.getCell(9)));
                     chiTietGiay.setSoLuong(getIntegerValue(row.getCell(10)));
                     chiTietGiay.setTrangThai(getIntegerValue(row.getCell(11)));
-                    System.out.println("méo"+getStringValue(row.getCell(5)));
 
                     // Kiểm tra giá và số lượng
-                    double importedGia = getDoubleValue(row.getCell(9));
-                    int importedSoLuong = getIntegerValue(row.getCell(10));
-                    if (importedGia <= 0 || importedSoLuong <= 0 || importedGia >= 1000000000 || importedSoLuong >= 1000000) {
+                    double importedGia1 = getDoubleValue(row.getCell(9));
+                    int importedSoLuong1 = getIntegerValue(row.getCell(10));
+                    if (importedGia1 <= 0 || importedSoLuong1 <= 0 || importedGia1 >= 1000000000 || importedSoLuong1 >= 1000000) {
                         // Nếu giá hoặc số lượng không đúng, có thể thực hiện xử lý tùy ý
                         System.out.println("Giá hoặc số lượng không hợp lệ cho sản phẩm có mã: " + ma);
                         continue; // Chuyển sang sản phẩm tiếp theo
