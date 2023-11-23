@@ -2,6 +2,7 @@ package com.example.sneaker_sophia.controller;
 
 import com.example.sneaker_sophia.dto.VoucherDTO;
 import com.example.sneaker_sophia.entity.ChiTietGiay;
+import com.example.sneaker_sophia.entity.Giay;
 import com.example.sneaker_sophia.entity.Voucher;
 import com.example.sneaker_sophia.repository.AnhRepository;
 import com.example.sneaker_sophia.request.VoucherReq;
@@ -21,6 +22,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Controller
@@ -115,6 +118,7 @@ public class VoucherController {
     public String viewUpdate(Model model, @PathVariable("id") Voucher vc) {
         VoucherReq voucherReq = new VoucherReq();
         BeanUtils.copyProperties(vc, voucherReq);
+//        voucherReq.setNgayBatDau(LocalDateTime.parse(String.valueOf(vc.getNgayBatDau()), formatter));
         List<String> listIDCTG = ctg_khuyenMaiService.findIdCTG(vc);
         List<ChiTietGiay> listCTG = ctg_khuyenMaiService.findCTG(vc);
         List<String> listId = new ArrayList<>();
@@ -122,17 +126,17 @@ public class VoucherController {
             listId.add(x.getGiay().getId().toString());
         }
 
+        List<UUID> listG = giayService.finGiayByCTG(chiTietGiayService.convertStringListToUUIDList(listId));
+        List<ChiTietGiay> listCTG2 = chiTietGiayService.getCTGByG(listG);
         Map<UUID, String> avtctgMap = new HashMap<>();
-
         for (ChiTietGiay ctg: listCTG) {
             String avtct = anhRepository.getAnhChinhByIdctg(ctg.getId());
             avtctgMap.put(ctg.getId(),avtct);
         }
         model.addAttribute("avtctgMap",avtctgMap);
-
-        model.addAttribute("listCTG", listCTG);
-        model.addAttribute("checkAllCTG", "true");
-        chiTietGiayService.checkCTG = 1;
+        model.addAttribute("listCTG", listCTG2);
+//        model.addAttribute("checkAllCTG", "false");
+        chiTietGiayService.checkCTG = 0;
         model.addAttribute("data", voucherReq);
         voucherService.addAttributeModel(model, listId, listIDCTG);
         return "/admin/voucher/update";

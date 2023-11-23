@@ -18,16 +18,15 @@ public class VoucherDTO {
 
     private String ten;
 
-    private Integer phanTramGiam;
-
-    @DateTimeFormat(pattern = "dd/mm/yyyy HH:mm")
-    private LocalDateTime ngayBatDau;
-
-    private Integer soLuong;
+    private String phanTramGiam;
 
 
-    @DateTimeFormat(pattern = "dd/mm/yyyy HH:mm")
-    private LocalDateTime ngayKetThuc;
+    private Object ngayBatDau;
 
-//    private String moTa;
+    private String soLuong;
+
+
+
+    private Object ngayKetThuc;
+
 }

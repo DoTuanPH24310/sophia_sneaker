@@ -51,6 +51,10 @@ public class GiayService {
         return null;
     }
 
+    public List<UUID> finGiayByCTG(List<UUID> ctg){
+        return giayRepository.finGiayByCTG(ctg);
+    }
+
     public Optional<Giay> findOne(UUID id) {
         return this.giayRepository.findById(id);
     }

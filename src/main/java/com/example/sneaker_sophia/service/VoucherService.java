@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +48,7 @@ public class VoucherService {
         model.addAttribute("listGiay", giayService.findAllByTrangThaiEquals(0));
     }
 
-    public List<Voucher> findByTrangThaiNotLike(){
+    public List<Voucher> findByTrangThaiNotLike() {
         return voucherRepository.findByTrangThaiNotLike();
     }
 
@@ -56,13 +57,13 @@ public class VoucherService {
         Page page = null;
         String txtSearchReq = request.getParameter("textSearch");
         String trangThaiReq = request.getParameter("trangThai");
-        String txtSearch = txtSearchReq == null || txtSearchReq.isBlank() ? null : "%"+txtSearchReq+"%";
+        String txtSearch = txtSearchReq == null || txtSearchReq.isBlank() ? null : "%" + txtSearchReq + "%";
 
         Integer check = trangThaiReq == null || trangThaiReq.isBlank() ? null : Integer.parseInt(trangThaiReq);
         model.addAttribute("textSearch", txtSearchReq);
         model.addAttribute("trangThai", trangThaiReq);
         if (trangThaiReq != null && trangThaiReq.equals("-1")) {
-          return voucherRepository.findAll(pageable);
+            return voucherRepository.findAll(pageable);
         }
 
         page = voucherRepository.locVaTimKiem(check, txtSearch, pageable);
@@ -72,21 +73,40 @@ public class VoucherService {
 
     public boolean validate(VoucherDTO vc, Model model, List<String> listIDCTG) {
         int check = 0;
-        String errTen = null, errGiaTri = null, errNBD = null, errNKT = null, err = null,errSoLuong = null;
-
+        String errTen = null, errGiaTri = null, errNBD = null, errNKT = null, err = null, errSoLuong = null;
+        Integer ptg = 0;
+        Integer sl = 0;
+        Integer nbt = 0;
+        LocalDateTime timeNow = LocalDateTime.now().minusMinutes(3);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
         if (vc.getTen() == null || vc.getTen().trim().length() == 0) {
             errTen = "Vui lòng nhập tên";
             check++;
         }
-        if (vc.getPhanTramGiam() == null) {
-            errGiaTri = "Nhập giá trị";
+
+        try {
+            ptg = Integer.parseInt(vc.getPhanTramGiam());
+        } catch (Exception e) {
+            errGiaTri = "Vui lòng nhập số";
+            check++;
+        }
+
+        if (vc.getPhanTramGiam() == null || vc.getPhanTramGiam().trim().length() == 0) {
+            errGiaTri = "Vui lòng nhập giá trị";
             check++;
 
-        } else if (vc.getPhanTramGiam() <= 0 || vc.getPhanTramGiam() > 100) {
+        } else if (ptg == 0) {
+            try {
+                ptg = Integer.parseInt(vc.getPhanTramGiam());
+            } catch (Exception e) {
+                errGiaTri = "Vui lòng nhập số";
+                check++;
+            }
+        } else if (ptg <= 0 || ptg > 100) {
             errGiaTri = "Từ 1 - 100";
             check++;
         } else {
-            Map<UUID, Integer> map = checkPhanTram(chiTietGiayService.convertStringListToUUIDList(listIDCTG), vc.getPhanTramGiam());
+            Map<UUID, Integer> map = checkPhanTram(chiTietGiayService.convertStringListToUUIDList(listIDCTG), ptg);
             if (!map.isEmpty()) {
                 err = "Tồn tại các khuyến mại trước đó:  \n\n";
                 for (Map.Entry<UUID, Integer> entry : map.entrySet()) {
@@ -96,29 +116,52 @@ public class VoucherService {
             }
 
         }
-        if (vc.getSoLuong() == null){
+        if (vc.getSoLuong() == null || vc.getSoLuong().trim().length() == 0) {
             errSoLuong = "Vui lòng nhập số lượng";
-
-        }else if (vc.getSoLuong() <= 0){
+            check++;
+        } else if (sl == 0) {
+            try {
+                sl = Integer.parseInt(vc.getPhanTramGiam());
+            } catch (Exception e) {
+                errSoLuong = "Vui lòng nhập số";
+                check++;
+            }
+        } else if (sl <= 0) {
             errSoLuong = "Tối thiểu là 1!";
-        }
-        LocalDateTime timeNow = LocalDateTime.now().minusMinutes(3);
-
-        if (vc.getNgayBatDau() == null) {
-            errNBD = "Vui lòng chọn ngày";
-            check++;
-        } else if (vc.getNgayBatDau().isBefore(timeNow)) {
-            errNBD = "Tối thiểu từ hôm nay" ;
             check++;
         }
 
-        if (vc.getNgayKetThuc() == null) {
-            errNKT = "Vui lòng chọn ngày";
-            check++;
-        } else if (vc.getNgayKetThuc().isBefore(vc.getNgayBatDau()) || vc.getNgayKetThuc().isEqual(vc.getNgayBatDau())) {
-            errNKT = "Phải lớn hơn ngày bắt đầu";
+        System.out.println("test ngay bat dau: " + vc.getNgayBatDau());
+
+        try {
+            LocalDateTime NBD = LocalDateTime.parse(String.valueOf(vc.getNgayBatDau()), formatter);
+            if (vc.getNgayBatDau() == null || vc.getNgayBatDau() == "") {
+                errNBD = "Vui lòng chọn ngày";
+                check++;
+            } else if (NBD.isBefore(timeNow)) {
+                errNBD = "Tối thiểu từ hôm nay";
+                check++;
+            }
+        } catch (Exception e) {
+            errNBD = "Nhập đúng định dạng ngày";
             check++;
         }
+
+        try {
+            LocalDateTime NKT = LocalDateTime.parse(String.valueOf(vc.getNgayKetThuc()), formatter);
+            if (vc.getNgayKetThuc() == null || vc.getNgayKetThuc() == "") {
+                errNKT = "Vui lòng chọn ngày";
+                check++;
+            } else if (NKT.isBefore(LocalDateTime.parse(String.valueOf(vc.getNgayBatDau()), formatter)) ||
+                    LocalDateTime.parse(String.valueOf(vc.getNgayKetThuc()), formatter).isEqual(LocalDateTime.parse(String.valueOf(vc.getNgayBatDau()), formatter))) {
+                errNKT = "Phải lớn hơn ngày bắt đầu";
+                check++;
+            }
+        } catch (Exception e) {
+            errNKT = "Nhập đúng định dạng ngày";
+            check++;
+        }
+
 
         model.addAttribute("errTen", errTen);
         model.addAttribute("errGiaTri", errGiaTri);
@@ -126,8 +169,6 @@ public class VoucherService {
         model.addAttribute("errNKT", errNKT);
         model.addAttribute("err", err);
         model.addAttribute("errSoLuong", errSoLuong);
-
-
         return check == 0;
     }
 
@@ -176,16 +217,21 @@ public class VoucherService {
     }
 
     public void saveVoucher(VoucherDTO voucherDTO, List<String> listIDCTG) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
         Voucher voucher = new Voucher();
         BeanUtils.copyProperties(voucherDTO, voucher);
-        System.out.println(voucher+ "test9");
+        voucher.setPhanTramGiam(Integer.parseInt(voucherDTO.getPhanTramGiam()));
+        voucher.setNgayBatDau(LocalDateTime.parse(String.valueOf(voucherDTO.getNgayBatDau()), formatter));
+        voucher.setNgayKetThuc(LocalDateTime.parse(String.valueOf(voucherDTO.getNgayKetThuc()), formatter));
+        voucher.setSoLuong(Integer.parseInt(voucherDTO.getSoLuong()));
+
         voucher.setMa("VC31");
         this.testTrangThai(voucher);
-        if (voucher.getId() != null){
+        if (voucher.getId() != null) {
             voucherRepository.save(voucher);
             this.updateCTG_VC(voucher, listIDCTG);
 
-        }else{
+        } else {
             voucherRepository.save(voucher);
             this.saveCTG_VC(voucher, listIDCTG);
         }

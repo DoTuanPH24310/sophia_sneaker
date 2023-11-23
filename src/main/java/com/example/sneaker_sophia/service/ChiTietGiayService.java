@@ -39,6 +39,10 @@ public class ChiTietGiayService {
         return chiTietGiayRepository.findAllByIdGiay(convertStringListToUUIDList(listId));
     }
 
+    public List<ChiTietGiay> getCTGByG(List<UUID> list) {
+        return chiTietGiayRepository.findAllByIdGiay(list);
+    }
+
 
     List<ChiTietGiay> findAllById(List<UUID> listIDG) {
         return chiTietGiayRepository.findAllById(listIDG);
@@ -58,7 +62,6 @@ public class ChiTietGiayService {
     }
 
 
-
     public List<String> checkedCTG(List<String> listIDCTG, Model model, List<String> listIDG) {
 
         List<String> temp = listIDCTG;
@@ -71,6 +74,7 @@ public class ChiTietGiayService {
 
         // Khi đã chọn All nhưng lại không chọn nữa
         if (checkCTG == 1 && listIDCTG.contains("AllCTG") == false && listIDCTG.size() <= findAllByTrangThaiEquals(0).size()) {
+            System.out.println("2");
 //            listIDCTG.remove("AllG");
             checkCTG = 0;
             return new ArrayList<String>();
@@ -78,6 +82,7 @@ public class ChiTietGiayService {
 
 //        Khi đã chọn All nhưng lại bỏ chọn các giá trị bên dưới
         if (checkCTG == 1 && listIDCTG.contains("AllCTG") && findAllByTrangThaiEquals(0).size() >= listIDCTG.size()) {
+//            System.out.println("123");
 //            listIDCTG.remove("AllG");
             checkCTG = 0;
             model.addAttribute("checkAllCTG", false);
@@ -87,6 +92,7 @@ public class ChiTietGiayService {
 
 //      Khi số lượng sản phẩm được chọn bằng với số lượng sản phẩm trong kho
         if (listIDCTG.size() == findAllByTrangThaiEquals(0).size() && checkCTG == 0) {
+            System.out.println("3");
             checkCTG = 1;
             model.addAttribute("checkAllCTG", true);
             return listIDCTG;
@@ -94,15 +100,17 @@ public class ChiTietGiayService {
 
 //        Khi đã chọn all nhưng không bỏ chọn giá trị nào khác(khi gọi lại server)
         if (checkCTG == 1 && listIDCTG.contains("AllCTG") && findAllByTrangThaiEquals(0).size() < listIDCTG.size()) {
+            System.out.println("4");
 //            listIDCTG.remove("AllG");
             listIDCTG.remove("AllCTG");
             model.addAttribute("checkAllCTG", true);
             return listIDCTG;
         }
+        System.out.println("5");
         return temp;
     }
 
-    public static List<UUID> convertStringListToUUIDList(List<String> stringList) {
+    public    List<UUID> convertStringListToUUIDList(List<String> stringList) {
         List<UUID> uuidList = new ArrayList<>();
         for (String str : stringList) {
             try {
@@ -117,24 +125,28 @@ public class ChiTietGiayService {
     }
 
     public static final int PRODUCT_DETAIL_PER_PAGE = 10;
-    public List<ChiTietGiay> getAll(){
+
+    public List<ChiTietGiay> getAll() {
         return chiTietGiayRepository.findAll();
     }
-    public void save(ChiTietGiay chiTietGiay){
+
+    public void save(ChiTietGiay chiTietGiay) {
         chiTietGiayRepository.save(chiTietGiay);
     }
-    public ChiTietGiay getOne(UUID id){
+
+    public ChiTietGiay getOne(UUID id) {
         return chiTietGiayRepository.findById(id).get();
     }
-    public void delete(UUID id){
-            chiTietGiayRepository.updateTrangThaiTo1ById(id);
+
+    public void delete(UUID id) {
+        chiTietGiayRepository.updateTrangThaiTo1ById(id);
     }
 
-    public Page<ChiTietGiay> findAll(Pageable pageable){
+    public Page<ChiTietGiay> findAll(Pageable pageable) {
         return chiTietGiayRepository.findAll(pageable);
     }
 
-    public Page<ChiTietGiay> listByPageAndProductName(int pageNum, String sortField, String sortDir, String keyword, String productName,String trangThai){
+    public Page<ChiTietGiay> listByPageAndProductName(int pageNum, String sortField, String sortDir, String keyword, String productName, String trangThai) {
         Sort sort = Sort.by(sortField);
         sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
         Pageable pageable = PageRequest.of(pageNum - 1, PRODUCT_DETAIL_PER_PAGE, sort);
@@ -142,7 +154,7 @@ public class ChiTietGiayService {
         if (StringUtils.isEmpty(productName) && StringUtils.isEmpty(keyword)) {
             return chiTietGiayRepository.findAll(pageable);
         } else if (StringUtils.isEmpty(productName)) {
-            return chiTietGiayRepository.findByKeyword(keyword,trangThai, pageable);
+            return chiTietGiayRepository.findByKeyword(keyword, trangThai, pageable);
         } else if (StringUtils.isEmpty(keyword)) {
             return chiTietGiayRepository.findByGiay_TenContainingIgnoreCase(productName, pageable);
         } else {
@@ -150,19 +162,19 @@ public class ChiTietGiayService {
         }
     }
 
-    public Page<ChiTietGiay> filterCombobox(int pageNum, String sortField, String sortDir,Giay giay, DeGiay deGiay, Hang hang, LoaiGiay loaiGiay, MauSac mauSac, KichCo kichCo,String trangThai,Double giaMin,Double giaMax){
+    public Page<ChiTietGiay> filterCombobox(int pageNum, String sortField, String sortDir, Giay giay, DeGiay deGiay, Hang hang, LoaiGiay loaiGiay, MauSac mauSac, KichCo kichCo, String trangThai, Double giaMin, Double giaMax) {
         Sort sort = Sort.by(sortField);
         sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
         Pageable pageable = PageRequest.of(pageNum - 1, PRODUCT_DETAIL_PER_PAGE, sort);
-        return chiTietGiayRepository.findChiTietGiayByMultipleParams(giay,deGiay,hang,loaiGiay,mauSac,kichCo,trangThai,giaMin,giaMax,pageable);
+        return chiTietGiayRepository.findChiTietGiayByMultipleParams(giay, deGiay, hang, loaiGiay, mauSac, kichCo, trangThai, giaMin, giaMax, pageable);
     }
 
-    public List<ChiTietGiay> findChiTietGiaysById(UUID uuid){
+    public List<ChiTietGiay> findChiTietGiaysById(UUID uuid) {
         return chiTietGiayRepository.findChiTietGiaysById(uuid);
     }
 
-    public List<ChiTietGiay> getChiTietGiaysByIdChiTietGiay(Giay giay, DeGiay deGiay, Hang hang, LoaiGiay loaiGiay, MauSac mauSac){
-        return chiTietGiayRepository.getChiTietGiaysByIdChiTietGiay(giay,deGiay,hang,loaiGiay,mauSac);
+    public List<ChiTietGiay> getChiTietGiaysByIdChiTietGiay(Giay giay, DeGiay deGiay, Hang hang, LoaiGiay loaiGiay, MauSac mauSac) {
+        return chiTietGiayRepository.getChiTietGiaysByIdChiTietGiay(giay, deGiay, hang, loaiGiay, mauSac);
     }
 
     public Page<ChiTietGiay> filterChiTietGiay(
@@ -266,7 +278,7 @@ public class ChiTietGiayService {
         return pageResult;
     }
 
-    public UUID findChiTietGiayIdByAnhId(String id){
+    public UUID findChiTietGiayIdByAnhId(String id) {
         return chiTietGiayRepository.findChiTietGiayIdByAnhId(id);
     }
 
@@ -299,27 +311,29 @@ public class ChiTietGiayService {
     public Integer findSoLuongTon(String ma) {
         return chiTietGiayRepository.findSoLuongTon(ma);
     }
+
     // 11- 11
-    public ChiTietGiay getCTGByQrCode(String qrcode){
+    public ChiTietGiay getCTGByQrCode(String qrcode) {
         return chiTietGiayRepository.getChiTietGiayByQrCode(qrcode);
     }
+
     // 13-11
-    public List<ChiTietGiay> getAllCTG(){
+    public List<ChiTietGiay> getAllCTG() {
         return chiTietGiayRepository.findAll();
     }
 
     //    14/11
-    public Integer findSoLuongTonByQrCode(String qr){
+    public Integer findSoLuongTonByQrCode(String qr) {
         return chiTietGiayRepository.findSoLuongTonByQrCode(qr);
     }
 
     // 17/11
 
-    public Integer tongKMByIdctg(UUID idctg){
+    public Integer tongKMByIdctg(UUID idctg) {
         return chiTietGiayRepository.tongKMByIdctg(idctg);
     }
 
-    public ChiTietGiay findByMa(String ma){
+    public ChiTietGiay findByMa(String ma) {
         return chiTietGiayRepository.findByMa(ma);
     }
 }
