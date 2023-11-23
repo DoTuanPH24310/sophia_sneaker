@@ -127,14 +127,14 @@ public class ChiTietGiayService {
         return chiTietGiayRepository.findById(id).get();
     }
     public void delete(UUID id){
-            chiTietGiayRepository.deleteById(id);
+            chiTietGiayRepository.updateTrangThaiTo1ById(id);
     }
 
     public Page<ChiTietGiay> findAll(Pageable pageable){
         return chiTietGiayRepository.findAll(pageable);
     }
 
-    public Page<ChiTietGiay> listByPageAndProductName(int pageNum, String sortField, String sortDir, String keyword, String productName){
+    public Page<ChiTietGiay> listByPageAndProductName(int pageNum, String sortField, String sortDir, String keyword, String productName,String trangThai){
         Sort sort = Sort.by(sortField);
         sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
         Pageable pageable = PageRequest.of(pageNum - 1, PRODUCT_DETAIL_PER_PAGE, sort);
@@ -142,7 +142,7 @@ public class ChiTietGiayService {
         if (StringUtils.isEmpty(productName) && StringUtils.isEmpty(keyword)) {
             return chiTietGiayRepository.findAll(pageable);
         } else if (StringUtils.isEmpty(productName)) {
-            return chiTietGiayRepository.findByKeyword(keyword, pageable);
+            return chiTietGiayRepository.findByKeyword(keyword,trangThai, pageable);
         } else if (StringUtils.isEmpty(keyword)) {
             return chiTietGiayRepository.findByGiay_TenContainingIgnoreCase(productName, pageable);
         } else {
@@ -317,6 +317,10 @@ public class ChiTietGiayService {
 
     public Integer tongKMByIdctg(UUID idctg){
         return chiTietGiayRepository.tongKMByIdctg(idctg);
+    }
+
+    public ChiTietGiay findByMa(String ma){
+        return chiTietGiayRepository.findByMa(ma);
     }
 }
 

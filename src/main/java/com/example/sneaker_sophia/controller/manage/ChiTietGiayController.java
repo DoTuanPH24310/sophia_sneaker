@@ -50,7 +50,7 @@ public class ChiTietGiayController {
 
     @GetMapping("chi-tiet-giay")
     public String listFirstPage(Model model) {
-        return listByPage(1, model, "ngayTao", "asc", null, null, null, null, null, null, null, null, null, null, null, null);
+        return listByPage(1, model, "ngayTao", "asc", null, null, null, null, null, null, null, null, "0", null, null, null);
     }
 
     @GetMapping("chi-tiet-giay/page/{pageNum}")
@@ -65,14 +65,14 @@ public class ChiTietGiayController {
                               @RequestParam(name = "loaiGiay", required = false, defaultValue = "defaultLoaiGiay") String loaiGiay,
                               @RequestParam(name = "mauSac", required = false, defaultValue = "defaultMauSac") String mauSac,
                               @RequestParam(name = "kichCo", required = false, defaultValue = "defaultKichCo") String kichCo,
-                              @RequestParam(name = "trangThai", required = false) String trangThai,
+                              @RequestParam(name = "trangThai", required = false,defaultValue = "-1") String trangThai,
                               @Param("giaMin") Double giaMin,
                               @Param("giaMax") Double giaMax,
                               @RequestParam Map<String, String> params) {
         Page<ChiTietGiay> page;
 
         if ((keyword != null && !keyword.isEmpty()) || (productName != null && !productName.isEmpty())) {
-            page = chiTietGiayService.listByPageAndProductName(pageNum, sortField, sortDir, keyword, productName);
+            page = chiTietGiayService.listByPageAndProductName(pageNum, sortField, sortDir, keyword, productName,trangThai);
         } else if ((giay != null && !giay.equals("defaultGiay"))
                 || (deGiay != null && !deGiay.equals("defaultDeGiay"))
                 || (hang != null && !hang.equals("defaultHang"))
@@ -93,7 +93,7 @@ public class ChiTietGiayController {
                     giaMax
             );
         } else {
-            page = chiTietGiayService.listByPageAndProductName(pageNum, sortField, sortDir, keyword, productName);
+            page = chiTietGiayService.listByPageAndProductName(pageNum, sortField, sortDir, keyword, productName,trangThai);
         }
 
 
@@ -136,7 +136,7 @@ public class ChiTietGiayController {
         model.addAttribute("giay", params != null ? params.get("giay") : null);
         model.addAttribute("giaMin", params != null ? params.get("giaMin") : null);
         model.addAttribute("giaMax", params != null ? params.get("giaMax") : null);
-        model.addAttribute("trangThai", trangThai != null ? trangThai : "0");
+        model.addAttribute("trangThai", trangThai != null ? trangThai : "-1");
         return "admin/chiTietGiay/chiTietGiay";
     }
 

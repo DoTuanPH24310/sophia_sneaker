@@ -140,13 +140,9 @@
                                name="maChiTietGiay">
                     </div>
                     <div class="col">
-                        <label for="tenGiay">Tên giày:</label>
-                        <select th:field="*{giay}" class="form-control custom-width" id="tenGiay" required=""
-                                name="tenGiay">
-                            <th:block th:each="giay : ${giay}">
-                                <option th:value="${giay.id}">[[${giay.ten}]]</option>
-                            </th:block>
-                        </select>
+                        <label for="tenChiTietGiay">Tên chi tiết giày:</label>
+                        <input th:field="*{ten}" class="form-control custom-width" id="tenChiTietGiay"
+                               name="tenChiTietGiay">
                     </div>
                 </div>
             </div>
@@ -211,8 +207,13 @@
                         </select>
                     </div>
                     <div class="col">
-                        <label for="gia">Giá:</label>
-                        <input th:field="*{gia}" class="form-control custom-width" id="gia" name="gia">
+                        <label for="tenGiay">Kiểu dáng:</label>
+                        <select th:field="*{giay}" class="form-control custom-width" id="tenGiay" required=""
+                                name="tenGiay">
+                            <th:block th:each="giay : ${giay}">
+                                <option th:value="${giay.id}">[[${giay.ten}]]</option>
+                            </th:block>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -222,6 +223,19 @@
                     <div class="col">
                         <label for="soLuong">Số lượng:</label>
                         <input th:field="*{soLuong}" class="form-control custom-width" id="soluong" name="soluong">
+                    </div>
+                    <div class="col">
+                        <label for="gia">Giá:</label>
+                        <input th:field="*{gia}" class="form-control custom-width" id="gia" name="gia">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col">
+                        <label for="moTa">Mô tả</label>
+                        <textarea  th:field="*{moTa}" class="form-control custom-width" id="moTa"
+                                   name="moTa"></textarea>
                     </div>
                     <div class="col">
                         <label>Trạng thái:</label>

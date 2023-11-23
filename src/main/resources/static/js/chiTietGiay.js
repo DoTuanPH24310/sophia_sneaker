@@ -26,3 +26,9 @@ function uploadExcel() {
         alert('Bạn chưa chọn tệp');
     }
 }
+    $(document).ready(function () {
+    $("#trangThaiSelect").change(function () {
+        var selectedValue = $(this).val();
+        $("#trangThaiHidden").val(selectedValue);
+    });
+});

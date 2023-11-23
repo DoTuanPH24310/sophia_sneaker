@@ -40,6 +40,8 @@ public class ImportExportFileController {
     @Autowired
     LoaiGiayService loaiGiayService;
     @Autowired
+    KichCoService2 kichCoService2;
+    @Autowired
     KichCoService kichCoService;
     @Autowired
     AnhService anhService;
@@ -53,9 +55,34 @@ public class ImportExportFileController {
         // Tạo một workbook mới
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Sheet1");
+        // Cài lưu ý triong sheet
+        // Tạo một CellStyle cho văn bản màu đỏ và nghiêng
+        CellStyle redItalicStyle = workbook.createCellStyle();
+        Font redItalicFont = workbook.createFont();
+        redItalicFont.setColor(IndexedColors.RED.getIndex());
+        redItalicFont.setItalic(true);
+        redItalicStyle.setFont(redItalicFont);
 
+        // Dòng 0
+        Row luuY1 = sheet.createRow(0);
+        Cell cellluuY1 = luuY1.createCell(0);
+        cellluuY1.setCellValue("Lưu ý: Các mã chỉ được tồn tại 1 lần và không trùng lặp," +
+                " nếu trùng lặp mã sẽ thêm số lượng cho sản phẩm mà không thay đổi bất kì thuộc tính nào của sản phẩm");
+        cellluuY1.setCellStyle(redItalicStyle);
+
+        // Dòng 1
+        Row luuY2 = sheet.createRow(1);
+        Cell cellluuY2 = luuY2.createCell(0);
+        cellluuY2.setCellValue("     Các thuộc tính của sản phẩm không được bỏ trống trừ mô tả");
+        cellluuY2.setCellStyle(redItalicStyle);
+
+        // Dòng 2
+        Row luuY3 = sheet.createRow(2);
+        Cell cellluuY3 = luuY3.createCell(0);
+        cellluuY3.setCellValue("     Giá và số lượng phải lơn hơn 0, Số lượng phải bé hơn 1 triệu, và giá thấp hơn 10 tỉ");
+        cellluuY3.setCellStyle(redItalicStyle);
         // Tạo hàng đầu tiên để đặt tên cho các cột
-        Row headerRow = sheet.createRow(0);
+        Row headerRow = sheet.createRow(3);
         headerRow.createCell(0).setCellValue("Mã");
         headerRow.createCell(1).setCellValue("Tên");
         headerRow.createCell(2).setCellValue("Giày");
@@ -73,7 +100,7 @@ public class ImportExportFileController {
         headerRow.createCell(14).setCellValue("Ảnh 3");
 
         // Lặp qua danh sách và ghi vào sheet
-        int rowIndex = 1; // Bắt đầu từ hàng thứ 2 để tránh ghi đè hàng đầu tiên
+        int rowIndex = 4; // Bắt đầu từ hàng thứ 2 để tránh ghi đè hàng đầu tiên
         for (ChiTietGiay chiTietGiay : chiTietGiayList) {
             Row row = sheet.createRow(rowIndex++);
             Cell cell0 = row.createCell(0);
@@ -145,47 +172,72 @@ public class ImportExportFileController {
         // Trả về ResponseEntity
         return new ResponseEntity<>(excelBytes, headers, HttpStatus.OK);
     }
-
     @RequestMapping(value = "/importFromExcel", method = RequestMethod.POST)
     public String importFromExcel(@RequestParam("file") MultipartFile file) {
         try {
-            // Đọc file Excel từ MultipartFile
             Workbook workbook = new XSSFWorkbook(file.getInputStream());
             Sheet sheet = workbook.getSheetAt(0);
 
-            // Lặp qua từng hàng trong sheet (bắt đầu từ hàng thứ 1, bỏ qua hàng tiêu đề)
-            for (int rowIndex = 1; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
+            for (int rowIndex = 4; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
                 Row row = sheet.getRow(rowIndex);
 
-                ChiTietGiay chiTietGiay = new ChiTietGiay();
-                chiTietGiay.setMa(getStringValue(row.getCell(0)));
-                chiTietGiay.setTen(getStringValue(row.getCell(1)));
-                chiTietGiay.setGiay(giayService.findByTen(getStringValue(row.getCell(2))));
-                chiTietGiay.setDeGiay(deGiayService.findByTen(getStringValue(row.getCell(3))));
-                chiTietGiay.setHang(hangService.findByTen(getStringValue(row.getCell(4))));
-                chiTietGiay.setKichCo(kichCoService.findByTen(getStringValue(row.getCell(5))));
-                chiTietGiay.setLoaiGiay(loaiGiayService.findByTen(getStringValue(row.getCell(6))));
-                chiTietGiay.setMauSac(mauSacService.findByTen(getStringValue(row.getCell(7))));
-                chiTietGiay.setMoTa(getStringValue(row.getCell(8)));
-                chiTietGiay.setGia(getDoubleValue(row.getCell(9)));
-                chiTietGiay.setSoLuong(getIntegerValue(row.getCell(10)));
-                chiTietGiay.setTrangThai(getIntegerValue(row.getCell(11)));
+                String ma = getStringValue(row.getCell(0));
+                ChiTietGiay existingChiTietGiay = chiTietGiayService.findByMa(ma);
 
-                chiTietGiayService.save(chiTietGiay);
+                if (existingChiTietGiay != null) {
+                    // Nếu mã đã tồn tại, cập nhật số lượng
+                    int existingSoLuong = existingChiTietGiay.getSoLuong();
+                    int importedSoLuong = getIntegerValue(row.getCell(10));
 
-                String linkAnh1 = getStringValue(row.getCell(12));
-                String linkAnh2 = getStringValue(row.getCell(13));
-                String linkAnh3 = getStringValue(row.getCell(14));
+                    // Kiểm tra giá và số lượng
+                    double importedGia = getDoubleValue(row.getCell(9));
+                    if (importedGia <= 0 || importedSoLuong <= 0 || importedGia >= 1000000000 || existingSoLuong + importedSoLuong >= 1000000) {
+                        // Nếu giá hoặc số lượng không đúng, có thể thực hiện xử lý tùy ý
+                        System.out.println("Giá hoặc số lượng không hợp lệ cho sản phẩm có mã: " + ma);
+                        continue; // Chuyển sang sản phẩm tiếp theo
+                    }
 
-                // Kiểm tra và lưu link ảnh vào bảng ảnh
-                saveLinkAnh(chiTietGiay, linkAnh1, 1);
-                saveLinkAnh(chiTietGiay, linkAnh2, 0);
-                saveLinkAnh(chiTietGiay, linkAnh3, 0);
+                    existingChiTietGiay.setSoLuong(existingSoLuong + importedSoLuong);
+                    chiTietGiayService.save(existingChiTietGiay);
+                }else {
+                    // Nếu mã chưa tồn tại, thêm mới
+                    ChiTietGiay chiTietGiay = new ChiTietGiay();
+                    chiTietGiay.setMa(getStringValue(row.getCell(0)));
+                    chiTietGiay.setTen(getStringValue(row.getCell(1)));
+                    chiTietGiay.setGiay(giayService.findByTen(getStringValue(row.getCell(2))));
+                    chiTietGiay.setDeGiay(deGiayService.findByTen(getStringValue(row.getCell(3))));
+                    chiTietGiay.setHang(hangService.findByTen(getStringValue(row.getCell(4))));
+                    chiTietGiay.setKichCo(kichCoService2.findByTen(getStringValue(row.getCell(5))));
+                    chiTietGiay.setLoaiGiay(loaiGiayService.findByTen(getStringValue(row.getCell(6))));
+                    chiTietGiay.setMauSac(mauSacService.findByTen(getStringValue(row.getCell(7))));
+                    chiTietGiay.setMoTa(getStringValue(row.getCell(8)));
+                    chiTietGiay.setGia(getDoubleValue(row.getCell(9)));
+                    chiTietGiay.setSoLuong(getIntegerValue(row.getCell(10)));
+                    chiTietGiay.setTrangThai(getIntegerValue(row.getCell(11)));
+                    System.out.println("méo"+getStringValue(row.getCell(5)));
 
+                    // Kiểm tra giá và số lượng
+                    double importedGia = getDoubleValue(row.getCell(9));
+                    int importedSoLuong = getIntegerValue(row.getCell(10));
+                    if (importedGia <= 0 || importedSoLuong <= 0 || importedGia >= 1000000000 || importedSoLuong >= 1000000) {
+                        // Nếu giá hoặc số lượng không đúng, có thể thực hiện xử lý tùy ý
+                        System.out.println("Giá hoặc số lượng không hợp lệ cho sản phẩm có mã: " + ma);
+                        continue; // Chuyển sang sản phẩm tiếp theo
+                    }
+
+                    chiTietGiayService.save(chiTietGiay);
+
+                    String linkAnh1 = getStringValue(row.getCell(12));
+                    String linkAnh2 = getStringValue(row.getCell(13));
+                    String linkAnh3 = getStringValue(row.getCell(14));
+
+                    // Kiểm tra và lưu link ảnh vào bảng ảnh
+                    saveLinkAnh(chiTietGiay, linkAnh1, 1);
+                    saveLinkAnh(chiTietGiay, linkAnh2, 0);
+                    saveLinkAnh(chiTietGiay, linkAnh3, 0);
+                }
             }
-            // Đóng workbook
             workbook.close();
-
             return "redirect:/admin/chi-tiet-giay";
         } catch (IOException e) {
             e.printStackTrace();
@@ -375,16 +427,23 @@ public class ImportExportFileController {
     //kiểm tra validate
     private String getStringValue(Cell cell) {
         if (cell == null) {
-            return null;
+            return "";
         }
-        if (cell.getCellType() == CellType.STRING) {
-            return cell.getStringCellValue();
-        } else if (cell.getCellType() == CellType.NUMERIC) {
-            // Chuyển đổi giá trị số thành chuỗi
-            return String.valueOf(cell.getNumericCellValue());
+
+        if (cell.getCellType() == CellType.NUMERIC) {
+            double numericValue = cell.getNumericCellValue();
+            long longValue = (long) numericValue;
+            if (numericValue == longValue) {
+                return String.valueOf(longValue);
+            } else {
+                return String.valueOf(numericValue);
+            }
+        } else {
+            cell.setCellType(CellType.STRING);
+            return cell.getStringCellValue().trim();
         }
-        return null;
     }
+
 
     private Double getDoubleValue(Cell cell) {
         if (cell == null) {
@@ -411,12 +470,6 @@ public class ImportExportFileController {
             return Integer.valueOf(cell.getStringCellValue());
         }
         return null;
-    }
-
-    private LocalDateTime parseLocalDateTime(String value) {
-        // Thực hiện chuyển đổi từ chuỗi thành LocalDateTime theo định dạng mong muốn
-        // Ví dụ: DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-        return LocalDateTime.parse(value, DateTimeFormatter.ISO_DATE_TIME);
     }
 
 }
