@@ -55,11 +55,10 @@ public class VoucherService {
         String txtSearchReq = request.getParameter("textSearch");
         String trangThaiReq = request.getParameter("trangThai");
         String txtSearch = txtSearchReq == null || txtSearchReq.isBlank() ? null : "%" + txtSearchReq + "%";
-
-        Integer check = trangThaiReq == null || trangThaiReq.isBlank() ? null : Integer.parseInt(trangThaiReq);
+        Integer check = trangThaiReq == null || trangThaiReq.isBlank()|| trangThaiReq.equals("-1") ? null : Integer.parseInt(trangThaiReq);
         model.addAttribute("textSearch", txtSearchReq);
         model.addAttribute("trangThai", trangThaiReq);
-        if (trangThaiReq != null && trangThaiReq.equals("-1")) {
+        if (trangThaiReq != null && trangThaiReq.equals("-1") && txtSearchReq.trim().length() == 0) {
             return  voucherRepository.findAllAndSort(pageable);
         }
         page = voucherRepository.locVaTimKiem(check, txtSearch, pageable);
