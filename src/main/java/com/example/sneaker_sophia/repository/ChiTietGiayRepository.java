@@ -20,6 +20,8 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
     @Query(value = "SELECT obj FROM ChiTietGiay obj WHERE obj.giay.id IN :listId")
     List<ChiTietGiay> findAllByIdGiay(List<UUID> listId);
 
+
+
     @Query(value = "SELECT obj.id FROM ChiTietGiay obj WHERE obj.giay.id IN :listId")
     List<String> findIdByIdGiay(List<UUID> listId);
 
@@ -110,6 +112,10 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
     // 29/10 cuongdv
     @Query(value = "select Id from ChiTietGiay where ma = ?1", nativeQuery = true)
     UUID getIdCTGByMa(String maCTG);
+
+
+
+
 
 
     @Query(value = "select soLuong from ChiTietGiay where ma =?1", nativeQuery = true)

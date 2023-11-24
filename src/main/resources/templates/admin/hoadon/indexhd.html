@@ -232,9 +232,11 @@
 
 
                         <div class="row">
-                            <form action="/admin/hoa-don/updatehdcxn" method="post">
+                            <form id="formTrCNX" action="/admin/hoa-don/updatehdcxn" method="post">
                                 <div>
-                                    <button type="submit" class="btn btn-primary mb-3 mr-2 float-right">Xác nhận đơn
+                                    <button type="submit" id="ghiChuXND" class="btn btn-primary mb-3 mr-2 float-right">
+                                        Xác
+                                        nhận đơn
                                     </button>
                                 </div>
                                 <div class="table table-wrapper-scroll-y my-custom-scrollbar">
@@ -243,7 +245,8 @@
                                         <tr class="bg-light">
                                             <th>
                                                 <input th:name="requestId"
-                                                       th:value="AllG" id="selectAllCXN" style="width: 20px; height: 18px;"
+                                                       th:value="AllG" id="selectAllCXN"
+                                                       style="width: 20px; height: 18px;"
                                                        type="checkbox">
                                             </th>
                                             <th>STT</th>
@@ -303,9 +306,11 @@
 
                     <div role="tabpanel" class="tab-pane" id="choGiao">
                         <div class="row">
-                            <form action="/admin/hoa-don/updatehdcg" method="post">
+                            <form id="formTrCG" action="/admin/hoa-don/updatehdcg" method="post">
                                 <div>
-                                    <button type="submit" class="btn btn-primary mb-3 mr-2 float-right">Xác nhận giao
+                                    <button type="submit" id="ghiChuXNG" class="btn btn-primary mb-3 mr-2 float-right">
+                                        Xác
+                                        nhận giao
                                     </button>
                                 </div>
                                 <div class="table table-wrapper-scroll-y my-custom-scrollbar">
@@ -314,7 +319,8 @@
                                         <tr class="bg-light">
                                             <th>
                                                 <input th:name="requestId"
-                                                       th:value="AllG" id="selectAllCG" style="width: 20px; height: 18px;"
+                                                       th:value="AllG" id="selectAllCG"
+                                                       style="width: 20px; height: 18px;"
                                                        type="checkbox">
                                             </th>
                                             <th>STT</th>
@@ -383,9 +389,10 @@
 
                     <div role="tabpanel" class="tab-pane" id="dangGiao">
                         <div class="row">
-                            <form action="/admin/hoa-don/updatehddg" method="post">
+                            <form id="formTrTC" action="/admin/hoa-don/updatehddg" method="post">
                                 <div>
-                                    <button type="submit" class="btn btn-primary mb-3 float-right">Xác nhận thành công
+                                    <button type="submit" id="ghiChuXNTC" class="btn btn-primary mb-3 float-right">Xác nhận
+                                        thành công
                                     </button>
                                 </div>
                                 <div class="table table-wrapper-scroll-y my-custom-scrollbar">
@@ -394,7 +401,8 @@
                                         <tr class="bg-light">
                                             <th>
                                                 <input th:name="requestId"
-                                                       th:value="AllG" id="selectAllDG" style="width: 20px; height: 18px;"
+                                                       th:value="AllG" id="selectAllDG"
+                                                       style="width: 20px; height: 18px;"
                                                        type="checkbox">
                                             </th>
                                             <th>STT</th>
@@ -596,8 +604,43 @@
         let errTable = '';
         let idSelectAll = '';
         let classSelectChild = '';
+        let myLinksXND = document.getElementById('ghiChuXND');
+        let actionFormXND = document.getElementById('formTrCNX');
+        let myLinksXNTC = document.getElementById('ghiChuXNTC');
+        let actionFormXNTC = document.getElementById('formTrTC');
+        let myLinksXNG = document.getElementById('ghiChuXNG');
+        let actionFormXNG = document.getElementById('formTrCG');
+
+        if (myLinksXND != null){
+            myLinksXND.addEventListener('click', function (event) {
+                event.preventDefault();
+                let mess = prompt("Nhập lí do : ");
+                let action = actionFormXND.getAttribute('action') + '?value=' + mess;
+                actionFormXND.setAttribute('action', action);
+                actionFormXND.submit();
+            });
+        }
+
+        if (myLinksXNG != null){
+            myLinksXNG.addEventListener('click', function (event) {
+                event.preventDefault();
+                let mess = prompt("Nhập lí do : ");
+                let action = actionFormXNG.getAttribute('action') + '?value=' + mess;
+                actionFormXNG.setAttribute('action', action);
+                actionFormXNG.submit();
+            });
+        }
 
 
+        if (myLinksXNTC != null){
+            myLinksXNTC.addEventListener('click', function (event) {
+                event.preventDefault();
+                let mess = prompt("Nhập lí do : ");
+                let action = actionFormXNTC.getAttribute('action') + '?value=' + mess;
+                actionFormXNTC.setAttribute('action', action);
+                actionFormXNTC.submit();
+            });
+        }
 
 
         $(document).ready(function () {
@@ -608,27 +651,30 @@
                 eventCheckbox();
             });
         });
+
         function eventCheckbox() {
-            if (activeTab ==  '#choXacNhan' ) {
+            if (activeTab == '#choXacNhan') {
                 idSelectAll = 'selectAllCXN';
-                classSelectChild ='.checkboxCXN'
-            }else if (activeTab == '#choGiao') {
+                classSelectChild = '.checkboxCXN'
+            } else if (activeTab == '#choGiao') {
                 idSelectAll = 'selectAllCG';
-                classSelectChild ='.checkboxCG'
+                classSelectChild = '.checkboxCG'
             } else if (activeTab == '#dangGiao') {
                 idSelectAll = 'selectAllDG';
-                classSelectChild ='.checkboxDG'
-            }else return;
+                classSelectChild = '.checkboxDG'
+            } else return;
 
 
             let selectAllCheckbox = document.getElementById(idSelectAll);
             let checkboxes = document.querySelectorAll(classSelectChild);
-
             selectAllCheckbox.addEventListener('click', function () {
                 checkboxes.forEach(function (checkbox) {
                     checkbox.checked = selectAllCheckbox.checked;
                 });
             });
+
+            console.log(selectAllCheckbox);
+            console.log(checkboxes);
 
             checkboxes.forEach(function (checkbox) {
                 checkbox.addEventListener('click', function () {
@@ -637,7 +683,6 @@
                     });
                 });
             });
-
         }
 
 
@@ -652,7 +697,7 @@
                 errTable = 'errchoXacNhan';
             } else if (tab == '#dangGiao') {
                 errTable = 'errdangGiao';
-            }else if (tab == '#huy'){
+            } else if (tab == '#huy') {
                 errTable = 'errhuy';
             }
         }
@@ -665,16 +710,16 @@
             let tbody = document.getElementById(id);
             tbody.innerHTML = '';
             for (let index = 0; index < data.length; index++) {
-                loadTr(data[index], tbody, index + 1);
+                loadTr(data[index], tbody, index + 1, tab);
             }
         }
 
-        function loadTr(x, tbody, index) {
+        function loadTr(x, tbody, index, tab) {
             let loaiDonbtn = ''
-
             const formattedDateTime = moment(x.createdDate).utcOffset(7).format('DD-MM-YYYY HH:mm:ss');
             let row = tbody.insertRow();
-            let formatteKM = x.khuyenMai.toLocaleString('vi-VN', {
+            let km = x.khuyenMai == null ? 0 : x.khuyenMai;
+            let formatteKM = km.toLocaleString('vi-VN', {
                 style: 'currency',
                 currency: 'VND'
             });
@@ -683,15 +728,16 @@
                 currency: 'VND'
             });
 
-            if ( activeTab == '#choGiao' ){
+            if (tab == '#choGiao') {
                 row.insertCell().innerHTML = ` <input name="idhd"
                        value="${x.id}" class="checkboxCG" style="width: 20px; height: 18px;"
 type="checkbox">`;
-            }else if (activeTab == '#choXacNhan' ){
+
+            } else if (tab == '#choXacNhan') {
                 row.insertCell().innerHTML = ` <input name="idhd"
                        value="${x.id}" class="checkboxCXN" style="width: 20px; height: 18px;"
                        type="checkbox">`;
-            }else if (activeTab == '#dangGiao'){
+            } else if (tab == '#dangGiao') {
                 row.insertCell().innerHTML = ` <input name="idhd"
                        value="${x.id}" class="checkboxDG" style="width: 20px; height: 18px;"
                        type="checkbox">`;
@@ -708,16 +754,16 @@ type="checkbox">`;
                 loaiDonbtn = '<button class="btn btn-success " style="border-radius: 30px; font-size: 12px; height: 40px">Tại quầy </button>';
             } else if (x.loaiHoaDon == 2) {
                 loaiDonbtn = '<button class="btn btn-primary "style="border-radius: 30px; font-size: 12px; height: 40px">Giao hàng</button>'
-            }else{
+            } else {
                 loaiDonbtn = '<button class="btn btn-primary "style="border-radius: 30px; font-size: 12px; height: 40px">Online</button>'
             }
 
             row.insertCell().innerHTML = loaiDonbtn;
-            if (activeTab == '#choThanhToan' || activeTab == '' || activeTab == '#choGiao' || activeTab == '#choXacNhan' ) {
+            if (activeTab == '#choThanhToan' || activeTab == '' || activeTab == '#choGiao') {
                 let button1 = `<a href="/admin/tai-quay/detail/${id}" class="btn btn-warning edit" style=" padding: 5px 10px; font-size: 12px"><i class="material-icons text-white mt-1" title="Chi tiết">&#xE254;</i></a>`
                 let button2 = `<a href="/admin/hoa-don/detail/${id}" class="btn btn-success ms-1" style=" padding: 5px 10px; font-size: 12px;"><i class="material-icons text-white mt-1" title="Chi tiết">visibility</i></a>`;
                 row.insertCell().innerHTML = button1 + button2;
-            } else if (activeTab == '#hoanThanh' || activeTab == '#dangGiao' || activeTab == '#huy') {
+            } else if (activeTab == '#hoanThanh' || activeTab == '#dangGiao' || activeTab == '#huy' || activeTab == '#choXacNhan') {
                 let button = `<a href="/admin/hoa-don/detail/${id}" class="btn btn-success ms-1" style=" padding: 5px 10px; font-size: 12px;"><i class="material-icons text-white mt-1" title="Chi tiết">visibility</i></a>`;
                 row.insertCell().innerHTML = button;
             }
@@ -725,6 +771,7 @@ type="checkbox">`;
 
 
         function resetSelectAndTab() {
+            // Lỗi ở đây
             textSearch.value = '';
             NBD.value = '';
             NKT.value = '';
@@ -753,11 +800,11 @@ type="checkbox">`;
                 temActiveTab = 1;
             } else if (temActiveTab == 'choGiao') {
                 temActiveTab = 4;
-            }else if (temActiveTab == 'choXacNhan'){
+            } else if (temActiveTab == 'choXacNhan') {
                 temActiveTab = 3;
-            }else if (temActiveTab == 'dangGiao'){
+            } else if (temActiveTab == 'dangGiao') {
                 temActiveTab = 5;
-            }else {
+            } else {
                 temActiveTab = 6;
             }
             let params = {

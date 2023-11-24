@@ -61,20 +61,22 @@
                     <input th:field="*{phanTramGiam}" type="number" min="1" class="form-control">
                     <p th:text="${errGiaTri}" class="text-danger"></p> <br>
 
+                    <label><span style="color: #c82333">*</span>Số lượng</label>
+                    <input th:field="*{soLuong}" type="number" min="1" class="form-control">
+                    <p th:text="${errSoLuong}" class="text-danger"></p> <br>
+
 
                     <label><span style="color: #c82333">*</span>Ngày bắt đầu</label>
-                    <input th:field="*{ngayBatDau}" id="ngayBatDau" type="date" class="form-control">
+                    <input th:field="*{ngayBatDau}" id="ngayBatDau" type="datetime-local" class="form-control">
                     <p th:text="${errNBD}" class="text-danger"></p> <br>
 
 
                     <label><span style="color: #c82333">*</span>Ngày kết thúc</label>
-                    <input th:field="*{ngayKetThuc}" id="ngayKetThuc" type="date" class="form-control">
+                    <input th:field="*{ngayKetThuc}" id="ngayKetThuc" type="datetime-local" class="form-control">
                     <p th:text="${errNKT}" class="text-danger"></p>   <br>
 
 
-                    <select style="font-weight: bold;" disabled name="" id="selectBox"  class="form-select text-center">
-                        <option value="">---------------</option>
-                    </select> <br>
+
 
                     <br>
 
@@ -91,10 +93,16 @@
                 <div class="col-8 formTable">
                     <!-- Bảng sản phẩm -->
                     <h5 style="font-weight: bold; margin-top: 4px;">Danh mục</h5>
-                    <div class="row mt-2">
-                        <div class="table table-responsive table-wrapper-scroll-y my-custom-scrollbar">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="position-relative">
 
-                            <table class="table table-responsive table-borderless">
+                            <input class="form-control w-100" placeholder="Tìm kiếm theo tên, mã,...">
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="table table-wrapper-scroll-y my-custom-scrollbar">
+
+                            <table class="table  table-borderless">
                                 <thead>
                                 <tr class="bg-light">
                                     <th scope="col" width="10%">
@@ -151,12 +159,12 @@
 
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="position-relative">
-                                <span class="position-absolute search"><i class="fa fa-search"></i></span>
                                 <input class="form-control w-100" placeholder="Tìm kiếm theo tên, mã,...">
                             </div>
                         </div>
-                        <div class="table table-responsive table-wrapper-scroll-y my-custom-scrollbar mb-3">
-                            <table id="tableCTG" class="table table-responsive table-borderless">
+                        <div class="table table-wrapper-scroll-y my-custom-scrollbar">
+
+                            <table id="tableCTG" class="table  table-borderless">
                                 <thead>
                                 <tr class="bg-light">
                                     <th scope="col" width="10%">
@@ -174,7 +182,7 @@
                                     <th scope="col" width="20%">Tên sản phẩm</th>
                                     <th scope="col" width="10%">Kích cỡ</th>
                                     <th scope="col" width="10%">Màu</th>
-                                    <th scope="col" width="5%">Thao tác</th>
+                                    <th scope="col" width="15%">Thao tác</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -190,11 +198,13 @@
                                         >
                                     </th>
 
-                                    <td><i class="fa fa-check-circle-o green"></i><span class="ms-1"></span></td>
+                                    <td>
+                                        <img th:src="${avtctgMap[x.id]}" alt="" style="width: 95px; height: auto">
+                                    </td>
                                     <td th:text="${x.ma}"></td>
                                     <td th:text="${x.giay.ten}"></td>
                                     <td th:text="${x.kichCo.ten}"></td>
-                                    <td></td>
+                                    <td th:text="${x.mauSac.ten}"></td>
 <!--                                    <td th:if="${x.trangThai == 0}">-->
 <!--                                        <button type="button" class="btn btn-success"-->
 <!--                                                style="border-radius: 30px; font-size: 11px; height: 40px">-->
@@ -208,10 +218,12 @@
 <!--                                        </button>-->
 <!--                                    </td>-->
                                     <td>
-                                        <a type="button" data-toggle="modal" th:attr="data-target='#detail'+${x.id}">
-                                            <i class="material-icons text-warning" style="font-size: 23px"
+                                        <button type="button" data-toggle="modal" th:attr="data-target='#detail'+${x.id}"
+                                           class="btn btn-success "
+                                           style=" padding: 5px 10px; font-size: 12px;">
+                                            <i class="material-icons text-white mt-1"
                                                title="Chi tiết">visibility</i>
-                                        </a>
+                                        </button>
                                         <!-- Modal -->
                                     </td>
                                 </tr>
@@ -278,7 +290,7 @@
                                 <div class="col-6">
                                     <div class="form-group">
                                         <b>Đế giày: </b>
-                                        <i>Cao su</i>
+                                        <i th:text="${x.deGiay.ten}"></i>
                                     </div>
                                 </div>
                             </div>
@@ -287,14 +299,14 @@
                                 <div class="col-6">
                                     <div class="form-group">
                                         <b>Hãng: </b>
-                                        <i>SOPHIa</i>
+                                        <i th:text="${x.hang.ten}"></i>
                                     </div>
                                 </div>
 
                                 <div class="col-6">
                                     <div class="form-group">
                                         <b>Màu sắc: </b>
-                                        <i>Đỏ</i>
+                                        <i th:text="${x.mauSac.ten}"></i>
                                     </div>
                                 </div>
                             </div>
@@ -308,18 +320,8 @@
                             </div>
                             <div class="row">
                                 <div class="col-4">
-                                    <img style="width: 150px; height: auto"
-                                         src="https://1sneaker.vn/wp-content/uploads/2023/04/giay-nike-air-Jordan-1-low-panda-co-thap-rep-12-2.jpg"
-                                         alt="">
+                                    <img th:src="${avtctgMap[x.id]}" alt="" style="width: auto; height: 150px">
                                 </div>
-
-
-                                <div class="col-4">
-                                    <img style="width: 150px; height: auto"
-                                         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBFzHX36KlCVX29BMD_FlZ3NSDZJ_eTNRDEkJY011DwzUHvxNHxenQVqmSxIza87LcxMs&usqp=CAU"
-                                         alt="">
-                                </div>
-
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -339,10 +341,6 @@
                 alert(mess)
             });
         }
-
-
-
-
 
     </script>
 </div>

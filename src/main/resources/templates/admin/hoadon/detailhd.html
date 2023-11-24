@@ -165,12 +165,12 @@
         </div>
 
         <div th:if="${hoaDon.trangThai == 4}"  class="float-right mr-3">
-            <a th:href="@{/admin/hoa-don/updatehdcg/{id}(id=${hoaDon.id})}" class="btn btn-primary">Xác nhận
+            <a th:href="@{/admin/hoa-don/updatehdcg/{id}(id=${hoaDon.id})}" class="myLinhXacNhan btn btn-primary">Xác nhận
                 giao</a>
             <a th:href="@{/admin/hoa-don/huyhdcg/{id}(id=${hoaDon.id})}" class=" myLinkHuy btn btn-danger mr-3">Hủy</a>
         </div>
         <div th:if="${hoaDon.trangThai == 5}"  class="float-right">
-            <a th:href="@{/admin/hoa-don/updatehddg/{id}(id=${hoaDon.id})}" class="btn btn-primary">Xác nhận
+            <a th:href="@{/admin/hoa-don/updatehddg/{id}(id=${hoaDon.id})}" class="myLinhXacNhan btn btn-primary">Xác nhận
                 thành công</a>
 
         </div>
@@ -404,6 +404,7 @@
 
 
         let myLinks = document.querySelectorAll('.myLinkHuy');
+        let myLinksXN = document.querySelectorAll('.myLinhXacNhan');
 
         myLinks.forEach(function(link) {
             link.addEventListener('click', function(event) {
@@ -416,6 +417,16 @@
                     window.location.href = hrefValue +"?value="+mess;
                 }
             });
+
+        });
+
+        myLinksXN.forEach(function(link) {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                let hrefValue = link.getAttribute('href');
+                let mess =  prompt("Nhập lí do hủy: ");
+                window.location.href = hrefValue +"?value="+mess;
+            });
         });
 
 
@@ -425,10 +436,16 @@
             if (value != null) {
                 fillTimeLine('icon1','text1',value,'Chờ thanh toán','uil-comment-alt-question');
             }
+            value = check('3');
+            if (value != null) {
+                fillTimeLine('icon1','text1',value,'Chờ Xác nhận','uil-comment-alt-question');
+            }
             value = check('6');
             if (value != null && listLSHD.length == 2) {
                 fillTimeLine('icon2','text2',value,'Hủy','uil-trash-alt');
             }
+
+
             value = check('4');
             if (value != null && value.hoaDon.loaiHoaDon != 1) {
                 fillTimeLine('icon2','text2',value,'Chờ giao','uil-clock-nine');
