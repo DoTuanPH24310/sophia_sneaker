@@ -541,7 +541,18 @@
                                     <td class="product_name">
                                         <a href="product-details-default.html" th:text="${item.hang + ' ' + item.giay + ' ' + item.loaiGiay + ' ' + item.mauSac}"></a>
                                     </td>
-                                    <td class="product-price" th:attr="data-gia=${item.gia}" th:text="${#numbers.formatCurrency(item.gia)}"></td>
+                                    <td class="product-price" th:attr="data-gia=${item.gia}" >
+                                        <span th:if="${session['giaCu_' + item.id] != session['giaMoi_' + item.id]}"
+                                              class="original-price"
+                                              style="text-decoration: line-through; color: red; font-size: 13px"
+                                              th:text="${#numbers.formatCurrency(session['giaCu_' + item.id])}"></span>
+                                        <br>
+                                        <span class="discounted-price" th:if="${session['giaCu_' + item.id] != session['giaMoi_' + item.id]}"
+                                              th:text="${#numbers.formatCurrency(session['giaMoi_' + item.id])}"></span>
+
+                                        <span th:unless="${session['giaCu_' + item.id] != session['giaMoi_' + item.id]}"
+                                              th:text="${#numbers.formatCurrency(session['giaCu_' + item.id])}"></span>
+                                    </td>
 
                                     <td class="product_quantity">
                                         <label for="quantity">Số lượng:</label>

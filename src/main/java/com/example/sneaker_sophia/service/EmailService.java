@@ -48,6 +48,10 @@ public class EmailService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Resource(name = "hoaDonRepository")
+    HoaDonRepository hoaDonRepository;
+
+
     public TaiKhoan taoTaiKhoanMoi(DiaChiDTO diaChiDTO) {
         TaiKhoan taiKhoanMoi = new TaiKhoan();
 
@@ -58,7 +62,7 @@ public class EmailService {
             String matKhauNgauNhien = taoMatKhauNgauNhien();
             String hashedMatKhau = passwordEncoder.encode(matKhauNgauNhien);
             taiKhoanMoi.setMatKhau(hashedMatKhau);
-            System.out.println("matkhau1"+matKhauNgauNhien);
+            System.out.println("matkhau1" + matKhauNgauNhien);
 
             VaiTro vaiTro = this.vaiTroRepository.findByTen("ADMIN");
             taiKhoanMoi.setVaiTro(vaiTro);
@@ -152,15 +156,23 @@ public class EmailService {
             hoaDonChiTiet.setDonGia(cartItem.getGia());
             hoaDonChiTiet.setTrangThai(1);
             ChiTietGiay chiTietGiay = chiTietGiayRepository.findById(cartItem.getId()).orElse(null);
-            System.out.println("Chi tiet giay: " + chiTietGiay.getId());
 
             if (chiTietGiay != null) {
-                hoaDonChiTiet.setChiTietGiay(chiTietGiay);
-                hoaDonChiTiet.setHoaDon(hoaDon);
+                int soLuongMua = cartItem.getSoLuong();
+                int soLuongHienTai = chiTietGiay.getSoLuong();
 
-                hoaDon.getListHoaDonChiTiet().add(hoaDonChiTiet);
-                this.hoaDonChiTietWebRepository.save(hoaDonChiTiet);
+                if (soLuongHienTai >= soLuongMua) {
+                    chiTietGiay.setSoLuong(soLuongHienTai - soLuongMua);
+                    chiTietGiayRepository.save(chiTietGiay);
 
+                    hoaDonChiTiet.setChiTietGiay(chiTietGiay);
+                    hoaDonChiTiet.setHoaDon(hoaDon);
+
+                    hoaDon.getListHoaDonChiTiet().add(hoaDonChiTiet);
+                    this.hoaDonChiTietWebRepository.save(hoaDonChiTiet);
+                } else {
+                    System.err.println("Not enough stock for product with ID: " + cartItem.getId());
+                }
             } else {
                 System.err.println("Product details not found for ID: " + cartItem.getId());
             }
@@ -178,7 +190,7 @@ public class EmailService {
             total += cartItem.getGia() * cartItem.getSoLuong();
         }
         HoaDon hoaDonMoi = new HoaDon();
-        hoaDonMoi.setMaHoaDOn("HD" + i++);
+        hoaDonMoi.setMaHoaDOn("HD" + this.hoaDonRepository.soHD());
         hoaDonMoi.setTaiKhoan(taiKhoan);
         hoaDonMoi.setLoaiHoaDon(3);
         hoaDonMoi.setTenKhachHang(taiKhoan.getTen());

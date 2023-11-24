@@ -22,6 +22,7 @@
             margin: 0; /* Loại bỏ margin mặc định */
             padding: 0; /* Loại bỏ padding mặc định */
         }
+
         /*.btn-delete-all {*/
         /*    background-color: #c85e5e;*/
         /*    color: white;*/
@@ -460,7 +461,7 @@
                     <div class="table_desc">
                         <div class="table_page table-responsive">
                             <div class="cart_submit">
-                                <a id="deleteAllButton" class="btn btn-md btn-golden" href="#" >Xóa tất cả</a>
+                                <a id="deleteAllButton" class="btn btn-md btn-golden" href="#">Xóa tất cả</a>
                             </div>
                             <table>
                                 <!-- Start Cart Table Head -->
@@ -495,8 +496,18 @@
                                                                 th:text="${cart.id.chiTietGiay.hang.ten + ' ' + cart.id.chiTietGiay.giay.ten + ' ' + cart.id.chiTietGiay.loaiGiay.ten + ' ' + cart.id.chiTietGiay.mauSac.ten}"></a>
                                     </td>
                                     <td class="product-price"
-                                        th:attr="data-gia=${cart.id.chiTietGiay.gia}"
-                                        th:text="${#numbers.formatCurrency(cart.id.chiTietGiay.gia)}">
+                                        th:attr="data-gia=${cart.id.chiTietGiay.gia}">
+                                        <span th:if="${session['giaCu_' + cart.id.chiTietGiay.id] != session['giaMoi_' + cart.id.chiTietGiay.id]}"
+                                              class="original-price"
+                                              style="text-decoration: line-through; color: red; font-size: 13px"
+                                              th:text="${#numbers.formatCurrency(session['giaCu_' + cart.id.chiTietGiay.id])}"></span>
+                                        <br>
+                                        <span class="discounted-price"
+                                              th:if="${session['giaCu_' + cart.id.chiTietGiay.id] != session['giaMoi_' + cart.id.chiTietGiay.id]}"
+                                              th:text="${#numbers.formatCurrency(session['giaMoi_' + cart.id.chiTietGiay.id])}"></span>
+
+                                        <span th:unless="${session['giaCu_' + cart.id.chiTietGiay.id] != session['giaMoi_' + cart.id.chiTietGiay.id]}"
+                                              th:text="${#numbers.formatCurrency(session['giaCu_' + cart.id.chiTietGiay.id])}"></span>
                                     </td>
 
                                     <td class="product_quantity">
@@ -998,7 +1009,6 @@
             });
         });
     });
-
 
 
 </script>

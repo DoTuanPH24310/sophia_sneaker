@@ -28,6 +28,8 @@ public class CartService {
     @PersistenceContext
     private EntityManager entityManager;
     @Autowired
+    private HttpSession session;
+    @Autowired
     private GioHangChiTietRepository gioHangChiTietRepository;
     @Autowired
     private ChiTietGiayRepository chiTietGiayRepository;
@@ -39,6 +41,7 @@ public class CartService {
     }
 
     public void addToCart(String userEmail, UUID chiTietGiayId) {
+        Double giaMoi = (Double) session.getAttribute("giaMoi_" + chiTietGiayId);
         if (!loginRepository.existsByEmail(userEmail)) {
             return;
         }
@@ -53,7 +56,7 @@ public class CartService {
         }
 
         ChiTietGiay chiTietGiay = chiTietGiayRepository.findById(chiTietGiayId).get();
-
+        chiTietGiay.setGia(giaMoi);
         GioHangChiTiet cartItem = gioHangChiTietRepository.findById_GioHangAndId_ChiTietGiay(gioHang, chiTietGiay);
         if (cartItem == null) {
             cartItem = new GioHangChiTiet(new IdGioHangChiTiet(gioHang, chiTietGiay), 1);
@@ -71,26 +74,31 @@ public class CartService {
 
     public void addToCartNoLogin(UUID id, HttpSession httpSession) {
         Optional<ChiTietGiay> chiTietSanPham = this.chiTietGiayRepository.findById(id);
-        CartItem item = new CartItem(chiTietSanPham.get().getId(),
-                chiTietSanPham.get().getAnhs().get(0).getDuongDan(),
-                chiTietSanPham.get().getGiay().getTen(),
-                chiTietSanPham.get().getTen(),
-                chiTietSanPham.get().getHang().getTen(),
-                chiTietSanPham.get().getLoaiGiay().getTen(),
-                chiTietSanPham.get().getMauSac().getTen(),
-                1,
-                chiTietSanPham.get().getGia());
 
         Cart cartSession = (Cart) httpSession.getAttribute("cart");
+
         if (cartSession == null) {
             Cart cart = new Cart();
             List<CartItem> list = new ArrayList<>();
+
+            Double giaMoi = (Double) httpSession.getAttribute("giaMoi_" + id);
+
+            CartItem item = new CartItem(
+                    chiTietSanPham.get().getId(),
+                    chiTietSanPham.get().getAnhs().get(0).getDuongDan(),
+                    chiTietSanPham.get().getGiay().getTen(),
+                    chiTietSanPham.get().getTen(),
+                    chiTietSanPham.get().getHang().getTen(),
+                    chiTietSanPham.get().getLoaiGiay().getTen(),
+                    chiTietSanPham.get().getMauSac().getTen(),
+                    1,
+                    giaMoi != null ? giaMoi : chiTietSanPham.get().getGia());
+
             list.add(item);
             cart.setItems(list);
             httpSession.setAttribute("cart", cart);
         } else {
-            Cart cart = (Cart) httpSession.getAttribute("cart");
-            List<CartItem> listItem = cart.getItems();
+            List<CartItem> listItem = cartSession.getItems();
 
             boolean itemExists = false;
             for (CartItem itemTmp : listItem) {
@@ -102,13 +110,27 @@ public class CartService {
             }
 
             if (!itemExists) {
+                Double giaMoi = (Double) httpSession.getAttribute("giaMoi_" + id);
+
+                CartItem item = new CartItem(
+                        chiTietSanPham.get().getId(),
+                        chiTietSanPham.get().getAnhs().get(0).getDuongDan(),
+                        chiTietSanPham.get().getGiay().getTen(),
+                        chiTietSanPham.get().getTen(),
+                        chiTietSanPham.get().getHang().getTen(),
+                        chiTietSanPham.get().getLoaiGiay().getTen(),
+                        chiTietSanPham.get().getMauSac().getTen(),
+                        1,
+                        giaMoi != null ? giaMoi : chiTietSanPham.get().getGia());
+
                 listItem.add(item);
             }
 
             // Cập nhật giỏ hàng trong session
-            httpSession.setAttribute("cart", cart);
+            httpSession.setAttribute("cart", cartSession);
         }
     }
+
 
     @Transactional
     public void mergeCarts(String userEmail, Cart cartSession) {
