@@ -10,25 +10,16 @@ function uploadExcel() {
             method: 'POST',
             body: formData
         })
-            .then(response => {
-                if (response.ok) {
-                    alert('Tải lên thành công');
-                    window.location.href = '/admin/chi-tiet-giay';
-                } else {
-                    alert('Tải danh sách thất bại, vui lòng kiểm tra lại');
-                    console.error(response.statusText);
-                }
+            .then(response => response.text())
+            .then(message => {
+                alert(message);
+                window.location.href = '/admin/chi-tiet-giay';
             })
             .catch(error => {
+                alert('Tải danh sách thất bại, vui lòng kiểm tra lại');
                 console.error('Error during file upload:', error);
             });
     } else {
         alert('Bạn chưa chọn tệp');
     }
 }
-    $(document).ready(function () {
-    $("#trangThaiSelect").change(function () {
-        var selectedValue = $(this).val();
-        $("#trangThaiHidden").val(selectedValue);
-    });
-});

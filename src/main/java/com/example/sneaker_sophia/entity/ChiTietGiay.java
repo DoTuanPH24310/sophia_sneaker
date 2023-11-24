@@ -1,6 +1,11 @@
 package com.example.sneaker_sophia.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,10 +16,12 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name = "ChiTietGiay")
@@ -100,6 +107,7 @@ public class ChiTietGiay {
     @JsonIgnore
     @OneToMany(mappedBy = "chiTietGiay", fetch = FetchType.LAZY)
     private List<HoaDonChiTiet> chiTietGiayList = new ArrayList<>();
+
 
 }
 

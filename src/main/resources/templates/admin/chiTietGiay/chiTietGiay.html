@@ -80,10 +80,38 @@
             opacity: 0;
             cursor: pointer;
         }
+        .qr-code {
+            display: flex;
+            flex-direction: column; /* Chỉnh hướng hiển thị thành dọc */
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .qr-code > * {
+            margin: 5px; /* Để tạo khoảng cách giữa các phần tử con */
+        }
     </style>
     <!-- Include xlsx library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
     <script src="/js/chiTietGiay.js"></script>
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <!-- Thêm mã JavaScript sau thẻ </tbody> -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var qrCodeElements = document.querySelectorAll(".qr-code"); // Chọn tất cả các phần tử chứa mã QR
+
+            qrCodeElements.forEach(function (element) {
+                var qrCodeData = element.textContent; // Lấy dữ liệu mã QR từ nội dung phần tử
+                var qrCode = new QRCode(element, {
+                    text: qrCodeData,
+                    width: 100,
+                    height: 100
+                });
+            });
+        });
+    </script>
+
 </head>
 <body>
 <section>
@@ -242,6 +270,10 @@
                     <i class="fa-solid fa-file-export"></i>
                     Xuất danh sách
                 </a>
+                <a class="btn btn-warning" th:href="@{/admin/qrcode}">
+                    <i class="fa-solid fa-file-export"></i>
+                    Xuất QR CODE
+                </a>
                 <div class="mt-1 mb-1 float-right" style="padding-right: 20px">
                     <form id="excelForm" th:action="@{/admin/importFromExcel}" method="post"
                           enctype="multipart/form-data">
@@ -261,14 +293,9 @@
                         <th>Ảnh</th>
                         <th>Mã chi tiết giày</th>
                         <th>Tên giày</th>
-                        <th>Size</th>
-                        <th>Loại đế</th>
-                        <th>Hãng</th>
-                        <th>Loại giày</th>
-                        <th>Màu sắc</th>
-                        <th>Kiểu dáng</th>
                         <th>Giá</th>
                         <th>Số lượng</th>
+                        <th>QR code</th>
                         <th>Trạng thái</th>
                         <th>Actions</th>
                     </tr>
@@ -277,26 +304,26 @@
                     <tr th:each="ctg, iterStat : ${listChiTietGiay}">
                         <td th:text="${iterStat.count}"></td>
                         <td>
-                            <img th:src="@{${ctg.anhs.get(0).getDuongDan()}}"
-                                 style="width: 100px; height: 100px" class="img-fluid" alt=""/>
+                            <img th:src="@{${ctg.anhs.get(0).getDuongDan()}}" style="width: 100px; height: 100px"
+                                 class="img-fluid" alt=""/>
                         </td>
                         <td>[[${ctg.ma}]]</td>
-                        <td>[[${ctg.ten}]]</td>
-                        <td>[[${ctg.kichCo.ten}]]</td>
-                        <td>[[${ctg.deGiay.ten}]]</td>
-                        <td>[[${ctg.hang.ten}]]</td>
-                        <td>[[${ctg.loaiGiay.ten}]]</td>
-                        <td>[[${ctg.mauSac.ten}]]</td>
-                        <td>[[${ctg.giay.ten}]]</td>
+                        <td th:text="${ctg.hang != null ? ctg.hang.ten : ''} + ' ' +
+                               ${ctg.giay != null ? ctg.giay.ten : ''} + ' ' +
+                               ${ctg.ten}+' '+
+                               ${ctg.mauSac != null ? ctg.mauSac.ten : ''}+' '+
+                               ${ctg.kichCo != null ? ctg.kichCo.ten : ''}"></td>
                         <td>[[${#numbers.formatDecimal(ctg.gia, 0, 'COMMA', 0, 'POINT')}]]</td>
                         <td>[[${#numbers.formatDecimal(ctg.soLuong, 0, 'COMMA', 0, 'POINT')}]]</td>
+                        <!-- Thay đổi cột hiển thị mã QR -->
+                        <td class="qr-code">
+                            <div th:text="${ctg.qrCode}"></div>
+                        </td>
                         <td style="width: 160px;">
-                            <button class="btn"
-                                    th:classappend="${ctg.trangThai == 0} ? 'btn-success' : 'btn-danger'"
+                            <button class="btn" th:classappend="${ctg.trangThai == 0} ? 'btn-success' : 'btn-danger'"
                                     style="border-radius: 30px; font-size: 9px;">
                                 [[${ctg.trangThai} == 0 ? 'Đang hoạt động' : 'Ngưng hoạt động']]
                             </button>
-
                         </td>
 
                         <td>
@@ -311,6 +338,7 @@
                             </a>
                         </td>
                     </tr>
+
                     </tbody>
                 </table>
             </div>
