@@ -95,22 +95,30 @@
     <!-- Include xlsx library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
     <script src="/js/chiTietGiay.js"></script>
-    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
-    <!-- Thêm mã JavaScript sau thẻ </tbody> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            var qrCodeElements = document.querySelectorAll(".qr-code"); // Chọn tất cả các phần tử chứa mã QR
+            // Lấy tất cả các phần tử có class "qr-code"
+            var qrcodeContainers = document.querySelectorAll(".qr-code");
 
-            qrCodeElements.forEach(function (element) {
-                var qrCodeData = element.textContent; // Lấy dữ liệu mã QR từ nội dung phần tử
-                var qrCode = new QRCode(element, {
+            // Duyệt qua từng phần tử và tạo mã QR
+            qrcodeContainers.forEach(function (qrcodeContainer) {
+                // Lấy dữ liệu từ thuộc tính th:text
+                var qrCodeData = qrcodeContainer.querySelector('div').textContent;
+
+                // Tạo mã QR
+                var qrcode = new QRCode(qrcodeContainer, {
                     text: qrCodeData,
-                    width: 100,
-                    height: 100
+                    width: 128,
+                    height: 128
                 });
             });
         });
     </script>
+
+<!--    // xuất file qrcode-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
 
 </head>
 <body>
@@ -266,13 +274,9 @@
                 <a class="btn btn-primary mt-1 mb-1 float-right" th:href="@{/admin/chi-tiet-giay/add}">
                     <i style="font-size: 18px; width: 10px" class="fab fa-plus"></i> Thêm
                 </a>
-                <a class="btn btn-success" th:href="@{/admin/exportToExcel}">
+                <a class="btn btn-success" id="exportButton" th:href="@{/admin/exportToExcel}">
                     <i class="fa-solid fa-file-export"></i>
                     Xuất danh sách
-                </a>
-                <a class="btn btn-warning" th:href="@{/admin/qrcode}">
-                    <i class="fa-solid fa-file-export"></i>
-                    Xuất QR CODE
                 </a>
                 <div class="mt-1 mb-1 float-right" style="padding-right: 20px">
                     <form id="excelForm" th:action="@{/admin/importFromExcel}" method="post"
