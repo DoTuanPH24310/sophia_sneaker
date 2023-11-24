@@ -24,4 +24,7 @@ public interface VoucherRepository extends JpaRepository<Voucher, UUID> {
 
     @Query(value = "select obj from Voucher obj order by obj.createdDate desc")
     Page findAllAndSort(Pageable pageable);
+
+    @Query(value = "select obj from Voucher obj where  obj.ma like ?1")
+    List<Voucher> findByMa(String ma);
 }

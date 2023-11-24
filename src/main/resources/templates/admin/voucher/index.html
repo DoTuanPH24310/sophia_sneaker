@@ -208,11 +208,13 @@
                 <h3 class="text-center text-body">Không có dữ liệu phù hợp</h3>
             </div>
 
+
         </div>
     </div>
 
     <script th:inline="javascript">
         let mess = [[${session.mess}]];
+        console.log(mess);
         if (mess != '' && mess != null){
             window.addEventListener("load", function () {
                 alert(mess);

@@ -25,6 +25,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+
 @EnableAsync
 @Controller
 @RequestMapping("/admin/voucher")
@@ -36,7 +37,8 @@ public class VoucherController {
     @Resource(name = "anhRepository")
     AnhRepository anhRepository;
 
-
+    @Autowired
+    private HttpSession session;
     @Autowired
     private GiayService giayService;
 
@@ -50,7 +52,7 @@ public class VoucherController {
     public static int checkSession = 0;
 
     @Async
-    @Scheduled(cron = "1 * * * * *")
+    @Scheduled(cron = "0 * * * * *")
     public void test() {
         List<Voucher> listUpdate = voucherService.findByTrangThaiNotLike();
         if (listUpdate.size() == 0) {
@@ -58,6 +60,7 @@ public class VoucherController {
         }
         voucherService.jobUpdate(listUpdate);
     }
+
 
     @GetMapping("/hien-thi")
     public String hienThi(Model model, @RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo, HttpSession session) {
@@ -93,6 +96,7 @@ public class VoucherController {
 
         listId = giayService.checkedGiay(listId, model);
         if (!listId.contains("false") && listId.size() > 0) {
+
             listIDCTG = chiTietGiayService.checkedCTG(listIDCTG, model, listId);
         }
 
@@ -114,6 +118,11 @@ public class VoucherController {
 
     @GetMapping("/view-update/{id}")
     public String viewUpdate(Model model, @PathVariable("id") Voucher vc) {
+        if (vc.getTrangThai() != 0) {
+            checkSession = 0;
+            session.setAttribute("mess", "Trạng thái khuyến mại đã thay đổi. Vui lòng thao tác lại");
+            return "redirect:/admin/voucher/hien-thi";
+        }
         VoucherReq voucherReq = new VoucherReq();
         BeanUtils.copyProperties(vc, voucherReq);
 //        voucherReq.setNgayBatDau(LocalDateTime.parse(String.valueOf(vc.getNgayBatDau()), formatter));
@@ -127,14 +136,14 @@ public class VoucherController {
         List<UUID> listG = giayService.finGiayByCTG(chiTietGiayService.convertStringListToUUIDList(listId));
         List<ChiTietGiay> listCTG2 = chiTietGiayService.getCTGByG(listG);
         Map<UUID, String> avtctgMap = new HashMap<>();
-        for (ChiTietGiay ctg: listCTG) {
+        for (ChiTietGiay ctg : listCTG) {
             String avtct = anhRepository.getAnhChinhByIdctg(ctg.getId());
-            avtctgMap.put(ctg.getId(),avtct);
+            avtctgMap.put(ctg.getId(), avtct);
         }
-        model.addAttribute("avtctgMap",avtctgMap);
+        model.addAttribute("avtctgMap", avtctgMap);
         model.addAttribute("listCTG", listCTG2);
         chiTietGiayService.checkCTG = 0;
-        if (listIDCTG.size() == listCTG2.size()){
+        if (listIDCTG.size() == listCTG2.size()) {
             model.addAttribute("checkAllCTG", true);
             chiTietGiayService.checkCTG = 1;
         }
@@ -145,7 +154,13 @@ public class VoucherController {
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable("id") Voucher vc, HttpSession session) {
+    public String delete(@PathVariable("id") Voucher vc) {
+        if (vc.getTrangThai() == 1) {
+            checkSession = 0;
+            session.setAttribute("mess", "Trạng thái khuyến mại đã thay đổi. Vui lòng thao tác lại");
+            return "redirect:/admin/voucher/hien-thi";
+
+        }
         if (vc.getTrangThai() == 0) {
             ctg_khuyenMaiService.deleteByIdKM(vc);
             voucherService.delete(vc);

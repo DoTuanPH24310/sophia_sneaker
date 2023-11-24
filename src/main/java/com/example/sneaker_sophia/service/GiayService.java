@@ -114,8 +114,6 @@ public class GiayService {
     public List<String> checkedGiay(List<String> listId, Model model) {
         List<String> temp = listId;
         Map<UUID, String> avtctgMap = new HashMap<>();
-
-
         model.addAttribute("avtctgMap",avtctgMap);
         // Khi chọn All lần đầu tiên
         if (listId.contains("AllG") && check == 0) {

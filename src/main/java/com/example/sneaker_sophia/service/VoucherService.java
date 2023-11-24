@@ -78,8 +78,11 @@ public class VoucherService {
         if (vc.getTen() == null || vc.getTen().trim().length() == 0) {
             errTen = "Vui lòng nhập tên";
             check++;
-        }
+        }else if (vc.getTen().length() > 49){
+            errTen = "Tối đa 50 kí tự";
+            check++;
 
+        }
         try {
             ptg = Integer.parseInt(vc.getPhanTramGiam());
         } catch (Exception e) {
@@ -185,12 +188,15 @@ public class VoucherService {
         for (Voucher v : list) {
             if ((v.getNgayBatDau().isBefore(now) || v.getNgayBatDau().isEqual(now))
                     && (v.getNgayKetThuc().isAfter(now) || v.getNgayKetThuc().isEqual(now))) {
+                System.out.println("vao 1");
                 v.setTrangThai(1);
                 voucherRepository.save(v);
             } else if (v.getNgayBatDau().isAfter(now)) {
+                System.out.println("vao 2");
                 v.setTrangThai(0);
                 voucherRepository.save(v);
             } else if (v.getNgayKetThuc().isBefore(now)) {
+                System.out.println("vao 3");
                 v.setTrangThai(2);
                 voucherRepository.save(v);
             }
@@ -220,8 +226,16 @@ public class VoucherService {
         voucher.setNgayBatDau(LocalDateTime.parse(String.valueOf(voucherDTO.getNgayBatDau()), formatter));
         voucher.setNgayKetThuc(LocalDateTime.parse(String.valueOf(voucherDTO.getNgayKetThuc()), formatter));
         voucher.setSoLuong(Integer.parseInt(voucherDTO.getSoLuong()));
+        List<Voucher> list = voucherRepository.findAll();
+        String maTemp = "VC0" + list.size();
+        int count = 1;
+        while (voucherRepository.findByMa(maTemp).size() != 0){
+            maTemp = "VC0" + (list.size() +count);
+            count++;
+        }
+        voucher.setMa(maTemp);
 
-        voucher.setMa("VC31");
+
         this.testTrangThai(voucher);
         if (voucher.getId() != null) {
             voucherRepository.save(voucher);
