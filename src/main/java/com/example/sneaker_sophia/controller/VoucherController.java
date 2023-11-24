@@ -17,15 +17,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
-
+@EnableAsync
 @Controller
 @RequestMapping("/admin/voucher")
 public class VoucherController {
@@ -49,8 +49,8 @@ public class VoucherController {
 
     public static int checkSession = 0;
 
-
-    @Scheduled(fixedRate = 60000)
+    @Async
+    @Scheduled(cron = "1 * * * * *")
     public void test() {
         List<Voucher> listUpdate = voucherService.findByTrangThaiNotLike();
         if (listUpdate.size() == 0) {
@@ -133,11 +133,12 @@ public class VoucherController {
         }
         model.addAttribute("avtctgMap",avtctgMap);
         model.addAttribute("listCTG", listCTG2);
+        chiTietGiayService.checkCTG = 0;
         if (listIDCTG.size() == listCTG2.size()){
             model.addAttribute("checkAllCTG", true);
+            chiTietGiayService.checkCTG = 1;
+        }
 
-        }//        model.addAttribute("checkAllCTG", "false");
-        chiTietGiayService.checkCTG = 0;
         model.addAttribute("data", voucherReq);
         voucherService.addAttributeModel(model, listId, listIDCTG);
         return "/admin/voucher/update";

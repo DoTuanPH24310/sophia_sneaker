@@ -7,10 +7,7 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.servlet.ServletRequest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -63,9 +60,8 @@ public class VoucherService {
         model.addAttribute("textSearch", txtSearchReq);
         model.addAttribute("trangThai", trangThaiReq);
         if (trangThaiReq != null && trangThaiReq.equals("-1")) {
-            return voucherRepository.findAll(pageable);
+            return  voucherRepository.findAllAndSort(pageable);
         }
-
         page = voucherRepository.locVaTimKiem(check, txtSearch, pageable);
         return page;
     }

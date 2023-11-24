@@ -206,10 +206,12 @@
                                     <!--                                        </button>-->
                                     <!--                                    </td>-->
                                     <td>
-                                        <a type="button" data-toggle="modal" th:attr="data-target='#detail'+${x.id}">
-                                            <i class="material-icons text-warning" style="font-size: 23px"
+                                        <button type="button" data-toggle="modal" th:attr="data-target='#detail'+${x.id}"
+                                                class="btn btn-success "
+                                                style=" padding: 5px 10px; font-size: 12px;">
+                                            <i class="material-icons text-white mt-1"
                                                title="Chi tiết">visibility</i>
-                                        </a>
+                                        </button>
                                         <!-- Modal -->
                                     </td>
                                 </tr>

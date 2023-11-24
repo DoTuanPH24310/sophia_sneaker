@@ -66,6 +66,7 @@ public class ChiTietGiayService {
         List<String> temp = listIDCTG;
         // Khi chọn All lần đầu tiên
         if (listIDCTG.contains("AllCTG") && checkCTG == 0) {
+            System.out.println(1);
             checkCTG = 1;
             model.addAttribute("checkAllCTG", true);
             return this.findIdByIdGiay(listIDG);
@@ -73,16 +74,15 @@ public class ChiTietGiayService {
 
         // Khi đã chọn All nhưng lại không chọn nữa
         if (checkCTG == 1 && listIDCTG.contains("AllCTG") == false && listIDCTG.size() <= findAllByTrangThaiEquals(0).size()) {
+            System.out.println(2);
             System.out.println("2");
-//            listIDCTG.remove("AllG");
             checkCTG = 0;
             return new ArrayList<String>();
         }
 
 //        Khi đã chọn All nhưng lại bỏ chọn các giá trị bên dưới
         if (checkCTG == 1 && listIDCTG.contains("AllCTG") && findAllByTrangThaiEquals(0).size() >= listIDCTG.size()) {
-//            System.out.println("123");
-//            listIDCTG.remove("AllG");
+            System.out.println(3);
             checkCTG = 0;
             model.addAttribute("checkAllCTG", false);
             listIDCTG.remove("AllCTG");
@@ -92,7 +92,7 @@ public class ChiTietGiayService {
 //      Khi số lượng sản phẩm được chọn bằng với số lượng sản phẩm trong kho
 
         if (listIDCTG.size() == chiTietGiayRepository.findIdByIdGiay(convertStringListToUUIDList(listIDG)).size() && checkCTG == 0) {
-            System.out.println("3");
+            System.out.println(4);
             checkCTG = 1;
             model.addAttribute("checkAllCTG", true);
             return listIDCTG;
@@ -100,13 +100,12 @@ public class ChiTietGiayService {
 
 //        Khi đã chọn all nhưng không bỏ chọn giá trị nào khác(khi gọi lại server)
         if (checkCTG == 1 && listIDCTG.contains("AllCTG") && findAllByTrangThaiEquals(0).size() < listIDCTG.size()) {
-            System.out.println("4");
-//            listIDCTG.remove("AllG");
+            System.out.println(5);
             listIDCTG.remove("AllCTG");
             model.addAttribute("checkAllCTG", true);
             return listIDCTG;
         }
-        System.out.println("5");
+        System.out.println(6);
         return temp;
     }
 
@@ -117,8 +116,6 @@ public class ChiTietGiayService {
                 UUID uuid = UUID.fromString(str);
                 uuidList.add(uuid);
             } catch (IllegalArgumentException e) {
-                // Xử lý ngoại lệ nếu chuỗi không hợp lệ
-                // Ví dụ: có thể bỏ qua hoặc log thông báo lỗi.
             }
         }
         return uuidList;
