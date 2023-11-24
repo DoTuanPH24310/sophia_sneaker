@@ -95,18 +95,18 @@
         <h5 style="font-weight: bold; text-align: center;" class="mt-3">Danh sách khuyến mại </h5>
         <hr>
         <div class="table table-wrapper-scroll-y my-custom-scrollbar">
-            <a class="btn btn-primary mt-1 mb-1 float-right" th:href="@{/admin/voucher/view-add}">
+            <a class="btn btn-primary mt-1 mb-2 float-right" th:href="@{/admin/voucher/view-add}">
                 <i style="font-size: 18px" class="fab fa-plus"></i> Thêm
             </a>
             <table id="table" class="table  table-borderless  formTable">
                 <thead>
                 <tr class="bg-light">
                     <th scope="col" width="2%">Mã </th>
-                    <th scope="col" width="15%">Tên</th>
-                    <th scope="col" width="10%">Giá trị</th>
+                    <th scope="col" width="18%">Tên</th>
+                    <th scope="col" width="7%">Giá trị</th>
                     <th scope="col" width="14%">Ngày bắt đầu</th>
                     <th scope="col" width="14%">Ngày kết thúc</th>
-                    <th scope="col" width="12%">Ngày tạo</th>
+                    <th scope="col" width="14%">Ngày tạo</th>
                     <th scope="col" width="20%">Trạng thái</th>
                     <th scope="col" width="20%">Thao tác</th>
                 </tr>
@@ -120,21 +120,21 @@
                     <td th:text="${vc.phanTramGiam} +'%'"></td>
                     <td th:text="${#temporals.format(vc.ngayBatDau, 'dd-MM-yyyy HH:mm')}"></td>
                     <td th:text="${#temporals.format(vc.ngayKetThuc, 'dd-MM-yyyy HH:mm')}"></td>
-                    <td th:text="${vc.createdDate}"></td>
+                    <td th:text="${#temporals.format(vc.createdDate, 'dd-MM-yyyy HH:mm')}"></td>
                     <td th:if="${vc.trangThai ==0}">
-                        <button class="btn btn-primary" style="border-radius: 30px; font-size: 12px; height: 40px">
+                        <button class="btn btn-primary" style="border-radius: 30px; font-size: 12px; height: 40px; width: 130px">
                             Sắp diễn ra
                         </button>
                     </td>
 
                     <td th:if="${vc.trangThai ==1}">
-                        <button class="btn btn-success" style="border-radius: 30px; font-size: 12px; height: 40px">
+                        <button class="btn btn-success" style="border-radius: 30px; font-size: 12px; height: 40px;width: 130px">
                           Đang diễn ra
                         </button>
                     </td>
 
                     <td th:if="${vc.trangThai ==2}">
-                        <button class="btn btn-danger" style="border-radius: 30px; font-size: 12px; height: 40px">
+                        <button class="btn btn-danger" style="border-radius: 30px; font-size: 12px; height: 40px;width: 130px">
                             Hết hạn
                         </button>
                     </td>

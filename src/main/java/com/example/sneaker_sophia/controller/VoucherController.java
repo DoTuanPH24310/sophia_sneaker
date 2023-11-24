@@ -50,16 +50,14 @@ public class VoucherController {
     public static int checkSession = 0;
 
 
-//    @Scheduled(fixedRate = 60000)
-//    public void test() {
-//        List<Voucher> listUpdate = voucherService.findByTrangThaiNotLike();
-//        if (listUpdate.size() == 0) {
-//            return;
-//
-//        }
-//        System.out.println("123");
-//        voucherService.jobUpdate(listUpdate);
-//    }
+    @Scheduled(fixedRate = 60000)
+    public void test() {
+        List<Voucher> listUpdate = voucherService.findByTrangThaiNotLike();
+        if (listUpdate.size() == 0) {
+            return;
+        }
+        voucherService.jobUpdate(listUpdate);
+    }
 
     @GetMapping("/hien-thi")
     public String hienThi(Model model, @RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo, HttpSession session) {
@@ -135,7 +133,10 @@ public class VoucherController {
         }
         model.addAttribute("avtctgMap",avtctgMap);
         model.addAttribute("listCTG", listCTG2);
-//        model.addAttribute("checkAllCTG", "false");
+        if (listIDCTG.size() == listCTG2.size()){
+            model.addAttribute("checkAllCTG", true);
+
+        }//        model.addAttribute("checkAllCTG", "false");
         chiTietGiayService.checkCTG = 0;
         model.addAttribute("data", voucherReq);
         voucherService.addAttributeModel(model, listId, listIDCTG);
@@ -149,13 +150,13 @@ public class VoucherController {
             voucherService.delete(vc);
             checkSession = 0;
             session.setAttribute("mess", "Xóa thành công");
-            return "redirect:/admin/voucher/hien-thi";
+            return "redirect:/admin/voucher/hien-thi#table";
         }
         vc.setTrangThai(3);
         checkSession = 0;
         session.setAttribute("mess", "Xóa thành công");
         voucherService.update(vc);
-        return "redirect:/admin/voucher/hien-thi";
+        return "redirect:/admin/voucher/hien-thi#table";
     }
 
 
@@ -179,7 +180,7 @@ public class VoucherController {
                 voucherService.saveVoucher(vc, listIDCTG);
                 checkSession = 0;
                 session.setAttribute("mess", "Khuyến mại đã được cập nhật");
-                return "redirect:/admin/voucher/hien-thi";
+                return "redirect:/admin/voucher/hien-thi#table";
             }
         }
         return "admin/voucher/update";

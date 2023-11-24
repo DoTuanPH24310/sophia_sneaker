@@ -63,7 +63,6 @@ public class ChiTietGiayService {
 
 
     public List<String> checkedCTG(List<String> listIDCTG, Model model, List<String> listIDG) {
-
         List<String> temp = listIDCTG;
         // Khi chọn All lần đầu tiên
         if (listIDCTG.contains("AllCTG") && checkCTG == 0) {
@@ -91,7 +90,8 @@ public class ChiTietGiayService {
         }
 
 //      Khi số lượng sản phẩm được chọn bằng với số lượng sản phẩm trong kho
-        if (listIDCTG.size() == findAllByTrangThaiEquals(0).size() && checkCTG == 0) {
+
+        if (listIDCTG.size() == chiTietGiayRepository.findIdByIdGiay(convertStringListToUUIDList(listIDG)).size() && checkCTG == 0) {
             System.out.println("3");
             checkCTG = 1;
             model.addAttribute("checkAllCTG", true);
