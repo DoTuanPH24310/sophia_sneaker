@@ -1,323 +1,520 @@
-<section xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-         layout:decorate="~{/layouts/layout}">
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layouts/layout}" th:lang="vi">
 
-    <div style="background-color: white; height: 600px" layout:fragment="content" class="col-md-12">
-        <form th:action="@{/admin/nhanvien/store}" method="post" th:object="${nhanVienRequest}" enctype="multipart/form-data">
-            <div class="row mt-3">
-                <div class="col-2">
-                    <h5 style="font-weight: bold; text-align: center;" class="mt-3">Ảnh đại diện</h5>
-                    <img th:src="@{'/getimage/' + 'thumbnail.png'}" class="rounded-circle mb-3 ml-3" style="width: 160px; height: 150px"
-                         alt="Avatar"/>
-                    <input type="file" name="image" placeholder="upload file" multiple onchange="previewImage(event)">
-                </div>
-                <div class="col-1">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
 
-                </div>
-                <div class="col-9">
-                    <div class="row mt-3">
-                        <div class="col-6">
-                            <label for="tenNhanVien"><span style="color: #c82333">*</span> Tên</label>
-                            <input id="tenNhanVien" type="text" class="form-control" th:field="*{ten}"
-                                   placeholder="Tên nhân viên">
-                            <span class="text-danger" th:text="${errTen}"></span>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.0.0/dist/jsQR.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
-                        </div>
-                        <div class="col-6">
-                            <label for="email"><span style="color: #c82333">*</span> Email</label>
-                            <input id="email" type="text" class="form-control" th:field="*{email}" placeholder="Email">
-                            <span class="text-danger" th:text="${errEmail}"></span>
-                        </div>
+</head>
+
+<body>
+
+<div style="background-color: white; height: 680px" layout:fragment="content" class="col-md-12">
+    <form th:action="@{/admin/nhanvien/store}" method="post" th:object="${nhanVienRequest}"
+          enctype="multipart/form-data">
+        <div class="row mt-3">
+            <div class="col-2">
+                <h5 style="font-weight: bold; text-align: center;" class="mt-3">Ảnh đại diện</h5>
+                <img th:src="@{'/getimage/' + 'thumbnail.png'}" class="rounded-circle mb-3 ml-3"
+                     style="width: 160px; height: 150px"
+                     alt="Avatar"/>
+                <input type="file" name="image" placeholder="upload file" multiple onchange="previewImage(event)">
+            </div>
+            <div class="col-1">
+
+            </div>
+            <div class="col-9">
+                <div class="row mb-3">
+                    <div class="col-3">
+
                     </div>
-                    <div class="row mt-3">
-                        <div class="col-6">
-                            <label for="ngaySinh"><span style="color: #c82333">*</span> Ngày sinh nhật</label>
-                            <input id="ngaySinh" type="date" class="form-control" th:field="*{ngaySinh}"
-                                   placeholder="Nhập ngày sinh">
-                            <span class="text-danger" th:text="${errNgaySinh}"></span>
+
+                    <div class="col-9">
+                        <a type="button" class="btn btn-primary float-right" id="startScanning" data-toggle="modal"
+                           data-target="#modalQRCode">
+                            QR CCCD
+                        </a>
+
+                    </div>
+
+                </div>
+                <div class="row mt-2">
+                    <div class="col-6">
+                        <label for="tenNhanVien"><span style="color: #c82333">*</span> Tên</label>
+                        <input id="tenNhanVien" type="text" class="form-control" th:value="${nhanVienRequest.ten}"
+                               th:field="*{ten}"
+                               placeholder="Tên nhân viên">
+                        <span class="text-danger" th:text="${errTen}"></span>
+
+                    </div>
+                    <div class="col-6">
+                        <label for="email"><span style="color: #c82333">*</span> Email</label>
+                        <input id="email" type="text" class="form-control" th:field="*{email}" placeholder="Email">
+                        <span class="text-danger" th:text="${errEmail}"></span>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-6">
+                        <label for="ngaySinh"><span style="color: #c82333">*</span> Ngày sinh</label>
+                        <input id="ngaySinh" type="date" class="form-control" th:field="*{ngaySinh}">
+                        <span class="text-danger" th:text="${errNgaySinh}"></span>
+                    </div>
+                    <div class="col-6">
+
+                        <label><span style="color: #c82333">*</span> Giới tính</label> <br>
+
+                        <div class="form-check form-check-inline">
+                            <label class="radio-inline">
+                                <input id="nam" type="radio" th:field="*{gioiTinh}" th:value="1"> Nam
+                            </label>
                         </div>
-                        <div class="col-6">
 
-                            <label><span style="color: #c82333">*</span> Giới tính</label> <br>
+                        <div class="form-check form-check-inline">
+                            <label class="radio-inline">
+                                <input id="nu" type="radio" th:field="*{gioiTinh}" th:value="0"> Nữ
+                            </label>
+                        </div>
+                        <br>
+                        <span class="text-danger" th:text="${errGT}"></span>
+                    </div>
+                </div>
 
-                            <div class="form-check form-check-inline">
-                                <label class="radio-inline">
-                                    <input  type="radio" th:field="*{gioiTinh}" th:value="1" > Nam
-                                </label>
+                <div class="row mt-3">
+                    <div class="col-6">
+                        <label for="cccd"><span style="color: #c82333">*</span> CCCD</label>
+                        <input id="cccd" type="text" class="form-control" th:field="*{canCuoc}"
+                               placeholder="Nhập CCCD">
+                        <span class="text-danger" th:text="${errCCCD}"></span>
+                    </div>
+
+                    <div class="col-6">
+                        <label for="soDienThoai"><span style="color: #c82333">*</span> Số điện thoại</label>
+                        <input id="soDienThoai" type="text" class="form-control" th:field="*{sdt}"
+                               placeholder="Số điện thoại">
+                        <span class="text-danger" th:text="${errSDT}"></span>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-4">
+                        <label for="province"><span style="color: #c82333">*</span>Tỉnh/Thành phố</label>
+                        <select th:field="*{tinh}" id="province" class="form-control">
+                            <option value="">--Chọn Tỉnh/Thành phố--</option>
+                        </select>
+                        <span class="text-danger" th:text="${errTinh}"></span>
+                    </div>
+                    <div class="col-4">
+                        <label for="district"><span style="color: #c82333">*</span>Quận/Huyện</label>
+                        <select th:field="*{quanHuyen}" id="district" class="form-control">
+                            <option value="">--Chọn Quận/Huyện--</option>
+                        </select>
+                        <span class="text-danger" th:text="${errQuanHuyen}"></span>
+                    </div>
+
+                    <div class="col-4">
+                        <label for="ward"><span style="color: #c82333">*</span>Phường/Xã</label>
+                        <select th:field="*{phuongXa}" id="ward" class="form-control">
+                            <option value="">--Chọn Phường/Xã--</option>
+                        </select>
+                        <span class="text-danger" th:text="${errPhuongXa}"></span>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <label for="dcCuThe"><span style="color: #c82333">*</span>Số nhà/Ngõ/Đường</label>
+                        <input id="dcCuThe" type="text" th:field="*{diaChiCuThe}" class="form-control"
+                               placeholder="Địa chỉ cụ thể">
+                        <span class="text-danger" th:text="${errDCCuThe}"></span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <button class="btn btn-primary mt-3" style="float: right" type="submit">
+            Thêm mới
+        </button>
+    </form>
+    <!--    Modal scan-->
+    <div class="modal fade" data-backdrop="static" id="modalQRCode" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" style="max-width: 700px">
+            <div class="modal-content" style="height: 630px">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Scan CCCD</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row ">
+                            <video id="video" height="500px" autoplay></video>
+                        </div>
+                        <div class="row" style="float: bottom">
+                            <div class="col-6">
+                                <div id="result" class="mt-1" th:text="${qrCodeResult}"></div>
+                            </div>
+                            <div class="col-6" style="float: right">
+                                <button id="stopScanning" class="btn btn-warning" style="float: right">Stop Scanning
+                                </button>
                             </div>
 
-                            <div class="form-check form-check-inline">
-                                <label class="radio-inline">
-                                    <input type="radio" th:field="*{gioiTinh}" th:value="0"> Nữ
-                                </label>
-                            </div>
-                            <br>
-                            <span class="text-danger" th:text="${errGT}"></span>
                         </div>
                     </div>
-
-                    <div class="row mt-3">
-                        <div class="col-6">
-                            <label for="cccd"><span style="color: #c82333">*</span> CCCD</label>
-                            <input id="cccd" type="text" class="form-control" th:field="*{canCuoc}"
-                                   placeholder="Nhập CCCD">
-                            <span class="text-danger" th:text="${errCCCD}"></span>
-                        </div>
-
-                        <div class="col-6">
-                            <label for="soDienThoai"><span style="color: #c82333">*</span> Số điện thoại</label>
-                            <input id="soDienThoai" type="text" class="form-control" th:field="*{sdt}"
-                                   placeholder="Số điện thoại">
-                            <span class="text-danger" th:text="${errSDT}"></span>
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-4">
-                            <label for="province"><span style="color: #c82333">*</span>Tỉnh/Thành phố</label>
-                            <select th:field="*{tinh}" id="province" class="form-control">
-                                <option value="">--Chọn Tỉnh/Thành phố--</option>
-                            </select>
-                            <span class="text-danger" th:text="${errTinh}"></span>
-                        </div>
-                        <div class="col-4">
-                            <label for="district"><span style="color: #c82333">*</span>Quận/Huyện</label>
-                            <select th:field="*{quanHuyen}" id="district" class="form-control">
-                                <option value="">--Chọn Quận/Huyện--</option>
-                            </select>
-                            <span class="text-danger" th:text="${errQuanHuyen}"></span>
-                        </div>
-
-                        <div class="col-4">
-                            <label for="ward"><span style="color: #c82333">*</span>Phường/Xã</label>
-                            <select th:field="*{phuongXa}" id="ward" class="form-control">
-                                <option value="">--Chọn Phường/Xã--</option>
-                            </select>
-                            <span class="text-danger" th:text="${errPhuongXa}"></span>
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-6">
-                            <label for="dcCuThe"><span style="color: #c82333">*</span>Số nhà/Ngõ/Đường</label>
-                            <input id="dcCuThe" type="text" th:field="*{diaChiCuThe}" class="form-control" placeholder="Địa chỉ cụ thể">
-                            <span class="text-danger" th:text="${errDCCuThe}"></span>
-                        </div>
-
-                        <div class="col-6">
-                            <label for="trangThai"><span style="color: #c82333">*</span> Trạng thái</label>
-                            <select th:field="*{trangThai}" id="trangThai" class="form-control">
-                                <option value="1">Kích hoạt</option>
-                            </select>
-                            <span class="text-danger" th:text="${errTrangThai}"></span>
-                        </div>
-                    </div>
-
                 </div>
             </div>
-            <button class="btn btn-primary mt-3" style="float: right" type="submit">
-                Thêm mới
-            </button>
-        </form>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
-                integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
-                crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js"
-                integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ=="
-                crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script>
-            const tinh = [[${session.tinh}]];
-            const quan = [[${session.quan}]];
-            let phuong = [[${session.phuong}]];
-            const host = "https://provinces.open-api.vn/api/";
-            console.log(tinh)
-            if(tinh == "-1"){
-                var renderData = (array, select) => {
-                    let row = ' <option disable value="">--Chọn Tỉnh/Thành phố--</option>';
-                    array.forEach(element => {
-                        row += `<option name="tinh" value="${element.code}">${element.name}</option>`;
-                    });
-                    document.querySelector("#" + select).innerHTML = row;
-                }
-
-                var renderDataDis = (array, select) => {
-                    let row = ' <option disable value="">--Chọn Quận/Huyện--</option>';
-                    array.forEach(element => {
-                        row += `<option name="quan" value="${element.code}">${element.name}</option>`;
-                    });
-                    document.querySelector("#" + select).innerHTML = row;
-                }
-
-                var renderDataWar = (array, select) => {
-                    let row = ' <option disable value="">--Chọn Phường/Xã--</option>';
-                    array.forEach(element => {
-                        row += `<option name="phuong" value="${element.code}">${element.name}</option>`;
-                    });
-                    document.querySelector("#" + select).innerHTML = row;
-                }
-
-                var callAPI = (api) => {
-                    return axios.get(api)
-                        .then((response) => {
-                            renderData(response.data, "province");
-                        });
-                };
-                callAPI('https://provinces.open-api.vn/api/?depth=2');
-
-
-                var callApiDistrict = (api) => {
-                    return axios.get(api)
-                        .then((response) => {
-                            renderDataDis(response.data.districts, "district");
-                        });
-                };
-                var callApiWard = (api) => {
-                    return axios.get(api)
-                        .then((response) => {
-                            renderDataWar(response.data.wards, "ward");
-                        });
-                }
-
-
-                $("#province").change(() => {
-                    callApiDistrict(host + "p/" + $("#province").val() + "?depth=2")
-                        .then(response => {
-                            console.log(response.data); // In ra dữ liệu từ API
-                        })
-                        .catch(error => {
-                            console.error(error);
-                        });
-                    printResult();
-                });
-                $("#district").change(() => {
-                    callApiWard(host + "d/" + $("#district").val() + "?depth=2");
-                    printResult();
-                });
-                $("#ward").change(() => {
-                    printResult();
-                })
-
-                var printResult = () => {
-                    if ($("#district").val() != "" && $("#province").val() != "" &&
-                        $("#ward").val() != "") {
-                        let result = $("#province option:selected").text() +
-                            " | " + $("#district option:selected").text() + " | " +
-                            $("#ward option:selected").text();
-                        $("#result").text(result)
-                    }
-
-                }
-            }else{
-                var renderData = (array, select) => {
-                    let row ;
-                    array.forEach(element => {
-                        if (tinh === element.code) {
-                            renderDataDis(element.districts, "district");
-                            row += `<option selected value="${element.code}">${element.name}</option>`;
-                        } else {
-                            row += `<option value="${element.code}">${element.name}</option>`;
-                        }
-                    });
-                    document.querySelector("#" + select).innerHTML = row;
-                }
-
-                var renderDataDis = (array, select) => {
-                    let row = ' <option disable value="">--Chọn Quận/Huyện--</option>';
-                    array.forEach(element => {
-                        if (quan === element.code) {
-                            renderDataWar(element.wards, "ward");
-                            row += `<option selected value="${element.code}">${element.name}</option>`;
-                        } else {
-                            row += `<option value="${element.code}">${element.name}</option>`;
-                        }
-
-                    });
-
-                    document.querySelector("#" + select).innerHTML = row;
-                }
-
-                var renderDataWar = (array, select) => {
-                    let row = ' <option disable value="">--Chọn Phường/Xã--</option>';
-                    array.forEach(element => {
-                        if (phuong === element.code) {
-                            row += `<option selected value="${element.code}">${element.name}</option>`;
-                            console.log(element);
-                        } else {
-                            row += `<option value="${element.code}">${element.name}</option>`;
-                        }
-
-                    });
-                    document.querySelector("#" + select).innerHTML = row;
-                }
-
-                var callAPI = (api) => {
-                    return axios.get(api)
-                        .then((response) => {
-                            renderData(response.data, "province");
-                        });
-                };
-                callAPI('https://provinces.open-api.vn/api/?depth=3');
-
-
-                var callApiDistrict = (api) => {
-                    return axios.get(api)
-                        .then((response) => {
-                            renderDataDis(response.data.districts, "district");
-                        });
-                };
-                var callApiWard = (api) => {
-                    return axios.get(api)
-                        .then((response) => {
-                            renderDataWar(response.data.wards, "ward");
-                        });
-                }
-
-                $("#province").change(() => {
-                    phuong = 0;
-                    callApiDistrict(host + "p/" + $("#province").val() + "?depth=2")
-                    callApiWard(host + "d/" + $("#district").val() + "?depth=2");
-                    printResult();
-                });
-
-
-                $("#district").change(() => {
-                    callApiWard(host + "d/" + $("#district").val() + "?depth=2");
-                    printResult();
-                });
-                $("#ward").change(() => {
-                    printResult();
-                })
-
-                var printResult = () => {
-                    if ($("#district").val() != "" && $("#province").val() != "" &&
-                        $("#ward").val() != "") {
-                        let result = $("#province option:selected").text() +
-                            " | " + $("#district option:selected").text() + " | " +
-                            $("#ward option:selected").text();
-                        $("#result").text(result)
-                    }
-
-                }
-            }
-
-
-
-            function previewImage(event) {
-                const fileInput = event.target;
-                const file = fileInput.files[0];
-
-                if (file) {
-                    const reader = new FileReader();
-
-                    reader.onload = function (e) {
-                        const imageElement = document.querySelector('img[alt="Avatar"]'); // Chọn thẻ img của bạn
-                        imageElement.src = e.target.result;
-                    };
-
-                    reader.readAsDataURL(file);
-                }
-            }
-        </script>
+        </div>
     </div>
-</section>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script th:inline="javascript">
+        const tinh = [[${session.tinh}]];
+        const quan = [[${session.quan}]];
+        let phuong = [[${session.phuong}]];
+        const host = "https://provinces.open-api.vn/api/";
+        console.log( 'đây' + phuong)
+        if (tinh == "-1") {
+            var renderData = (array, select) => {
+                let row = ' <option disable value="">--Chọn Tỉnh/Thành phố--</option>';
+                array.forEach(element => {
+                    row += `<option name="tinh" value="${element.code}">${element.name}</option>`;
+                });
+                document.querySelector("#" + select).innerHTML = row;
+            }
+
+            var renderDataDis = (array, select) => {
+                let row = ' <option disable value="">--Chọn Quận/Huyện--</option>';
+                array.forEach(element => {
+                    row += `<option name="quan" value="${element.code}">${element.name}</option>`;
+                });
+                document.querySelector("#" + select).innerHTML = row;
+            }
+
+            var renderDataWar = (array, select) => {
+                let row = ' <option disable value="">--Chọn Phường/Xã--</option>';
+                array.forEach(element => {
+                    row += `<option name="phuong" value="${element.code}">${element.name}</option>`;
+                });
+                document.querySelector("#" + select).innerHTML = row;
+            }
+
+            var callAPI = (api) => {
+                return axios.get(api)
+                    .then((response) => {
+                        renderData(response.data, "province");
+                    });
+            };
+            callAPI('https://provinces.open-api.vn/api/?depth=2');
 
 
+            var callApiDistrict = (api) => {
+                return axios.get(api)
+                    .then((response) => {
+                        renderDataDis(response.data.districts, "district");
+                    });
+            };
+            var callApiWard = (api) => {
+                return axios.get(api)
+                    .then((response) => {
+                        renderDataWar(response.data.wards, "ward");
+                    });
+            }
+
+
+            $("#province").change(() => {
+                callApiDistrict(host + "p/" + $("#province").val() + "?depth=2")
+                    .then(response => {
+                        console.log(response.data); // In ra dữ liệu từ API
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+                printResult();
+            });
+            $("#district").change(() => {
+                callApiWard(host + "d/" + $("#district").val() + "?depth=2");
+                printResult();
+            });
+            $("#ward").change(() => {
+                printResult();
+            })
+
+            var printResult = () => {
+                if ($("#district").val() != "" && $("#province").val() != "" &&
+                    $("#ward").val() != "") {
+                    let result = $("#province option:selected").text() +
+                        " | " + $("#district option:selected").text() + " | " +
+                        $("#ward option:selected").text();
+                    $("#result").text(result)
+                }
+
+            }
+        }
+        else {
+            var renderData = (array, select) => {
+                let row = ' <option disable value="">--Chọn Tỉnh/Thành phố--</option>';
+                array.forEach(element => {
+                    if (tinh === element.code) {
+                        renderDataDis(element.districts, "district");
+                        row += `<option selected value="${element.code}">${element.name}</option>`;
+                    } else {
+                        row += `<option value="${element.code}">${element.name}</option>`;
+                    }
+                });
+                document.querySelector("#" + select).innerHTML = row;
+            }
+
+            var renderDataDis = (array, select) => {
+
+                let row = ' <option disable value="">--Chọn Quận/Huyện--</option>';
+                array.forEach(element => {
+                    if (quan === element.code) {
+                        renderDataWar(element.wards, "ward");
+                        row += `<option selected value="${element.code}">${element.name}</option>`;
+                    } else {
+                        row += `<option value="${element.code}">${element.name}</option>`;
+                    }
+
+                });
+
+                document.querySelector("#" + select).innerHTML = row;
+            }
+
+            var renderDataWar = (array, select) => {
+                let row = ' <option disable value="">--Chọn Phường/Xã--</option>';
+                array.forEach(element => {
+                    if (phuong === element.code) {
+                        row += `<option selected value="${element.code}">${element.name}</option>`;
+                        console.log(element);
+                    } else {
+                        row += `<option value="${element.code}">${element.name}</option>`;
+                    }
+
+                });
+                document.querySelector("#" + select).innerHTML = row;
+            }
+
+            var callAPI = (api) => {
+                return axios.get(api)
+                    .then((response) => {
+                        renderData(response.data, "province");
+                    });
+            };
+            callAPI('https://provinces.open-api.vn/api/?depth=3');
+
+
+            var callApiDistrict = (api) => {
+                return axios.get(api)
+                    .then((response) => {
+                        renderDataDis(response.data.districts, "district");
+                    });
+            };
+            var callApiWard = (api) => {
+                return axios.get(api)
+                    .then((response) => {
+                        renderDataWar(response.data.wards, "ward");
+                    });
+            }
+
+            $("#province").change(() => {
+                phuong = 0;
+                callApiDistrict(host + "p/" + $("#province").val() + "?depth=2")
+                callApiWard(host + "d/" + $("#district").val() + "?depth=2");
+                printResult();
+            });
+
+
+            $("#district").change(() => {
+                callApiWard(host + "d/" + $("#district").val() + "?depth=2");
+                printResult();
+            });
+            $("#ward").change(() => {
+                printResult();
+            })
+
+            var printResult = () => {
+                if ($("#district").val() != "" && $("#province").val() != "" &&
+                    $("#ward").val() != "") {
+                    let result = $("#province option:selected").text() +
+                        " | " + $("#district option:selected").text() + " | " +
+                        $("#ward option:selected").text();
+                    $("#result").text(result)
+                }
+
+            }
+        }
+
+
+        function previewImage(event) {
+            const fileInput = event.target;
+            const file = fileInput.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const imageElement = document.querySelector('img[alt="Avatar"]'); // Chọn thẻ img của bạn
+                    imageElement.src = e.target.result;
+                };
+
+                reader.readAsDataURL(file);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const video = document.getElementById('video');
+            const resultDiv = document.getElementById('result');
+            const startScanningButton = document.getElementById('startScanning');
+            const stopScanningButton = document.getElementById('stopScanning');
+            let scanning = false;
+            let stream;
+            let qrCodeFound = false; // Thêm biến để kiểm tra đã tìm thấy QR code chưa
+
+            startScanningButton.addEventListener('click', function () {
+                scanning = true;
+                qrCodeFound = false; // Reset biến khi bắt đầu quét mới
+                startScanning();
+            });
+
+            stopScanningButton.addEventListener('click', function () {
+                stopScanning();
+            });
+
+            function startScanning() {
+                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    navigator.mediaDevices.getUserMedia({video: true})
+                        .then(function (newStream) {
+                            video.srcObject = newStream;
+                            video.play();
+                            video.addEventListener('loadedmetadata', function () {
+                                scanQRCode();
+                            });
+                            stream = newStream;
+                            scanning = true;
+                            startScanningButton.disabled = true;
+                            stopScanningButton.disabled = false;
+                        })
+                        .catch(function (error) {
+                            console.error("Error accessing the camera: ", error);
+                        });
+                } else {
+                    console.error("getUserMedia is not supported on your browser");
+                }
+            }
+
+            function stopScanning() {
+                if (stream) {
+                    const tracks = stream.getTracks();
+                    tracks.forEach(track => track.stop());
+                    video.srcObject = null;
+                    scanning = false;
+                    qrCodeFound = false; // Reset biến khi dừng quét
+                    startScanningButton.disabled = false; // Cho phép bắt đầu quét lại
+                    stopScanningButton.disabled = true;
+
+                    // Tắt modal (đảm bảo ID của modal đúng)
+                    // const myModal = new bootstrap.Modal(document.getElementById('modalQRCode'));
+                    $('#modalQRCode').modal('hide');
+
+                }
+            }
+
+            function scanQRCode() {
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                let lastScanTime = 0;
+
+                function captureFrame() {
+                    if (!scanning || qrCodeFound) return;
+
+                    const currentTime = Date.now();
+                    const timeSinceLastScan = currentTime - lastScanTime;
+
+                    if (timeSinceLastScan >= 1000) { // Chỉ quét mỗi 2 giây
+                        lastScanTime = currentTime;
+
+                        canvas.width = video.videoWidth;
+                        canvas.height = video.videoHeight;
+                        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                        const resizedCanvas = document.createElement('canvas');
+                        const resizedContext = resizedCanvas.getContext('2d');
+                        resizedCanvas.width = 400;
+                        resizedCanvas.height = (video.videoHeight / video.videoWidth) * 400;
+                        resizedContext.drawImage(canvas, 0, 0, resizedCanvas.width, resizedCanvas.height);
+
+                        const imageData = resizedContext.getImageData(0, 0, resizedCanvas.width, resizedCanvas.height);
+                        try {
+                            const code = jsQR(imageData.data, imageData.width, imageData.height);
+                            if (code) {
+                                const dataParts = code.data.split('|');
+
+
+                                // document.getElementById("cccd").value = code.data;
+                                if (dataParts.length === 7) {
+                                    // Truy cập từng phần tử dữ liệu
+                                    const maSo = dataParts[0];
+                                    const hoTen = dataParts[2];
+                                    const ngaySinh = dataParts[3];
+                                    const gioiTinh = dataParts[4];
+                                    const diaChi = dataParts[5];
+                                    const ngayCap = dataParts[6];
+
+                                    // Hiển thị hoặc sử dụng thông tin
+                                    console.log("Mã số:", maSo);
+                                    console.log("Họ tên:", hoTen);
+                                    console.log("Ngày sinh:", ngaySinh);
+                                    console.log("Giới tính:", gioiTinh);
+                                    console.log("Địa chỉ:", diaChi);
+                                    console.log("Ngày cấp:", ngayCap);
+                                    // Chuyển đổi định dạng "DDMMYYYY" sang "YYYY-MM-DD" bằng Moment.js
+                                    // Chuyển đổi định dạng "DDMMYYYY" sang "yyyy-MM-dd"
+                                    const formattedNgaySinh = `${ngaySinh.substr(4, 4)}-${ngaySinh.substr(2, 2)}-${ngaySinh.substr(0, 2)}`;
+                                    document.getElementById("cccd").value = maSo;
+                                    document.getElementById("tenNhanVien").value = hoTen;
+                                    document.getElementById("tenNhanVien").value = hoTen;
+                                    document.getElementById("ngaySinh").value = formattedNgaySinh;
+                                    if (gioiTinh === "Nam") {
+                                        document.getElementById("nam").checked = true;
+                                    } else if (gioiTinh === "Nữ") {
+                                        document.getElementById("nu").checked = true;
+                                    }
+                                    // Dừng quét
+                                    stopScanning();
+                                } else {
+                                    console.error("Dữ liệu không đúng định dạng");
+                                    qrCodeFound = false;
+                                }
+                                console.log(code.data);
+                                stopScanning();
+                            } else {
+                                const resultDiv = document.getElementById('result');
+                                if (resultDiv) {
+                                    resultDiv.innerText = 'No QR Code found';
+                                } else {
+                                    console.error("Element with id 'result' not found.");
+                                }
+                                qrCodeFound = false;
+                            }
+                        } catch (error) {
+                            console.error('Lỗi xảy ra trong jsQR:', error);
+                            setTimeout(startScanning, 1000);
+                        }
+                    }
+                    if (scanning) {
+                        requestAnimationFrame(captureFrame);
+                    }
+                }
+
+                captureFrame();
+            }
+
+        })
+
+    </script>
+</div>
+</body>
+</html>
 

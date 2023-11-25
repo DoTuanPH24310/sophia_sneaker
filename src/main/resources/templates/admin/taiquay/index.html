@@ -877,7 +877,7 @@
         <div class="modal-dialog" style="max-width: 700px">
             <div class="modal-content" style="height: 630px">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">QR Scan</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Quét QR</h5>
 
                 </div>
                 <div class="modal-body">
@@ -890,7 +890,7 @@
                                 <div id="result" class="mt-1" th:text="${qrCodeResult}"></div>
                             </div>
                             <div class="col-6" style="float: right">
-                                <button id="stopScanning" class="btn btn-warning" style="float: right">Stop Scanning
+                                <button id="stopScanning" class="btn btn-warning" style="float: right">Dừng
                                 </button>
                             </div>
 
@@ -1657,7 +1657,7 @@
                         try {
                             const code = jsQR(imageData.data, imageData.width, imageData.height);
                             if (code) {
-                                resultDiv.innerText = 'QR Code content: ' + code.data;
+                                resultDiv.innerText = 'Kết quả QR: ' + code.data;
                                 $.ajax({
                                     type: 'get',
                                     url: 'http://localhost:8080/api/chi-tiet-giay/getSLTBYQR/' + code.data,
@@ -1672,7 +1672,7 @@
                                 sendQRCodeToServer(code.data);
                                 // stopScanning();
                             } else {
-                                resultDiv.innerText = 'No QR Code found';
+                                resultDiv.innerText = 'Không tìm thấy mã QR';
                                 qrCodeFound = false;
                             }
                         } catch (error) {

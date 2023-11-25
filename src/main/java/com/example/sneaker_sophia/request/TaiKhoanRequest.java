@@ -25,12 +25,11 @@ public class TaiKhoanRequest {
 
     private String canCuoc;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate ngaySinh;
+    private String ngaySinh;
 
     private String sdt;
 
-    private Integer gioiTinh;
+    private String gioiTinh;
 
     private Integer trangThai;
 
@@ -50,9 +49,9 @@ public class TaiKhoanRequest {
         this.setAnhDaiDien(taiKhoanDiaChi.getTaiKhoan().getAnhDaiDien());
         this.setEmail(taiKhoanDiaChi.getTaiKhoan().getEmail());
         this.setCanCuoc(taiKhoanDiaChi.getTaiKhoan().getCanCuoc());
-        this.setNgaySinh(taiKhoanDiaChi.getTaiKhoan().getNgaySinh());
+        this.setNgaySinh(String.valueOf(taiKhoanDiaChi.getTaiKhoan().getNgaySinh()));
         this.setSdt(taiKhoanDiaChi.getTaiKhoan().getSdt());
-        this.setGioiTinh(taiKhoanDiaChi.getTaiKhoan().getGioiTinh());
+        this.setGioiTinh(String.valueOf(taiKhoanDiaChi.getTaiKhoan().getGioiTinh()));
         this.setTrangThai(taiKhoanDiaChi.getTaiKhoan().getTrangThai());
         this.setTinh(taiKhoanDiaChi.getDiaChi().getTinh());
         this.setQuanHuyen(taiKhoanDiaChi.getDiaChi().getQuanHuyen());

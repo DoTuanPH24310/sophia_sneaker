@@ -40,15 +40,14 @@
 
 <body>
 
-<div style="background-color: white; height: 600px" layout:fragment="content" class="col-md-12">
+<div style="background-color: white; height: 680px" layout:fragment="content" class="col-md-12">
     <form th:action="@{/admin/nhanvien/update/{id}#tableCTG(id=${nhanVien.idTaiKhoan})}"
           method="post" th:object="${nhanVien}" enctype="multipart/form-data">
         <div class="row mt-3">
             <div class="col-2">
                 <h5 style="font-weight: bold; text-align: center;" class="mt-3">Ảnh đại diện</h5>
-                <img th:src="@{${nhanVien.anhDaiDien}}" class="rounded-circle mb-3 ml-3"
-                     style="width: 160px; height: 150px"
-                     alt="Avatar"/>
+                <img th:src="@{(${nhanVien.anhDaiDien} eq 'thumbnail.png') ? '/getimage/thumbnail.png' : ${nhanVien.anhDaiDien}}"
+                     alt="" width="160" height="150" class="rounded-circle mb-3 ml-3">
 <!--                <input type="file" id="fileImage" th:field="*{anhDaiDien}" name="fileImage"-->
 <!--                       accept="image/png,image/jpg" th:value="${session.anhDaiDien}" onchange="previewImage(event)"/>-->
                 <input type="file" name="image" placeholder="upload file" multiple onchange="previewImage(event)">
@@ -58,12 +57,14 @@
 
             </div>
             <div class="col-9">
+
+
                 <div class="row mt-3">
                     <div class="col-6">
                         <label for="tenNhanVien"><span style="color: #c82333">*</span> Tên</label>
                         <input id="tenNhanVien" type="text" class="form-control" th:field="*{ten}"
                                placeholder="Tên nhân viên">
-                        <p class="text-danger"></p>
+                        <span class="text-danger" th:text="${errTen}"></span>
 
 
                     </div>
@@ -71,17 +72,17 @@
                         <label for="email"><span style="color: #c82333">*</span> Email</label>
 
                         <input id="email" type="text" class="form-control" th:field="*{email}" placeholder="Email">
-                        <p class="text-danger"></p>
+                        <span class="text-danger" th:text="${errEmail}"></span>
 
 
                     </div>
                 </div>
                 <div class="row mt-3">
                     <div class="col-6">
-                        <label for="ngaySinh"><span style="color: #c82333">*</span> Ngày sinh nhật</label>
+                        <label for="ngaySinh"><span style="color: #c82333">*</span> Ngày sinh</label>
                         <input id="ngaySinh" type="date" class="form-control" th:field="*{ngaySinh}"
                                placeholder="Nhập ngày sinh">
-                        <p class="text-danger"></p>
+                        <span class="text-danger" th:text="${errNgaySinh}"></span>
                     </div>
                     <div class="col-6">
 
@@ -99,6 +100,8 @@
                             </label>
                         </div>
                     </div>
+                    <br>
+                    <span class="text-danger" th:text="${errGT}"></span>
                 </div>
 
                 <div class="row mt-3">
@@ -106,14 +109,15 @@
                         <label for="cccd"><span style="color: #c82333">*</span> CCCD</label>
                         <input id="cccd" type="text" class="form-control" th:field="*{canCuoc}"
                                placeholder="Nhập CCCD">
-                        <p class="text-danger"></p>
+                        <span class="text-danger" th:text="${errCCCD}"></span>
+
                     </div>
 
                     <div class="col-6">
                         <label for="soDienThoai"><span style="color: #c82333">*</span> Số điện thoại</label>
                         <input id="soDienThoai" type="text" class="form-control" th:field="*{sdt}"
                                placeholder="Số điện thoại">
-                        <p class="text-danger"></p>
+                        <span class="text-danger" th:text="${errSDT}"></span>
                     </div>
                 </div>
                 <div class="row mt-3">
@@ -123,15 +127,16 @@
                         <!--                        <span th:text="${listDC[0].tinh}"></span>-->
                         <!--                        th:selected="${dc.tinh == listDC[0].tinh}"-->
                         <select th:field="*{tinh}" id="province" class="form-control">
-                            <option value=""></option>
+                            <option value="">--Chọn Tỉnh/Thành phố--</option>
                         </select>
-
+                        <span class="text-danger" th:text="${errTinh}"></span>
                     </div>
                     <div class="col-4">
                         <label for="district"><span style="color: #c82333">*</span>Quận/Huyện</label>
                         <select th:field="*{quanHuyen}" id="district" class="form-control">
-                            <option value=""></option>
+                            <option value="">--Chọn Quận/Huyện--</option>
                         </select>
+                        <span class="text-danger" th:text="${errQuanHuyen}"></span>
                     </div>
 
                     <div class="col-4">
@@ -140,6 +145,7 @@
                         <select th:field="*{phuongXa}" id="ward" class="form-control">
                             <option value="">--Chọn Phường/Xã--</option>
                         </select>
+                        <span class="text-danger" th:text="${errPhuongXa}"></span>
                     </div>
                 </div>
                 <div class="row mt-3">
@@ -155,6 +161,7 @@
                             <option value="1">Kích hoạt</option>
                             <option value="0">Ngưng hoạt động</option>
                         </select>
+                        <span class="text-danger" th:text="${errTrangThai}"></span>
                     </div>
                 </div>
 

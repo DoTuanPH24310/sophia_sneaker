@@ -1,7 +1,7 @@
 <section xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
          layout:decorate="~{/layouts/layout}">
 
-    <div style="background-color: white; height: 600px" layout:fragment="content" class="col-md-12">
+    <div style="background-color: white; height: 680px" layout:fragment="content" class="col-md-12">
         <form th:action="@{/admin/khachhang/store}" method="post" th:object="${khachHangRequest}" enctype="multipart/form-data">
             <div class="row mt-3">
                 <div class="col-2">
@@ -30,7 +30,7 @@
                     </div>
                     <div class="row mt-3">
                         <div class="col-6">
-                            <label for="ngaySinh"><span style="color: #c82333">*</span> Ngày sinh nhật</label>
+                            <label for="ngaySinh"><span style="color: #c82333">*</span> Ngày sinh</label>
                             <input id="ngaySinh" type="date" class="form-control" th:field="*{ngaySinh}"
                                    placeholder="Nhập ngày sinh">
                             <span class="text-danger" th:text="${errNgaySinh}"></span>
@@ -95,18 +95,10 @@
                         </div>
                     </div>
                     <div class="row mt-3">
-                        <div class="col-6">
+                        <div class="col-12">
                             <label for="dcCuThe"><span style="color: #c82333">*</span>Số nhà/Ngõ/Đường</label>
                             <input id="dcCuThe" type="text" th:field="*{diaChiCuThe}" class="form-control" placeholder="Địa chỉ cụ thể">
                             <span class="text-danger" th:text="${errDCCuThe}"></span>
-                        </div>
-
-                        <div class="col-6">
-                            <label for="trangThai"><span style="color: #c82333">*</span> Trạng thái</label>
-                            <select th:field="*{trangThai}" id="trangThai" class="form-control">
-                                <option value="1">Kích hoạt</option>
-                            </select>
-                            <span class="text-danger" th:text="${errTrangThai}"></span>
                         </div>
                     </div>
 
@@ -123,7 +115,7 @@
                 integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ=="
                 crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-        <script>
+        <script th:inline="javascript">
             const tinh = [[${session.tinh}]];
             const quan = [[${session.quan}]];
             let phuong = [[${session.phuong}]];

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/admin/nhanvien")
@@ -64,7 +65,7 @@ public class NhanVienController {
         session.setAttribute("phuong", "-1");
         TaiKhoanRequest nhanVienRequest = new TaiKhoanRequest();
         model.addAttribute("nhanVienRequest", nhanVienRequest);
-        nhanVienRequest.setGioiTinh(1);
+        nhanVienRequest.setGioiTinh(String.valueOf(1));
         return "admin/nhanvien/createnv";
     }
 
@@ -84,6 +85,7 @@ public class NhanVienController {
 
         return "admin/nhanvien/editnv";
     }
+
     private final FileUpload fileUpload;
 
     @PostMapping("/store")
@@ -95,27 +97,26 @@ public class NhanVienController {
 
         nv_rq.setIdVaiTro(vaiTroRepository.getIdByTenNV());
         String imageURL = "";
-        if(multipartFile.isEmpty()){
-            imageURL = "thumbnail.png";
-        }else{
-            imageURL = fileUpload.uploadFile(multipartFile);
-        }
-        nv_rq.setAnhDaiDien(imageURL);
-        if (taiKhoanService.save(nv_rq, model)) {
-            if (nv_rq.getTinh() == null){
-                session.setAttribute("tinh", "-1");
-                session.setAttribute("quan", "-1");
-                session.setAttribute("phuong", "-1");
-            }else{
+        session.removeAttribute("tinh");
+        session.removeAttribute("quan");
+        session.removeAttribute("phuong");
+        if (!taiKhoanService.validateAdd(nv_rq, model)) {
                 session.setAttribute("tinh", nv_rq.getTinh());
                 session.setAttribute("quan", nv_rq.getQuanHuyen());
                 session.setAttribute("phuong", nv_rq.getPhuongXa());
-                session.setAttribute("anhDaiDien", nv_rq.getAnhDaiDien());
-            }
-
             return "admin/nhanvien/createnv";
+
+        } else {
+            if (multipartFile.isEmpty()) {
+                imageURL = "thumbnail.png";
+            } else {
+                imageURL = fileUpload.uploadFile(multipartFile);
+            }
+            nv_rq.setAnhDaiDien(imageURL);
+            taiKhoanService.save(nv_rq, model);
+            return "redirect:/admin/nhanvien/hienthi";
+
         }
-        return "redirect:/admin/nhanvien/hienthi";
 
     }
 
@@ -124,19 +125,28 @@ public class NhanVienController {
             Model model,
             @PathVariable("id") String idTaiKhoan,
             @RequestParam("image") MultipartFile multipartFile,
-            @ModelAttribute("nhanVien") TaiKhoanRequest nv_rq
+            @ModelAttribute("nhanVien") TaiKhoanRequest nv_rq, HttpSession session
     ) throws IOException {
         TaiKhoanRequest taiKhoan = taiKhoanService.getTaiKhoanById(idTaiKhoan);
         nv_rq.setIdTaiKhoan(idTaiKhoan);
         String imageURL = null;
-        if(multipartFile.isEmpty()){
+
+
+        nv_rq.setIdVaiTro(vaiTroRepository.getIdByTenNV());
+        if (!taiKhoanService.validateUppdate(nv_rq, model)) {
+            session.setAttribute("tinh", nv_rq.getTinh());
+            session.setAttribute("quan", nv_rq.getQuanHuyen());
+            session.setAttribute("phuong", nv_rq.getPhuongXa());
+            return "admin/nhanvien/editnv";
+        }
+        if (multipartFile.isEmpty()) {
             nv_rq.setAnhDaiDien(taiKhoan.getAnhDaiDien());
-        }else {
+        } else {
             imageURL = fileUpload.uploadFile(multipartFile);
         }
         nv_rq.setAnhDaiDien(imageURL);
-        nv_rq.setIdVaiTro(vaiTroRepository.getIdByTenNV());
         taiKhoanService.update(idTaiKhoan, nv_rq, model);
         return "redirect:/admin/nhanvien/hienthi";
     }
+
 }

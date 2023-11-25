@@ -28,7 +28,7 @@
 
 <body>
 
-<div style="background-color: white; height: 600px;" layout:fragment="content" class="col-md-12">
+<div style="background-color: white; height: 680px;" layout:fragment="content" class="col-md-12">
     <form th:action="@{/admin/khachhang/update/{id}#tableCTG(id=${khachHang.idTaiKhoan})}"
           method="post" th:object="${khachHang}" enctype="multipart/form-data">
         <div class="row mt-3">
@@ -53,7 +53,7 @@
                         <label for="tenNhanVien"><span style="color: #c82333">*</span> Tên</label>
                         <input id="tenNhanVien" type="text" class="form-control" th:field="*{ten}"
                                placeholder="Tên nhân viên">
-                        <p class="text-danger"></p>
+                        <span class="text-danger" th:text="${errTen}"></span>
 
 
                     </div>
@@ -61,17 +61,15 @@
                         <label for="email"><span style="color: #c82333">*</span> Email</label>
 
                         <input id="email" type="text" class="form-control" th:field="*{email}" placeholder="Email">
-                        <p class="text-danger"></p>
-
-
+                        <span class="text-danger" th:text="${errEmail}"></span>
                     </div>
                 </div>
                 <div class="row mt-3">
                     <div class="col-6">
-                        <label for="ngaySinh"><span style="color: #c82333">*</span> Ngày sinh nhật</label>
+                        <label for="ngaySinh"><span style="color: #c82333">*</span> Ngày sinh</label>
                         <input id="ngaySinh" type="date" class="form-control" th:field="*{ngaySinh}"
                                placeholder="Nhập ngày sinh">
-                        <p class="text-danger"></p>
+                        <span class="text-danger" th:text="${errNgaySinh}"></span>
                     </div>
                     <div class="col-6">
 
@@ -89,6 +87,7 @@
                             </label>
                         </div>
                     </div>
+                    <span class="text-danger" th:text="${errGT}"></span>
                 </div>
 
                 <div class="row mt-3">
@@ -96,14 +95,14 @@
                         <label for="cccd"><span style="color: #c82333">*</span> CCCD</label>
                         <input id="cccd" type="text" class="form-control" th:field="*{canCuoc}"
                                placeholder="Nhập CCCD">
-                        <p class="text-danger"></p>
+                        <span class="text-danger" th:text="${errCCCD}"></span>
                     </div>
 
                     <div class="col-6">
                         <label for="soDienThoai"><span style="color: #c82333">*</span> Số điện thoại</label>
                         <input id="soDienThoai" type="text" class="form-control" th:field="*{sdt}"
                                placeholder="Số điện thoại">
-                        <p class="text-danger"></p>
+                        <span class="text-danger" th:text="${errSDT}"></span>
                     </div>
                 </div>
                 <div class="row">
@@ -113,10 +112,10 @@
                                 data-target="#modalDoiDiaChi"
                                 data-toggle="modal"
                                 onclick="loadAllDC();"
-                                class="btn btn-info edit"
-                                style=" width: 50px; height: 40px; padding: 5px 10px; font-size: 12px; margin-left: 10px; margin-bottom: 10px">
-                            <i class="material-icons text-red mt-1"
-                               title="Thêm địa chỉ">&#xef3a;</i>
+                                class="btn btn-primary edit"
+                                style=" width: 130px; height: 40px;  margin-left: 10px; margin-bottom: 10px">
+                            <span
+                                    title="Thêm địa chỉ">Thêm địa chỉ</span>
                         </button>
                     </div>
 
@@ -129,13 +128,14 @@
                             <select th:field="*{tinh}" id="province" class="form-control">
                                 <option value=""></option>
                             </select>
-
+                            <span class="text-danger" th:text="${errTinh}"></span>
                         </div>
                         <div class="col-4">
                             <label for="district"><span style="color: #c82333">*</span>Quận/Huyện</label>
                             <select th:field="*{quanHuyen}" id="district" class="form-control">
                                 <option value=""></option>
                             </select>
+                            <span class="text-danger" th:text="${errQuanHuyen}"></span>
                         </div>
 
                         <div class="col-4">
@@ -144,6 +144,7 @@
                             <select th:field="*{phuongXa}" id="ward" class="form-control">
                                 <option value="">--Chọn Phường/Xã--</option>
                             </select>
+                            <span class="text-danger" th:text="${errPhuongXa}"></span>
                         </div>
                     </div>
 

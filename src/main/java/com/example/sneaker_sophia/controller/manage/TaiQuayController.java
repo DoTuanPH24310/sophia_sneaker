@@ -471,7 +471,7 @@ public class TaiQuayController {
     @PostMapping(value = "/scan", consumes = "application/json")
     public String handleQRCode(@RequestBody Map<String, String> requestBody) {
         String qrCodeData = requestBody.get("qrCodeData");
-
+        System.out.println("AAAAAAAAAAAAAAAAA"+ qrCodeData);
         ChiTietGiay chiTietGiay = chiTietGiayService.getCTGByQrCode(qrCodeData);
         HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
         HoaDonChiTiet hoaDonChiTietOld = hoaDonChiTietServive.getHDCTByIdCTSP(chiTietGiay.getId(), tempIdHD);

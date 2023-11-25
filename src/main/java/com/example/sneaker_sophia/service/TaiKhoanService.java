@@ -18,6 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -64,31 +67,31 @@ public class TaiKhoanService {
         String encodedPassword = passwordEncoder.encode(rawPassword);
         taiKhoan.setMatKhau(encodedPassword);
         taiKhoan.setAnhDaiDien(nhanVienRequest.getAnhDaiDien());
-
+        taiKhoan.setTrangThai(1);
         DiaChi diaChi = new DiaChi(nhanVienRequest);
         diaChi.setTaiKhoan(taiKhoan);
         diaChi.setDiaChiMacDinh(1);
         diaChi.setTen(nhanVienRequest.getTen());
         diaChi.setSdt(nhanVienRequest.getSdt());
-        if (validateAdd(nhanVienRequest, model)) {
-            if(nhanVienRequest.getAnhDaiDien().equals("")){
-                taiKhoan.setAnhDaiDien("thumbnail.png");
-            }
-            this.taiKhoanRepository.save(taiKhoan);
-            this.diaChiRepository.save(diaChi);
-            return false;
+
+        if (nhanVienRequest.getAnhDaiDien().equals("")) {
+            taiKhoan.setAnhDaiDien("thumbnail.png");
         }
+        this.taiKhoanRepository.save(taiKhoan);
+        this.diaChiRepository.save(diaChi);
+
+
         return true;
     }
 
-    public void update(String id, TaiKhoanRequest nhanVienRequest, Model model) {
+    public boolean update(String id, TaiKhoanRequest nhanVienRequest, Model model) {
         TaiKhoan taiKhoan = taiKhoanRepository.findById(id).orElse(null);
         DiaChi diaChi = diaChiRepository.getDiaChiByIdTaiKhoan(id);
         if (taiKhoan != null && diaChi != null) {
             taiKhoan.setTen(nhanVienRequest.getTen());
             taiKhoan.setEmail(nhanVienRequest.getEmail());
-            taiKhoan.setNgaySinh(nhanVienRequest.getNgaySinh());
-            taiKhoan.setGioiTinh(nhanVienRequest.getGioiTinh());
+            taiKhoan.setNgaySinh(LocalDate.parse(nhanVienRequest.getNgaySinh()));
+            taiKhoan.setGioiTinh(Integer.parseInt(nhanVienRequest.getGioiTinh()));
             taiKhoan.setCanCuoc(nhanVienRequest.getCanCuoc());
             taiKhoan.setSdt(nhanVienRequest.getSdt());
             taiKhoan.setTrangThai(nhanVienRequest.getTrangThai());
@@ -105,12 +108,10 @@ public class TaiKhoanService {
             if (nhanVienRequest.getAnhDaiDien() == null) {
                 taiKhoan.setAnhDaiDien(taiKhoanRepository.getAnhById(id));
             }
-            if (validateUppdate(nhanVienRequest, model)) {
-                this.taiKhoanRepository.save(taiKhoan);
-                this.diaChiRepository.save(diaChi);
-            }
-
+            this.taiKhoanRepository.save(taiKhoan);
+            this.diaChiRepository.save(diaChi);
         }
+        return true;
     }
 
     public boolean validateAdd(TaiKhoanRequest nhanVienRequest, Model model) {
@@ -128,29 +129,43 @@ public class TaiKhoanService {
         String idCardRegex = "^\\d{12}$";
         Pattern idCardPattern = Pattern.compile(idCardRegex);
         Matcher idCardMatcher = idCardPattern.matcher(nhanVienRequest.getCanCuoc());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-        if (!matcher.matches()){
-            errSDT = "Số điện thoại không đúng định dạng";
+        try {
+            LocalDate ngaySinh = LocalDate.parse(String.valueOf(nhanVienRequest.getNgaySinh()), formatter);
+            if (nhanVienRequest.getNgaySinh() == null) {
+                errNgaySinh = "Không để trống ngày sinh";
+                i++;
+            } else if (ngaySinh.isAfter((gioHT))) {
+                errNgaySinh = "Ngày sinh không hợp lệ";
+                i++;
+            }
+        } catch (Exception e) {
+            errNgaySinh = "Nhập đúng định dạng ngày";
             i++;
         }
-        if (!emailMatcher.matches()){
+        if (!matcher.matches()) {
+            errSDT = "Số điện thoại không đúng định dạng (10 số)";
+            i++;
+        }
+        if (!emailMatcher.matches()) {
             errEmail = "Email không đúng định dạng";
             i++;
         }
-        if (!idCardMatcher.matches()){
-            errCCCD = "Số CCCD không đúng định dạng";
+        if (!idCardMatcher.matches()) {
+            errCCCD = "Số CCCD không đúng định dạng (12 số)";
             i++;
         }
-        if (taiKhoanRepository.getTaiKhoanByEmail(nhanVienRequest.getEmail()) != null){
-            errEmail = "Email đã được sửu dụng";
+        if (taiKhoanRepository.getTaiKhoanByEmail(nhanVienRequest.getEmail()) != null) {
+            errEmail = "Email đã được sử dụng";
             i++;
         }
-        if (taiKhoanRepository.getTaiKhoanByCCCD(nhanVienRequest.getCanCuoc()) != null){
-            errCCCD= "CCCD đã được sửu dụng";
+        if (taiKhoanRepository.getTaiKhoanByCCCD(nhanVienRequest.getCanCuoc()) != null) {
+            errCCCD = "CCCD đã được sử dụng";
             i++;
         }
-        if (taiKhoanRepository.getTaiKhoanBySDT(nhanVienRequest.getSdt()) != null){
-            errSDT = "Số điện thoại đã được sửu dụng";
+        if (taiKhoanRepository.getTaiKhoanBySDT(nhanVienRequest.getSdt()) != null) {
+            errSDT = "Số điện thoại đã được sử dụng";
             i++;
         }
         if (nhanVienRequest.getTen().equals("")) {
@@ -169,14 +184,16 @@ public class TaiKhoanService {
             errSDT = "Không để trống số điện thoại";
             i++;
         }
+
         if (nhanVienRequest.getGioiTinh() == null) {
             errGT = "Không để trống giới tính";
             i++;
         }
-        if (nhanVienRequest.getTrangThai() == null) {
-            errTrangThai = "Không để trống trạng thái";
+        if (!nhanVienRequest.getGioiTinh().equals("1") && !nhanVienRequest.getGioiTinh().equals("0")) {
+            errGT = "Thao tác không chính xác";
             i++;
         }
+
         if (nhanVienRequest.getTinh() == null) {
             errTinh = "Không để trống Tỉnh/Thành phố";
             i++;
@@ -191,14 +208,6 @@ public class TaiKhoanService {
         }
         if (nhanVienRequest.getDiaChiCuThe().equals("")) {
             errDCCuThe = "Không để trống địa chỉ cụ thể";
-            i++;
-        }
-        if (nhanVienRequest.getNgaySinh() == null) {
-            errNgaySinh = "Không để trống ngày sinh";
-            i++;
-        }
-        else if(nhanVienRequest.getNgaySinh().isAfter(gioHT)){
-            errNgaySinh = "Ngày sinh không hợp lệ";
             i++;
         }
         model.addAttribute("errNgaySinh", errNgaySinh);
@@ -224,7 +233,7 @@ public class TaiKhoanService {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(nhanVienRequest.getSdt());
 
-        String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+        String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.com";
         Pattern emailPattern = Pattern.compile(emailRegex);
         Matcher emailMatcher = emailPattern.matcher(nhanVienRequest.getEmail());
 
@@ -232,17 +241,31 @@ public class TaiKhoanService {
         Pattern idCardPattern = Pattern.compile(idCardRegex);
         Matcher idCardMatcher = idCardPattern.matcher(nhanVienRequest.getCanCuoc());
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-        if (!matcher.matches()){
-            errSDT = "Số điện thoại không đùng định dạng";
+        try {
+            LocalDate ngaySinh = LocalDate.parse(String.valueOf(nhanVienRequest.getNgaySinh()), formatter);
+            if (nhanVienRequest.getNgaySinh() == null) {
+                errNgaySinh = "Không để trống ngày sinh";
+                i++;
+            } else if (ngaySinh.isAfter((gioHT))) {
+                errNgaySinh = "Ngày sinh không hợp lệ";
+                i++;
+            }
+        } catch (Exception e) {
+            errNgaySinh = "Nhập đúng định dạng ngày";
             i++;
         }
-        if (!emailMatcher.matches()){
+        if (!matcher.matches()) {
+            errSDT = "Số điện thoại không đùng định dạng (10 số)";
+            i++;
+        }
+        if (!emailMatcher.matches()) {
             errEmail = "Email không đúng định dạng";
             i++;
         }
-        if (!idCardMatcher.matches()){
-            errCCCD = "Số CCCD không đúng định dạng";
+        if (!idCardMatcher.matches()) {
+            errCCCD = "Số CCCD không đúng định dạng (12 số)";
             i++;
         }
         if (nhanVienRequest.getTen().equals("")) {
@@ -285,14 +308,7 @@ public class TaiKhoanService {
             errDCCuThe = "Không để trống địa chỉ cụ thể";
             i++;
         }
-        if (nhanVienRequest.getNgaySinh() == null) {
-            errNgaySinh = "Không để trống ngày sinh";
-            i++;
-        }
-        else if(nhanVienRequest.getNgaySinh().isAfter(gioHT)){
-            errNgaySinh = "Ngày sinh không hợp lệ";
-            i++;
-        }
+
         model.addAttribute("errNgaySinh", errNgaySinh);
         model.addAttribute("errTen", errTen);
         model.addAttribute("errEmail", errEmail);
@@ -308,21 +324,21 @@ public class TaiKhoanService {
         return i == 0;
     }
 
-    public TaiKhoan getTaiKhoanByIdKH(String idkh){
+    public TaiKhoan getTaiKhoanByIdKH(String idkh) {
         return taiKhoanRepository.findById(idkh).orElse(null);
     }
 
     //30/10
-    public List<TaiKhoan> findAllKhachHang(){
+    public List<TaiKhoan> findAllKhachHang() {
         return taiKhoanRepository.findAllKhachHang();
     }
 
-    public List<TaiKhoan> findByText(String text){
-        text = text.trim().length() == 0 ?null: "%"+text+"%";
+    public List<TaiKhoan> findByText(String text) {
+        text = text.trim().length() == 0 ? null : "%" + text + "%";
         return taiKhoanRepository.findByText(text);
     }
 
-    public List<DiaChi> findListTKById(String id){
+    public List<DiaChi> findListTKById(String id) {
         return diaChiRepository.findListTKByIdKH((id));
     }
 
