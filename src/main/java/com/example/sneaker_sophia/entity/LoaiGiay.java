@@ -1,8 +1,8 @@
 package com.example.sneaker_sophia.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -12,6 +12,10 @@ import java.util.UUID;
 @Getter
 @Setter
 @Table(name = "LoaiGiay")
+@AllArgsConstructor
+@NoArgsConstructor
+@Component
+@Builder
 public class LoaiGiay {
     @Id
     @Column(name = "Id")
