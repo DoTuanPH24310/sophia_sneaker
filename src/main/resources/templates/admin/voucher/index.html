@@ -140,18 +140,15 @@
                     </td>
                     <td>
 
-
-                        <a th:if="${vc.trangThai == 0}" th:href="@{/admin/voucher/view-update/{id}#tableCTG(id=${vc.id})}"
-                           class="btn btn-warning edit"
-                           style=" padding: 5px 10px; font-size: 12px">
-                            <i class="material-icons text-white mt-1" title="Sửa">&#xE254;</i>
-                        </a>
-
-                        <a th:unless="${vc.trangThai == 0}" onclick="thongBao('Không sửa được khuyến mại đang diễn ra');"
-                           class="btn btn-warning "
+                        <a th:href="@{/admin/voucher/detail/{id}(id=${vc.id})}"
+                           class="btn btn-success "
                            style=" padding: 5px 10px; font-size: 12px;">
-                            <i class="material-icons text-white mt-1" title="Sửa">&#xE254;</i>
+                            <i class="material-icons text-white mt-1"
+                               title="Chi tiết">visibility</i>
                         </a>
+
+
+
 
                         <a th:if="${vc.trangThai == 1}" onclick="thongBao('Không xóa được khuyến mại đang diễn ra');"
                            class="btn btn-danger "

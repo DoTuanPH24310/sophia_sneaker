@@ -153,6 +153,21 @@ public class VoucherController {
         return "/admin/voucher/update";
     }
 
+    @GetMapping("/detail/{id}")
+    public String detail(Model model, @PathVariable("id") Voucher vc) {
+        Map<UUID, String> avtctgMap = new HashMap<>();
+        List<ChiTietGiay> listCTG = ctg_khuyenMaiService.findCTG(vc);
+        for (ChiTietGiay ctg : listCTG) {
+            String avtct = anhRepository.getAnhChinhByIdctg(ctg.getId());
+            avtctgMap.put(ctg.getId(), avtct);
+        }
+        model.addAttribute("avtctgMap", avtctgMap);
+        model.addAttribute("listctg",listCTG);
+        model.addAttribute("avtctgMap", avtctgMap);
+        model.addAttribute("data", vc);
+        return "/admin/voucher/detail";
+    }
+
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable("id") Voucher vc) {
         if (vc.getTrangThai() == 1) {
