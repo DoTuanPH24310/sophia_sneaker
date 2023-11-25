@@ -119,13 +119,13 @@
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs ms-1" role="tablist">
                     <li role="presentation" class="nav-item">
-                        <a class="nav-link active" href="#choThanhToan" aria-controls="ALL" role="tab"
+                        <a id="tabALL" class="nav-link active" href="#choThanhToan" aria-controls="ALL" role="tab"
                            data-toggle="tab">Chờ thanh toán
                         </a>
                     </li>
 
                     <li role="presentation" class="nav-item">
-                        <a class="nav-link  text-dark" href="#choXacNhan" aria-controls="choXacNhan" role="tab"
+                        <a id="tabChoXacNhan" class="nav-link  text-dark" href="#choXacNhan" aria-controls="choXacNhan" role="tab"
                            data-toggle="tab">Chờ xác nhận
                             <!--                            Đây-->
                             <span class="countHD" th:text="${soHDCXN}"></span>
@@ -596,9 +596,12 @@
         let errTable = '';
         let idSelectAll = '';
         let classSelectChild = '';
-
-
-
+        let x =1;
+        if(x ==1){
+            document.addEventListener("DOMContentLoaded", function() {
+                document.getElementById('tabChoXacNhan').click();
+            });
+        }
 
         $(document).ready(function () {
             $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -608,7 +611,6 @@
                 eventCheckbox();
             });
         });
-
 
 
         function eventCheckbox() {
