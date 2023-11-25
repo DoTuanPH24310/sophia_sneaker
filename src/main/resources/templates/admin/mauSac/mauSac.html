@@ -59,14 +59,15 @@
                     <div class="row">
                         <div class="col-6">
                             <label> Tìm kiếm </label>
-                            <input style="border-radius: 10px;" type="text" th:value="${txtSearch}"
+                            <input th:value="${txtSearch}"
                                    class="form-control" name="txtSearch"
-                                   placeholder="Nhập mã, tên của màu sắc...">
+                                   placeholder="Nhập mã, tên của màu sắc..." onchange="this.form.submit()"
+                                   style="border-radius: 10px;" id="txtSearchInput">
                             <p class="text-danger"></p>
                         </div>
                         <div class="col-6">
                             <label>Trạng thái</label>
-                            <select style="border-radius: 10px;" class="form-select" th:onchange="this.form.submit()"
+                            <select style="border-radius: 10px;" class="form-select" id="trangThaiSelect" onchange="this.form.submit()"
                                     name="trangThai">
                                 <div style="border: 10px">
                                     <option th:selected="${trangThai}  == -1 ? true:false" value="-1"> Tất cả
@@ -109,20 +110,20 @@
                         <td th:text="${g.ma}"></td>
                         <td th:text="${g.ten}"></td>
                         <td th:if="${g.trangThai!=0}" style="width: 160px;">
-                            <button class="btn btn-danger" style="border-radius: 30px; font-size: 9px;">Ngưng hoạt
+                            <button class="btn btn-danger" style="border-radius: 30px; font-size: 9px; width: 120px">Ngưng hoạt
                                 động
                             </button>
                         </td>
                         <td th:if="${g.trangThai==0}" style="width: 160px;">
-                            <button class="btn btn-primary" style="border-radius: 30px; font-size: 9px;">Hoạt động
+                            <button class="btn btn-primary" style="border-radius: 30px; font-size: 9px; width: 120px">Hoạt động
                             </button>
                         </td>
                         <td>
-                            <a class="edit" th:href="@{/admin/mauSac/view-update/{id}(id=${g.id})}">
-                                <i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i>
+                            <a class="btn btn-warning edit" style=" padding: 5px 10px; font-size: 12px" th:href="@{/admin/mauSac/view-update/{id}(id=${g.id})}">
+                                <i class="material-icons text-white mt-1" data-toggle="tooltip" title="Edit">&#xE254;</i>
                             </a>
-                            <a onclick="return confirm('Bạn có muốn xóa không')" class="delete" th:href="@{/admin/mauSac/delete/{id}(id=${g.id})}">
-                                <i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i>
+                            <a onclick="return confirm('Bạn có muốn xóa không')" class="btn btn-danger delete" style=" padding: 5px 10px; font-size: 12px" th:href="@{/admin/mauSac/delete/{id}(id=${g.id})}">
+                                <i class="material-icons text-white mt-1" data-toggle="tooltip" title="Delete">&#xE872;</i>
                             </a>
                         </td>
                     </tr>
@@ -142,6 +143,7 @@
                         <li class="page-item">
                             <a class="page-link" th:if="${pageNo > 0}"
                                th:href="@{/admin/mauSac/hien-thi#table(pageNo=${pageNo-1},trangThai=${trangThai},txtSearch=${txtSearch})}">Prev</a>
+                            <!--                            ,trangThai=${trangThai},textSearch=${textSearch}-->
                             <span class="page-link" th:unless="${pageNo > 0}">Prev</span>
                         </li>
                         <li th:each="i: ${#numbers.sequence(0, danhSachMauSac.totalPages-1)}" class="page-item">
@@ -164,6 +166,5 @@
             </div>
         </div>
 </section>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </body>
 </html>
