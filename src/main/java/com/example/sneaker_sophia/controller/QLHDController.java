@@ -1,4 +1,4 @@
-package com.example.sneaker_sophia.controller;
+package com.example.sneaker_sophia.controller.manage;
 
 import com.example.sneaker_sophia.entity.HinhThucThanhToan;
 import com.example.sneaker_sophia.entity.HoaDon;
@@ -12,7 +12,6 @@ import com.example.sneaker_sophia.service.LSHDService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -118,8 +117,9 @@ public class QLHDController {
 
     @PostMapping("updatehdcg")
     public String updatehdcg(
-            @RequestParam(value = "idhd", required = false) List<String> listhdcg
+            @RequestParam(value = "idhd", required = false) List<String> listhdcg, Model model
     ) {
+        session.setAttribute("tabActive", "tabChoGiao");
         if (listhdcg == null) {
             return "redirect:/admin/hoa-don/hien-thi";
         }
@@ -139,6 +139,7 @@ public class QLHDController {
     public String updatehddg(
             @RequestParam(value = "idhd", required = false) List<String> listhddg
     ) {
+        session.setAttribute("tabActive", "tabDangGiao");
         if (listhddg == null) {
             return "redirect:/admin/hoa-don/hien-thi";
         }
@@ -158,6 +159,8 @@ public class QLHDController {
     public String updatehdcxnd(
             @PathVariable("id") String idhd
     ) {
+
+        session.setAttribute("tabActive", "tabChoXacNhan");
         HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
         if (hoaDon != null) {
             hoaDon.setTrangThai(4);

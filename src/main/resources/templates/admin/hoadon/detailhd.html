@@ -116,7 +116,7 @@
 <body>
 
 <div layout:fragment="content" class="container">
-    <div style="background-color: white; height: 300px;" >
+    <div style="background-color: white; height: 300px;">
 
         <div class="main">
             <ul class="ultag mt-3">
@@ -164,17 +164,18 @@
 
         </div>
 
-        <div th:if="${hoaDon.trangThai == 4}"  class="float-right mr-3">
-            <a th:href="@{/admin/hoa-don/updatehdcg/{id}(id=${hoaDon.id})}" class="btn btn-primary">Xác nhận
+        <div th:if="${hoaDon.trangThai == 4}" class="float-right mr-3">
+            <a th:href="@{/admin/hoa-don/updatehdcg/{id}(id=${hoaDon.id})}" onclick="return confirm('Xác nhận giao?')" class="btn btn-primary">Xác nhận
                 giao</a>
             <a th:href="@{/admin/hoa-don/huyhdcg/{id}(id=${hoaDon.id})}" class=" myLinkHuy btn btn-danger mr-3">Hủy</a>
         </div>
-        <div th:if="${hoaDon.trangThai == 5}"  class="float-right">
-            <a th:href="@{/admin/hoa-don/updatehddg/{id}(id=${hoaDon.id})}" class="btn btn-primary">Xác nhận
+        <div th:if="${hoaDon.trangThai == 5}" class="float-right">
+            <a th:href="@{/admin/hoa-don/updatehddg/{id}(id=${hoaDon.id})}" id="myLinhXacNhan" class="btn btn-primary">Xác
+                nhận
                 thành công</a>
 
         </div>
-        <div th:if="${hoaDon.trangThai == 3}"  class="float-right">
+        <div th:if="${hoaDon.trangThai == 3}" class="float-right">
             <a th:href="@{/admin/hoa-don/updatehdcxn/{id}(id=${hoaDon.id})}" class="btn btn-primary">Xác nhận đơn</a>
             <a th:href="@{/admin/hoa-don/huyhdcxn/{id}(id=${hoaDon.id})}" class="myLinkHuy btn btn-danger mr-3">Hủy</a>
         </div>
@@ -252,7 +253,7 @@
                         <span th:if="${hoaDon.loaiHoaDon == 2}">Giao hàng</span>
                         <span th:if="${hoaDon.loaiHoaDon == 3}">Online</span>
                         <!-- Add more conditions as needed -->
-                        <span th:if="${hoaDon.loaiHoaDon != 1 && hoaDon.loaiHoaDon != 2 && hoaDon.loaiHoaDon != 3}">
+<span th:if="${hoaDon.loaiHoaDon != 1 && hoaDon.loaiHoaDon != 2 && hoaDon.loaiHoaDon != 3}">
                             <!-- Default value if none of the conditions are met -->
                             <span th:text="${hoaDon.loaiHoaDon}"></span>
                         </span>
@@ -311,7 +312,7 @@
                             </td>
 
                             <td>
-                            <span th:if="${hdct.donGia * hdct.soLuong == ((hdct.donGia * (1- ((hdct.phanTramGiam) / 100.0)) * hdct.soLuongGiam)
+<span th:if="${hdct.donGia * hdct.soLuong == ((hdct.donGia * (1- ((hdct.phanTramGiam) / 100.0)) * hdct.soLuongGiam)
                                               + (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}">
 
                                                  <span th:text="${#numbers.formatCurrency((hdct.donGia * (1- ((hdct.phanTramGiam) / 100.0)) * hdct.soLuongGiam)
@@ -402,56 +403,74 @@
         let date = null;
 
 
-
         let myLinks = document.querySelectorAll('.myLinkHuy');
+        let myLinksXN = document.getElementById('myLinhXacNhan');
 
-        myLinks.forEach(function(link) {
-            link.addEventListener('click', function(event) {
-                event.preventDefault();
-                let hrefValue = link.getAttribute('href');
-              let mess =  prompt("Nhập lí do hủy: ");
-                if (mess.trim().length == 0){
-                    alert("Vui lòng nhập lí do: ");
-                }else {
-                    window.location.href = hrefValue +"?value="+mess;
-                }
+        if (myLinks != null) {
+            myLinks.forEach(function (link) {
+                link.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    let hrefValue = link.getAttribute('href');
+                    let mess = prompt("Nhập lí do hủy: ");
+                    if (mess.trim().length == 0) {
+                        alert("Vui lòng nhập lí do: ");
+                    } else {
+                        window.location.href = hrefValue + "?value=" + mess;
+                    }
+                });
             });
-        });
+        }
 
+        if (myLinksXN != null) {
+            myLinksXN.addEventListener('click', function (event) {
+                event.preventDefault();
+                let rs = confirm('Xác nhận thành công: ');
+                if (!rs) return;
+                let hrefValue = myLinksXN.getAttribute('href');
+                let mess = prompt("Nhập ghi chú: ");
+                window.location.href = hrefValue + "?value=" + mess;
+            });
+        }
 
 
         window.addEventListener('DOMContentLoaded', function () {
             value = check('2');
             if (value != null) {
-               fillTimeLine('icon1','text1',value,'Chờ thanh toán','uil-comment-alt-question');
+                fillTimeLine('icon1', 'text1', value, 'Chờ thanh toán', 'uil-comment-alt-question');
+            }
+            value = check('3');
+            if (value != null) {
+                fillTimeLine('icon1', 'text1', value, 'Chờ Xác nhận', 'uil-comment-alt-question');
             }
             value = check('6');
             if (value != null && listLSHD.length == 2) {
-                fillTimeLine('icon2','text2',value,'Hủy','uil-trash-alt');
+                fillTimeLine('icon2', 'text2', value, 'Hủy', 'uil-trash-alt');
             }
+
+
             value = check('4');
             if (value != null && value.hoaDon.loaiHoaDon != 1) {
-                fillTimeLine('icon2','text2',value,'Chờ giao','uil-clock-nine');
+                fillTimeLine('icon2', 'text2', value, 'Chờ giao', 'uil-clock-nine');
             }
             value = check('6');
-            if (value != null   && listLSHD.length == 3) {
-                fillTimeLine('icon3','text3',value,'Hủy','uil-trash-alt');
+            if (value != null && listLSHD.length == 3) {
+                fillTimeLine('icon3', 'text3', value, 'Hủy', 'uil-trash-alt');
             }
             value = check('5');
             if (value != null && value.hoaDon.loaiHoaDon != 1) {
-                fillTimeLine('icon3','text3',value,'Đang giao','uil-truck');
+                fillTimeLine('icon3', 'text3', value, 'Đang giao', 'uil-truck');
             }
             value = check('1');
             if (value != null) {
-                if (value.hoaDon.loaiHoaDon == 1){
-                    fillTimeLine('icon2','text2',value,'Thành công','uil-check-circle');
-                }else
-                fillTimeLine('icon4','text4',value,'Thành công','uil-check-circle');
+                if (value.hoaDon.loaiHoaDon == 1) {
+                    fillTimeLine('icon2', 'text2', value, 'Thành công', 'uil-check-circle');
+                } else
+                    fillTimeLine('icon4', 'text4', value, 'Thành công', 'uil-check-circle');
             }
 
         })
 
-        function fillTimeLine(icon,text,value,trangThai,classIcon) {
+        function fillTimeLine(icon, text, value, trangThai, classIcon) {
             date = moment(value.createdDate).utcOffset(7).format('DD-MM-YYYY HH:mm:ss');
             activeTab(value);
             document.getElementById(icon).style.color = '#4ed5c6';
@@ -465,7 +484,7 @@
 
 
         function activeTab(value) {
-            if (listLSHD.length == 1){
+            if (listLSHD.length == 1) {
                 one.classList.add("active");
                 two.classList.remove("active");
                 three.classList.remove("active");
@@ -473,7 +492,7 @@
                 five.classList.remove("active");
                 return;
             }
-            if (listLSHD.length == 2){
+            if (listLSHD.length == 2) {
                 one.classList.add("active");
                 two.classList.add("active");
                 three.classList.remove("active");
@@ -481,7 +500,7 @@
                 five.classList.remove("active");
                 return;
             }
-            if (listLSHD.length == 3){
+            if (listLSHD.length == 3) {
                 one.classList.add("active");
                 two.classList.add("active");
                 three.classList.add("active");
@@ -490,7 +509,7 @@
                 return;
             }
 
-            if (listLSHD.length == 4){
+            if (listLSHD.length == 4) {
                 one.classList.add("active");
                 two.classList.add("active");
                 three.classList.add("active");
@@ -499,7 +518,7 @@
                 return;
             }
 
-            if (listLSHD.length == 5){
+            if (listLSHD.length == 5) {
                 one.classList.add("active");
                 two.classList.add("active");
                 three.classList.add("active");
