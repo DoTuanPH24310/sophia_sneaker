@@ -139,6 +139,14 @@
                         </button>
                     </td>
                     <td>
+<!--                        Thay doi-->
+
+                        <a  th:href="@{/admin/voucher/detail/{id}(id=${vc.id})}"
+                           class="btn btn-primary">
+                           Chi tiết
+                        </a>
+
+
                         <a th:if="${vc.trangThai == 0}" class="edit" th:href="@{/admin/voucher/view-update/{id}#tableCTG(id=${vc.id})}">
                             <i class="material-icons" title="Cập nhật">&#xE254;</i>
                         </a>

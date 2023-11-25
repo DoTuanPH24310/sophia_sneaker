@@ -114,6 +114,15 @@ public class VoucherController {
         return "/admin/voucher/update";
     }
 
+//    Thay doi
+    @GetMapping("/detail/{id}")
+    public String detail(Model model, @PathVariable("id") Voucher vc) {
+        model.addAttribute("data", vc);
+        List<ChiTietGiay> listCTG = ctg_khuyenMaiService.findCTG(vc);
+        model.addAttribute("listctg",listCTG);
+        return "/admin/voucher/detail";
+    }
+
     @GetMapping("/delete/{id}")
     public String delete(Model model, @PathVariable("id") Voucher vc, HttpSession session) {
 //      Nếu trạng thái sắp diễn ra thì xóa luôn
