@@ -125,7 +125,7 @@
                     </li>
 
                     <li role="presentation" class="nav-item">
-                        <a class="nav-link  text-dark" href="#choXacNhan" aria-controls="choXacNhan" role="tab"
+                        <a id="tabChoXacNhan" class="nav-link  text-dark" href="#choXacNhan" aria-controls="choXacNhan" role="tab"
                            data-toggle="tab">Chờ xác nhận
                             <!--                            Đây-->
                             <span class="countHD" th:text="${soHDCXN}"></span>
@@ -133,15 +133,15 @@
 
                     </li>
                     <li role="presentation" class="nav-item">
-                        <a class="nav-link  text-dark" href="#choGiao" aria-controls="choVanChuyen" role="tab"
+                        <a id="tabChoGiao" class="nav-link  text-dark" href="#choGiao" aria-controls="choVanChuyen"
+                           role="tab"
                            data-toggle="tab">Chờ giao
                             <!--                            Đây-->
                             <span class="countHD" th:text="${soHDCG}"></span>
                         </a>
-
                     </li>
                     <li role="presentation" class="nav-item">
-                        <a class="nav-link  text-dark" href="#dangGiao" aria-controls="vanChuyen" role="tab"
+                        <a id="tabDangGiao" class="nav-link  text-dark" href="#dangGiao" aria-controls="vanChuyen" role="tab"
                            data-toggle="tab">Đang giao
                             <!--                            Đây-->
                             <span class="countHD" th:text="${soHDDG}"></span>
@@ -234,7 +234,8 @@
                         <div class="row">
                             <form id="formTrCNX" action="/admin/hoa-don/updatehdcxn" method="post">
                                 <div>
-                                    <button type="submit" id="ghiChuXND" class="btn btn-primary mb-3 mr-2 float-right">
+                                    <button type="submit" onclick="return confirm('Xác nhận đơn?')"
+                                            class="btn btn-primary mb-3 mr-2 float-right">
                                         Xác
                                         nhận đơn
                                     </button>
@@ -308,7 +309,8 @@
                         <div class="row">
                             <form id="formTrCG" action="/admin/hoa-don/updatehdcg" method="post">
                                 <div>
-                                    <button type="submit" id="ghiChuXNG" class="btn btn-primary mb-3 mr-2 float-right">
+                                    <button type="submit" onclick="return confirm('Xác nhận giao hàng?')"
+                                            class="btn btn-primary mb-3 mr-2 float-right">
                                         Xác
                                         nhận giao
                                     </button>
@@ -391,7 +393,8 @@
                         <div class="row">
                             <form id="formTrTC" action="/admin/hoa-don/updatehddg" method="post">
                                 <div>
-                                    <button type="submit" id="ghiChuXNTC" class="btn btn-primary mb-3 float-right">Xác nhận
+                                    <button type="submit" id="ghiChuXNTC" class="btn btn-primary mb-3 float-right">Xác
+                                        nhận
                                         thành công
                                     </button>
                                 </div>
@@ -604,38 +607,23 @@
         let errTable = '';
         let idSelectAll = '';
         let classSelectChild = '';
-        let myLinksXND = document.getElementById('ghiChuXND');
-        let actionFormXND = document.getElementById('formTrCNX');
         let myLinksXNTC = document.getElementById('ghiChuXNTC');
         let actionFormXNTC = document.getElementById('formTrTC');
-        let myLinksXNG = document.getElementById('ghiChuXNG');
-        let actionFormXNG = document.getElementById('formTrCG');
 
-        if (myLinksXND != null){
-            myLinksXND.addEventListener('click', function (event) {
-                event.preventDefault();
-                let mess = prompt("Nhập lí do : ");
-                let action = actionFormXND.getAttribute('action') + '?value=' + mess;
-                actionFormXND.setAttribute('action', action);
-                actionFormXND.submit();
-            });
-        }
 
-        if (myLinksXNG != null){
-            myLinksXNG.addEventListener('click', function (event) {
-                event.preventDefault();
-                let mess = prompt("Nhập lí do : ");
-                let action = actionFormXNG.getAttribute('action') + '?value=' + mess;
-                actionFormXNG.setAttribute('action', action);
-                actionFormXNG.submit();
+        let x = [[${session.tabActive}]];
+        if (x != null) {
+            document.addEventListener("DOMContentLoaded", function () {
+                document.getElementById(x).click();
+                removeSeesion('tabActive');
             });
         }
 
 
-        if (myLinksXNTC != null){
+        if (myLinksXNTC != null) {
             myLinksXNTC.addEventListener('click', function (event) {
                 event.preventDefault();
-                let mess = prompt("Nhập lí do : ");
+                let mess = prompt("Nhập ghi chú : ");
                 let action = actionFormXNTC.getAttribute('action') + '?value=' + mess;
                 actionFormXNTC.setAttribute('action', action);
                 actionFormXNTC.submit();
@@ -672,9 +660,6 @@
                     checkbox.checked = selectAllCheckbox.checked;
                 });
             });
-
-            console.log(selectAllCheckbox);
-            console.log(checkboxes);
 
             checkboxes.forEach(function (checkbox) {
                 checkbox.addEventListener('click', function () {
@@ -833,6 +818,14 @@ type="checkbox">`;
                         loadAllTable(data, activeTab);
                     }
                 }
+            })
+        }
+
+
+        function removeSeesion(name) {
+            $.ajax({
+                type: 'get',
+                url: 'http://localhost:8080/api/hoa-don/deleteSession/' + name,
             })
         }
 

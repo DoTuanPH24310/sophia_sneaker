@@ -215,6 +215,7 @@ public class ImportExportFileController {
                 // Kiểm tra điều kiện số lượng và giá trước khi truy cập vào đối tượng
                 int importedSoLuong = getIntegerValue(row.getCell(10));
                 double importedGia = getDoubleValue(row.getCell(9));
+                String qrCode = getStringValue(row.getCell(12));
 
                 if (importedGia <= 0 || importedSoLuong <= 0 || importedGia >= 1000000000 || importedSoLuong >= 10000) {
                     return ResponseEntity.badRequest().body("Lỗi: Giá hoặc số lượng không hợp lệ cho sản phẩm có mã: " + ma);
@@ -226,7 +227,11 @@ public class ImportExportFileController {
                     // Nếu mã đã tồn tại, cập nhật số lượng
                         existingChiTietGiay.setSoLuong(importedSoLuong);
                         existingChiTietGiay.setGia(importedGia); // Cập nhật giá
-                        existingChiTietGiay.setQrCode(generateRandomQRCode()); // Cập nhật QR
+                    if(qrCode.isEmpty() || qrCode==null){
+                        existingChiTietGiay.setQrCode(generateRandomQRCode());
+                    }else{
+                        existingChiTietGiay.setQrCode(qrCode); // Cập nhật QR
+                    }
                         chiTietGiayService.save(existingChiTietGiay);
                 } else {
                     // Nếu mã chưa tồn tại, thêm mới

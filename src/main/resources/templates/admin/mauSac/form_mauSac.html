@@ -24,31 +24,31 @@
 </head>
 <body>
 <section>
-    <div layout:fragment="content" class="col-md-9" style="margin: auto">
+    <div layout:fragment="content" class="col-md-12" style="background-color: white; height: 500px; margin: auto">
         <form method="post" th:action="@{/admin/mauSac/add}" th:object="${data}">
-            <div class="row mb-3">
+            <div class="row mb-3" style="margin-top: 20px; margin-left: 50px; margin-right: 50px">
                 <div class="col-6">
                     <div class="form-floating">
                         <input type="text" class="form-control" name="maGiamGia" th:field="*{ma}" id="maGiamGia" placeholder="Nhập mã màu sắc"/>
                         <label for="maGiamGia" class="form-label">Mã Màu sắc</label>
-                        <span th:errors="*{ma}"></span>
+                        <span th:errors="*{ma}" style="color: red"></span>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="form-floating">
                         <input type="text" class="form-control" name="tenGiamGia" th:field="*{ten}" id="tenGiamGia" placeholder="Nhập tên màu sắc"/>
                         <label for="tenGiamGia" class="form-label">Tên Màu sắc</label>
-                        <span th:errors="*{ten}"></span>
+                        <span th:errors="*{ten}" style="color: red"></span>
                     </div>
                 </div>
             </div>
-            <div class="row mb-3">
+            <div class="row mb-3" style="margin-top: 20px; margin-left: 50px; margin-right: 50px">
                 <div class="col">
                     <div class="form-group">
                         <label class="form-label">Trạng thái</label>
                         <div class="form-floating">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="trangThai" th:field="*{trangThai}" value="0" id="radioHoatDong"/>
+                                <input class="form-check-input" type="radio" name="trangThai" value="0" id="radioHoatDong" checked="">
                                 <label class="form-check-label" for="radioHoatDong">Hoạt động</label>
                             </div>
                             <div class="form-check form-check-inline">
@@ -60,9 +60,9 @@
                     </div>
                 </div>
             </div>
-            <div class="row mb-3">
+            <div class="row mb-3" style="margin-top: 20px; margin-left: 50px; margin-right: 50px">
                 <div class="col">
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary">Xác nhận</button>
                 </div>
             </div>
         </form>

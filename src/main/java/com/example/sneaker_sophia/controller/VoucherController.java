@@ -51,15 +51,15 @@ public class VoucherController {
 
     public static int checkSession = 0;
 
-    @Async
-    @Scheduled(cron = "0 * * * * *")
-    public void test() {
-        List<Voucher> listUpdate = voucherService.findByTrangThaiNotLike();
-        if (listUpdate.size() == 0) {
-            return;
-        }
-        voucherService.jobUpdate(listUpdate);
-    }
+//    @Async
+//    @Scheduled(cron = "0 * * * * *")
+//    public void test() {
+//        List<Voucher> listUpdate = voucherService.findByTrangThaiNotLike();
+//        if (listUpdate.size() == 0) {
+//            return;
+//        }
+//        voucherService.jobUpdate(listUpdate);
+//    }
 
 
     @GetMapping("/hien-thi")
@@ -151,6 +151,21 @@ public class VoucherController {
         model.addAttribute("data", voucherReq);
         voucherService.addAttributeModel(model, listId, listIDCTG);
         return "/admin/voucher/update";
+    }
+
+    @GetMapping("/detail/{id}")
+    public String detail(Model model, @PathVariable("id") Voucher vc) {
+        Map<UUID, String> avtctgMap = new HashMap<>();
+        List<ChiTietGiay> listCTG = ctg_khuyenMaiService.findCTG(vc);
+        for (ChiTietGiay ctg : listCTG) {
+            String avtct = anhRepository.getAnhChinhByIdctg(ctg.getId());
+            avtctgMap.put(ctg.getId(), avtct);
+        }
+        model.addAttribute("avtctgMap", avtctgMap);
+        model.addAttribute("listctg",listCTG);
+        model.addAttribute("avtctgMap", avtctgMap);
+        model.addAttribute("data", vc);
+        return "/admin/voucher/detail";
     }
 
     @GetMapping("/delete/{id}")
