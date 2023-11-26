@@ -60,7 +60,6 @@ public class CartService {
             gioHang = gioHangRepository.save(gioHang);
         }
 
-        chiTietGiay.setGia(giaMoi);
         GioHangChiTiet cartItem = gioHangChiTietRepository.findById_GioHangAndId_ChiTietGiay(gioHang, chiTietGiay);
         if (cartItem == null) {
             cartItem = new GioHangChiTiet(new IdGioHangChiTiet(gioHang, chiTietGiay), 1);
