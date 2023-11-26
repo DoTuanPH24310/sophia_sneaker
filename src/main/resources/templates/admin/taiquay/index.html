@@ -10,10 +10,6 @@
 
     <style>
 
-        .modal-backdrop.fade.show {
-            opacity: 0.6;
-        }
-
         #inputPhiShip, #tienKhachDua {
             border: none;
             border-bottom: 2px solid #e9e4e4;
@@ -40,6 +36,9 @@
         h5.modal-title p {
             display: inline; /* hoặc display: inline-block; */
         }
+
+
+
     </style>
 
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.0.0/dist/jsQR.min.js"></script>
@@ -49,6 +48,8 @@
 
 <div layout:fragment="content" class="container" style="background-color: white;">
     <!--        <form action="/admin/tai-quay/addHD" method="post">-->
+
+
 
     <div class="row float-right mr-1">
         <form action="/admin/tai-quay/addHD" method="get">
@@ -870,6 +871,9 @@
         </div>
     </div>
 
+
+
+
     <!--    Modal scan-->
 
     <div class="modal fade" data-backdrop="static" id="modalQRCode" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -931,6 +935,41 @@
         const loaihdg = [[${session.loaihdg}]];
         let slt = -1;
         const checkIHD = [[${session.checkTTHT}]];
+        let notifications = document.querySelector('.notifications');
+
+        function createToast(type, icon, title, text){
+            console.log('vào');
+            let newToast = document.createElement('div');
+            newToast.innerHTML = `
+            <div class="thongBao ${type}">
+                <i class="${icon}"></i>
+                <div class="content">
+                    <div class="title">${title}</div>
+                    <span style="font-weight: bold;">${text}</span>
+                </div>
+                <i class="fa-solid fa-xmark" onclick="(this.parentElement).remove()"></i>
+            </div>`;
+            notifications.appendChild(newToast);
+            // newToast.timeOut = setTimeout(
+            //     ()=>newToast.remove(), 2000
+            // )
+        }
+
+        let errhd = [[${session.errTaiQuay}]];
+        if (errhd != null) {
+            window.addEventListener("load", function () {
+                let type = 'error';
+                let icon = 'fa-solid fa-triangle-exclamation';
+                let title = 'Thất bại';
+                let text = 'Thêm được tối đa 5 hóa đơn.';
+                createToast(type, icon, title, text);
+                console.log('check 2')
+                // alert(errhd);
+                removeSeesion('errTaiQuay');
+            })
+        }
+
+
 
 
         if (checkIHD != null && checkIHD == 1){
@@ -972,13 +1011,7 @@
             });
         }
 
-        let errhd = [[${session.errTaiQuay}]];
-        if (errhd != null) {
-            window.addEventListener("load", function () {
-                alert(errhd);
-                removeSeesion('errTaiQuay');
-            })
-        }
+
         window.addEventListener('load', function () {
             validateTienThua();
         })
@@ -1743,6 +1776,10 @@
             tienDuSpan.textContent = formattedTienDu;
             tienKhachDuaInput.value = formattedTienKhachDua;
         }
+
+
+
+
     </script>
 
 </div>
