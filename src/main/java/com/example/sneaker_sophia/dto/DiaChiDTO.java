@@ -3,6 +3,7 @@ package com.example.sneaker_sophia.dto;
 
 import com.example.sneaker_sophia.entity.DiaChi;
 import com.example.sneaker_sophia.entity.TaiKhoan;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -28,6 +29,10 @@ public class DiaChiDTO {
     @NotNull(message = "Vui lòng chọn tỉnh")
     private Integer tinh;
 
+    @NotBlank(message = "Vui lòng nhập địa chỉ email")
+    @Email(message = "Địa chỉ email không hợp lệ")
+    private String email;
+
     private Integer diaChiMacDinh;
 
     private Integer trangThai;
@@ -43,8 +48,8 @@ public class DiaChiDTO {
         diaChi.setQuanHuyen(getQuanHuyen());
         diaChi.setTinh(getTinh());
         if (getTaiKhoan() != null) {
-            TaiKhoan taiKhoan = new TaiKhoan();
-            taiKhoan.setId(getTaiKhoan().getId());
+            TaiKhoan taiKhoan = getTaiKhoan();
+            taiKhoan.setEmail(getEmail());
             diaChi.setTaiKhoan(taiKhoan);
         }
 

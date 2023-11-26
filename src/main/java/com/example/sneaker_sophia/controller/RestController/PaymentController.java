@@ -2,6 +2,11 @@ package com.example.sneaker_sophia.controller.RestController;
 
 import com.example.sneaker_sophia.configuration.VnpayConfig;
 import com.example.sneaker_sophia.dto.PaymentResDTO;
+import com.example.sneaker_sophia.entity.HoaDon;
+import com.example.sneaker_sophia.repository.HoaDonWebRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +20,8 @@ import java.util.*;
 @RestController
 @RequestMapping("/api/payment")
 public class PaymentController {
+
+
     @GetMapping("/create_payment")
     public String createPayment(@RequestParam("totalAmount") String totalAmount) throws UnsupportedEncodingException {
         String vnp_Version = "2.1.0";
@@ -85,13 +92,9 @@ public class PaymentController {
         return paymentUrl;
     }
 
-    @PostMapping("/payment_callback")
-    public ResponseEntity<String> paymentCallback(@RequestParam(value = "vnp_ResponseCode", required = false) String responseCode) {
-        if (responseCode != null && responseCode.equals("00")) {
-            return ResponseEntity.ok("/check-out/thanhtoan");
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Payment failed");
-        }
-    }
+
+
+
+
 
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zxx">
+<html lang="zxx"  xmlns:th="http://www.thymeleaf.org" >
 
 
 <meta http-equiv="content-type" content="text/html;charset=UTF-8"/><!-- /Added by HTTrack -->
@@ -435,8 +435,18 @@
                             </ul>
                             <a href="#" class="customer-review ml-2">(customer review )</a>
                         </div>
-                        <div class="price"
-                             th:text="${#numbers.formatDecimal(giay.getGia(), 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></div>
+                        <div class="price">
+                            <span th:if="${session['giaCu_' + id] != session['giaMoi_' + id]}"
+                                  class="original-price"
+                                  style="text-decoration: line-through; color: red; font-size: 13px"
+                                  th:text="${#numbers.formatCurrency(session['giaCu_' + id])}"></span>
+                            <br>
+                            <span class="discounted-price" th:if="${session['giaCu_' + id] != session['giaMoi_' + id]}"
+                                  th:text="${#numbers.formatCurrency(session['giaMoi_' + id])}"></span>
+
+                            <span th:unless="${session['giaCu_' + id] != session['giaMoi_' + id]}"
+                                  th:text="${#numbers.formatCurrency(session['giaCu_' + id])}"></span>
+                        </div>
 
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam fringilla augue nec est
                             critique auctor. Donec non est at libero vulputate rutrum. Morbi ornare lectus quis

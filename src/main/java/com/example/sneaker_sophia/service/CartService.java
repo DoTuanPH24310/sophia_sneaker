@@ -25,8 +25,8 @@ public class CartService {
 
     private final LoginRepository loginRepository;
     private final GioHangRepository gioHangRepository;
-    @PersistenceContext
-    private EntityManager entityManager;
+    @Autowired
+    private KhuyenMaiWebService khuyenMaiWebService;
     @Autowired
     private HttpSession session;
     @Autowired
@@ -45,9 +45,14 @@ public class CartService {
         if (!loginRepository.existsByEmail(userEmail)) {
             return;
         }
+        ChiTietGiay chiTietGiay = chiTietGiayRepository.findById(chiTietGiayId).get();
+
         TaiKhoan taiKhoan = loginRepository.findByEmail(userEmail);
         GioHang gioHang = gioHangRepository.findByTaiKhoan(taiKhoan);
 
+        if (chiTietGiay != null && chiTietGiay.getSoLuong() <= 0) {
+            return;
+        }
         if (gioHang == null) {
             gioHang = new GioHang();
             gioHang.setTaiKhoan(taiKhoan);
@@ -55,7 +60,6 @@ public class CartService {
             gioHang = gioHangRepository.save(gioHang);
         }
 
-        ChiTietGiay chiTietGiay = chiTietGiayRepository.findById(chiTietGiayId).get();
         chiTietGiay.setGia(giaMoi);
         GioHangChiTiet cartItem = gioHangChiTietRepository.findById_GioHangAndId_ChiTietGiay(gioHang, chiTietGiay);
         if (cartItem == null) {
@@ -76,7 +80,9 @@ public class CartService {
         Optional<ChiTietGiay> chiTietSanPham = this.chiTietGiayRepository.findById(id);
 
         Cart cartSession = (Cart) httpSession.getAttribute("cart");
-
+        if (chiTietSanPham.get().getSoLuong() <= 0) {
+            return;
+        }
         if (cartSession == null) {
             Cart cart = new Cart();
             List<CartItem> list = new ArrayList<>();

@@ -19,8 +19,8 @@ public class KhuyenMaiWebService {
 
         if (listCTG_KM != null && !listCTG_KM.isEmpty()) {
             for (CTG_KhuyenMai ctg : listCTG_KM) {
-                if (ctg.getTrangThai() == 0) {
-                    Voucher voucher = ctg.getId().getVoucher();
+                Voucher voucher = ctg.getId().getVoucher();
+                if (voucher.getTrangThai() == 1) {
                     Integer phanTramGiam = voucher.getPhanTramGiam();
                     if (phanTramGiam != null) {
                         Double giamGia = (phanTramGiam * giaBan) / 100.0;
@@ -35,5 +35,6 @@ public class KhuyenMaiWebService {
 
         chiTietGiay.setGia(giaKhuyenMai);
     }
+
 
 }

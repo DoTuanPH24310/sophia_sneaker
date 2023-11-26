@@ -15,4 +15,6 @@ public interface HoaDonWebRepository extends JpaRepository<HoaDon, String> {
             + "WHERE YEAR(h.ngayNhan) = :nam "
             + "GROUP BY MONTH(h.ngayNhan)")
     List<Object[]> getDoanhThuTheoThang(@Param("nam") int nam);
+
+    HoaDon findByMaHoaDOn(String hoadon);
 }

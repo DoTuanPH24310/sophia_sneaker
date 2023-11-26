@@ -54,7 +54,7 @@ public class ThanhToanService {
         hoaDon.setDiaChi(diaChiTamChu.taoDiaChiString(taiKhoan.getDiaChiList()));
         hoaDon.setPhiShip(20000.0);
         hoaDon.setTrangThai(3);
-        hoaDon.setTongTien(total);
+        hoaDon.setTongTien(0.0);
         hoaDon.setTienThua(0.0);
         HoaDon savedHoaDon = hoaDonWebRepository.save(hoaDon);
         for (GioHangChiTiet cartItem : cartItems) {

@@ -55,9 +55,9 @@ public class EmailService {
     public TaiKhoan taoTaiKhoanMoi(DiaChiDTO diaChiDTO) {
         TaiKhoan taiKhoanMoi = new TaiKhoan();
 
-        if (diaChiDTO != null && diaChiDTO.getTaiKhoan() != null) {
+        if (diaChiDTO != null) {
             taiKhoanMoi.setTen(diaChiDTO.getTen());
-            taiKhoanMoi.setEmail(diaChiDTO.getTaiKhoan().getEmail());
+            taiKhoanMoi.setEmail(diaChiDTO.getEmail());
             taiKhoanMoi.setTrangThai(1);
             String matKhauNgauNhien = taoMatKhauNgauNhien();
             String hashedMatKhau = passwordEncoder.encode(matKhauNgauNhien);
@@ -80,8 +80,10 @@ public class EmailService {
     public void themDiaChiVaoTaiKhoan(DiaChiDTO diaChiDTO, TaiKhoan taiKhoan) {
         DiaChi diaChiMoi = new DiaChi();
         diaChiDTO.loadDiaChiDTO(diaChiMoi);
+        taiKhoan.setEmail(diaChiDTO.getEmail());
         diaChiMoi.setTrangThai(1);
         diaChiMoi.setDiaChiMacDinh(1);
+
 
         if (taiKhoan.getId() == null) {
             this.taiKhoanRepository.save(taiKhoan);
@@ -197,12 +199,13 @@ public class EmailService {
         hoaDonMoi.setSoDienThoai(taiKhoan.getSdt());
         hoaDonMoi.setDiaChi(diaChiTamChu.taoDiaChiString(taiKhoan.getDiaChiList()));
         hoaDonMoi.setPhiShip(20000.0);
-//        hoaDonMoi.setTongTien(total);
+        hoaDonMoi.setTongTien(0.0);
         hoaDonMoi.setTienThua(0.0);
         hoaDonMoi.setTrangThai(3);
 
         hoaDonMoi = this.hoaDonWebRepository.save(hoaDonMoi);
 
+        session.setAttribute("maHD", hoaDonMoi.getMaHoaDOn());
         HinhThucThanhToan hinhThuc = new HinhThucThanhToan();
         hinhThuc.setTrangThai(hinhThucThanhToan);
         hinhThuc.setHoaDon(hoaDonMoi);

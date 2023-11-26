@@ -74,8 +74,6 @@ public class ProductWebController {
         List<ChiTietGiay> productList = filteredChiTietGiay.getContent();
         for (ChiTietGiay chiTietGiay : productList) {
             this.khuyenMaiWebService.tinhGiaSauKhuyenMai(chiTietGiay, session);
-
-            // Thêm giá cũ và giá mới vào model
             model.addAttribute("giaCu_" + chiTietGiay.getId(), session.getAttribute("giaCu"));
             model.addAttribute("giaMoi_" + chiTietGiay.getId(), session.getAttribute("giaMoi"));
         }

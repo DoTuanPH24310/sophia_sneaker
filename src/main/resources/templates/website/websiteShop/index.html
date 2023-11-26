@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zxx">
+<html lang="zxx" xmlns:th="http://www.thymeleaf.org">
 
 
 <meta http-equiv="content-type" content="text/html;charset=UTF-8"/><!-- /Added by HTTrack -->
@@ -761,8 +761,10 @@
                                         </div>
                                         <div class="action-link">
                                             <div class="action-link-left">
-                                                <a class="add-to-cart" th:attr="data-product-id=${product.getChiTietGiayList().get(0).getId()}"
-                                                   data-bs-toggle="modal" data-bs-target="#modalAddcart" href="#">Add to Cart</a>
+                                                <a class="add-to-cart"
+                                                   th:attr="data-product-id=${product.getChiTietGiayList().get(0).getId()}"
+                                                   data-bs-toggle="modal" data-bs-target="#modalAddcart" href="#">Add to
+                                                    Cart</a>
                                             </div>
                                             <div class="action-link-right">
                                                 <a href="#" data-bs-toggle="modal"
@@ -790,8 +792,20 @@
                                             </ul>
                                         </div>
                                         <div class="content-right">
-                                                <span class="price" th:if="${product.getChiTietGiayList() != null and product.getChiTietGiayList().size() > 0}">
-                                                    <span th:text="${#numbers.formatDecimal(product.getChiTietGiayList().get(0).getGia(), 0, 'COMMA', 0, 'POINT') + ' VNĐ'}"></span>
+                                                <span class="price"
+                                                      th:if="${product.getChiTietGiayList() != null and product.getChiTietGiayList().size() > 0}">
+<!--                                                    <span th:text="${#numbers.formatDecimal(product.getChiTietGiayList().get(0).getGia(), 0, 'COMMA', 0, 'POINT') + ' VNĐ'}"></span>-->
+                                                    <span th:if="${session['giaCu_' + product.getChiTietGiayList().get(0)] != session['giaMoi_' + product.getChiTietGiayList().get(0)]}"
+                                                          class="original-price"
+                                                          style="text-decoration: line-through; color: red; font-size: 13px"
+                                                          th:text="${#numbers.formatCurrency(session['giaCu_' + product.getChiTietGiayList().get(0)])}"></span>
+
+                                                                    <span class="discounted-price"
+                                                                          th:if="${session['giaCu_' + product.getChiTietGiayList().get(0)] != session['giaMoi_' + product.getChiTietGiayList().get(0)]}"
+                                                                          th:text="${#numbers.formatCurrency(session['giaMoi_' + product.getChiTietGiayList().get(0)])}"></span>
+
+                                                                    <span th:unless="${session['giaCu_' + product.getChiTietGiayList().get(0)] != session['giaMoi_' + product.getChiTietGiayList().get(0)]}"
+                                                                          th:text="${#numbers.formatCurrency(session['giaCu_' + product.getChiTietGiayList().get(0)])}"></span>
                                                 </span>
 
                                         </div>
@@ -1594,7 +1608,7 @@
                     <div class="row">
                         <div class="col-md-7">
                             <div class="row">
-                                <div class="col-md-4"  >
+                                <div class="col-md-4">
                                     <div class="modal-add-cart-product-img">
                                         <img th:src="@{${products.get(0).getChiTietGiayList().get(0).getAnhs().get(0).getDuongDan()}}"
                                              style="width: 90px; height: 135px" class="img-fluid" alt=""/>
@@ -1613,9 +1627,11 @@
                         </div>
                         <div class="col-md-5 modal-border">
                             <ul class="modal-add-cart-product-shipping-info">
-                                <li><strong><i class="icon-shopping-cart"></i> There Are <strong th:text="${cartItems.size()+1}"></strong> Items In Your
+                                <li><strong><i class="icon-shopping-cart"></i> There Are <strong
+                                        th:text="${cartItems.size()+1}"></strong> Items In Your
                                     Cart.</strong></li>
-                                <li><strong>TOTAL PRICE: </strong> <span th:text="${#numbers.formatCurrency(totalCartPrice)}"></span></li>
+                                <li><strong>TOTAL PRICE: </strong> <span
+                                        th:text="${#numbers.formatCurrency(totalCartPrice)}"></span></li>
                                 <li class="modal-continue-button"><a href="#" data-bs-dismiss="modal">CONTINUE
                                     SHOPPING</a></li>
                             </ul>
