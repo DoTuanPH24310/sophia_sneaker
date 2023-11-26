@@ -726,8 +726,8 @@
                 <div class="col-12">
                     <div class="section-content-gap">
                         <div class="secton-content">
-                            <h3 class="section-title">the New arrivals</h3>
-                            <p>Preorder now to receive exclusive deals & gifts</p>
+                            <h3 class="section-title">sản phẩm mới</h3>
+                            <p>Đặt hàng ngay để nhận ưu đãi & quà tặng độc quyền</p>
                         </div>
                     </div>
                 </div>
@@ -748,12 +748,11 @@
                                 <div class="product-default-single-item product-color--pink swiper-slide"
                                      th:each="product : ${products}">
                                     <div class="image-box">
-                                        <a th:href="@{'/sophia-store/detail/'+${product.getChiTietGiayList().get(0).getId()}}"
-                                           class="image-link"
-                                           th:if="${not #lists.isEmpty(product.getChiTietGiayList())}">
-                                            <img th:src="@{${product.getChiTietGiayList().get(0).getAnhs().get(0).getDuongDan()}}"
+                                        <a th:href="@{'/sophia-store/detail/'+${product.getId()}}"
+                                           class="image-link">
+                                            <img th:src="@{${product.anhs.get(0).getDuongDan()}}"
                                                  style="width: 320px; height: 370px" class="img-fluid" alt=""/>
-                                            <img th:src="@{${product.getChiTietGiayList().get(0).getAnhs().get(1).getDuongDan()}}"
+                                            <img th:src="@{${product.anhs.get(1).getDuongDan()}}"
                                                  style="width: 320px; height: 370px" class="img-fluid" alt=""/>
                                         </a>
                                         <div class="tag">
@@ -761,7 +760,7 @@
                                         </div>
                                         <div class="action-link">
                                             <div class="action-link-left">
-                                                <a class="add-to-cart" th:attr="data-product-id=${product.getChiTietGiayList().get(0).getId()}"
+                                                <a class="add-to-cart" th:attr="data-product-id=${product.getId()}"
                                                    data-bs-toggle="modal" data-bs-target="#modalAddcart" href="#">Add to Cart</a>
                                             </div>
                                             <div class="action-link-right">
@@ -775,10 +774,9 @@
                                     </div>
                                     <div class="content">
                                         <div class="content-left">
-                                            <h6 class="title"
-                                                th:if="${product.getChiTietGiayList() != null and product.getChiTietGiayList().size() > 0}">
-                                                <a th:href="@{'/sophia-store/detail/' + ${product.getChiTietGiayList().get(0).getId()}}"
-                                                   th:text="${product.getChiTietGiayList().get(0).getHang().getTen() + ' ' + product.getTen()}">
+                                            <h6 class="title">
+                                                <a th:href="@{'/sophia-store/detail/' + ${product.getId()}}"
+                                                   th:text="${product.getHang().getTen() + ' ' + product.getTen()}">
                                                 </a>
                                             </h6>
                                             <ul class="review-star">
@@ -790,8 +788,8 @@
                                             </ul>
                                         </div>
                                         <div class="content-right">
-                                                <span class="price" th:if="${product.getChiTietGiayList() != null and product.getChiTietGiayList().size() > 0}">
-                                                    <span th:text="${#numbers.formatDecimal(product.getChiTietGiayList().get(0).getGia(), 0, 'COMMA', 0, 'POINT') + ' VNĐ'}"></span>
+                                                <span class="price" >
+                                                    <span th:text="${#numbers.formatDecimal(product.getGia(), 0, 'COMMA', 0, 'POINT') + ' VNĐ'}"></span>
                                                 </span>
 
                                         </div>
@@ -1596,7 +1594,7 @@
                             <div class="row">
                                 <div class="col-md-4"  >
                                     <div class="modal-add-cart-product-img">
-                                        <img th:src="@{${products.get(0).getChiTietGiayList().get(0).getAnhs().get(0).getDuongDan()}}"
+                                        <img th:src="@{${products.get(0).getAnhs().get(0)}}"
                                              style="width: 90px; height: 135px" class="img-fluid" alt=""/>
                                     </div>
                                 </div>
