@@ -334,52 +334,10 @@ public class ChiTietGiayService {
 
     public boolean validate(ChiTietGiay chiTietGiay, Model model) {
         int check = 0;
-        String errTen = null, errMa = null, errSoLuong = null, errGia = null, errQr = null;
-        Double gia = 0.0;
-        Integer sl = 0;
+        String errMa = null, errQr = null;
 
-        if (chiTietGiay.getMa() == null || StringUtils.isEmpty(chiTietGiay.getMa()) || chiTietGiay.getMa().length() > 49
-                || !chiTietGiay.getMa().matches("^[a-zA-Z0-9]+$")) {
-            errMa = "Mã không hợp lệ";
-            check++;
-        }
         if (chiTietGiayRepository.getIdCTGByMa(chiTietGiay.getMa()) != null){
             errMa = "Mã đã được sử dụng";
-            check++;
-        }
-
-
-        if (chiTietGiay.getTen() == null || StringUtils.isEmpty(chiTietGiay.getTen()) || chiTietGiay.getTen().length() > 49
-                || !chiTietGiay.getTen().matches("^[a-zA-Z0-9]+$")) {
-            errTen = "Tên không hợp lệ";
-            check++;
-        }
-
-        if (chiTietGiay.getGia() == null || StringUtils.isEmpty(String.valueOf(chiTietGiay.getGia()))) {
-            errGia = "Vui lòng nhập giá";
-            check++;
-        } else {
-            try {
-                gia = Double.parseDouble(String.valueOf(chiTietGiay.getGia()));
-                if (gia <= 0 || gia > 1000000000) {
-                    errGia = "Giá phải là một số dương và không quá 1,000,000,000";
-                    check++;
-                }
-            } catch (NumberFormatException e) {
-                errGia = "Giá phải là một số";
-                check++;
-            }
-        }
-
-        try {
-            sl = Integer.parseInt(String.valueOf(chiTietGiay.getSoLuong()));
-        } catch (NumberFormatException e) {
-            errSoLuong = "Vui lòng nhập số";
-            check++;
-        }
-
-        if ((chiTietGiay.getQrCode().length() > 16 || !chiTietGiay.getQrCode().matches("^[a-zA-Z0-9]+$"))) {
-            errQr = "QR code không hợp lệ";
             check++;
         }
 
@@ -387,10 +345,7 @@ public class ChiTietGiayService {
             errQr = "QR code đã được sử dụng";
             check++;
         }
-        model.addAttribute("errTen", errTen);
-        model.addAttribute("errGia", errGia);
         model.addAttribute("errMa", errMa);
-        model.addAttribute("errSoLuong", errSoLuong);
         model.addAttribute("errQr", errQr);
 
         return check == 0;
@@ -398,58 +353,24 @@ public class ChiTietGiayService {
 
     public boolean validateUpdate(ChiTietGiay chiTietGiay, Model model) {
         int check = 0;
-        String errTen = null, errMa = null, errSoLuong = null, errGia = null, errQr = null;
-        Double gia = 0.0;
-        Integer sl = 0;
+        String errMa = null, errQr = null;
 
-        if (chiTietGiay.getMa() == null || StringUtils.isEmpty(chiTietGiay.getMa()) || chiTietGiay.getMa().length() > 49
-                || !chiTietGiay.getMa().matches("^[a-zA-Z0-9]+$")) {
-            errMa = "Mã không hợp lệ";
+        // Kiểm tra xem mã QR code đã được sử dụng hay chưa
+        ChiTietGiay existingChiTietGiay = chiTietGiayRepository.getChiTietGiayByQrCode(chiTietGiay.getQrCode());
+        if (existingChiTietGiay != null && !existingChiTietGiay.getId().equals(chiTietGiay.getId())) {
+            // Nếu mã QR code đã được sử dụng và không phải là chính nó, thì thông báo lỗi
+            errQr = "QR code đã được sử dụng";
             check++;
         }
 
-        if (chiTietGiay.getTen() == null || StringUtils.isEmpty(chiTietGiay.getTen()) || chiTietGiay.getTen().length() > 49
-                || !chiTietGiay.getTen().matches("^[a-zA-Z0-9]+$")) {
-            errTen = "Tên không hợp lệ";
-            check++;
-        }
+        // Các kiểm tra khác (nếu có)
 
-        if (chiTietGiay.getGia() == null || StringUtils.isEmpty(String.valueOf(chiTietGiay.getGia()))) {
-            errGia = "Vui lòng nhập giá";
-            check++;
-        } else {
-            try {
-                gia = Double.parseDouble(String.valueOf(chiTietGiay.getGia()));
-                if (gia <= 0 || gia > 1000000000) {
-                    errGia = "Giá phải là một số dương và không quá 1,000,000,000";
-                    check++;
-                }
-            } catch (NumberFormatException e) {
-                errGia = "Giá phải là một số";
-                check++;
-            }
-        }
-
-        try {
-            sl = Integer.parseInt(String.valueOf(chiTietGiay.getSoLuong()));
-        } catch (NumberFormatException e) {
-            errSoLuong = "Vui lòng nhập số";
-            check++;
-        }
-
-        if ((chiTietGiay.getQrCode().length() > 16 || !chiTietGiay.getQrCode().matches("^[a-zA-Z0-9]+$"))) {
-            errQr = "QR code không hợp lệ";
-            check++;
-        }
-
-        model.addAttribute("errTen", errTen);
-        model.addAttribute("errGia", errGia);
         model.addAttribute("errMa", errMa);
-        model.addAttribute("errSoLuong", errSoLuong);
         model.addAttribute("errQr", errQr);
 
         return check == 0;
     }
+
 
 
 }

@@ -72,70 +72,12 @@
         }
 
     </style>
-    <script>
-        var selectedImages = []; // Mảng lưu trữ các ảnh đã chọn
-        var maxImages = 3; // Số lượng tối đa ảnh được phép tải lên
-
-        function showSelectedImages(input) {
-            var imageList = document.getElementById("imageList");
-            imageList.innerHTML = ''; // Xóa bỏ danh sách ảnh trước đó
-
-            for (var i = 0; i < input.files.length; i++) {
-                if (input.files.length > maxImages) {
-                    alert("Chỉ được tải lên tối đa " + maxImages + " ảnh.");
-                    break;
-                } else {
-
-                    var file = input.files[i];
-
-                    if (file) {
-                        var reader = new FileReader();
-
-                        reader.onload = function (e) {
-
-                            var img = document.createElement("img");
-                            img.src = e.target.result;
-
-                            var listItem = document.createElement("li");
-                            listItem.appendChild(img);
-
-                            // Tạo nút xóa và thêm sự kiện xóa
-                            var deleteButton = document.createElement("button");
-                            deleteButton.innerHTML = '<i class="fa fa-times-circle"></i>'; // Biểu tượng X
-                            deleteButton.onclick = function () {
-                                deleteImage(this);
-                            };
-                            listItem.appendChild(deleteButton);
-
-                            imageList.appendChild(listItem);
-                            selectedImages.push(file); // Lưu trữ ảnh đã chọn
-                        };
-
-                        reader.readAsDataURL(file);
-                    }
-                }
-            }
-        }
-
-        function deleteImage(button) {
-            var listItem = button.parentElement;
-            var index = Array.from(listItem.parentElement.children).indexOf(listItem);
-            selectedImages.splice(index, 1); // Xóa ảnh khỏi mảng
-            listItem.remove(); // Xóa phần tử li chứa ảnh
-        }
-
-        function deleteSelectedImages() {
-            // Xóa tất cả các ảnh đã chọn
-            selectedImages = [];
-            var imageList = document.getElementById("imageList");
-            imageList.innerHTML = '';
-        }
-    </script>
+    <script src="/js/chiTietGiay.js"></script>
 </head>
 <body>
 <section>
     <div layout:fragment="content" class="col-md-9" style="margin: auto">
-        <form method="post" th:action="@{/admin/chi-tiet-giay/add}" th:object="${chiTietGiay}"
+        <form method="post" th:action="@{/admin/chi-tiet-giay/add}" th:object="${chiTietGiay}" onsubmit="return validateForm()"
               enctype="multipart/form-data">
             <div class="form-group">
                 <div class="row">
@@ -144,12 +86,13 @@
                         <input th:field="*{ma}" class="form-control custom-width" id="maChiTietGiay"
                                name="maChiTietGiay">
                         <p th:text="${errMa}" class="text-danger"></p>
+                        <p id="maValidationMessage" class="text-danger"></p>
                     </div>
                     <div class="col">
                         <label for="tenChiTietGiay">Tên chi tiết giày:</label>
                         <input th:field="*{ten}" class="form-control custom-width" id="tenChiTietGiay"
                                name="tenChiTietGiay">
-                        <p th:text="${errTen}" class="text-danger"></p>
+                        <p id="tenValidationMessage" class="text-danger"></p>
                     </div>
                 </div>
             </div>
@@ -230,12 +173,12 @@
                     <div class="col">
                         <label for="soLuong">Số lượng:</label>
                         <input th:field="*{soLuong}" class="form-control custom-width" id="soluong" name="soluong">
-                        <p th:text="${errSoLuong}" class="text-danger"></p>
+                        <p id="soLuongValidationMessage" class="text-danger"></p>
                     </div>
                     <div class="col">
                         <label for="gia">Giá:</label>
                         <input th:field="*{gia}" class="form-control custom-width" id="gia" name="gia">
-                        <p th:text="${errGia}" class="text-danger"></p>
+                        <p id="giaValidationMessage" class="text-danger"></p>
                     </div>
                 </div>
             </div>
@@ -245,6 +188,7 @@
                         <label for="moTa">Mô tả</label>
                         <textarea th:field="*{moTa}" class="form-control custom-width" id="moTa"
                                   name="moTa"></textarea>
+                        <p id="moTaValidationMessage" class="text-danger"></p>
                     </div>
                     <div class="col">
                         <label>Trạng thái:</label>
@@ -266,7 +210,7 @@
                         <ul id="imageList">
                             <!-- Danh sách các ảnh đã chọn sẽ được hiển thị ở đây -->
                         </ul>
-
+                        <p id="imageValidationMessage" class="text-danger"></p>
                         <input id="customFileInput" type="file" name="imageFile" multiple
                                onchange="showSelectedImages(this)"/>
                         <label for="customFileInput" class="btn btn-danger">
@@ -283,6 +227,7 @@
                         <input th:field="*{qrCode}" class="form-control custom-width" id="qrCode"
                                name="qrCode">
                         <p th:text="${errQr}" class="text-danger"></p> <br>
+                        <p id="qrCodeValidationMessage" class="text-danger"></p>
                     </div>
                 </div>
             </div>
@@ -291,8 +236,6 @@
                        value="Submit">
             </div>
         </form>
-
-
     </div>
 </section>
 </body>
