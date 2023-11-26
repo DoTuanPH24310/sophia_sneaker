@@ -157,6 +157,7 @@ public class EmailService {
             hoaDonChiTiet.setSoLuong(cartItem.getSoLuong());
             hoaDonChiTiet.setDonGia(cartItem.getGia());
             hoaDonChiTiet.setTrangThai(1);
+
             ChiTietGiay chiTietGiay = chiTietGiayRepository.findById(cartItem.getId()).orElse(null);
 
             if (chiTietGiay != null) {
@@ -184,13 +185,8 @@ public class EmailService {
 
 
     public HoaDon taoHoaDonMoi(TaiKhoan taiKhoan, Integer hinhThucThanhToan) {
-        Integer i = 20;
-        double total = 0.0;
         Cart cart = (Cart) session.getAttribute("cart");
         List<CartItem> cartItems = cart.getItems();
-        for (CartItem cartItem : cartItems) {
-            total += cartItem.getGia() * cartItem.getSoLuong();
-        }
         HoaDon hoaDonMoi = new HoaDon();
         hoaDonMoi.setMaHoaDOn("HD" + this.hoaDonRepository.soHD());
         hoaDonMoi.setTaiKhoan(taiKhoan);
@@ -202,6 +198,7 @@ public class EmailService {
         hoaDonMoi.setTongTien(0.0);
         hoaDonMoi.setTienThua(0.0);
         hoaDonMoi.setTrangThai(3);
+//        hoaDonMoi.setKhuyenMai();
 
         hoaDonMoi = this.hoaDonWebRepository.save(hoaDonMoi);
 
@@ -209,6 +206,7 @@ public class EmailService {
         HinhThucThanhToan hinhThuc = new HinhThucThanhToan();
         hinhThuc.setTrangThai(hinhThucThanhToan);
         hinhThuc.setHoaDon(hoaDonMoi);
+        hinhThuc.setSoTien(0.0);
         hinhThucThanhToanWebRepository.save(hinhThuc);
 
         LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();

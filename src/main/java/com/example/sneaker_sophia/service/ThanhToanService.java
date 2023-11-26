@@ -3,6 +3,7 @@ package com.example.sneaker_sophia.service;
 import com.example.sneaker_sophia.entity.*;
 import com.example.sneaker_sophia.repository.*;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +35,8 @@ public class ThanhToanService {
     private HinhThucThanhToanWebRepository hinhThucThanhToanRepository;
 
     @Autowired
+    private HttpSession session;
+    @Autowired
     private LichSuHoaDonWebRepository lichSuHoaDonWebRepository;
 
     @Resource(name = "hoaDonRepository")
@@ -59,27 +62,18 @@ public class ThanhToanService {
         HoaDon savedHoaDon = hoaDonWebRepository.save(hoaDon);
         for (GioHangChiTiet cartItem : cartItems) {
             HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
-            ChiTietGiay chiTietGiay = cartItem.getId().getChiTietGiay();
 
-            int soLuongMua = cartItem.getSoLuong();
-            int soLuongHienTai = chiTietGiay.getSoLuong();
-
-            if (soLuongHienTai >= soLuongMua) {
-                chiTietGiay.setSoLuong(soLuongHienTai - soLuongMua);
-                chiTietGiayRepository.save(chiTietGiay);
-            }else{
-                return;
-            }
             hoaDonChiTiet.setHoaDon(savedHoaDon);
             hoaDonChiTiet.setChiTietGiay(cartItem.getId().getChiTietGiay());
             hoaDonChiTiet.setSoLuong(cartItem.getSoLuong());
-            hoaDonChiTiet.setDonGia(cartItem.getId().getChiTietGiay().getGia());
+            hoaDonChiTiet.setDonGia(0.0);
             hoaDonChiTietRepository.save(hoaDonChiTiet);
         }
 
         HinhThucThanhToan hinhThuc = new HinhThucThanhToan();
         hinhThuc.setTrangThai(hinhThucThanhToan);
         hinhThuc.setHoaDon(savedHoaDon);
+        hinhThuc.setSoTien(0.0);
         hinhThucThanhToanRepository.save(hinhThuc);
 
         LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
