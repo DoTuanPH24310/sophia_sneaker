@@ -170,23 +170,38 @@ public class ChiTietGiayController {
         return "admin/chiTietGiay/formEditChiTietGiay";
     }
 
-    @PostMapping("/chi-tiet-giay/save")
+    @PostMapping("/chi-tiet-giay/add")
     public String add(
             @ModelAttribute ChiTietGiay chiTietGiay,
-            @RequestParam("imageFile") MultipartFile[] imageFiles) {
+            @RequestParam("imageFile") MultipartFile[] imageFiles,
+            Model model) {
         try {
+            // Kiểm tra hợp lệ trước khi lưu thông tin
+            if (!chiTietGiayService.validate(chiTietGiay, model)) {
+                model.addAttribute("giay", giayService.getAll());
+                model.addAttribute("hang", hangService.getAll());
+                model.addAttribute("deGiay", deGiayService.getAll());
+                model.addAttribute("mauSac", mauSacService.getAll());
+                model.addAttribute("loaiGiay", loaiGiayService.getAll());
+                model.addAttribute("kichCo", kichCoService.getAll());
+                model.addAttribute("anh", anhService.getAll());
+                return "admin/chiTietGiay/formChiTietGiay";
+            }
+
             // Lưu chi tiết giày vào cơ sở dữ liệu
             chiTietGiayService.save(chiTietGiay);
 
             boolean isFirstImage = true;
+            // Kiểm tra nếu danh sách ảnh rỗng, thêm 2 ảnh mặc định
+            if (imageFiles.length==0) {
+                addDefaultImages(anhService, chiTietGiay, 2);
+            } else {
+                // Nếu danh sách chỉ có 1 ảnh, thêm 1 ảnh mặc định
+                if (imageFiles.length == 1) {
+                    addDefaultImages(anhService, chiTietGiay, 1);
+                }
 
-            for (MultipartFile imageFile : imageFiles) {
-                String originalFilename = imageFile.getOriginalFilename();
-
-                // Tải ảnh lên Cloudinary và nhận URL của ảnh
-                String imageUrl = fileUpload.uploadFile(imageFile);
-
-                if (imageUrl != null) {
+                for (MultipartFile imageFile : imageFiles) {
                     // Tạo đối tượng ảnh và thiết lập các thông tin cần thiết
                     Anh anh = new Anh();
 
@@ -197,7 +212,7 @@ public class ChiTietGiayController {
                         anh.setAnhChinh(0);
                     }
 
-                    anh.setDuongDan(imageUrl); // Lưu URL của ảnh từ Cloudinary
+                    anh.setDuongDan(String.valueOf(imageFile)); // Lưu URL của ảnh từ Cloudinary
                     anh.setChiTietGiay(chiTietGiay);
 
                     // Lưu đối tượng ảnh vào cơ sở dữ liệu
@@ -206,25 +221,53 @@ public class ChiTietGiayController {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            // Xử lý lỗi, có thể thêm thông báo lỗi vào model để hiển thị trên giao diện
         }
 
         return "redirect:/admin/chi-tiet-giay";
     }
 
+    // Hàm thêm ảnh mặc định
+    private void addDefaultImages(AnhService anhService, ChiTietGiay chiTietGiay, int count) {
+        for (int i = 0; i < count; i++) {
+            Anh anh = new Anh();
+            anh.setAnhChinh(0); // Đặt là ảnh không chính
+            anh.setDuongDan("http://res.cloudinary.com/deihbhsfj/image/upload/v1700796874/1c68cc62-7857-46b4-8ce2-b62ad2dc82d1.jpg");
+            anh.setChiTietGiay(chiTietGiay);
+            anhService.save(anh);
+        }
+    }
     @PostMapping("chi-tiet-giay/update")
     public String update(ChiTietGiay chiTietGiay,
-                         @RequestParam("imageFile") MultipartFile[] imageFiles) {
+                         @RequestParam("imageFile") MultipartFile[] imageFiles,
+                         Model model) {
         try {
+            // Kiểm tra hợp lệ trước khi lưu thông tin
+            if (!chiTietGiayService.validate(chiTietGiay, model)) {
+                model.addAttribute("giay", giayService.getAll());
+                model.addAttribute("hang", hangService.getAll());
+                model.addAttribute("deGiay", deGiayService.getAll());
+                model.addAttribute("mauSac", mauSacService.getAll());
+                model.addAttribute("loaiGiay", loaiGiayService.getAll());
+                model.addAttribute("kichCo", kichCoService.getAll());
+                model.addAttribute("anh", anhService.getAll());
+                return "admin/chiTietGiay/formChiTietGiay";
+            }
+
             // Lưu chi tiết giày vào cơ sở dữ liệu
             chiTietGiayService.save(chiTietGiay);
+
             boolean isFirstImage = true;
-            for (MultipartFile imageFile : imageFiles) {
-                String originalFilename = imageFile.getOriginalFilename();
+            // Kiểm tra nếu danh sách ảnh rỗng, thêm 2 ảnh mặc định
+            if (imageFiles.length==0) {
+                addDefaultImages(anhService, chiTietGiay, 2);
+            } else {
+                // Nếu danh sách chỉ có 1 ảnh, thêm 1 ảnh mặc định
+                if (imageFiles.length == 1) {
+                    addDefaultImages(anhService, chiTietGiay, 1);
+                }
 
-                // Tải ảnh lên Cloudinary và nhận URL của ảnh
-                String imageUrl = fileUpload.uploadFile(imageFile);
-
-                if (imageUrl != null) {
+                for (MultipartFile imageFile : imageFiles) {
                     // Tạo đối tượng ảnh và thiết lập các thông tin cần thiết
                     Anh anh = new Anh();
 
@@ -235,7 +278,7 @@ public class ChiTietGiayController {
                         anh.setAnhChinh(0);
                     }
 
-                    anh.setDuongDan(imageUrl); // Lưu URL của ảnh từ Cloudinary
+                    anh.setDuongDan(String.valueOf(imageFile)); // Lưu URL của ảnh từ Cloudinary
                     anh.setChiTietGiay(chiTietGiay);
 
                     // Lưu đối tượng ảnh vào cơ sở dữ liệu
@@ -244,9 +287,8 @@ public class ChiTietGiayController {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            // Xử lý lỗi, có thể thêm thông báo lỗi vào model để hiển thị trên giao diện
         }
-
-        chiTietGiayService.save(chiTietGiay);
         return "redirect:/admin/chi-tiet-giay";
     }
 

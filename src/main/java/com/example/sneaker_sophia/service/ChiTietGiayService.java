@@ -1,6 +1,7 @@
 package com.example.sneaker_sophia.service;
 
 import com.example.sneaker_sophia.dto.DTO_API_CTG;
+import com.example.sneaker_sophia.dto.VoucherDTO;
 import com.example.sneaker_sophia.entity.*;
 import com.example.sneaker_sophia.repository.ChiTietGiayRepository;
 import jakarta.persistence.EntityManager;
@@ -22,8 +23,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.thymeleaf.util.StringUtils;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -327,5 +331,126 @@ public class ChiTietGiayService {
     public ChiTietGiay findByMa(String ma) {
         return chiTietGiayRepository.findByMa(ma);
     }
+
+    public boolean validate(ChiTietGiay chiTietGiay, Model model) {
+        int check = 0;
+        String errTen = null, errMa = null, errSoLuong = null, errGia = null, errQr = null;
+        Double gia = 0.0;
+        Integer sl = 0;
+
+        if (chiTietGiay.getMa() == null || StringUtils.isEmpty(chiTietGiay.getMa()) || chiTietGiay.getMa().length() > 49
+                || !chiTietGiay.getMa().matches("^[a-zA-Z0-9]+$")) {
+            errMa = "Mã không hợp lệ";
+            check++;
+        }
+        if (chiTietGiayRepository.getIdCTGByMa(chiTietGiay.getMa()) != null){
+            errMa = "Mã đã được sử dụng";
+            check++;
+        }
+
+
+        if (chiTietGiay.getTen() == null || StringUtils.isEmpty(chiTietGiay.getTen()) || chiTietGiay.getTen().length() > 49
+                || !chiTietGiay.getTen().matches("^[a-zA-Z0-9]+$")) {
+            errTen = "Tên không hợp lệ";
+            check++;
+        }
+
+        if (chiTietGiay.getGia() == null || StringUtils.isEmpty(String.valueOf(chiTietGiay.getGia()))) {
+            errGia = "Vui lòng nhập giá";
+            check++;
+        } else {
+            try {
+                gia = Double.parseDouble(String.valueOf(chiTietGiay.getGia()));
+                if (gia <= 0 || gia > 1000000000) {
+                    errGia = "Giá phải là một số dương và không quá 1,000,000,000";
+                    check++;
+                }
+            } catch (NumberFormatException e) {
+                errGia = "Giá phải là một số";
+                check++;
+            }
+        }
+
+        try {
+            sl = Integer.parseInt(String.valueOf(chiTietGiay.getSoLuong()));
+        } catch (NumberFormatException e) {
+            errSoLuong = "Vui lòng nhập số";
+            check++;
+        }
+
+        if ((chiTietGiay.getQrCode().length() > 16 || !chiTietGiay.getQrCode().matches("^[a-zA-Z0-9]+$"))) {
+            errQr = "QR code không hợp lệ";
+            check++;
+        }
+
+        if (chiTietGiayRepository.getChiTietGiayByQrCode(chiTietGiay.getQrCode()) != null){
+            errQr = "QR code đã được sử dụng";
+            check++;
+        }
+        model.addAttribute("errTen", errTen);
+        model.addAttribute("errGia", errGia);
+        model.addAttribute("errMa", errMa);
+        model.addAttribute("errSoLuong", errSoLuong);
+        model.addAttribute("errQr", errQr);
+
+        return check == 0;
+    }
+
+    public boolean validateUpdate(ChiTietGiay chiTietGiay, Model model) {
+        int check = 0;
+        String errTen = null, errMa = null, errSoLuong = null, errGia = null, errQr = null;
+        Double gia = 0.0;
+        Integer sl = 0;
+
+        if (chiTietGiay.getMa() == null || StringUtils.isEmpty(chiTietGiay.getMa()) || chiTietGiay.getMa().length() > 49
+                || !chiTietGiay.getMa().matches("^[a-zA-Z0-9]+$")) {
+            errMa = "Mã không hợp lệ";
+            check++;
+        }
+
+        if (chiTietGiay.getTen() == null || StringUtils.isEmpty(chiTietGiay.getTen()) || chiTietGiay.getTen().length() > 49
+                || !chiTietGiay.getTen().matches("^[a-zA-Z0-9]+$")) {
+            errTen = "Tên không hợp lệ";
+            check++;
+        }
+
+        if (chiTietGiay.getGia() == null || StringUtils.isEmpty(String.valueOf(chiTietGiay.getGia()))) {
+            errGia = "Vui lòng nhập giá";
+            check++;
+        } else {
+            try {
+                gia = Double.parseDouble(String.valueOf(chiTietGiay.getGia()));
+                if (gia <= 0 || gia > 1000000000) {
+                    errGia = "Giá phải là một số dương và không quá 1,000,000,000";
+                    check++;
+                }
+            } catch (NumberFormatException e) {
+                errGia = "Giá phải là một số";
+                check++;
+            }
+        }
+
+        try {
+            sl = Integer.parseInt(String.valueOf(chiTietGiay.getSoLuong()));
+        } catch (NumberFormatException e) {
+            errSoLuong = "Vui lòng nhập số";
+            check++;
+        }
+
+        if ((chiTietGiay.getQrCode().length() > 16 || !chiTietGiay.getQrCode().matches("^[a-zA-Z0-9]+$"))) {
+            errQr = "QR code không hợp lệ";
+            check++;
+        }
+
+        model.addAttribute("errTen", errTen);
+        model.addAttribute("errGia", errGia);
+        model.addAttribute("errMa", errMa);
+        model.addAttribute("errSoLuong", errSoLuong);
+        model.addAttribute("errQr", errQr);
+
+        return check == 0;
+    }
+
+
 }
 
