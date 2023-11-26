@@ -2,9 +2,6 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/layouts/layout}">
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
-    <!----css3---->
-    <link rel="stylesheet" href="/css/custom.css">
     <style>
         .filter form {
             display: flex;
@@ -144,7 +141,7 @@
                                            placeholder="Nhập tên sản phẩm" class="form-control search"/>
                                     <input style="margin-right: 10px" type="submit" value="Tìm kiếm"
                                            class="btn btn-primary ml-2"/>
-                                    <a class="btn btn-danger" style="margin-right: 10px; width:110px"
+                                    <a class="btn btn-danger" style="margin-right: 10px; width:150px"
                                        href="/admin/chi-tiet-giay">Làm mới</a>
                                 </div>
                                 <p class="text-danger"></p>
@@ -155,9 +152,9 @@
             </div>
         </div>
 
-        <div class="filter">
+        <div class="filter" >
             <div class="row">
-                <div class="col-10 mt-4 container">
+                <div class="col-10 mt-4 container formTable">
                     <form th:action="@{/admin/chi-tiet-giay/page/1}" class="form-inline m-3" id="">
                         <input type="hidden" name="sortField" th:value="${sortField}"/>
                         <input type="hidden" name="sortDir" th:value="${sortDir}"/>
