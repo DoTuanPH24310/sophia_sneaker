@@ -35,16 +35,16 @@ public class TaiKhoanDTO {
     private Integer trangThai;
 
 
-
-    public TaiKhoanDTO(TaiKhoanRequest nhanVienRequest) {
-        this.setTen(nhanVienRequest.getTen());
-        this.setEmail(nhanVienRequest.getEmail());
-        this.setNgaySinh(nhanVienRequest.getNgaySinh());
-        this.setGioiTinh(nhanVienRequest.getGioiTinh());
-        this.setCanCuoc(nhanVienRequest.getCanCuoc());
-        this.setSdt(nhanVienRequest.getSdt());
-        this.setTrangThai(nhanVienRequest.getTrangThai());
-        this.setAnhDaiDien(nhanVienRequest.getAnhDaiDien());
-        this.setVaiTro(VaiTro.builder().id(nhanVienRequest.getIdVaiTro()).build());
-    }
+//
+//    public TaiKhoanDTO(TaiKhoanRequest nhanVienRequest) {
+//        this.setTen(nhanVienRequest.getTen());
+//        this.setEmail(nhanVienRequest.getEmail());
+//        this.setNgaySinh(nhanVienRequest.getNgaySinh());
+//        this.setGioiTinh(nhanVienRequest.getGioiTinh());
+//        this.setCanCuoc(nhanVienRequest.getCanCuoc());
+//        this.setSdt(nhanVienRequest.getSdt());
+//        this.setTrangThai(nhanVienRequest.getTrangThai());
+//        this.setAnhDaiDien(nhanVienRequest.getAnhDaiDien());
+//        this.setVaiTro(VaiTro.builder().id(nhanVienRequest.getIdVaiTro()).build());
+//    }
 }

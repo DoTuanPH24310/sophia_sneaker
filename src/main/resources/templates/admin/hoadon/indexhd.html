@@ -233,14 +233,14 @@
 
                         <div class="row">
                             <form id="formTrCNX" action="/admin/hoa-don/updatehdcxn" method="post">
-                                <div>
-                                    <button type="submit" onclick="return confirm('Xác nhận đơn?')"
+                                <div th:if="${#lists.size(listhdhcxn) > 0}">
+                                    <!-- If listhdhcxn has elements, display the button -->
+                                    <button type="submit" onclick="return confirm('Xác nhận đơn?')"
                                             class="btn btn-primary mb-3 mr-2 float-right">
-                                        Xác
-                                        nhận đơn
+                                        Xác nhận đơn
                                     </button>
                                 </div>
-                                <div class="table table-wrapper-scroll-y my-custom-scrollbar">
+                                <div class="mt-4 table table-wrapper-scroll-y my-custom-scrollbar">
                                     <table id="tableModal" class="table table-borderless ml-2">
                                         <thead>
                                         <tr class="bg-light">
@@ -308,14 +308,17 @@
                     <div role="tabpanel" class="tab-pane" id="choGiao">
                         <div class="row">
                             <form id="formTrCG" action="/admin/hoa-don/updatehdcg" method="post">
-                                <div>
+
+                                <div th:if="${#lists.size(listhdcg) > 0}">
+                                    <!-- If listhdhcxn has elements, display the button -->
                                     <button type="submit" onclick="return confirm('Xác nhận giao hàng?')"
                                             class="btn btn-primary mb-3 mr-2 float-right">
                                         Xác
                                         nhận giao
                                     </button>
                                 </div>
-                                <div class="table table-wrapper-scroll-y my-custom-scrollbar">
+
+                                <div class="mt-4 table table-wrapper-scroll-y my-custom-scrollbar">
                                     <table id="tableModal" class="table table-borderless ml-2">
                                         <thead>
                                         <tr class="bg-light">
@@ -392,13 +395,17 @@
                     <div role="tabpanel" class="tab-pane" id="dangGiao">
                         <div class="row">
                             <form id="formTrTC" action="/admin/hoa-don/updatehddg" method="post">
-                                <div>
-                                    <button type="submit" id="ghiChuXNTC" class="btn btn-primary mb-3 float-right">Xác
-                                        nhận
+
+                                <div th:if="${#lists.size(listhddg) > 0}">
+                                    <!-- If listhdhcxn has elements, display the button -->
+                                    <button type="submit" id="ghiChuXNTC"
+                                            class="btn btn-primary mb-3 mr-2 float-right">
+                                        Xác nhận
                                         thành công
                                     </button>
                                 </div>
-                                <div class="table table-wrapper-scroll-y my-custom-scrollbar">
+
+                                <div class="mt-4 table table-wrapper-scroll-y my-custom-scrollbar">
                                     <table id="tableModal" class="table table-borderless ml-2">
                                         <thead>
                                         <tr class="bg-light">
@@ -582,7 +589,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>

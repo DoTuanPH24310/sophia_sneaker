@@ -165,7 +165,8 @@
         </div>
 
         <div th:if="${hoaDon.trangThai == 4}" class="float-right mr-3">
-            <a th:href="@{/admin/hoa-don/updatehdcg/{id}(id=${hoaDon.id})}" onclick="return confirm('Xác nhận giao?')" class="btn btn-primary">Xác nhận
+            <a th:href="@{/admin/hoa-don/updatehdcg/{id}(id=${hoaDon.id})}" onclick="return confirm('Xác nhận giao?')"
+               class="btn btn-primary">Xác nhận
                 giao</a>
             <a th:href="@{/admin/hoa-don/huyhdcg/{id}(id=${hoaDon.id})}" class=" myLinkHuy btn btn-danger mr-3">Hủy</a>
         </div>
@@ -182,7 +183,7 @@
 
     </div>
 
-    <div style="background-color: white;">
+    <div style="background-color: white; min-height: 100px ">
         <div class="m-3">
             <div class="row mt-4">
                 <h5 style="font-size: 17px;" class="mt-2 ms-2">Lịch sử thanh toán</h5>
@@ -190,7 +191,7 @@
             </div>
             <div class="table">
                 <div class="table" th:if="${displayTable}">
-                    <table id="tableModal" class="table table-borderless" th:object="${httt}">
+                    <table id="tableModal" class="table table-borderless" th:if="${httt != null}" th:object="${httt}">
                         <thead>
                         <tr class="bg-light">
                             <th>Người xác nhận</th>
@@ -216,6 +217,9 @@
                     </table>
                     <h2 class="text-center mt-4" id="err"></h2>
                 </div>
+                <div class="mb-3" th:unless="${httt != null}">
+                    <h5  style="text-align: center">Chưa có lịch sử thanh toán</h5>
+                </div>
             </div>
         </div>
 
@@ -226,7 +230,8 @@
             <div class="ttdh mb-5 mt-4">
 
                 <div class="row">
-                    <h5 style="font-size: 17px;" class="mt-3 ms-2">Thông tin đơn hàng</h5>
+                    <h5 style="font-size: 17px;" class="mt-3 ms-2"
+                        th:text="'Thông tin đơn hàng ' + ${' ( ' + hoaDon.maHoaDOn + ' ) '}"></h5>
                     <hr style="width: 1200px;color: black;height: 1px;background-color: black;">
                 </div>
 
@@ -249,7 +254,7 @@
                 <span>Loại đơn: &ensp;&ensp;&ensp;&ensp;
                     <button class="bg-info text-light"
                             style="border-radius: 50px; border: white; width: 150px;">
-                        <span th:if="${hoaDon.loaiHoaDon == 1}">Tại quầy</span>
+<span th:if="${hoaDon.loaiHoaDon == 1}">Tại quầy</span>
                         <span th:if="${hoaDon.loaiHoaDon == 2}">Giao hàng</span>
                         <span th:if="${hoaDon.loaiHoaDon == 3}">Online</span>
                         <!-- Add more conditions as needed -->

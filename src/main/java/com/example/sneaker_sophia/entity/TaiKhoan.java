@@ -93,8 +93,8 @@ public class TaiKhoan {
     public TaiKhoan(TaiKhoanRequest nhanVienRequest) {
         this.setTen(nhanVienRequest.getTen());
         this.setEmail(nhanVienRequest.getEmail());
-        this.setNgaySinh(nhanVienRequest.getNgaySinh());
-        this.setGioiTinh(nhanVienRequest.getGioiTinh());
+        this.setNgaySinh(LocalDate.parse(nhanVienRequest.getNgaySinh()));
+        this.setGioiTinh(Integer.parseInt(nhanVienRequest.getGioiTinh()));
         this.setCanCuoc(nhanVienRequest.getCanCuoc());
         this.setSdt(nhanVienRequest.getSdt());
         this.setTrangThai(nhanVienRequest.getTrangThai());
