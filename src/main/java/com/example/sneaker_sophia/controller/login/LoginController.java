@@ -21,5 +21,10 @@ public class LoginController {
         return "/login/dang_nhap";
     }
 
+    @GetMapping("404")
+    public String error404(){
+        return "/website/productwebsite/404";
+    }
+
 
 }

@@ -5,6 +5,8 @@ import com.example.sneaker_sophia.entity.GioHangChiTiet;
 import com.example.sneaker_sophia.repository.*;
 import com.example.sneaker_sophia.service.CartService;
 import com.example.sneaker_sophia.service.ChiTietGiayService;
+import com.example.sneaker_sophia.service.KhuyenMaiWebService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
@@ -37,11 +39,13 @@ public class ProductWebController {
     @Autowired
     private ChiTietGiayRepository chiTietGiayRepository;
     @Autowired
+    private KhuyenMaiWebService khuyenMaiWebService;
+    @Autowired
     private ChiTietGiayService chiTietGiayService;
 
     @GetMapping("/product")
     public String home(
-            Model model,
+            Model model, HttpSession session,
             @RequestParam(value = "giayIds", required = false) List<String> giayTen,
             @RequestParam(value = "kichCoIds", required = false) List<String> kichCoTen,
             @RequestParam(value = "deGiayIds", required = false) List<String> deGiayTen,
@@ -67,6 +71,14 @@ public class ProductWebController {
                 giayTen, kichCoTen, deGiayTen, hangTen, loaiGiayTen, mauSacTen, minPrice, page, pageSize, sortField
         );
 
+        List<ChiTietGiay> productList = filteredChiTietGiay.getContent();
+        for (ChiTietGiay chiTietGiay : productList) {
+            this.khuyenMaiWebService.tinhGiaSauKhuyenMai(chiTietGiay, session);
+            model.addAttribute("giaCu_" + chiTietGiay.getId(), session.getAttribute("giaCu"));
+            model.addAttribute("giaMoi_" + chiTietGiay.getId(), session.getAttribute("giaMoi"));
+        }
+
+
         model.addAttribute("soLuong", soLuong);
         model.addAttribute("totalCartPrice", totalCartPrice);
         model.addAttribute("danhSachHang", this.hangRepository.findAll());
@@ -76,7 +88,7 @@ public class ProductWebController {
         model.addAttribute("danhSachLoaiGiay", this.loaiGiayRepository.findAll());
         model.addAttribute("danhSachGiay", this.giayRepository.findAll());
         model.addAttribute("cartItems", cartItems);
-        model.addAttribute("danhSachProduct", filteredChiTietGiay.getContent()); // Lấy danh sách sản phẩm từ Page
+        model.addAttribute("danhSachProduct", productList); // Lấy danh sách sản phẩm từ Page
         model.addAttribute("totalPages", filteredChiTietGiay.getTotalPages()); // Tổng số trang
         model.addAttribute("currentPage", page); // Trang hiện tại
         model.addAttribute("sortField", sortField);

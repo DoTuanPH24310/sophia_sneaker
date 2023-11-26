@@ -391,13 +391,12 @@
         <div class="container">
             <div class="row">
                 <div class="col-12">
-                    <h3 class="breadcrumb-title">Shop - Grid Left Sidebar</h3>
+                    <h3 class="breadcrumb-title">Sản phẩm</h3>
                     <div class="breadcrumb-nav breadcrumb-nav-color--black breadcrumb-nav-hover-color--golden">
                         <nav aria-label="breadcrumb">
                             <ul>
-                                <li><a href="index.html">Home</a></li>
-                                <li><a href="shop-grid-sidebar-left.html">Shop</a></li>
-                                <li class="active" aria-current="page">Shop Grid Left Sidebar</li>
+                                <li><a th:href="@{/sophia-store/home}">Trang chủ</a></li>
+                                <li class="active" aria-current="page">Sản phẩm</li>
                             </ul>
                         </nav>
                     </div>
@@ -678,8 +677,23 @@
                                                             </ul>
                                                         </div>
                                                         <div class="content-right">
-                                                            <span class="price"
-                                                                  th:text="${#numbers.formatCurrency(product.gia)}"></span>
+                                                            <div class="content-right">
+                                                                <!-- Hiển thị giá cũ -->
+                                                                <div class="content-right">
+                                                                    <span th:if="${session['giaCu_' + product.id] != session['giaMoi_' + product.id]}"
+                                                                          class="original-price"
+                                                                          style="text-decoration: line-through; color: red; font-size: 13px"
+                                                                          th:text="${#numbers.formatCurrency(session['giaCu_' + product.id])}"></span>
+
+                                                                    <span class="discounted-price" th:if="${session['giaCu_' + product.id] != session['giaMoi_' + product.id]}"
+                                                                          th:text="${#numbers.formatCurrency(session['giaMoi_' + product.id])}"></span>
+
+                                                                    <span th:unless="${session['giaCu_' + product.id] != session['giaMoi_' + product.id]}"
+                                                                          th:text="${#numbers.formatCurrency(session['giaCu_' + product.id])}"></span>
+                                                                </div>
+
+                                                            </div>
+
                                                         </div>
 
                                                     </div>
@@ -718,9 +732,16 @@
                                                             <li class="fill"><i class="ion-android-star"></i></li>
                                                             <li class="empty"><i class="ion-android-star"></i></li>
                                                         </ul>
-                                                        <span class="product-list-price"><del
-                                                                th:text="${#numbers.formatCurrency(product.gia)}"></del>
-                                                                </span>
+                                                        <span th:if="${session['giaCu_' + product.id] != session['giaMoi_' + product.id]}"
+                                                              class="original-price"
+                                                              style="text-decoration: line-through; color: red; font-size: 13px"
+                                                              th:text="${#numbers.formatCurrency(session['giaCu_' + product.id])}"></span>
+
+                                                        <span class="discounted-price" th:if="${session['giaCu_' + product.id] != session['giaMoi_' + product.id]}"
+                                                              th:text="${#numbers.formatCurrency(session['giaMoi_' + product.id])}"></span>
+
+                                                        <span th:unless="${session['giaCu_' + product.id] != session['giaMoi_' + product.id]}"
+                                                              th:text="${#numbers.formatCurrency(session['giaCu_' + product.id])}"></span>
                                                         <p th:text="${product.moTa}"></p>
                                                         <div class="product-action-icon-link-list">
                                                             <a th:attr="data-product-id=${product.getId()}" data-bs-toggle="modal"

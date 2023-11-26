@@ -60,6 +60,16 @@ public class SoLuongSessionRest {
         }
     }
 
+    @GetMapping("/removeAll")
+    public ResponseEntity<String> removeAllItems(HttpSession session) {
+        try {
+            soLuongSessionService.removeAllItems(session);
+            return ResponseEntity.ok("All items removed successfully");
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Entity not found: " + e.getMessage());
+        }
+    }
+
 }
 
 

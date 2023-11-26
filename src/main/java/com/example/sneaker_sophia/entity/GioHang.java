@@ -1,5 +1,6 @@
 package com.example.sneaker_sophia.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
@@ -37,5 +40,11 @@ public class GioHang {
 
     @Column(name = "trangThai")
     private Integer trangThai;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "id.gioHang", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<GioHangChiTiet> gioHangChiTiets = new ArrayList<>();
+
+
 
 }

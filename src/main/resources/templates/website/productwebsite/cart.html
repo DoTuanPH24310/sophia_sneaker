@@ -23,6 +23,14 @@
             padding: 0; /* Loại bỏ padding mặc định */
         }
 
+        /*.btn-delete-all {*/
+        /*    background-color: #c85e5e;*/
+        /*    color: white;*/
+        /*}*/
+
+        .cart_submit {
+            text-align: left;
+        }
     </style>
 </head>
 
@@ -343,68 +351,6 @@
     </div> <!-- ENd Offcanvas Header -->
 
     <!-- Start Offcanvas Mobile Menu Wrapper -->
-    <div class="offcanvas-wishlist-wrapper">
-        <h4 class="offcanvas-title">Wishlist</h4>
-        <ul class="offcanvas-wishlist">
-            <li class="offcanvas-wishlist-item-single">
-                <div class="offcanvas-wishlist-item-block">
-                    <a href="#" class="offcanvas-wishlist-item-image-link">
-                        <img src="/assets/images/product/default/home-1/default-1.jpg" alt=""
-                             class="offcanvas-wishlist-image">
-                    </a>
-                    <div class="offcanvas-wishlist-item-content">
-                        <a href="#" class="offcanvas-wishlist-item-link">Car Wheel</a>
-                        <div class="offcanvas-wishlist-item-details">
-                            <span class="offcanvas-wishlist-item-details-quantity">1 x </span>
-                            <span class="offcanvas-wishlist-item-details-price">$49.00</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="offcanvas-wishlist-item-delete text-right">
-                    <a href="#" class="offcanvas-wishlist-item-delete"><i class="fa fa-trash-o"></i></a>
-                </div>
-            </li>
-            <li class="offcanvas-wishlist-item-single">
-                <div class="offcanvas-wishlist-item-block">
-                    <a href="#" class="offcanvas-wishlist-item-image-link">
-                        <img src="/assets/images/product/default/home-2/default-1.jpg" alt=""
-                             class="offcanvas-wishlist-image">
-                    </a>
-                    <div class="offcanvas-wishlist-item-content">
-                        <a href="#" class="offcanvas-wishlist-item-link">Car Vails</a>
-                        <div class="offcanvas-wishlist-item-details">
-                            <span class="offcanvas-wishlist-item-details-quantity">3 x </span>
-                            <span class="offcanvas-wishlist-item-details-price">$500.00</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="offcanvas-wishlist-item-delete text-right">
-                    <a href="#" class="offcanvas-wishlist-item-delete"><i class="fa fa-trash-o"></i></a>
-                </div>
-            </li>
-            <li class="offcanvas-wishlist-item-single">
-                <div class="offcanvas-wishlist-item-block">
-                    <a href="#" class="offcanvas-wishlist-item-image-link">
-                        <img src="/assets/images/product/default/home-3/default-1.jpg" alt=""
-                             class="offcanvas-wishlist-image">
-                    </a>
-                    <div class="offcanvas-wishlist-item-content">
-                        <a href="#" class="offcanvas-wishlist-item-link">Shock Absorber</a>
-                        <div class="offcanvas-wishlist-item-details">
-                            <span class="offcanvas-wishlist-item-details-quantity">1 x </span>
-                            <span class="offcanvas-wishlist-item-details-price">$350.00</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="offcanvas-wishlist-item-delete text-right">
-                    <a href="#" class="offcanvas-wishlist-item-delete"><i class="fa fa-trash-o"></i></a>
-                </div>
-            </li>
-        </ul>
-        <ul class="offcanvas-wishlist-action-button">
-            <li><a href="#" class="btn btn-block btn-golden">View wishlist</a></li>
-        </ul>
-    </div> <!-- End Offcanvas Mobile Menu Wrapper -->
 
 </div> <!-- End Offcanvas Mobile Menu Section -->
 
@@ -427,13 +373,13 @@
         <div class="container">
             <div class="row">
                 <div class="col-12">
-                    <h3 class="breadcrumb-title">Cart</h3>
+                    <h3 class="breadcrumb-title">Giỏ hàng</h3>
                     <div class="breadcrumb-nav breadcrumb-nav-color--black breadcrumb-nav-hover-color--golden">
                         <nav aria-label="breadcrumb">
                             <ul>
-                                <li><a href="websiteShop/index.html">Home</a></li>
-                                <li><a href="shop-grid-sidebar-left.html">Shop</a></li>
-                                <li class="active" aria-current="page">Cart</li>
+                                <li><a th:href="@{/sophia-store/home}">Trang chủ</a></li>
+                                <li><a th:href="@{/sophia-store/product}">Sản phẩm</a></li>
+                                <li class="active" aria-current="page">Giỏ hàng</li>
                             </ul>
                         </nav>
                     </div>
@@ -452,6 +398,9 @@
                 <div class="col-12">
                     <div class="table_desc">
                         <div class="table_page table-responsive">
+                            <div class="cart_submit">
+                                <a id="deleteAllButton" class="btn btn-md btn-golden" href="#">Xóa tất cả</a>
+                            </div>
                             <table>
                                 <!-- Start Cart Table Head -->
                                 <thead>
@@ -485,8 +434,18 @@
                                                                 th:text="${cart.id.chiTietGiay.hang.ten + ' ' + cart.id.chiTietGiay.giay.ten + ' ' + cart.id.chiTietGiay.loaiGiay.ten + ' ' + cart.id.chiTietGiay.mauSac.ten}"></a>
                                     </td>
                                     <td class="product-price"
-                                        th:attr="data-gia=${cart.id.chiTietGiay.gia}"
-                                        th:text="${#numbers.formatCurrency(cart.id.chiTietGiay.gia)}">
+                                        th:attr="data-gia=${cart.id.chiTietGiay.gia}">
+                                        <span th:if="${session['giaCu_' + cart.id.chiTietGiay.id] != session['giaMoi_' + cart.id.chiTietGiay.id]}"
+                                              class="original-price"
+                                              style="text-decoration: line-through; color: red; font-size: 13px"
+                                              th:text="${#numbers.formatCurrency(session['giaCu_' + cart.id.chiTietGiay.id])}"></span>
+                                        <br>
+                                        <span class="discounted-price"
+                                              th:if="${session['giaCu_' + cart.id.chiTietGiay.id] != session['giaMoi_' + cart.id.chiTietGiay.id]}"
+                                              th:text="${#numbers.formatCurrency(session['giaMoi_' + cart.id.chiTietGiay.id])}"></span>
+
+                                        <span th:unless="${session['giaCu_' + cart.id.chiTietGiay.id] != session['giaMoi_' + cart.id.chiTietGiay.id]}"
+                                              th:text="${#numbers.formatCurrency(session['giaCu_' + cart.id.chiTietGiay.id])}"></span>
                                     </td>
 
                                     <td class="product_quantity">
@@ -522,14 +481,14 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-6 col-md-6">
-                    <div class="coupon_code left" data-aos="fade-up" data-aos-delay="200">
-                        <h3>Mã giảm giá</h3>
-                        <div class="coupon_inner">
-                            <p>Nhập mã phiếu giảm giá của bạn nếu bạn có.</p>
-                            <input class="mb-2" placeholder="Mã giảm giá" type="text">
-                            <button type="submit" class="btn btn-md btn-golden">Áp dụng</button>
-                        </div>
-                    </div>
+<!--                    <div class="coupon_code left" data-aos="fade-up" data-aos-delay="200">-->
+<!--                        <h3>Mã giảm giá</h3>-->
+<!--                        <div class="coupon_inner">-->
+<!--                            <p>Nhập mã phiếu giảm giá của bạn nếu bạn có.</p>-->
+<!--                            <input class="mb-2" placeholder="Mã giảm giá" type="text">-->
+<!--                            <button type="submit" class="btn btn-md btn-golden">Áp dụng</button>-->
+<!--                        </div>-->
+<!--                    </div>-->
                 </div>
                 <div class="col-lg-6 col-md-6">
                     <div class="coupon_code right" data-aos="fade-up" data-aos-delay="400">
@@ -967,15 +926,28 @@
     }
 
 
-    // // Lắng nghe sự kiện keyup trên tất cả các ô nhập số lượng
-    // $("input[type='text']").on("keyup", function() {
-    //
-    //     // Đảm bảo rằng giá trị nhập liệu sau khi keyup là một số nguyên dương
-    //     var inputValue = $(this).val();
-    //     if (isNaN(inputValue) || inputValue <= 0) {
-    //         $(this).val(1);
-    //     }
-    // });
+    $(document).ready(function () {
+        $("#deleteAllButton").click(function (event) {
+            event.preventDefault();
+
+            $.ajax({
+                url: "/giohangchitiet/removeAll",
+                type: "DELETE",
+                success: function (data) {
+                    console.log("Xóa thành công: ", data);
+                    $(".cart-table-wrapper tbody tr").remove();
+
+                    if ($(".cart-table-wrapper tbody tr").length === 0) {
+                        window.location.href = "/cart/hien-thi";
+                    }
+                },
+                error: function (error) {
+                    console.error("Lỗi khi xóa tất cả: ", error);
+                }
+            });
+        });
+    });
+
 
 </script>
 

@@ -1,9 +1,6 @@
 package com.example.sneaker_sophia.service;
 
-import com.example.sneaker_sophia.entity.ChiTietGiay;
-import com.example.sneaker_sophia.entity.GioHang;
-import com.example.sneaker_sophia.entity.GioHangChiTiet;
-import com.example.sneaker_sophia.entity.IdGioHangChiTiet;
+import com.example.sneaker_sophia.entity.*;
 import com.example.sneaker_sophia.repository.ChiTietGiayRepository;
 import com.example.sneaker_sophia.repository.GioHangChiTietRepository;
 import com.example.sneaker_sophia.repository.GioHangRepository;
@@ -59,34 +56,29 @@ public class SoluongService {
 
     @Transactional
     public boolean decreaseQuantity(UUID gioHangId, UUID chiTietGiayId) {
-        // Kiểm tra số lượng hiện có trong cơ sở dữ liệu
         int availableQuantity = gioHangChiTietRepository.getAvailableQuantity(gioHangId, chiTietGiayId);
 
-        // Kiểm tra nếu số lượng giảm về 0 hoặc âm hơn, thì không cho phép giảm
         int decreaseBy = 1;
         if (availableQuantity > decreaseBy) {
             gioHangChiTietRepository.decreaseQuantity(gioHangId, chiTietGiayId);
-            return true; // Số lượng giảm thành công
+            return true;
         } else {
-            return false; // Số lượng đã là 0 hoặc âm, không thực hiện giảm
+            return false;
         }
     }
 
     private List<GioHangChiTiet> productList = new ArrayList<>();
 
     public List<GioHangChiTiet> getUpdatedProducts() {
-        // Thực hiện logic để lấy dữ liệu sản phẩm mới, ví dụ:
         productList = this.gioHangChiTietRepository.findAll();
 
         return productList;
     }
 
     public void updateQuantity(UUID gioHangId, UUID chiTietGiayId, int newQuantity) {
-        // Tìm đối tượng GioHangChiTiet trong cơ sở dữ liệu
         GioHang gioHang = gioHangRepository.findById(gioHangId)
                 .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy Giỏ hàng với ID: " + gioHangId));
 
-        // Lấy thông tin ChiTietGiay và ChiTietGiayChiTiet từ cơ sở dữ liệu
         ChiTietGiay chiTietGiay = chiTietGiayRepository.findById(chiTietGiayId)
                 .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy ChiTietGiay với ID: " + chiTietGiayId));
 
@@ -100,15 +92,37 @@ public class SoluongService {
         if (gioHangChiTiet != null) {
             int chiTietGiayQuantity = chiTietGiay.getSoLuong();
 
+            if (newQuantity < 1) {
+                newQuantity = 1;
+            }
+
             if (newQuantity > chiTietGiayQuantity) {
                 gioHangChiTiet.setSoLuong(chiTietGiayQuantity);
-
             } else {
                 gioHangChiTiet.setSoLuong(newQuantity);
             }
-        }
-        gioHangChiTietRepository.save(gioHangChiTiet);
 
+            if (gioHangChiTietRepository != null) {
+                gioHangChiTietRepository.save(gioHangChiTiet);
+            } else {
+                System.out.println("gioHangChiTietRepository is null");
+            }
+        }
     }
+
+
+    @Transactional
+    public void removeAllItems(TaiKhoan taiKhoan) {
+        GioHang gioHang = gioHangRepository.findByTaiKhoan(taiKhoan);
+        if (gioHang != null) {
+            gioHang.getGioHangChiTiets().clear();
+            entityManager.createQuery("DELETE FROM GioHangChiTiet g WHERE g.id.gioHang = :gioHang")
+                    .setParameter("gioHang", gioHang)
+                    .executeUpdate();
+        }
+    }
+
+
+
 
 }

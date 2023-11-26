@@ -341,7 +341,8 @@
             <li class="offcanvas-cart-item-single" th:each="item : ${cartItem}">
                 <div class="offcanvas-cart-item-block">
                     <a href="#" class="offcanvas-cart-item-image-link">
-                        <img class="offcanvas-cart-image" th:src="@{${item.anh}}" style="width: 92px; height: 92px" alt="">
+                        <img class="offcanvas-cart-image" th:src="@{${item.anh}}" style="width: 92px; height: 92px"
+                             alt="">
                     </a>
                     <div class="offcanvas-cart-item-content">
                         <a href="#" class="offcanvas-cart-item-link"
@@ -507,8 +508,8 @@
                             <div class="col-lg-6">
                                 <div class="default-form-box">
                                     <label> Địa chỉ email <span>*</span></label>
-                                    <input type="text" th:field="*{taiKhoan.email}">
-                                    <span th:errors="*{taiKhoan.email}" style="color: red"></span>
+                                    <input type="text" th:field="*{email}">
+                                    <span th:errors="*{email}" style="color: red"></span>
                                 </div>
                             </div>
                             <div class="col-4">
@@ -518,6 +519,7 @@
                                             th:field="*{tinh}" placeholder="Chọn tỉnh">
                                         <option value="">Chọn tỉnh</option>
                                         <option value=""></option>
+
                                     </select>
                                     <span th:errors="*{tinh}" style="color: red"></span>
                                 </div>
@@ -585,7 +587,19 @@
                                         <td>
                                             <p th:text="${item.soLuong}"></p>
                                         </td>
-                                        <td th:text="${#numbers.formatCurrency(item.gia)}"></td>
+                                        <td>
+                                            <span th:if="${session['giaCu_' + item.id] != session['giaMoi_' + item.id]}"
+                                                  class="original-price"
+                                                  style="text-decoration: line-through; color: red; font-size: 13px"
+                                                  th:text="${#numbers.formatCurrency(session['giaCu_' + item.id])}"></span>
+                                            <br>
+                                            <span class="discounted-price"
+                                                  th:if="${session['giaCu_' + item.id] != session['giaMoi_' + item.id]}"
+                                                  th:text="${#numbers.formatCurrency(session['giaMoi_' + item.id])}"></span>
+
+                                            <span th:unless="${session['giaCu_' + item.id] != session['giaMoi_' + item.id]}"
+                                                  th:text="${#numbers.formatCurrency(session['giaCu_' + item.id])}"></span>
+                                        </td>
                                         <td th:text="${#numbers.formatCurrency(item.gia * item.soLuong)}"></td>
                                     </tr>
                                     </tbody>
@@ -611,7 +625,7 @@
                                 <div class="panel-default">
                                     <label class="checkbox-default" for="currencyCod" data-bs-toggle="collapse"
                                            data-bs-target="#methodCod">
-                                        <input type="radio" id="currencyCod" name="hinhThucThanhToan" value="0">
+                                        <input type="radio" id="currencyCod" name="hinhThucThanhToan" value="0" checked>
                                         <span>Thanh toán khi nhận hàng</span>
                                     </label>
 
@@ -624,8 +638,7 @@
                                 <div class="panel-default">
                                     <label class="checkbox-default" for="currencyPaypal" data-bs-toggle="collapse"
                                            data-bs-target="#methodPaypal">
-                                        <input type="radio" id="currencyPaypal" name="hinhThucThanhToan" value="1"
-                                               checked>
+                                        <input type="radio" id="currencyPaypal" name="hinhThucThanhToan" value="1">
                                         <span>VNPay</span>
                                     </label>
                                     <div id="methodPaypal" class="collapse " data-parent="#methodPaypal">
@@ -962,145 +975,181 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
+    const tinh = '[[${#strings.isEmpty(session.tinh) ? -1 : session.tinh}]]';
+    const quan = '[[${#strings.isEmpty(session.quan) ? -1 : session.quan}]]';
+    let phuong = '[[${#strings.isEmpty(session.phuong) ? -1 : session.phuong}]]';
+
     const host = "https://provinces.open-api.vn/api/";
 
-    async function callAPI(api) {
-        try {
-            const response = await axios.get(api);
-            renderData(response.data, "province");
-        } catch (error) {
-            console.error("Error fetching province data:", error);
-        }
-    }
-
-    async function callApiDistrict(api) {
-        try {
-            const response = await axios.get(api);
-            renderData(response.data.districts, "district");
-        } catch (error) {
-            console.error("Error fetching district data:", error);
-        }
-    }
-
-    async function callApiWard(api) {
-        try {
-            const response = await axios.get(api);
-            renderData(response.data.wards, "ward");
-        } catch (error) {
-            console.error("Error fetching ward data:", error);
-        }
-    }
-
-    function renderData(array, select) {
-        let row = '<option disable value="">chọn</option>';
+    // Function to render options for a select element
+    // Function to render options for a select element
+    const renderOptions = (array, selectId, placeholder) => {
+        let options = '';
+        // Add placeholder regardless of whether the array is empty
+        options += `<option disable value="">${placeholder}</option>`;
         array.forEach(element => {
-            row += `<option value="${element.code}">${element.name}</option>`;
+            options += `<option value="${element.code}">${element.name}</option>`;
         });
-        document.querySelector("#" + select).innerHTML = row;
-    }
+        document.querySelector("#" + selectId).innerHTML = options;
+    };
 
-    $("#province").change(async () => {
-        const provinceApi = host + "p/" + $("#province").val() + "?depth=2";
-        await callApiDistrict(provinceApi);
+
+    // Function to handle API calls
+    const callAPI = (api, selectId, renderFunction) => {
+        return axios.get(api)
+            .then((response) => {
+                renderFunction(response.data, selectId);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
+
+    // Event listener for province change
+    $("#province").change(() => {
+        const selectedProvinceCode = $("#province").val();
+
+        // Call API to load districts based on the selected province
+        callAPI(host + "p/" + selectedProvinceCode + "?depth=2", "district", (data, selectId) => {
+            renderOptions(data.districts, selectId, "--Chọn Quận/Huyện--");
+        });
+
+        // Call API to load wards based on the selected district
+        callAPI(host + "d/" + $("#district").val() + "?depth=2", "ward", (data, selectId) => {
+            renderOptions(data.wards, selectId, "--Chọn Phường/Xã--");
+        });
+
         printResult();
     });
 
-    $("#district").change(async () => {
-        const districtApi = host + "d/" + $("#district").val() + "?depth=2";
-        await callApiWard(districtApi);
+    // Event listener for district change
+    $("#district").change(() => {
+        // Call API to load wards based on the selected district
+        callAPI(host + "d/" + $("#district").val() + "?depth=2", "ward", (data, selectId) => {
+            renderOptions(data.wards, selectId, "--Chọn Phường/Xã--");
+        });
+
         printResult();
     });
 
+    // Event listener for ward change
     $("#ward").change(() => {
         printResult();
     });
 
-    var printResult = () => {
-        if ($("#district").val() != "" && $("#province").val() != "" && $("#ward").val() != "") {
-            let result =
-                $("#province option:selected").text() +
-                " | " +
-                $("#district option:selected").text() +
-                " | " +
+    // Function to print the selected result
+    const printResult = () => {
+        if ($("#district").val() !== "" && $("#province").val() !== "" && $("#ward").val() !== "") {
+            let result = $("#province option:selected").text() +
+                " | " + $("#district option:selected").text() + " | " +
                 $("#ward option:selected").text();
             $("#result").text(result);
         }
     };
 
-    document.addEventListener("DOMContentLoaded", function () {
-        var provinceDropdown = document.getElementById("province");
-        var districtDropdown = document.getElementById("district");
-        var wardDropdown = document.getElementById("ward");
-
-        provinceDropdown.addEventListener("change", updateShippingFee);
-        districtDropdown.addEventListener("change", updateShippingFee);
-        wardDropdown.addEventListener("change", updateShippingFee);
-
-        // Initial API call to fetch province data
-        callAPI(host + "?depth=1");
+    callAPI(host + "?depth=2", "province", (data, selectId) => {
+        renderOptions(data, selectId, "--Chọn Tỉnh/Thành phố--");
+        renderOptions([], "district", "--Chọn Quận/Huyện--");
+        renderOptions([], "ward", "--Chọn Phường/Xã--");
     });
 
-    function calculateShippingFee() {
-        // Lấy thông tin địa chỉ từ các trường trên trang web
-        var districtId = document.getElementById("district").value;
 
-        // Gọi API tính phí vận chuyển từ backend
-        fetch("/ghn-api/calculateShippingFee?serviceId=2&fromDistrictId=1&toDistrictId=" + districtId)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log("API Response:", data); // Log the entire response for debugging
+    if (tinh !== "-1") {
+        callAPI(host + "?depth=3", "province", (data, selectId) => {
+            renderOptions(data, selectId, "--Chọn Tỉnh/Thành phố--");
 
-                // Check the structure of the response
-                if (data && data.fee !== undefined) {
-                    // Cập nhật phí vận chuyển trên trang web
-                    var shippingCostElement = document.getElementById("shipping-cost");
-                    if (shippingCostElement) {
-                        shippingCostElement.innerText = formatCurrency(data.fee);
-                    } else {
-                        console.error("Shipping cost element not found!");
-                    }
-                } else {
-                    console.error("Invalid response format: 'fee' property not found in inner data");
-                }
-            })
-            .catch(error => console.error("Error:", error));
+            $("#province").val(tinh);
+
+            callAPI(host + "p/" + tinh + "?depth=2", "district", (districtData, districtSelectId) => {
+                renderOptions(districtData.districts, districtSelectId, "--Chọn Quận/Huyện--");
+
+                $("#district").val(quan);
+
+                callAPI(host + "d/" + quan + "?depth=2", "ward", (wardData, wardSelectId) => {
+                    renderOptions(wardData.wards, wardSelectId, "--Chọn Phường/Xã--");
+
+                    $("#ward").val(phuong);
+                    printResult();
+                });
+            });
+        });
+    } else {
+        renderOptions([], "district", "--Chọn Quận/Huyện--");
+        renderOptions([], "ward", "--Chọn Phường/Xã--");
     }
 
-    function updateShippingFee() {
-        calculateShippingFee();
-    }
 
-    function formatCurrency(amount) {
-        return new Intl.NumberFormat('vi-VN', {style: 'currency', currency: 'VND'}).format(amount);
-    }
 
-    document.getElementById("btnThanhToan").addEventListener("click", function(event) {
-        var paymentMethod = document.querySelector('input[name="hinhThucThanhToan"]:checked').id;
 
-        if (paymentMethod === "currencyCod") {
+    var isFormChecked = true;
+
+    document.getElementById("btnThanhToan").addEventListener("click", function (event) {
+        // Kiểm tra hình thức thanh toán đã được chọn chưa
+        if (isFormChecked) {
+            return;
+        }
+
+        // Kiểm tra hình thức thanh toán đã được chọn chưa
+        var paymentMethod = document.querySelector('input[name="hinhThucThanhToan"]:checked');
+        if (!paymentMethod) {
+            alert("Vui lòng chọn hình thức thanh toán!");
             event.preventDefault();
+            return;
+        }
 
+        // Kiểm tra các trường thông tin địa chỉ
+        var ten = document.getElementById("ten").value.trim();
+        var sdt = document.getElementById("sdt").value.trim();
+        var email = document.getElementById("email").value.trim();
+        var tinh = document.getElementById("province").value.trim();
+        var quanHuyen = document.getElementById("district").value.trim();
+        var phuongXa = document.getElementById("ward").value.trim();
+        var diaChiCuThe = document.getElementById("diaChiCuThe").value.trim();
+
+        // Kiểm tra tất cả các trường thông tin địa chỉ đã được nhập hay chưa
+
+
+        // Nếu là thanh toán khi nhận hàng, kiểm tra địa chỉ cụ thể
+        if (paymentMethod.id === "currencyCod") {
             document.getElementById("formThanhToan").submit();
-        } else {
+            return;
+        }
+
+        // Nếu là thanh toán qua VNPay, kiểm tra xem đã nhận được đường link thanh toán chưa
+        if (paymentMethod.id === "currencyPaypal") {
             fetch("/api/payment/create_payment?totalAmount=" + encodeURIComponent(document.getElementById("totalAmount").innerText))
                 .then(response => response.text())
                 .then(paymentUrl => {
-                    console.log("Received Payment URL:", paymentUrl);
-                    document.getElementById("formThanhToan").action = paymentUrl;
-                    document.getElementById("formThanhToan").submit();
+                    if (!ten || !sdt || !email || !tinh || !quanHuyen || !phuongXa || !diaChiCuThe) {
+                        alert("Vui lòng điền đầy đủ thông tin địa chỉ!");
+                        event.preventDefault();
+                        return;
+                    }
+
+                    // Kiểm tra xem link thanh toán có hợp lệ không
+                    if (paymentUrl.trim() === "") {
+                        alert("Có lỗi xảy ra khi tạo đường link thanh toán. Vui lòng thử lại sau.");
+                        event.preventDefault();
+                    } else {
+                        // Nếu mọi kiểm tra thành công, submit form
+                        document.getElementById("formThanhToan").action = paymentUrl;
+                        document.getElementById("formThanhToan").submit();
+                    }
                 })
                 .catch(error => {
                     console.error("Error fetching payment URL:", error);
                 });
+        } else {
+            // Nếu mọi kiểm tra thành công, submit form
+            document.getElementById("formThanhToan").submit();
         }
+
+        isFormChecked = true;
+        alert("Đã kiểm tra thông tin thành công. Nhấn thanh toán để tiếp tục!");
     });
 
-    document.getElementById("formThanhToan").addEventListener("submit", function(event) {
+
+    document.getElementById("formThanhToan").addEventListener("submit", function (event) {
         if (document.getElementById("formThanhToan").action.includes("/api/payment/create_payment")) {
             event.preventDefault();
             document.getElementById("formThanhToan").action = "/check-out/thanhtoan";
