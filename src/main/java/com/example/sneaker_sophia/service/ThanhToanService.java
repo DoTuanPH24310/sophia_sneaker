@@ -48,8 +48,9 @@ public class ThanhToanService {
         for (GioHangChiTiet cartItem : cartItems) {
             total += cartItem.getId().getChiTietGiay().getGia() * cartItem.getSoLuong();
         }
+        int soHD = this.hoaDonRepository.soHD() + 1;
         HoaDon hoaDon = new HoaDon();
-        hoaDon.setMaHoaDOn("HD" + this.hoaDonRepository.soHD());
+        hoaDon.setMaHoaDOn("HD" + soHD);
         hoaDon.setTaiKhoan(taiKhoan);
         hoaDon.setLoaiHoaDon(3);
         hoaDon.setTenKhachHang(taiKhoan.getTen());

@@ -188,7 +188,8 @@ public class EmailService {
         Cart cart = (Cart) session.getAttribute("cart");
         List<CartItem> cartItems = cart.getItems();
         HoaDon hoaDonMoi = new HoaDon();
-        hoaDonMoi.setMaHoaDOn("HD" + this.hoaDonRepository.soHD());
+        int soHD = this.hoaDonRepository.soHD() + 1;
+        hoaDonMoi.setMaHoaDOn("HD" + soHD);
         hoaDonMoi.setTaiKhoan(taiKhoan);
         hoaDonMoi.setLoaiHoaDon(3);
         hoaDonMoi.setTenKhachHang(taiKhoan.getTen());
