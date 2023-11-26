@@ -2,8 +2,11 @@ package com.example.sneaker_sophia.service;
 
 import com.example.sneaker_sophia.entity.Cart;
 import com.example.sneaker_sophia.entity.CartItem;
+import com.example.sneaker_sophia.entity.ChiTietGiay;
+import com.example.sneaker_sophia.repository.ChiTietGiayRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,6 +14,8 @@ import java.util.UUID;
 
 @Service
 public class SoLuongSessionService {
+    @Autowired
+    private ChiTietGiayRepository chiTietGiayRepository;
 
     @SuppressWarnings("unchecked")
     public void increaseQuantity(UUID chiTietGiayId, HttpSession session) {
@@ -38,15 +43,27 @@ public class SoLuongSessionService {
 
     @SuppressWarnings("unchecked")
     public void updateQuantity(UUID chiTietGiayId, int newQuantity, HttpSession session) {
-        Cart cart = getCartFromSession(session);
-        CartItem cartItem = findCartItemById(cart, chiTietGiayId);
-
-        if (cartItem != null) {
-            cartItem.setSoLuong(newQuantity);
+        if (newQuantity < 1) {
+            newQuantity = 1;
         }
 
-        updateCartInSession(cart, session);
+        Cart cart = getCartFromSession(session);
+        CartItem cartItem = findCartItemById(cart, chiTietGiayId);
+        ChiTietGiay chiTietGiay = this.chiTietGiayRepository.findById(chiTietGiayId).orElse(null);
+
+        if (chiTietGiay != null) {
+            // Kiểm tra xem newQuantity có vượt quá số lượng của chi tiết giày không
+            if (newQuantity > chiTietGiay.getSoLuong()) {
+                newQuantity = chiTietGiay.getSoLuong();
+            }
+
+            if (cartItem != null) {
+                cartItem.setSoLuong(newQuantity);
+                updateCartInSession(cart, session);
+            }
+        }
     }
+
 
     private Cart getCartFromSession(HttpSession session) {
         Cart cart = (Cart) session.getAttribute("cart");

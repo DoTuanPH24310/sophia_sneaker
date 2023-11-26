@@ -5,6 +5,7 @@ import com.example.sneaker_sophia.entity.Giay;
 import com.example.sneaker_sophia.entity.GioHangChiTiet;
 import com.example.sneaker_sophia.entity.Hang;
 import com.example.sneaker_sophia.service.*;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,6 +26,8 @@ WebsiteshopController {
     @Autowired
     ChiTietGiayService chiTietGiayService;
     @Autowired
+    private KhuyenMaiWebService khuyenMaiWebService;
+    @Autowired
     GiayService giayService;
     @Autowired
     HangService2 hangService;
@@ -39,7 +42,7 @@ WebsiteshopController {
     @Autowired
     private CartService cartService;
     @GetMapping("/home")
-    public String home(Model model){
+    public String home(Model model,HttpSession httpSession){
         List<ChiTietGiay> productList = chiTietGiayService.getAll();
         productList.sort(Comparator.comparing(ChiTietGiay::getNgayTao));
         List<ChiTietGiay> top16Products = productList.subList(0, Math.min(productList.size(), 16));
@@ -48,6 +51,13 @@ WebsiteshopController {
         // cart
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         List<GioHangChiTiet> cartItems = cartService.getCartItems(authentication.getName());
+
+        // Tính giá sau khuyến mãi cho từng sản phẩm trong giỏ hàng
+        for (GioHangChiTiet cartItem : cartItems) {
+            ChiTietGiay chiTietGiay = cartItem.getId().getChiTietGiay();
+            khuyenMaiWebService.tinhGiaSauKhuyenMai(chiTietGiay, httpSession);
+        }
+
         double totalCartPrice = cartItems.stream()
                 .mapToDouble(item -> item.getId().getChiTietGiay().getGia() * item.getSoLuong())
                 .sum();
@@ -58,6 +68,7 @@ WebsiteshopController {
 
         return "website/websiteShop/index";
     }
+
 
     @GetMapping("/detail/{id}")
     public String Detail(Model model, @PathVariable("id") UUID id){

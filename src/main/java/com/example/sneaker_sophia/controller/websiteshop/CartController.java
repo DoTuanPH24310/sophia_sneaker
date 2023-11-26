@@ -6,6 +6,7 @@ import com.example.sneaker_sophia.repository.GioHangRepository;
 import com.example.sneaker_sophia.repository.LoginRepository;
 import com.example.sneaker_sophia.service.CartService;
 import com.example.sneaker_sophia.service.ChiTietGiayService;
+import com.example.sneaker_sophia.service.KhuyenMaiWebService;
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,10 @@ import java.util.UUID;
 @Controller
 @RequestMapping("cart")
 public class CartController {
-
+    @Autowired
+    private KhuyenMaiWebService khuyenMaiWebService;
+    @Autowired
+    private ChiTietGiayRepository chiTietGiayRepository;
     @Autowired
     private CartService cartService;
 
@@ -35,13 +39,16 @@ public class CartController {
     @GetMapping("hien-thi")
     public String viewCart(Model model, HttpSession httpSession) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        // Kiểm tra xem người dùng đã đăng nhập hay chưa
         if (authentication != null && authentication.isAuthenticated() && !authentication.getPrincipal().equals("anonymousUser")) {
-            // Người dùng đã đăng nhập
             List<GioHangChiTiet> cartItems = cartService.getCartItems(authentication.getName());
 
             if (cartItems.isEmpty()) {
                 return "website/productwebsite/empty-cart";
+            }
+
+            for (GioHangChiTiet cartItem : cartItems) {
+                ChiTietGiay chiTietGiay = cartItem.getId().getChiTietGiay();
+                khuyenMaiWebService.tinhGiaSauKhuyenMai(chiTietGiay, httpSession);
             }
 
             double totalCartPrice = cartItems.stream()
@@ -60,6 +67,14 @@ public class CartController {
             if (cart == null || (cart != null && cart.getItems().isEmpty())) {
                 return "website/productwebsite/empty-cart";
             } else if (cart != null) {
+                for (CartItem cartItem : cart.getItems()) {
+                    UUID chiTietGiayId = cartItem.getId();
+                    ChiTietGiay chiTietGiay = this.chiTietGiayRepository.findById(chiTietGiayId).orElse(null);
+                    if (chiTietGiay != null) {
+                        khuyenMaiWebService.tinhGiaSauKhuyenMai(chiTietGiay, httpSession);
+                    }
+                }
+
                 List<CartItem> cartItems = cart.getItems();
                 double totalCartPrice = cartItems.stream()
                         .mapToDouble(item -> item.getGia() * item.getSoLuong())
@@ -72,6 +87,7 @@ public class CartController {
             return "website/productwebsite/cartSession";
         }
     }
+
 
     @GetMapping("/add-to-cart/{id}")
     public String addToCart(@PathVariable("id") UUID chiTietGiayId, Model model, HttpSession httpSession) {

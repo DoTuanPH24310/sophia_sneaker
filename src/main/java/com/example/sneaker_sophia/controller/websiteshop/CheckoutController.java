@@ -3,11 +3,14 @@ package com.example.sneaker_sophia.controller.websiteshop;
 import com.example.sneaker_sophia.dto.DiaChiDTO;
 import com.example.sneaker_sophia.dto.TaiKhoanDTO;
 import com.example.sneaker_sophia.entity.*;
+import com.example.sneaker_sophia.repository.HoaDonWebRepository;
 import com.example.sneaker_sophia.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,6 +35,8 @@ public class CheckoutController {
     private DiaChiCheckoutService diaChiService;
     @Autowired
     private GioHangService gioHangService;
+    @Autowired
+    private HoaDonWebRepository hoaDonWebRepository;
 
     @GetMapping("home")
     public String showCheckoutPage(Model model, HttpSession session) {
@@ -122,7 +127,7 @@ public class CheckoutController {
 
             if (cartItems != null && !cartItems.isEmpty()) {
                 thanhToanService.thucHienThanhToan(email, cartItems, hinhThucThanhToan);
-                return "website/404";
+                return "redirect:/check-out/success";
             }
         }
         return "redirect:/cart/hien-thi";
@@ -134,10 +139,12 @@ public class CheckoutController {
                             @RequestParam(value = "hinhThucThanhToan", required = false) Integer hinhThucThanhToan,
                             Model model, HttpSession session) {
         try {
+            session.removeAttribute("tinh");
+            session.removeAttribute("quan");
+            session.removeAttribute("phuong");
             if (result.hasErrors()) {
                 double total = 0.0;
                 Cart cart = (Cart) session.getAttribute("cart");
-
                 if (cart != null) {
                     List<CartItem> cartItems = cart.getItems();
                     if (cartItems != null && !cartItems.isEmpty()) {
@@ -149,16 +156,19 @@ public class CheckoutController {
                                 return "redirect:/cart/hien-thi";
                             }
                         }
+
+                        session.setAttribute("tinh", diaChi.getTinh());
+                        session.setAttribute("quan", diaChi.getQuanHuyen());
+                        session.setAttribute("phuong", diaChi.getPhuongXa());
                         model.addAttribute("cartItems", cartItems);
                         model.addAttribute("total", total);
 
                         return "website/productwebsite/checkoutSession";
                     } else {
-                        // Giỏ hàng không có sản phẩm, chuyển hướng về trang giỏ hàng
                         return "redirect:/cart/hien-thi";
                     }
+
                 } else {
-                    // Trường hợp không tìm thấy giỏ hàng trong session, chuyển hướng về trang giỏ hàng
                     return "redirect:/cart/hien-thi";
                 }
             }
@@ -179,20 +189,62 @@ public class CheckoutController {
             emailService.guiEmailXacNhanThanhToan(taiKhoanMoi.getEmail(), hoaDonMoi);
             model.addAttribute("hoaDon", hoaDonMoi);
             session.removeAttribute("cart");
-            return "redirect:/thanh-toan-thanh-cong";
+
+            return "redirect:/check-out/success";
 
         } catch (Exception e) {
             e.printStackTrace();
 
             model.addAttribute("error", "Đã xảy ra lỗi trong quá trình thanh toán.");
-            return "redirect:/thanh-toan-that-bai";
+            return "redirect:/shophia-store/home";
         }
+    }
+
+
+    @GetMapping("/paymentCallback")
+    public String paymentCallback(
+            @RequestParam(value = "vnp_ResponseCode", required = false) String responseCode,
+            @RequestParam(value = "vnp_TransactionNo", required = false) String transactionNo,
+            @RequestParam(value = "vnp_Amount", required = false) String amountPaidString, HttpSession session) {
+        String maHD = (String) session.getAttribute("maHD");
+        if (responseCode != null && responseCode.equals("00")) {
+            HoaDon hoaDon = hoaDonWebRepository.findByMaHoaDOn(maHD);
+            System.out.println("Payment callback called!");
+            if (hoaDon != null) {
+                double amountPaid = getAmountPaidFromVnPayResponse(amountPaidString);
+                hoaDon.setTongTien(hoaDon.getTongTien() + amountPaid);
+                hoaDon.setTrangThai(3); // Assuming 2 represents a paid status, adjust it based on your needs
+                hoaDonWebRepository.save(hoaDon);
+                System.out.println("Payment callback called!");
+                return "redirect/check-out/success";
+            } else {
+                return "redirect:/ádfadsf";
+            }
+        } else {
+            return "redirect:/ádfadsf";
+        }
+    }
+
+    private double getAmountPaidFromVnPayResponse(String amountPaidString) {
+        if (amountPaidString != null) {
+            try {
+                return Double.parseDouble(amountPaidString) / 100000; // Assuming the amount is in VND, adjust if needed
+            } catch (NumberFormatException e) {
+                e.printStackTrace(); // Log the error or take appropriate action
+            }
+        }
+        return 0.0;
     }
 
 
     @GetMapping("test")
     public String test() {
         return "website/testPhiShip";
+    }
+
+    @GetMapping("success")
+    public String success() {
+        return "website/productwebsite/success";
     }
 
 
