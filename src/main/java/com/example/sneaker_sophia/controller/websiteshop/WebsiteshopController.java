@@ -42,10 +42,10 @@ WebsiteshopController {
     @Autowired
     private CartService cartService;
     @GetMapping("/home")
-    public String home(Model model, HttpSession httpSession) {
-        List<Giay> productList = giayService.getAll();
-        productList.sort(Comparator.comparing(Giay::getId));
-        List<Giay> top16Products = productList.subList(0, Math.min(productList.size(), 16));
+    public String home(Model model,HttpSession httpSession){
+        List<ChiTietGiay> productList = chiTietGiayService.getAll();
+        productList.sort(Comparator.comparing(ChiTietGiay::getNgayTao));
+        List<ChiTietGiay> top16Products = productList.subList(0, Math.min(productList.size(), 16));
         model.addAttribute("products", top16Products);
 
         // cart
