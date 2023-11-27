@@ -298,6 +298,7 @@ public class TaiQuayController {
         if (hinhThucThanhToan != null) {
             model.addAttribute("tienKhachDua", hinhThucThanhToan.getSoTien());
             model.addAttribute("phiVanChuyen", hoaDon.getPhiShip());
+            model.addAttribute("httt",hinhThucThanhToan.getTrangThai());
         }
 
         model.addAttribute("tongTienTruocGiam", tongTienTruocGiam);
