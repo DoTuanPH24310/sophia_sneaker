@@ -17,7 +17,15 @@ import java.util.UUID;
 
 @Repository
 public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> {
-    @Query(value = "SELECT obj FROM ChiTietGiay obj WHERE obj.giay.id IN :listId")
+    @Query(value = "SELECT ChiTietGiay.*\n" +
+            "FROM ChiTietGiay\n" +
+            "         INNER JOIN Giay ON Giay.Id = ChiTietGiay.IdGiay\n" +
+            "WHERE Giay.Id in ?1\n" +
+            "  AND NOT EXISTS (\n" +
+            "        SELECT *\n" +
+            "        FROM CTG_KhuyenMai inner join KhuyenMai KM on KM.Id = CTG_KhuyenMai.IdKhuyenMai\n" +
+            "        WHERE CTG_KhuyenMai.IdCTG = ChiTietGiay.Id and ( KM.trangThai =1 or KM.trangThai =0)\n" +
+            "    );",nativeQuery = true)
     List<ChiTietGiay> findAllByIdGiay(List<UUID> listId);
 
 

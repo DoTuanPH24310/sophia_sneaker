@@ -45,7 +45,7 @@
 
 
     <div class="row">
-        <h3 style="font-weight: bold; text-align: center;" class="mt-2">Quản Lý Khuyến Mại</h3>
+        <h3 style="font-weight: bold; text-align: center;" class="mt-2">Quản Lý Giảm Giá</h3>
         <div class="col-1"></div>
         <div class="col-10 mt-4 formTable">
             <h5 style="font-weight: bold;" class="mt-3">Bộ lọc</h5>
@@ -57,7 +57,7 @@
                         <label> Tìm kiếm </label>
                         <input style="border-radius: 10px;" type="text" th:value="${textSearch}" class="form-control"
                                name="textSearch"
-                               placeholder="Nhập mã hoặc tên khuyến mại...">
+                               placeholder="Nhập mã hoặc tên Giảm Giá...">
                         <p class="text-danger"></p>
                     </div>
 
@@ -90,7 +90,7 @@
 
     <!-- Danh sách vourcher -->
     <div class="row mt-3">
-        <h5 style="font-weight: bold; text-align: center;" class="mt-3">Danh sách khuyến mại </h5>
+        <h5 style="font-weight: bold; text-align: center;" class="mt-3">Danh sách Giảm Giá </h5>
         <hr>
         <div class="table table-wrapper-scroll-y my-custom-scrollbar">
             <a class="btn btn-primary mt-1 mb-2 float-right" th:href="@{/admin/voucher/view-add}">
@@ -214,7 +214,7 @@
             let type = 'error';
             let icon = 'fa-solid fa-circle-exclamation';
             let title = 'Thất bại!';
-            let text = 'Không xóa được khuyến mại đang diễn ra';
+            let text = 'Không xóa được Giảm Giá đang diễn ra';
             createToast(type, icon, title, text);
             removeSeesion('errTaiQuay');
         }
