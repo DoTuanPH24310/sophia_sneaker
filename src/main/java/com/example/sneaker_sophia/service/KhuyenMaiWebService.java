@@ -20,7 +20,7 @@ public class KhuyenMaiWebService {
         if (listCTG_KM != null && !listCTG_KM.isEmpty()) {
             for (CTG_KhuyenMai ctg : listCTG_KM) {
                 Voucher voucher = ctg.getId().getVoucher();
-                if (voucher.getTrangThai() == 1) {
+                if (voucher.getTrangThai() == 1 && voucher.getSoLuong() > 0) {
                     Integer phanTramGiam = voucher.getPhanTramGiam();
                     if (phanTramGiam != null) {
                         giamGia = (phanTramGiam * giaBan) / 100.0;
@@ -34,6 +34,8 @@ public class KhuyenMaiWebService {
         session.setAttribute("giaMoi_" + chiTietGiay.getId(), giaKhuyenMai);
 
     }
+
+
 
 
 }

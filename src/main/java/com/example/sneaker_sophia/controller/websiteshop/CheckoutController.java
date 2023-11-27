@@ -54,9 +54,18 @@ public class CheckoutController {
                 for (GioHangChiTiet item : cartItems) {
                     ChiTietGiay chiTietGiay = item.getId().getChiTietGiay();
 
-                    double subtotal = chiTietGiay.getGia() * item.getSoLuong();
-                    total += subtotal;
+                    double giaBan = chiTietGiay.getGia();
+                    int soLuong = item.getSoLuong();
+
+                    if (soLuong > 0) {
+                        double subtotal = giaBan * soLuong;
+                        total += subtotal;
+                    } else {
+                        double giaKhuyenMai = (Double) session.getAttribute("giaMoi_" + chiTietGiay.getId());
+                        total += giaKhuyenMai;
+                    }
                 }
+
 
                 if (diaChi != null) {
 

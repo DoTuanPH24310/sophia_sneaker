@@ -42,7 +42,8 @@ public class EmailService {
 
     @Autowired
     private HoaDonChiTietWebRepository hoaDonChiTietWebRepository;
-
+    @Autowired
+    private VoucherRepository voucherRepository;
     @Autowired
     private LichSuHoaDonWebRepository lichSuHoaDonWebRepository;
     @Autowired
@@ -151,23 +152,71 @@ public class EmailService {
     }
 
     public void themSanPhamVaoHoaDonChiTiet(List<CartItem> cartItems, HoaDon hoaDon) {
+        double total = 0.0;
+        for (CartItem cartItem : cartItems) {
+            total += cartItem.getGia() * cartItem.getSoLuong();
+        }
+        double tongTienDonHang = 0.0;
+        int tongSoLuongGiam = 0;
+        Integer tongGiamGia = 0;
+        int soLuongGiam = 0;
+        double tongTienGiam = 0.0;
         for (CartItem cartItem : cartItems) {
             HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
-
-            hoaDonChiTiet.setSoLuong(cartItem.getSoLuong());
-            hoaDonChiTiet.setDonGia(cartItem.getGia());
-            hoaDonChiTiet.setTrangThai(1);
-
             ChiTietGiay chiTietGiay = chiTietGiayRepository.findById(cartItem.getId()).orElse(null);
 
+            int soLuongMua = cartItem.getSoLuong();
+            int soLuongHienTai = chiTietGiay.getSoLuong();
+            int soLuongPhieuGiamDaSuDung = 0;
+            if (soLuongHienTai >= soLuongMua) {
+                List<CTG_KhuyenMai> listCTG_KM = chiTietGiay.getListCTG_KM();
+                // Tính toán số lượng giảm và giảm giá tương ứng
+                for (CTG_KhuyenMai ctg : listCTG_KM) {
+                    // Kiểm tra trạng thái giảm giá
+                    if (ctg.getId().getVoucher().getTrangThai() == 1 && ctg.getId().getVoucher().getSoLuong() > 0) {
+                        if (ctg.getId().getVoucher() != null) {
+                            soLuongGiam = ctg.getId().getVoucher().getSoLuong();
+                        }
+                        int soLuongGiamApDung = Math.min(soLuongGiam - soLuongPhieuGiamDaSuDung, soLuongMua);
+
+                        // Cập nhật số lượng giảm giá của sản phẩm
+                        tongSoLuongGiam = soLuongGiamApDung;
+                        session.setAttribute("tongSoLuongGiam" + chiTietGiay.getId(), tongSoLuongGiam);
+                        // Cập nhật giảm giá của sản phẩm
+                        int phanTramGiam = ctg.getId().getVoucher().getPhanTramGiam();
+                        int giamGia = phanTramGiam * soLuongGiam;
+                        tongGiamGia = giamGia;
+                        hoaDonChiTiet.setPhanTramGiam(tongGiamGia);
+                        hoaDonChiTiet.setSoLuongGiam(soLuongGiam);
+                        // Cập nhật tổng số tiền giảm
+                        double donGia = chiTietGiay.getGia();
+                        int giam = ctg.getId().getVoucher().getPhanTramGiam();
+                        double tienGiam = donGia * giam / 100 * soLuongGiamApDung;
+                        tongTienGiam += tienGiam;
+                        tongTienDonHang = total - tongTienGiam;
+                        soLuongPhieuGiamDaSuDung += soLuongGiamApDung;
+
+                        // Trừ đi số lượng đã sử dụng từ bảng giảm giá
+                        ctg.getId().getVoucher().setSoLuong(ctg.getId().getVoucher().getSoLuong() - soLuongGiamApDung);
+                        voucherRepository.save(ctg.getId().getVoucher());
+                    }
+                }
+
+                // Cập nhật số lượng tồn sau khi giảm giá
+                chiTietGiay.setSoLuong(soLuongHienTai - soLuongMua);
+                chiTietGiayRepository.save(chiTietGiay);
+            } else {
+                return; // Xử lý khi số lượng không đủ
+            }
+
+
             if (chiTietGiay != null) {
-                int soLuongMua = cartItem.getSoLuong();
-                int soLuongHienTai = chiTietGiay.getSoLuong();
 
                 if (soLuongHienTai >= soLuongMua) {
                     chiTietGiay.setSoLuong(soLuongHienTai - soLuongMua);
                     chiTietGiayRepository.save(chiTietGiay);
-
+                    hoaDonChiTiet.setSoLuong(cartItem.getSoLuong());
+                    hoaDonChiTiet.setDonGia(chiTietGiay.getGia());
                     hoaDonChiTiet.setChiTietGiay(chiTietGiay);
                     hoaDonChiTiet.setHoaDon(hoaDon);
 
@@ -180,13 +229,14 @@ public class EmailService {
                 System.err.println("Product details not found for ID: " + cartItem.getId());
             }
         }
+        hoaDon.setTongTien(tongTienDonHang);
+        hoaDon.setKhuyenMai(tongTienGiam);
+        this.hoaDonRepository.save(hoaDon);
 
     }
 
 
     public HoaDon taoHoaDonMoi(TaiKhoan taiKhoan, Integer hinhThucThanhToan) {
-        Cart cart = (Cart) session.getAttribute("cart");
-        List<CartItem> cartItems = cart.getItems();
         HoaDon hoaDonMoi = new HoaDon();
         int soHD = this.hoaDonRepository.soHD() + 1;
         hoaDonMoi.setMaHoaDOn("HD" + soHD);
@@ -196,10 +246,8 @@ public class EmailService {
         hoaDonMoi.setSoDienThoai(taiKhoan.getSdt());
         hoaDonMoi.setDiaChi(diaChiTamChu.taoDiaChiString(taiKhoan.getDiaChiList()));
         hoaDonMoi.setPhiShip(20000.0);
-        hoaDonMoi.setTongTien(0.0);
         hoaDonMoi.setTienThua(0.0);
         hoaDonMoi.setTrangThai(3);
-//        hoaDonMoi.setKhuyenMai();
 
         hoaDonMoi = this.hoaDonWebRepository.save(hoaDonMoi);
 
