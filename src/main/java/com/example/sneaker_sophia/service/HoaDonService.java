@@ -124,7 +124,25 @@ public class HoaDonService {
         return hoaDonRepository.soHDDG();
     }
 
-    public List<Object[]> getDoanhThuTheoThang(int nam) {
-        return hoaDonWebRepository.getDoanhThuTheoThang(nam);
+    public List<Object[]> getDoanhThuTheoThang(LocalDateTime ngayBatDau,LocalDateTime ngayKetThuc, String unit) {
+        return hoaDonWebRepository.getDoanhThuTheoThang(ngayBatDau,ngayKetThuc, unit);
+    }
+
+    //thông kê
+
+    public int countHoaDonTrangThaiThanhCongByDate(LocalDateTime ngayBatDau,LocalDateTime ngayKetThuc){
+        return hoaDonRepository.countHoaDonTrangThaiThanhCongByDate(ngayBatDau,ngayKetThuc);
+    }
+
+    public int countHoaDonTrangThaiHuyByDate(LocalDateTime ngayBatDau,LocalDateTime ngayKetThuc){
+        return hoaDonRepository.countHoaDonTrangThaiHuyByDate(ngayBatDau,ngayKetThuc);
+    }
+
+    public Double calculateTongTienByDate(LocalDateTime ngayBatDau,LocalDateTime ngayKetThuc){
+        return hoaDonRepository.calculateTongTienByDate(ngayBatDau,ngayKetThuc);
+    }
+
+    public int countHoaDonByDateRange(LocalDateTime ngayBatDau,LocalDateTime ngayKetThuc){
+        return hoaDonRepository.countHoaDonByDateRange(ngayBatDau,ngayKetThuc);
     }
 }

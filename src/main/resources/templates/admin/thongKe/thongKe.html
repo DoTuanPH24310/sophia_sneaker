@@ -10,31 +10,115 @@
 
     <!-- Custom styles for this template-->
     <link href="/css/sb-admin-2.min.css" rel="stylesheet">
+    <style>
+        .col-2.container {
+            border-radius: 10px; /* Đặt bán kính bo viên radius mong muốn */
+            background-color: #ffffff; /* Đặt màu nền trắng, bạn có thể thay đổi mã màu tùy chọn */
+            padding: 10px; /* Đặt khoảng trắng bên trong nếu cần thiết */
+            margin-left: 15px;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var thongKeForm = document.getElementById('thongKeForm');
+            var ngayBatDauInput = document.getElementById('NBDHoaDon');
+            var ngayKetThucInput = document.getElementById('NKTHoaDon');
+
+            ngayBatDauInput.addEventListener('change', function () {
+                thongKeForm.submit();
+            });
+
+            ngayKetThucInput.addEventListener('change', function () {
+                thongKeForm.submit();
+            });
+        });
+    </script>
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            // Lấy giá trị từ model và đặt cho các input fields
+            var ngayBatDau = /*[[${ngayBatDau}]]*/ '';
+            var ngayKetThuc = /*[[${ngayKetThuc}]]*/ '';
+
+            // Đặt giá trị cho input fields
+            $('#NBDHoaDon').val(ngayBatDau);
+            $('#NKTHoaDon').val(ngayKetThuc);
+        });
+    </script>
 </head>
 <body>
 <section>
     <div layout:fragment="content" class="col-md-12" style="margin: auto" id="page-top">
-        <div class="col-3">
-            <label for="nam">Chọn năm</label>
-            <select style="border-radius: 10px;" class="form-select" name="nam" id="nam" onchange="this.form.submit()">
-                <div style="border: 10px">
-                    <option value="null" th:selected="${listHDCT == null}">Tất cả</option>
-                    <option th:each="nam : ${listHDCT}" th:value="${nam.}"
-                            th:text="${deGiayItem.ten}" th:selected="${deGiayItem.ten == deGiay}"></option>
+        <div class="row">
+            <form th:action="@{/admin/thong-ke}" th:method="get" class="form-inline m-3" id="thongKeForm">
+                <!-- Các input fields khác nếu cần -->
+                <div class="col-2">
+                    <div class="form-floating">
+                        <input type="datetime-local" class="form-control" name="ngayBatDau" id="NBDHoaDon"/>
+                        <label for="NBDHoaDon" class="form-label">Từ ngày</label>
+                    </div>
                 </div>
-            </select>
+
+                <div class="col-2">
+                    <div class="form-floating">
+                        <input type="datetime-local" class="form-control" name="ngayKetThuc" id="NKTHoaDon"/>
+                        <label for="NKTHoaDon" class="form-label">Đến ngày</label>
+                    </div>
+                </div>
+            </form>
+
         </div>
+        <br>
+        <div class="row container-fluid">
+            <div class="col-2 container">
+                <div class="row">
+                    <h2 class="h5 mb-5 text-gray-800">DOANH THU</h2>
+                </div>
+                <div class="row">
+                    <h2>[[${#numbers.formatDecimal(doanhThu, 0, 'COMMA', 0, 'POINT')}]]</h2>
+                </div>
+            </div>
+            <div class="col-2 container">
+                <div class="row">
+                    <h2 class="h5 mb-5 text-gray-800">SỐ SẢN PHẨM ĐÃ BÁN</h2>
+                </div>
+                <div class="row">
+                    <h2 th:text="${soHoaDon}"></h2>
+                </div>
+            </div>
+            <div class="col-2 container">
+                <div class="row">
+                    <h1 class="h5 mb-5 text-gray-800">HÓA ĐƠN ĐÃ TẠO</h1>
+                </div>
+                <div class="row">
+                    <h2 th:text="${soHoaDon}"></h2>
+                </div>
+            </div>
+            <div class="col-2 container">
+                <div class="row">
+                    <h2 class="h5 mb-5 text-gray-800">HÓA ĐƠN THÀNH CÔNG</h2>
+                </div>
+                <div class="row">
+                    <h2 th:text="${soHoaDonThanhCong}"></h2>
+                </div>
+            </div>
+            <div class="col-2 container">
+                <div class="row">
+                    <h2 class="h5 mb-5 text-gray-800">HÓA ĐƠN HỦY</h2>
+                </div>
+                <div class="row">
+                    <h2 th:text="${soHoaDonHuy}"></h2>
+                </div>
+            </div>
+        </div>
+        <br>
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
             <!-- Begin Page Content -->
             <div class="container-fluid">
 
                 <!-- Page Heading -->
-                <h1 class="h3 mb-2 text-gray-800">Charts</h1>
-                <p class="mb-4">Chart.js is a third party plugin that is used to generate the charts in this theme.
-                    The charts below have been customized - for further customization options, please visit the <a
-                            target="_blank" href="https://www.chartjs.org/docs/latest/">official Chart.js
-                        documentation</a>.</p>
+                <h1 class="h3 mb-2 text-gray-800">Biểu đồ thống kê kinh doanh SOPHIA STORE</h1>
+                <p class="mb-4"></p>
 
                 <!-- Content Row -->
                 <div class="row">
@@ -44,7 +128,9 @@
                         <!-- Area Chart -->
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Area Chart</h6>
+                                <h6 class="m-0 font-weight-bold text-primary">
+                                    Doanh thu
+                                </h6>
                             </div>
                             <div class="card-body">
                                 <div class="chart-area">

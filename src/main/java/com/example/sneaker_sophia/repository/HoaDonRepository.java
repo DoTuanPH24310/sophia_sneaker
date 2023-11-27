@@ -4,6 +4,7 @@ import com.example.sneaker_sophia.entity.HoaDon;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -90,5 +91,38 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
             @Param("loaiHoaDon") Integer loaiHoaDon,
             @Param("textSearch") String textSearch
 
+    );
+
+    // thống kê
+    @Query("SELECT COUNT(h) FROM HoaDon h WHERE h.trangThai = 1 " +
+            "AND (:ngayBatDau IS NULL OR h.createdDate >= :ngayBatDau) " +
+            "AND (:ngayKetThuc IS NULL OR h.createdDate <= :ngayKetThuc)")
+    int countHoaDonTrangThaiThanhCongByDate(
+            @Param("ngayBatDau") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime ngayBatDau,
+            @Param("ngayKetThuc") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime ngayKetThuc
+    );
+
+    @Query("SELECT COUNT(h) FROM HoaDon h WHERE h.trangThai = 6 " +
+            "AND (:ngayBatDau IS NULL OR h.createdDate >= :ngayBatDau) " +
+            "AND (:ngayKetThuc IS NULL OR h.createdDate <= :ngayKetThuc)")
+    int countHoaDonTrangThaiHuyByDate(
+            @Param("ngayBatDau") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime ngayBatDau,
+            @Param("ngayKetThuc") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime ngayKetThuc
+    );
+
+    @Query("SELECT SUM(h.tongTien) FROM HoaDon h WHERE " +
+            "(:ngayBatDau IS NULL OR h.createdDate >= :ngayBatDau) AND " +
+            "(:ngayKetThuc IS NULL OR h.createdDate <= :ngayKetThuc)")
+    Double calculateTongTienByDate(
+            @Param("ngayBatDau") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime ngayBatDau,
+            @Param("ngayKetThuc") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime ngayKetThuc
+    );
+
+    @Query("SELECT COUNT(h) FROM HoaDon h WHERE " +
+            "(:ngayBatDau IS NULL OR h.createdDate >= :ngayBatDau) AND " +
+            "(:ngayKetThuc IS NULL OR h.createdDate <= :ngayKetThuc)")
+    int countHoaDonByDateRange(
+            @Param("ngayBatDau") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime ngayBatDau,
+            @Param("ngayKetThuc") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime ngayKetThuc
     );
 }

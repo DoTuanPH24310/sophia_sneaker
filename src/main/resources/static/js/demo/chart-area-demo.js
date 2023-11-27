@@ -29,7 +29,7 @@ function number_format(number, decimals, dec_point, thousands_sep) {
 
 // Area Chart Example
 var areaChart = document.getElementById("myAreaChart");
-fetch("/api/chart/revenue?nam=2023")
+fetch("http://localhost:8080/api/chart/revenue?ngayBatDau=2023-10-31T13%3A48&ngayKetThuc=2023-12-01T13%3A48")
     .then(response => response.json())
     .then(data => {
         var myLineChart = new Chart(areaChart, {
