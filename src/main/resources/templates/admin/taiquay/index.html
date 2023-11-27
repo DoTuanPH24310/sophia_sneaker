@@ -380,17 +380,19 @@
                         </div>
                         <div class="col-3">
 
-                            <input id="tienMat" onchange="displayTraSau();" type="radio" value="1" checked name="phuongThuc">
+                            <input id="tienMat" onchange="displayTraSau();" type="radio" value="1" checked
+                                   name="phuongThuc">
                             <label for="tienMat"><h6>Tiền mặt</h6></label>
                         </div>
                         <div class="col-3">
 
-                            <input id="chuyenKhoan" onchange="displayTraSau();"  type="radio" value="2" name="phuongThuc">
-                            <label  for="chuyenKhoan"><h6>Chuyển khoản</h6></label>
+                            <input id="chuyenKhoan" onchange="displayTraSau();" type="radio" value="2"
+                                   name="phuongThuc">
+                            <label for="chuyenKhoan"><h6>Chuyển khoản</h6></label>
                         </div>
 
                         <div class="col-2" id="phuongThucTraSau" style="display: none;">
-                            <input  id="traSau" onchange="displayTraSau();" type="radio" value="3" name="phuongThuc">
+                            <input id="traSau" onchange="displayTraSau();" type="radio" value="3" name="phuongThuc">
                             <label for="traSau"><h6>Trả sau</h6></label>
                         </div>
 
@@ -932,13 +934,14 @@
         let slt = -1;
         const checkIHD = [[${session.checkTTHT}]];
         const phiPhip = [[${phiVanChuyen}]];
+        const httt = [[${httt}]];
 
 
-        if (checkIHD != null && checkIHD == 1){
+        if (checkIHD != null && checkIHD == 1) {
             removeSeesion('checkTTHT');
             window.onload = function () {
                 $('#modalInHoaDon').modal('show');
-                document.getElementById('inHoaDon').href ='http://localhost:8080/admin/tai-quay/pdf/'+ idHoaDon;
+                document.getElementById('inHoaDon').href = 'http://localhost:8080/admin/tai-quay/pdf/' + idHoaDon;
                 document.getElementById('inHoaDon').addEventListener('click', function () {
                     $('#modalInHoaDon').modal('hide');
                 });
@@ -947,16 +950,20 @@
         }
 
         let myLinks = document.querySelectorAll('.myLinkHuy');
-        if (myLinks != null){
-            myLinks.forEach(function(link) {
-                link.addEventListener('click', function(event) {
+        if (myLinks != null) {
+            myLinks.forEach(function (link) {
+                link.addEventListener('click', function (event) {
                     event.preventDefault();
                     let hrefValue = link.getAttribute('href');
-                    let mess =  prompt("Nhập lí do hủy: ");
-                    if (mess.trim().length == 0 || mess == null){
-                        alert("Vui lòng nhập lí do");
-                    }else {
-                        window.location.href = hrefValue +"?value="+mess;
+                    let mess = prompt("Nhập lí do hủy: ");
+                    if (mess.trim().length == 0 || mess == null) {
+                        let type = 'error';
+                        let icon = 'fa-solid fa-circle-exclamation';
+                        let title = 'Thất bại!';
+                        let text = 'Bạn chưa nhập lí do';
+                        createToast(type, icon, title, text);
+                    } else {
+                        window.location.href = hrefValue + "?value=" + mess;
                     }
                 });
             });
@@ -972,39 +979,38 @@
                 }
             });
         }
+        //Day ne
 
-        let errhd = [[${session.errTaiQuay}]];
-        if (errhd != null) {
-            window.addEventListener("load", function () {
-                alert(errhd);
-                removeSeesion('errTaiQuay');
-            })
-        }
-        window.addEventListener('load', function () {
-            validateTienThua();
-        })
 
         document.getElementById('formXacNhanDonHang').addEventListener('submit', function (event) {
             event.preventDefault();
             let tienKhachDua = document.getElementById('tienKhachDua').value;
             let phiShip = document.getElementById('inputPhiShip') == null ? 0 : parseFloat(document.getElementById('inputPhiShip').value);
             if (tongTien == null || tongTien == 0) {
-                alert("VUi lòng chọn sản phẩm mua hàng");
+                let type = 'error';
+                let icon = 'fa-solid fa-circle-exclamation';
+                let title = 'Thất bại!';
+                let text = 'Vui lòng chọn sản phẩm';
+                createToast(type, icon, title, text);
+                return;
             }
 
-            console.log(document.getElementById('traSau').checked);
             if (tongTien != null && tongTien != 0 && document.getElementById('traSau').checked == false) {
                 tienKhachDua = tienKhachDua.replace(/[^\d.]/g, '');
                 tienKhachDua = parseFloat(tienKhachDua.replace(/\./g, ''));
                 if (tienKhachDua - (tongTien + phiShip) < 0) {
-                    alert("Số tiền khách đưa còn thiếu");
+                    let type = 'error';
+                    let icon = 'fa-solid fa-circle-exclamation';
+                    let title = 'Thất bại!';
+                    let text = 'Số tiền khách đưa còn thiếu';
+                    createToast(type, icon, title, text);
 
                 } else {
                     if (confirm('Xác nhận thanh toán đơn hàng')) {
                         document.getElementById('formXacNhanDonHang').submit();
                     }
                 }
-            }else {
+            } else {
                 if (confirm('Xác nhận thanh toán đơn hàng')) {
                     document.getElementById('formXacNhanDonHang').submit();
                 }
@@ -1015,10 +1021,12 @@
         document.getElementById('formSoluong').addEventListener('submit', function (event) {
             let inputValue = document.getElementById('inputSoLuong').value;
             if (slt == -1 || (slt - inputValue < 0)) {
-                alert("Không đủ số lượng tồn");
+                let type = 'error';
+                let icon = 'fa-solid fa-circle-exclamation';
+                let title = 'Thất bại!';
+                let text = 'Không đủ số lượng tồn';
+                createToast(type, icon, title, text);
                 event.preventDefault();
-            } else {
-                alert("Đã thêm vào giỏ hàng");
             }
         });
 
@@ -1451,6 +1459,7 @@
                 loadTrDDC(data[index], index);
             }
         }
+
         if (idKh != null) {
             if (loaihdg == 2) {
                 customSwitches.checked = true; // Đánh dấu checkbox là checked
@@ -1471,13 +1480,13 @@
             if (customSwitches.checked) {
                 form.style.display = "block";
                 displayPhiShip();
-                document.getElementById('phuongThucTraSau').style.display ="block";
+                document.getElementById('phuongThucTraSau').style.display = "block";
                 $.ajax({
                     type: 'get',
                     url: 'http://localhost:8080/api/hoa-don/updateGiaoHang/' + idHoaDon,
                 })
             } else {
-                document.getElementById('phuongThucTraSau').style.display ="none";
+                document.getElementById('phuongThucTraSau').style.display = "none";
                 document.getElementById('blockTienKhachDua').style.display = "flex";
                 document.getElementById('blockTienThua').style.display = "flex";
                 document.getElementById('tienMat').checked = true;
@@ -1498,12 +1507,12 @@
 
         function displayTraSau() {
             let checkTraSau = document.getElementById('traSau');
-            if(checkTraSau.checked){
-                document.getElementById('blockTienKhachDua').style.display ="none";
-                document.getElementById('blockTienThua').style.display ="none";
-            }else {
-                document.getElementById('blockTienKhachDua').style.display ="flex";
-                document.getElementById('blockTienThua').style.display ="flex";
+            if (checkTraSau.checked) {
+                document.getElementById('blockTienKhachDua').style.display = "none";
+                document.getElementById('blockTienThua').style.display = "none";
+            } else {
+                document.getElementById('blockTienKhachDua').style.display = "flex";
+                document.getElementById('blockTienThua').style.display = "flex";
             }
 
         }
@@ -1527,11 +1536,21 @@
             input.classList.add('mt-4');
             input.name = 'phiVanChuyen';
             input.id = 'inputPhiShip';
-            // if(phiPhip > 0){
-            //     input.value = Float.parse(phiPhip);
-            // }else{
-            input.value = 0;
-            // }
+            let formattedPhiShip = 0;
+            if (phiPhip != null && phiPhip > 0) {
+                formattedPhiShip = phiPhip.toLocaleString('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND'
+                });
+
+                input.value = (formattedPhiShip);
+            } else {
+                formattedPhiShip = '0'.toLocaleString('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND'
+                });
+                input.value = formattedPhiShip;
+            }
 
             col3.appendChild(input);
 
@@ -1644,8 +1663,8 @@
                     if (timeSinceLastScan >= 1000) { // Chỉ quét mỗi 2 giây
                         lastScanTime = currentTime;
 
-                        canvas.width = video.videoWidth;
-                        canvas.height = video.videoHeight;
+                        canvas.width = 800;
+                        canvas.height = 600;
                         context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
                         const resizedCanvas = document.createElement('canvas');
@@ -1653,7 +1672,6 @@
                         resizedCanvas.width = 400;
                         resizedCanvas.height = (video.videoHeight / video.videoWidth) * 400;
                         resizedContext.drawImage(canvas, 0, 0, resizedCanvas.width, resizedCanvas.height);
-
                         const imageData = resizedContext.getImageData(0, 0, resizedCanvas.width, resizedCanvas.height);
                         try {
                             const code = jsQR(imageData.data, imageData.width, imageData.height);
@@ -1717,15 +1735,23 @@
         let tienKhachDuaInput = document.getElementById("tienKhachDua");
         let tienDuSpan = document.getElementById("tienDu");
         let tongTienHD = parseFloat(tongTien);
-
-        // Lắng nghe sự kiện khi người dùng nhập số tiền khách đưa
+        window.addEventListener('load', function () {
+            validateTienThua();
+        })
         tienKhachDuaInput.addEventListener('input', function () {
             validateTienThua();
         });
 
         function validateTienThua() {
             if (tongTien == null) return;
+            if(httt != null){
+                if (httt == 2){
+                    document.getElementById('chuyenKhoan').checked = true;
+                }else if(httt == 3){
+                    document.getElementById('traSau').checked = true;
+                }
 
+            }
             let tienKhachDua = tienKhachDuaInput.value.replace(/[^\d.]/g, '');
             let phiShip = document.getElementById('inputPhiShip') == null ? '0.' : document.getElementById('inputPhiShip').value;
             phiShip = phiShip.replace(/[^\d.]/g, '');
