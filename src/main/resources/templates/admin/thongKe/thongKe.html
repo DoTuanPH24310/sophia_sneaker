@@ -18,38 +18,40 @@
             margin-left: 15px;
         }
     </style>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var thongKeForm = document.getElementById('thongKeForm');
-            var ngayBatDauInput = document.getElementById('NBDHoaDon');
-            var ngayKetThucInput = document.getElementById('NKTHoaDon');
+<!--    <script>-->
+<!--        document.addEventListener('DOMContentLoaded', function () {-->
+<!--            var thongKeForm = document.getElementById('thongKeForm');-->
+<!--            var ngayBatDauInput = document.getElementById('NBDHoaDon');-->
+<!--            var ngayKetThucInput = document.getElementById('NKTHoaDon');-->
 
-            ngayBatDauInput.addEventListener('change', function () {
-                thongKeForm.submit();
-            });
+<!--            ngayBatDauInput.addEventListener('change', function () {-->
+<!--                thongKeForm.submit();-->
+<!--            });-->
 
-            ngayKetThucInput.addEventListener('change', function () {
-                thongKeForm.submit();
-            });
-        });
-    </script>
-    <script th:inline="javascript">
-        $(document).ready(function () {
-            // Lấy giá trị từ model và đặt cho các input fields
-            var ngayBatDau = /*[[${ngayBatDau}]]*/ '';
-            var ngayKetThuc = /*[[${ngayKetThuc}]]*/ '';
+<!--            ngayKetThucInput.addEventListener('change', function () {-->
+<!--                thongKeForm.submit();-->
+<!--            });-->
+<!--        });-->
+<!--    </script>-->
+<!--    <script th:inline="javascript">-->
+<!--        $(document).ready(function () {-->
+<!--            // Lấy giá trị từ model và đặt cho các input fields-->
+<!--            var ngayBatDau = /*[[${ngayBatDau}]]*/ '';-->
+<!--            var ngayKetThuc = /*[[${ngayKetThuc}]]*/ '';-->
 
-            // Đặt giá trị cho input fields
-            $('#NBDHoaDon').val(ngayBatDau);
-            $('#NKTHoaDon').val(ngayKetThuc);
-        });
-    </script>
+<!--            // Đặt giá trị cho input fields-->
+<!--            $('#NBDHoaDon').val(ngayBatDau);-->
+<!--            $('#NKTHoaDon').val(ngayKetThuc);-->
+<!--        });-->
+<!--    </script>-->
+
+
 </head>
 <body>
 <section>
     <div layout:fragment="content" class="col-md-12" style="margin: auto" id="page-top">
         <div class="row">
-            <form th:action="@{/admin/thong-ke}" th:method="get" class="form-inline m-3" id="thongKeForm">
+            <form class="form-inline m-3" id="thongKeForm">
                 <!-- Các input fields khác nếu cần -->
                 <div class="col-2">
                     <div class="form-floating">
@@ -65,7 +67,6 @@
                     </div>
                 </div>
             </form>
-
         </div>
         <br>
         <div class="row container-fluid">
@@ -74,7 +75,7 @@
                     <h2 class="h5 mb-5 text-gray-800">DOANH THU</h2>
                 </div>
                 <div class="row">
-                    <h2>[[${#numbers.formatDecimal(doanhThu, 0, 'COMMA', 0, 'POINT')}]]</h2>
+                    <h2 id="doanhThu"></h2>
                 </div>
             </div>
             <div class="col-2 container">
@@ -82,7 +83,7 @@
                     <h2 class="h5 mb-5 text-gray-800">SỐ SẢN PHẨM ĐÃ BÁN</h2>
                 </div>
                 <div class="row">
-                    <h2 th:text="${soHoaDon}"></h2>
+                    <h2 id="sanPhamDaBan"></h2>
                 </div>
             </div>
             <div class="col-2 container">
@@ -90,7 +91,7 @@
                     <h1 class="h5 mb-5 text-gray-800">HÓA ĐƠN ĐÃ TẠO</h1>
                 </div>
                 <div class="row">
-                    <h2 th:text="${soHoaDon}"></h2>
+                    <h2 id="1"></h2>
                 </div>
             </div>
             <div class="col-2 container">
@@ -98,7 +99,7 @@
                     <h2 class="h5 mb-5 text-gray-800">HÓA ĐƠN THÀNH CÔNG</h2>
                 </div>
                 <div class="row">
-                    <h2 th:text="${soHoaDonThanhCong}"></h2>
+                    <h2 id="2"></h2>
                 </div>
             </div>
             <div class="col-2 container">
@@ -106,7 +107,7 @@
                     <h2 class="h5 mb-5 text-gray-800">HÓA ĐƠN HỦY</h2>
                 </div>
                 <div class="row">
-                    <h2 th:text="${soHoaDonHuy}"></h2>
+                    <h2 id=3""></h2>
                 </div>
             </div>
         </div>
@@ -144,7 +145,7 @@
                         <!-- Bar Chart -->
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Top 10 sản phẩm bán chạy nhất năm</h6>
+                                <h6 class="m-0 font-weight-bold text-primary">Top 10 sản phẩm bán chạy nhất</h6>
                             </div>
                             <div class="card-body">
                                 <div class="chart-bar">
@@ -196,6 +197,30 @@
             <i class="fas fa-angle-up"></i>
         </a>
 
+        <script>
+            var today = new Date();
+
+            // Cộng thêm 1 năm
+            var preYear = new Date(today);
+            preYear.setMonth(0)
+            preYear.setDate(1)
+
+            // Định dạng thành chuỗi YYYY-MM-DDThh:mm (định dạng của datetime-local)
+            var preYearString = preYear.toISOString().slice(0, 16);
+            var Year = new Date().toISOString().slice(0, 16);
+            // Đặt giá trị mặc định cho input ngày bắt đầu và ngày kết thúc
+            document.getElementById("NBDHoaDon").value = preYearString;
+            document.getElementById("NKTHoaDon").value = Year;
+
+            $(document).ready(function () {
+                // Make an asynchronous request to your API endpoint
+                $.get("/api/thong-ke", function (data) {
+                    // Update HTML elements with API data
+                    $("#doanhThu").text(data.doanhThu);
+                    // Similar updates for other elements
+                });
+            });
+        </script>
         <!-- Bootstrap core JavaScript-->
         <script src="/vendor/jquery/jquery.min.js"></script>
         <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

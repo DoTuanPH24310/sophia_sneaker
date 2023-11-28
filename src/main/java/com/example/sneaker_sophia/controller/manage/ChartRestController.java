@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/chart")
@@ -25,21 +26,55 @@ public class ChartRestController {
     HoaDonWebRepository hoaDonWebRepository;
 
     @GetMapping("/revenue")
-    public List<Object[]> getRevenueChartData( @RequestParam(name = "ngayBatDau", required = false)
-                                                   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime ngayBatDau,
-                                               @RequestParam(name = "ngayKetThuc", required = false)
-                                                   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime ngayKetThuc,
+    public List<Object[]> getRevenueChartData(@RequestParam(name = "ngayBatDau", required = false)
+                                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime ngayBatDau,
+                                              @RequestParam(name = "ngayKetThuc", required = false)
+                                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime ngayKetThuc,
                                               Model model) {
-        List<Object[]> revenueDataList = hoaDonService.getDoanhThuTheoThang(ngayBatDau,ngayKetThuc, hoaDonWebRepository.determineTimeUnit(ngayBatDau,ngayKetThuc));
-        model.addAttribute("listHDCT",hoaDonChiTietDTService.findAll());
+        List<Object[]> revenueDataList = hoaDonService.getDoanhThuTheoThang(ngayBatDau, ngayKetThuc, hoaDonWebRepository.determineTimeUnit(ngayBatDau, ngayKetThuc));
+        System.out.println("nít" + hoaDonWebRepository.determineTimeUnit(ngayBatDau, ngayKetThuc));
+        model.addAttribute("listHDCT", hoaDonChiTietDTService.findAll());
         return revenueDataList;
     }
 
     @GetMapping("/product")
-    public List<Object[]> getProductChartData(@RequestParam("nam") int nam,
+    public List<Object[]> getProductChartData(@RequestParam(name = "ngayBatDau", required = false)
+                                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime ngayBatDau,
+                                              @RequestParam(name = "ngayKetThuc", required = false)
+                                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime ngayKetThuc,
                                               Model model) {
-        List<Object[]> productDataList = hoaDonChiTietDTService.findTop10BestSellingProductsByNam(nam);
-        model.addAttribute("listHDCT",hoaDonChiTietDTService.findAll());
+        List<Object[]> productDataList = hoaDonChiTietDTService.findTop10BestSellingProductsByNam(ngayBatDau, ngayKetThuc, hoaDonWebRepository.determineTimeUnit(ngayBatDau, ngayKetThuc));
+        model.addAttribute("listHDCT", hoaDonChiTietDTService.findAll());
         return productDataList;
     }
+
+    @GetMapping("/status")
+    public List<Object[]> getStatusChartData(@RequestParam(name = "ngayBatDau", required = false)
+                                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime ngayBatDau,
+                                              @RequestParam(name = "ngayKetThuc", required = false)
+                                              @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime ngayKetThuc,
+                                              Model model) {
+        List<Object[]> statusDataList = hoaDonService.countHoaDonByTrangThai(ngayBatDau, ngayKetThuc);
+        model.addAttribute("listHDCT", hoaDonChiTietDTService.findAll());
+        return statusDataList;
+    }
+    @GetMapping("/thong-ke")
+    public Map<String, Object> thongKe(
+            @RequestParam(name = "ngayBatDau", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime ngayBatDau,
+            @RequestParam(name = "ngayKetThuc", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime ngayKetThuc) {
+
+
+        Map<String, Object> result = Map.of(
+                "ngayBatDau", ngayBatDau,
+                "ngayKetThuc", ngayKetThuc,
+                "soHoaDon", hoaDonService.countHoaDonByDateRange(ngayBatDau, ngayKetThuc),
+                "soHoaDonThanhCong", hoaDonService.countHoaDonTrangThaiThanhCongByDate(ngayBatDau, ngayKetThuc),
+                "soHoaDonHuy", hoaDonService.countHoaDonTrangThaiHuyByDate(ngayBatDau, ngayKetThuc),
+                "doanhThu", hoaDonService.calculateTongTienByDate(ngayBatDau, ngayKetThuc)
+        );
+        return result;
+    }
+
 }

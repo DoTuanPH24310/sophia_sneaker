@@ -8,6 +8,7 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -124,7 +125,7 @@ public class HoaDonService {
         return hoaDonRepository.soHDDG();
     }
 
-    public List<Object[]> getDoanhThuTheoThang(LocalDateTime ngayBatDau,LocalDateTime ngayKetThuc, String unit) {
+    public List<Object[]> getDoanhThuTheoThang(LocalDateTime ngayBatDau, LocalDateTime ngayKetThuc, String unit) {
         return hoaDonWebRepository.getDoanhThuTheoThang(ngayBatDau,ngayKetThuc, unit);
     }
 
@@ -144,5 +145,9 @@ public class HoaDonService {
 
     public int countHoaDonByDateRange(LocalDateTime ngayBatDau,LocalDateTime ngayKetThuc){
         return hoaDonRepository.countHoaDonByDateRange(ngayBatDau,ngayKetThuc);
+    }
+
+    public  List<Object[]> countHoaDonByTrangThai(LocalDateTime ngayBatDau,LocalDateTime ngayKetThuc){
+        return hoaDonWebRepository.countHoaDonByNgayTao(ngayBatDau,ngayKetThuc);
     }
 }

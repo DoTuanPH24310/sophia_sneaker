@@ -29,28 +29,94 @@ function number_format(number, decimals, dec_point, thousands_sep) {
 
 // Area Chart Example
 var areaChart = document.getElementById("myAreaChart");
-fetch("http://localhost:8080/api/chart/revenue?ngayBatDau=2023-10-31T13%3A48&ngayKetThuc=2023-12-01T13%3A48")
-    .then(response => response.json())
-    .then(data => {
-        var myLineChart = new Chart(areaChart, {
+// Lấy các phần tử DOM của ô ngày bắt đầu và kết thúc
+var ngayBatDauInput = document.getElementById("NBDHoaDon");
+var ngayKetThucInput = document.getElementById("NKTHoaDon");
+
+// Sự kiện khi giá trị của ô ngày bắt đầu thay đổi
+ngayBatDauInput.addEventListener("input", function () {
+    callApiAndUpdateChart();
+    callApiThongKe()
+});
+
+// Sự kiện khi giá trị của ô ngày kết thúc thay đổi
+ngayKetThucInput.addEventListener("input", function () {
+    callApiAndUpdateChart();
+    callApiThongKe()
+});
+
+// Hàm gọi API và cập nhật biểu đồ
+function callApiAndUpdateChart() {
+    // Lấy giá trị từ ô ngày bắt đầu và ngày kết thúc
+    var ngayBatDau = ngayBatDauInput.value;
+    var ngayKetThuc = ngayKetThucInput.value;
+
+    // Tạo URL với thông tin ngày
+    var url = "http://localhost:8080/api/chart/revenue?ngayBatDau=" + encodeURIComponent(ngayBatDau) + "&ngayKetThuc=" + encodeURIComponent(ngayKetThuc);
+
+    console.log(encodeURIComponent(ngayBatDau) + "&ngayKetThuc=" + encodeURIComponent(ngayKetThuc))
+    // Gửi request đến URL tương ứng
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            // Cập nhật biểu đồ với dữ liệu mới
+            updateChart(data);
+        })
+        .catch(error => console.error('Error:', error));
+
+    var url1 = "http://localhost:8080/api/chart/thong-ke?ngayBatDau=" + encodeURIComponent(ngayBatDau) + "&ngayKetThuc=" + encodeURIComponent(ngayKetThuc);
+    // Gửi request đến URL tương ứng
+    fetch(url1)
+        .then(response => response.json())
+        .then(data => {
+            // Cập nhật biểu đồ với dữ liệu mới
+            $("#doanhThu").text(data.doanhThu);
+            $("#sanPhamDaBan").text(data.doanhThu);
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+// Hàm cập nhật biểu đồ với dữ liệu mới
+function updateChart(data) {
+    // Tạo hoặc cập nhật biểu đồ
+    if (typeof myLineChart === 'undefined') {
+        // Nếu biểu đồ chưa được tạo, tạo mới
+        myLineChart = new Chart(areaChart, {
             type: 'line',
             data: {
-                labels: data.map(item => 'Tháng ' + item[0]),
-                datasets: [{
-                    label: "Doanh thu",
-                    lineTension: 0.3,
-                    backgroundColor: "rgba(78, 115, 223, 0.05)",
-                    borderColor: "rgba(78, 115, 223, 1)",
-                    pointRadius: 3,
-                    pointBackgroundColor: "rgba(78, 115, 223, 1)",
-                    pointBorderColor: "rgba(78, 115, 223, 1)",
-                    pointHoverRadius: 1,
-                    pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
-                    pointHoverBorderColor: "rgba(78, 115, 223, 1)",
-                    pointHitRadius: 10,
-                    pointBorderWidth: 2,
-                    data: data.map(item => item[1]),
-                }],
+                labels: data.map(item => item[0]),
+                datasets: [
+                    {
+                        label: "Doanh thu tháng này",
+                        lineTension: 0.3,
+                        backgroundColor: "rgba(78, 115, 223, 0.05)",
+                        borderColor: "rgba(78, 115, 223, 1)",
+                        pointRadius: 3,
+                        pointBackgroundColor: "rgba(78, 115, 223, 1)",
+                        pointBorderColor: "rgba(78, 115, 223, 1)",
+                        pointHoverRadius: 1,
+                        pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+                        pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+                        pointHitRadius: 10,
+                        pointBorderWidth: 2,
+                        data: data.map(item => item[1]),
+                    },
+                    {
+                        label: "Tháng trước",
+                        lineTension: 0.3,
+                        backgroundColor: "rgba(223, 78, 78, 0.05)",
+                        borderColor: "rgba(223, 78, 78, 1)",
+                        pointRadius: 3,
+                        pointBackgroundColor: "rgba(223, 78, 78, 1)",
+                        pointBorderColor: "rgba(223, 78, 78, 1)",
+                        pointHoverRadius: 1,
+                        pointHoverBackgroundColor: "rgba(223, 78, 78, 1)",
+                        pointHoverBorderColor: "rgba(223, 78, 78, 1)",
+                        pointHitRadius: 10,
+                        pointBorderWidth: 2,
+                        data: data.map(item => item[2]), // Giả sử giá trị của line thứ 2 nằm ở vị trí thứ 2 trong mảng data
+                    }
+                ],
             },
             options: {
                 maintainAspectRatio: false,
@@ -81,7 +147,7 @@ fetch("http://localhost:8080/api/chart/revenue?ngayBatDau=2023-10-31T13%3A48&nga
                             padding: 10,
                             // Include a dollar sign in the ticks
                             callback: function (value, index, values) {
-                                return number_format(value) +' VNĐ';
+                                return number_format(value) + ' VNĐ';
                             }
                         },
                         gridLines: {
@@ -113,10 +179,21 @@ fetch("http://localhost:8080/api/chart/revenue?ngayBatDau=2023-10-31T13%3A48&nga
                     callbacks: {
                         label: function (tooltipItem, chart) {
                             var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-                            return datasetLabel+ ' ' + number_format(tooltipItem.yLabel)+ ' VNĐ' ;
+                            return datasetLabel + ' ' + number_format(tooltipItem.yLabel) + ' VNĐ';
                         }
                     }
                 }
             }
         });
-    });
+    } else {
+        // Nếu biểu đồ đã tồn tại, cập nhật dữ liệu
+        myLineChart.data.labels = data.map(item => item[0]);
+        myLineChart.data.datasets[0].data = data.map(item => item[1]);
+        myLineChart.update();
+    }
+}
+
+// Gọi hàm lần đầu để hiển thị biểu đồ ban đầu
+callApiAndUpdateChart();
+
+

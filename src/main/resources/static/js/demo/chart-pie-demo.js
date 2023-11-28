@@ -13,21 +13,6 @@ fetch("/api/chart/product?nam=2023")
 // Dãy màu cho hoverBackgroundColor
         const hoverBackgroundColorArray = ['#2e59d9', '#17a673', '#2c9faf'];
 
-// Tạo thêm màu sắc nếu cần
-        for (let i = 0; i < 7; i++) {
-            backgroundColorArray.push(getRandomColor());
-            hoverBackgroundColorArray.push(getRandomColor());
-        }
-
-// Hàm để sinh màu sắc ngẫu nhiên
-        function getRandomColor() {
-            const letters = '0123456789ABCDEF';
-            let color = '#';
-            for (let i = 0; i < 6; i++) {
-                color += letters[Math.floor(Math.random() * 16)];
-            }
-            return color;
-        }
 
 // Sử dụng mảng màu sắc trong mã của bạn
         const chartData = {
