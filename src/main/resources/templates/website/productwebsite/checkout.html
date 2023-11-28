@@ -407,39 +407,40 @@
 <!-- ...:::: Start Checkout Section:::... -->
 <div class="checkout-section">
     <div class="container">
-        <!-- Start User Details Checkout Form -->
-        <div class="checkout_form" data-aos="fade-up" data-aos-delay="400">
-            <div class="row">
-                <div class="col-lg-6 col-md-6">
-                    <form th:object="${diaChi}" method="post">
+        <form th:object="${diaChi}" th:action="@{/check-out/thanh-toan}" method="post" id="formThanhToan">
+
+            <!-- Start User Details Checkout Form -->
+            <div class="checkout_form" data-aos="fade-up" data-aos-delay="400">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6">
                         <h3>Thông tin địa chỉ</h3>
                         <div class="row">
                             <div class="col-12">
                                 <div class="default-form-box">
                                     <label>Họ tên người nhận hàng</label>
-                                    <input type="text" th:field="*{ten}" disabled>
+                                    <input type="text" th:field="*{ten}" id="nameTen">
                                     <span th:errors="*{ten}" style="color: red"></span>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="default-form-box">
                                     <label>Số điện thoại <span>*</span></label>
-                                    <input type="text" th:field="*{sdt}" disabled>
+                                    <input type="text" th:field="*{sdt}" id="nameSoDienThoai">
                                     <span th:errors="*{sdt}" style="color: red"></span>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="default-form-box">
                                     <label> Địa chỉ email <span>*</span></label>
-                                    <input type="text" th:field="*{taiKhoan.email}" disabled>
-                                    <span th:errors="*{taiKhoan.email}" style="color: red"></span>
+                                    <input type="text" th:value="${email}" disabled>
+                                    <!--                                                                        <span th:errors="*{taiKhoan.email}" style="color: red"></span>-->
                                 </div>
                             </div>
                             <div class="col-4">
                                 <div class="default-form-box">
                                     <label for="province">Tỉnh<span>*</span></label>
-                                    <select class="country_option nice-select wide" id="province" name="tinh"
-                                            th:field="*{tinh}" placeholder="Chọn tỉnh" disabled>
+                                    <select class="country_option nice-select wide" id="province"
+                                            th:field="*{tinh}" placeholder="Chọn tỉnh">
                                         <option value="">Chọn tỉnh</option>
                                         <option value=""></option>
                                     </select>
@@ -449,8 +450,8 @@
                             <div class="col-4">
                                 <div class="default-form-box">
                                     <label for="district">Huyện <span>*</span></label>
-                                    <select class="country_option nice-select wide" name="quanHuyen" id="district"
-                                            th:field="*{quanHuyen}" placeholder="Chọn huyện" disabled>
+                                    <select class="country_option nice-select wide" id="district"
+                                            th:field="*{quanHuyen}" placeholder="Chọn huyện">
                                         <option value="">Chọn quận huyện</option>
                                         <option value=""></option>
                                     </select>
@@ -460,8 +461,8 @@
                             <div class="col-4">
                                 <div class="default-form-box">
                                     <label for="ward">Xã <span>*</span></label>
-                                    <select class="country_option nice-select wide" id="ward" name="phuongXa"
-                                            th:field="*{phuongXa}" placeholder="Chọn xã" disabled>
+                                    <select class="country_option nice-select wide" id="ward"
+                                            th:field="*{phuongXa}" placeholder="Chọn xã">
                                         <option value="">Chọn phường xã</option>
                                         <option value=""></option>
                                     </select>
@@ -473,114 +474,116 @@
                             <div class="col-12">
                                 <div class="default-form-box">
                                     <label>Địa chỉ cụ thể <span>*</span></label>
-                                    <input placeholder="House number and street name" type="text"
-                                           th:field="*{diaChiCuThe}" disabled>
+                                    <input placeholder="House number and street name" type="text" id="nameDiaChiCuThe"
+                                           th:field="*{diaChiCuThe}">
                                     <span th:errors="*{diaChiCuThe}" style="color: red"></span>
                                 </div>
                             </div>
                         </div>
-                    </form>
-                </div>
-                <div class="col-lg-6 col-md-6">
-                    <form th:action="@{/check-out/thanh-toan}" method="post" id="formThanhToan">
-                        <h3>Đơn hàng của bạn</h3>
-                        <div class="order_table table-responsive">
-                            <table>
-                                <thead>
-                                <tr>
-                                    <th>Ảnh</th>
-                                    <th>Sản phẩm</th>
-                                    <th>Số lượng</th>
-                                    <th>Đơn giá</th>
-                                    <th>Thành tiền</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="item : ${cartItems}">
-                                    <td class="product_thumb">
-                                        <img class="offcanvas-cart-image"
-                                             th:src="@{${item.id.chiTietGiay.anhs.get(0).getDuongDan()}}"
-                                             style="width: 92px; height: 92px"
-                                             alt="">
-                                    </td>
-                                    <td >
-                                    <p th:text="${item.id.chiTietGiay.hang.ten + ' ' + item.id.chiTietGiay.giay.ten + ' ' + item.id.chiTietGiay.loaiGiay.ten + ' ' + item.id.chiTietGiay.mauSac.ten}"></p>
-                                    </td>
-                                    <td>
-                                        <p th:text="${item.soLuong}"></p>
-                                    </td>
-                                    <td>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <form th:action="@{/check-out/thanh-toan}" method="post">
+                            <h3>Đơn hàng của bạn</h3>
+                            <div class="order_table table-responsive">
+                                <table>
+                                    <thead>
+                                    <tr>
+                                        <th>Ảnh</th>
+                                        <th>Sản phẩm</th>
+                                        <th>Số lượng</th>
+                                        <th>Đơn giá</th>
+                                        <th>Thành tiền</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="item : ${cartItems}">
+                                        <td class="product_thumb">
+                                            <img class="offcanvas-cart-image"
+                                                 th:src="@{${item.id.chiTietGiay.anhs.get(0).getDuongDan()}}"
+                                                 style="width: 92px; height: 92px"
+                                                 alt="">
+                                        </td>
+                                        <td>
+                                            <p th:text="${item.id.chiTietGiay.hang.ten + ' ' + item.id.chiTietGiay.giay.ten + ' ' + item.id.chiTietGiay.loaiGiay.ten + ' ' + item.id.chiTietGiay.mauSac.ten}"></p>
+                                        </td>
+                                        <td>
+                                            <p th:text="${item.soLuong}"></p>
+                                        </td>
+                                        <td>
                                         <span th:if="${session['giaCu_' + item.id.chiTietGiay.id] != session['giaMoi_' + item.id.chiTietGiay.id]}"
                                               class="original-price"
                                               style="text-decoration: line-through; color: red; font-size: 13px"
                                               th:text="${#numbers.formatCurrency(session['giaCu_' + item.id.chiTietGiay.id])}"></span>
-                                        <br>
-                                        <span class="discounted-price"
-                                              th:if="${session['giaCu_' + item.id.chiTietGiay.id] != session['giaMoi_' + item.id.chiTietGiay.id]}"
-                                              th:text="${#numbers.formatCurrency(session['giaMoi_' + item.id.chiTietGiay.id])}"></span>
+                                            <br>
+                                            <span class="discounted-price"
+                                                  th:if="${session['giaCu_' + item.id.chiTietGiay.id] != session['giaMoi_' + item.id.chiTietGiay.id]}"
+                                                  th:text="${#numbers.formatCurrency(session['giaMoi_' + item.id.chiTietGiay.id])}"></span>
 
-                                        <span th:unless="${session['giaCu_' + item.id.chiTietGiay.id] != session['giaMoi_' + item.id.chiTietGiay.id]}"
-                                              th:text="${#numbers.formatCurrency(session['giaCu_' + item.id.chiTietGiay.id])}"></span>
-                                    </td>
-                                    <td >
-<!--                                        <p th:text="${#numbers.formatCurrency(session['giaMoi_' + cart.id.chiTietGiay.id] * item.soLuong)}"></p>-->
-                                    </td>
-                                </tr>
-                                </tbody>
-                                <tfoot>
-                                <tr>
-                                    <td colspan="4" style="text-align: center;">Tổng giá sản phẩm</td>
-                                    <td th:text="${#numbers.formatCurrency(total)}"></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4" style="text-align: center;">Phí vận chuyển</td>
-                                    <td id="shipping-cost" th:value="20000">20000</td>
-                                </tr>
-                                <tr class="order_total">
-                                    <td colspan="4" style="text-align: center;">Tổng tiền đơn hàng</td>
-                                    <td><strong id="totalAmount" th:text="${#numbers.formatCurrency(total)}"></strong>
-                                    </td>
-                                </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-                        <div class="payment_method">
-                            <div class="panel-default">
-                                <label class="checkbox-default" for="currencyCod" data-bs-toggle="collapse"
-                                       data-bs-target="#methodCod">
-                                    <input type="radio" id="currencyCod" name="hinhThucThanhToan" value="3">
-                                    <span>Thanh toán khi nhận hàng</span>
-                                </label>
+                                            <span th:unless="${session['giaCu_' + item.id.chiTietGiay.id] != session['giaMoi_' + item.id.chiTietGiay.id]}"
+                                                  th:text="${#numbers.formatCurrency(session['giaCu_' + item.id.chiTietGiay.id])}"></span>
+                                        </td>
+                                        <td>
+                                            <p th:text="${#numbers.formatCurrency(session['giaMoi_' + item.id.chiTietGiay.id] * item.soLuong)}"></p>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <td colspan="4" style="text-align: center;">Tổng giá sản phẩm</td>
+                                        <td th:text="${#numbers.formatCurrency(total)}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" style="text-align: center;">Phí vận chuyển</td>
+                                        <td id="shipping-cost" th:value="20000">20000</td>
+                                    </tr>
+                                    <tr class="order_total">
+                                        <td colspan="4" style="text-align: center;">Tổng tiền đơn hàng</td>
+                                        <td><strong id="totalAmount"
+                                                    th:text="${#numbers.formatCurrency(total)}"></strong>
+                                        </td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <div class="payment_method">
+                                <div class="panel-default">
+                                    <label class="checkbox-default" for="currencyCod" data-bs-toggle="collapse"
+                                           data-bs-target="#methodCod">
+                                        <input type="radio" id="currencyCod" name="hinhThucThanhToan" value="3">
+                                        <span>Thanh toán khi nhận hàng</span>
+                                    </label>
 
-                                <div id="methodCod" class="collapse" data-parent="#methodCod">
-                                    <div class="card-body1">
-                                        <p>Vui lòng nhập địa chỉ giao và kiểm tra đúng nơi nhận hàng.</p>
+                                    <div id="methodCod" class="collapse" data-parent="#methodCod">
+                                        <div class="card-body1">
+                                            <p>Vui lòng nhập địa chỉ giao và kiểm tra đúng nơi nhận hàng.</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="panel-default">
-                                <label class="checkbox-default" for="currencyPaypal" data-bs-toggle="collapse"
-                                       data-bs-target="#methodPaypal">
-                                    <input type="radio" id="currencyPaypal" name="hinhThucThanhToan" value="2">
-                                    <span>VNPay</span>
-                                </label>
-                                <div id="methodPaypal" class="collapse " data-parent="#methodPaypal">
-                                    <div class="card-body1">
-                                        <p>Pay via PayPal; you can pay with your credit card if you don’t have a
-                                            PayPal account.</p>
+                                <div class="panel-default">
+                                    <label class="checkbox-default" for="currencyPaypal" data-bs-toggle="collapse"
+                                           data-bs-target="#methodPaypal">
+                                        <input type="radio" id="currencyPaypal" name="hinhThucThanhToan" value="2">
+                                        <span>VNPay</span>
+                                    </label>
+                                    <div id="methodPaypal" class="collapse " data-parent="#methodPaypal">
+                                        <div class="card-body1">
+                                            <p>Pay via PayPal; you can pay with your credit card if you don’t have a
+                                                PayPal account.</p>
+                                        </div>
                                     </div>
                                 </div>
+                                <div class="order_button pt-3">
+                                    <button id="btnThanhToan" class="btn btn-md btn-black-default-hover" type="submit">
+                                        Thanh
+                                        toán
+                                    </button>
+                                </div>
                             </div>
-                            <div class="order_button pt-3">
-                                <button id="btnThanhToan" class="btn btn-md btn-black-default-hover" type="submit">Thanh
-                                    toán
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
-            </div>
-        </div> <!-- Start User Details Checkout Form -->
+            </div> <!-- Start User Details Checkout Form -->
+        </form>
     </div>
 </div><!-- ...:::: End Checkout Section:::... -->
 
@@ -894,151 +897,184 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script>
-    const tinh = [[${session.tinh}]];
-    const quan = [[${session.quan}]];
-    let phuong = [[${session.phuong}]];
+    const tinh = '[[${#strings.isEmpty(session.tinh) ? -1 : session.tinh}]]';
+    const quan = '[[${#strings.isEmpty(session.quan) ? -1 : session.quan}]]';
+    let phuong = '[[${#strings.isEmpty(session.phuong) ? -1 : session.phuong}]]';
+
     const host = "https://provinces.open-api.vn/api/";
 
-    var renderData = (array, select) => {
-        let row = ' <option disable value="">--Chọn Tỉnh/Thành phố--</option';
+    const renderOptions = (array, selectId, placeholder) => {
+        let options = '';
+        // Add placeholder regardless of whether the array is empty
+        options += `<option disable value="">${placeholder}</option>`;
         array.forEach(element => {
-            if (tinh === element.code) {
-                renderDataDis(element.districts, "district");
-                row = `<option selected value="${element.code}">${element.name}</option>`;
-            } else {
-                row += `<option value="${element.code}">${element.name}</option>`;
-            }
+            options += `<option value="${element.code}">${element.name}</option>`;
         });
-        document.querySelector("#" + select).innerHTML = row;
-    }
+        document.querySelector("#" + selectId).innerHTML = options;
+    };
 
-    var renderDataDis = (array, select) => {
-        let row = ' <option disable value="">--Chọn Quận/Huyện--</option>';
-        array.forEach(element => {
-            if (quan === element.code) {
-                renderDataWar(element.wards, "ward");
-                row = `<option selected value="${element.code}">${element.name}</option>`;
-            } else {
-                row += `<option value="${element.code}">${element.name}</option>`;
-            }
-
-        });
-
-        document.querySelector("#" + select).innerHTML = row;
-    }
-
-    var renderDataWar = (array, select) => {
-        let row = ' <option disable value="">--Chọn Phường/Xã--</option>';
-        array.forEach(element => {
-            if (phuong === element.code) {
-                row = `<option selected value="${element.code}">${element.name}</option>`;
-                console.log(element);
-            } else {
-                row += `<option value="${element.code}">${element.name}</option>`;
-            }
-
-        });
-        document.querySelector("#" + select).innerHTML = row;
-    }
-
-    var callAPI = (api) => {
+    const callAPI = (api, selectId, renderFunction) => {
         return axios.get(api)
             .then((response) => {
-                renderData(response.data, "province");
+                renderFunction(response.data, selectId);
+            })
+            .catch((error) => {
+                console.error(error);
             });
     };
-    callAPI('https://provinces.open-api.vn/api/?depth=3');
-
-
-    var callApiDistrict = (api) => {
-        return axios.get(api)
-            .then((response) => {
-                renderDataDis(response.data.districts, "district");
-            });
-    };
-    var callApiWard = (api) => {
-        return axios.get(api)
-            .then((response) => {
-                renderDataWar(response.data.wards, "ward");
-            });
-    }
 
     $("#province").change(() => {
-        phuong = 0;
-        callApiDistrict(host + "p/" + $("#province").val() + "?depth=2")
-        callApiWard(host + "d/" + $("#district").val() + "?depth=2");
+        const selectedProvinceCode = $("#province").val();
+
+        // Call API to load districts based on the selected province
+        callAPI(host + "p/" + selectedProvinceCode + "?depth=2", "district", (data, selectId) => {
+            renderOptions(data.districts, selectId, "--Chọn Quận/Huyện--");
+        });
+
+        // Call API to load wards based on the selected district
+        callAPI(host + "d/" + $("#district").val() + "?depth=2", "ward", (data, selectId) => {
+            renderOptions(data.wards, selectId, "--Chọn Phường/Xã--");
+        });
+
         printResult();
     });
-
 
     $("#district").change(() => {
-        callApiWard(host + "d/" + $("#district").val() + "?depth=2");
+        // Call API to load wards based on the selected district
+        callAPI(host + "d/" + $("#district").val() + "?depth=2", "ward", (data, selectId) => {
+            renderOptions(data.wards, selectId, "--Chọn Phường/Xã--");
+        });
+
         printResult();
     });
+
     $("#ward").change(() => {
         printResult();
-    })
+    });
 
-    var printResult = () => {
-        if ($("#district").val() != "" && $("#province").val() != "" &&
-            $("#ward").val() != "") {
+    const printResult = () => {
+        if ($("#district").val() !== "" && $("#province").val() !== "" && $("#ward").val() !== "") {
             let result = $("#province option:selected").text() +
                 " | " + $("#district option:selected").text() + " | " +
                 $("#ward option:selected").text();
-            $("#result").text(result)
+            $("#result").text(result);
+        }
+    };
+
+    callAPI(host + "?depth=2", "province", (data, selectId) => {
+        renderOptions(data, selectId, "--Chọn Tỉnh/Thành phố--");
+        renderOptions([], "district", "--Chọn Quận/Huyện--");
+        renderOptions([], "ward", "--Chọn Phường/Xã--");
+    });
+
+    if (tinh !== "-1") {
+        callAPI(host + "?depth=3", "province", (data, selectId) => {
+            renderOptions(data, selectId, "--Chọn Tỉnh/Thành phố--");
+
+            $("#province").val(tinh);
+
+            callAPI(host + "p/" + tinh + "?depth=2", "district", (districtData, districtSelectId) => {
+                renderOptions(districtData.districts, districtSelectId, "--Chọn Quận/Huyện--");
+
+                $("#district").val(quan);
+
+                callAPI(host + "d/" + quan + "?depth=2", "ward", (wardData, wardSelectId) => {
+                    renderOptions(wardData.wards, wardSelectId, "--Chọn Phường/Xã--");
+
+                    $("#ward").val(phuong);
+                    printResult();
+                });
+            });
+        });
+    } else {
+        renderOptions([], "district", "--Chọn Quận/Huyện--");
+        renderOptions([], "ward", "--Chọn Phường/Xã--");
+
+
+        if (myLinksXNTC != null) {
+            myLinksXNTC.addEventListener('click', function (event) {
+                event.preventDefault();
+                let mess = prompt("Nhập ghi chú : ");
+                let action = actionFormXNTC.getAttribute('action') + '?value=' + mess;
+
+                actionFormXNTC.submit();
+            });
         }
 
     }
+    const formThanhToan = document.getElementById("formThanhToan");
+
 
     document.getElementById("btnThanhToan").addEventListener("click", function (event) {
+        event.preventDefault();
+
+
         var paymentMethod = document.querySelector('input[name="hinhThucThanhToan"]:checked').id;
-        var formData = {};
-        var formElements = document.getElementById("formThanhToan").elements;
-        for (var i = 0; i < formElements.length; i++) {
-            var element = formElements[i];
-            if (element.name) {
-                formData[element.name] = element.value;
-            }
-        }
-
-        // Store selected values of dropdowns
-        formData["selectedProvince"] = $("#province").val();
-        formData["selectedDistrict"] = $("#district").val();
-        formData["selectedWard"] = $("#ward").val();
-        sessionStorage.setItem("checkoutFormData", JSON.stringify(formData));
         if (paymentMethod === "currencyCod") {
-            event.preventDefault();
-            var selectedProvince = $("#province").val();
-            var selectedDistrict = $("#district").val();
-            var selectedWard = $("#ward").val();
+            let selectTinh = document.getElementById('province');
+            let selectHuyen = document.getElementById('district');
+            let selectXa = document.getElementById('ward');
+            let tinh = selectTinh.options[selectTinh.selectedIndex].textContent;
+            let huyen = selectHuyen.options[selectHuyen.selectedIndex].textContent;
+            let xa = selectXa.options[selectXa.selectedIndex].textContent;
 
-            if (!selectedProvince || !selectedDistrict || !selectedWard) {
-                console.error("Please select values for all dropdowns");
-                return;
-            }
-
-            document.getElementById("formThanhToan").submit();
+            let action = formThanhToan.getAttribute('action') + '?thanhPho=' + tinh + '&' + 'huyen=' + huyen + '&' + 'xa=' + xa;
+            console.log(action);
+            formThanhToan.setAttribute('action', action);
+            formThanhToan.submit();
         } else {
-            fetch("/api/payment/create_payment?totalAmount=" + encodeURIComponent(document.getElementById("totalAmount").innerText))
-                .then(response => response.text())
-                .then(paymentUrl => {
-                    console.log("Received Payment URL:", paymentUrl);
-                    document.getElementById("formThanhToan").action = paymentUrl;
-                    document.getElementById("formThanhToan").submit();
-                })
-                .catch(error => {
+            event.preventDefault();
+
+            let selectTinh = document.getElementById('province');
+            let selectHuyen = document.getElementById('district');
+            let selectXa = document.getElementById('ward');
+            let tinh = selectTinh.options[selectTinh.selectedIndex].textContent;
+            let huyen = selectHuyen.options[selectHuyen.selectedIndex].textContent;
+            let xa = selectXa.options[selectXa.selectedIndex].textContent;
+
+            let action = formThanhToan.getAttribute('action') + '?thanhPho=' + tinh + '&' + 'huyen=' + huyen + '&' + 'xa=' + xa;
+            console.log(action);
+            formThanhToan.setAttribute('action', action);
+            formThanhToan.submit();
+            let tenn = document.getElementById('nameTen').value;
+            let sdtn = document.getElementById('nameSoDienThoai').value;
+            let tinhh = document.getElementById('province').value;
+            let quanHuyenn = document.getElementById('district').value;
+            let phuongXan = document.getElementById('ward').value;
+            let diaChiCuThen = document.getElementById('nameDiaChiCuThe').value;
+            console.log("tenn:", tenn);
+            console.log("sdtn:", sdtn);
+            console.log("tinhh:", tinhh);
+            console.log("quanHuyenn:", quanHuyenn);
+            console.log("phuongXan:", phuongXan);
+            console.log("diaChiCuThen:", diaChiCuThen);
+
+            if (
+                tenn != null && tenn.trim() !== '' &&
+                sdtn != null && sdtn.trim() !== '' &&
+                tinhh != null && tinhh.trim() !== '' &&
+                quanHuyenn != null && quanHuyenn.trim() !== '' &&
+                phuongXan != null && phuongXan.trim() !== '' &&
+                diaChiCuThen != null && diaChiCuThen.trim() !== ''
+
+            ) {
+                fetch("/api/payment/create_payment?totalAmount=" + encodeURIComponent(document.getElementById("totalAmount").innerText))
+                    .then(response => response.text())
+                    .then(paymentUrl => {
+                        console.log("Received Payment URL:", paymentUrl);
+                        document.getElementById("formThanhToan").action = paymentUrl;
+                        formThanhToan.submit();
+
+                    }).catch(error => {
                     console.error("Error fetching payment URL:", error);
                 });
+            }
+
         }
+
     });
 
-    document.getElementById("formThanhToan").addEventListener("submit", function (event) {
-        if (document.getElementById("formThanhToan").action.includes("/api/payment/create_payment")) {
-            event.preventDefault();
-            document.getElementById("formThanhToan").action = "/check-out/thanh-toan";
-            document.getElementById("formThanhToan").submit();
-        }
-    });
+
 </script>
 </body>
 
