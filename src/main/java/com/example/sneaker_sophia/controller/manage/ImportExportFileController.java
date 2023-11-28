@@ -16,12 +16,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -40,9 +39,26 @@ public class ImportExportFileController {
     @Autowired
     LoaiGiayService loaiGiayService;
     @Autowired
+    KichCoService2 kichCoService2;
+    @Autowired
     KichCoService kichCoService;
     @Autowired
     AnhService anhService;
+
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    private static final int QR_CODE_LENGTH = 16;
+
+    public static String generateRandomQRCode() {
+        Random random = new SecureRandom();
+        StringBuilder qrCode = new StringBuilder(QR_CODE_LENGTH);
+
+        for (int i = 0; i < QR_CODE_LENGTH; i++) {
+            int randomIndex = random.nextInt(CHARACTERS.length());
+            qrCode.append(CHARACTERS.charAt(randomIndex));
+        }
+
+        return qrCode.toString();
+    }
 
     // import excel
     @GetMapping("/exportToExcel")
@@ -53,9 +69,35 @@ public class ImportExportFileController {
         // Tạo một workbook mới
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Sheet1");
+        // Cài lưu ý triong sheet
+        // Tạo một CellStyle cho văn bản màu đỏ và nghiêng
+        CellStyle redItalicStyle = workbook.createCellStyle();
+        Font redItalicFont = workbook.createFont();
+        redItalicFont.setColor(IndexedColors.RED.getIndex());
+        redItalicFont.setItalic(true);
+        redItalicStyle.setFont(redItalicFont);
 
+        // Dòng 0
+        Row luuY1 = sheet.createRow(0);
+        Cell cellluuY1 = luuY1.createCell(0);
+        cellluuY1.setCellValue("Lưu ý: Các mã chỉ được tồn tại 1 lần và không trùng lặp," +
+                " nếu trùng lặp mã sẽ thêm số lượng cho sản phẩm mà không thay đổi bất kì thuộc tính nào của sản phẩm");
+        cellluuY1.setCellStyle(redItalicStyle);
+
+        // Dòng 1
+        Row luuY2 = sheet.createRow(1);
+        Cell cellluuY2 = luuY2.createCell(0);
+        cellluuY2.setCellValue("     Các thuộc tính của sản phẩm không được bỏ trống trừ mô tả, thêm ít nhất 2 ảnh " +
+                "nếu ảnh để trống sẽ tự động thêm ảnh mặc định.");
+        cellluuY2.setCellStyle(redItalicStyle);
+
+        // Dòng 2
+        Row luuY3 = sheet.createRow(2);
+        Cell cellluuY3 = luuY3.createCell(0);
+        cellluuY3.setCellValue("     Giá và số lượng phải lơn hơn 0, Số lượng phải bé hơn 10.000, và giá thấp hơn 10 tỉ");
+        cellluuY3.setCellStyle(redItalicStyle);
         // Tạo hàng đầu tiên để đặt tên cho các cột
-        Row headerRow = sheet.createRow(0);
+        Row headerRow = sheet.createRow(3);
         headerRow.createCell(0).setCellValue("Mã");
         headerRow.createCell(1).setCellValue("Tên");
         headerRow.createCell(2).setCellValue("Giày");
@@ -68,12 +110,13 @@ public class ImportExportFileController {
         headerRow.createCell(9).setCellValue("Giá");
         headerRow.createCell(10).setCellValue("Số Lượng");
         headerRow.createCell(11).setCellValue("Trạng Thái");
-        headerRow.createCell(12).setCellValue("Ảnh 1");
-        headerRow.createCell(13).setCellValue("Ảnh 2");
-        headerRow.createCell(14).setCellValue("Ảnh 3");
+        headerRow.createCell(12).setCellValue("QR code");
+        headerRow.createCell(13).setCellValue("Ảnh 1");
+        headerRow.createCell(14).setCellValue("Ảnh 2");
+        headerRow.createCell(15).setCellValue("Ảnh 3");
 
         // Lặp qua danh sách và ghi vào sheet
-        int rowIndex = 1; // Bắt đầu từ hàng thứ 2 để tránh ghi đè hàng đầu tiên
+        int rowIndex = 4; // Bắt đầu từ hàng thứ 2 để tránh ghi đè hàng đầu tiên
         for (ChiTietGiay chiTietGiay : chiTietGiayList) {
             Row row = sheet.createRow(rowIndex++);
             Cell cell0 = row.createCell(0);
@@ -113,11 +156,14 @@ public class ImportExportFileController {
             Cell cell11= row.createCell(11);
             cell11.setCellValue(chiTietGiay.getTrangThai());
 
+            Cell cell12= row.createCell(12);
+            cell12.setCellValue(chiTietGiay.getQrCode());
+
             List<Anh> anhs = anhService.anhsFindIdChitietGiay(chiTietGiay);
 
             for (int i = 0; i < anhs.size(); i++) {
                 Anh anh = anhs.get(i);
-                Cell cell = row.createCell(12 + i);
+                Cell cell = row.createCell(13 + i);
                 cell.setCellValue(anh.getDuongDan());
             }
         }
@@ -145,51 +191,128 @@ public class ImportExportFileController {
         // Trả về ResponseEntity
         return new ResponseEntity<>(excelBytes, headers, HttpStatus.OK);
     }
-
     @RequestMapping(value = "/importFromExcel", method = RequestMethod.POST)
-    public String importFromExcel(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<String> importFromExcel(@RequestParam("file") MultipartFile file) {
+        // Set để theo dõi các mã đã xuất hiện
+        Set<String> existingMaSet = new HashSet<>();
         try {
-            // Đọc file Excel từ MultipartFile
             Workbook workbook = new XSSFWorkbook(file.getInputStream());
             Sheet sheet = workbook.getSheetAt(0);
 
-            // Lặp qua từng hàng trong sheet (bắt đầu từ hàng thứ 1, bỏ qua hàng tiêu đề)
-            for (int rowIndex = 1; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
+            for (int rowIndex = 4; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
                 Row row = sheet.getRow(rowIndex);
 
-                ChiTietGiay chiTietGiay = new ChiTietGiay();
-                chiTietGiay.setMa(getStringValue(row.getCell(0)));
-                chiTietGiay.setTen(getStringValue(row.getCell(1)));
-                chiTietGiay.setGiay(giayService.findByTen(getStringValue(row.getCell(2))));
-                chiTietGiay.setDeGiay(deGiayService.findByTen(getStringValue(row.getCell(3))));
-                chiTietGiay.setHang(hangService.findByTen(getStringValue(row.getCell(4))));
-                chiTietGiay.setKichCo(kichCoService.findByTen(getStringValue(row.getCell(5))));
-                chiTietGiay.setLoaiGiay(loaiGiayService.findByTen(getStringValue(row.getCell(6))));
-                chiTietGiay.setMauSac(mauSacService.findByTen(getStringValue(row.getCell(7))));
-                chiTietGiay.setMoTa(getStringValue(row.getCell(8)));
-                chiTietGiay.setGia(getDoubleValue(row.getCell(9)));
-                chiTietGiay.setSoLuong(getIntegerValue(row.getCell(10)));
-                chiTietGiay.setTrangThai(getIntegerValue(row.getCell(11)));
+                String ma = getStringValue(row.getCell(0));
 
-                chiTietGiayService.save(chiTietGiay);
+                // Kiểm tra xem mã đã xuất hiện chưa
+                if (existingMaSet.contains(ma)) {
+                    // Nếu đã tồn tại, xử lý lỗi hoặc thông báo mà bạn muốn
+                    return ResponseEntity.badRequest().body("Lỗi: Mã đã xuất hiện trước đó - " + ma);
+                }
 
-                String linkAnh1 = getStringValue(row.getCell(12));
-                String linkAnh2 = getStringValue(row.getCell(13));
-                String linkAnh3 = getStringValue(row.getCell(14));
+                existingMaSet.add(ma);
 
-                // Kiểm tra và lưu link ảnh vào bảng ảnh
-                saveLinkAnh(chiTietGiay, linkAnh1, 1);
-                saveLinkAnh(chiTietGiay, linkAnh2, 0);
-                saveLinkAnh(chiTietGiay, linkAnh3, 0);
+                // Kiểm tra điều kiện số lượng và giá trước khi truy cập vào đối tượng
+                int importedSoLuong = getIntegerValue(row.getCell(10));
+                double importedGia = getDoubleValue(row.getCell(9));
+                String qrCode = getStringValue(row.getCell(12));
 
+                if (importedGia <= 0 || importedSoLuong <= 0 || importedGia >= 1000000000 || importedSoLuong >= 10000) {
+                    return ResponseEntity.badRequest().body("Lỗi: Giá hoặc số lượng không hợp lệ cho sản phẩm có mã: " + ma);
+                }
+
+                ChiTietGiay existingChiTietGiay = chiTietGiayService.findByMa(ma);
+
+                if (existingChiTietGiay != null) {
+                    // Nếu mã đã tồn tại, cập nhật số lượng
+                        existingChiTietGiay.setSoLuong(importedSoLuong);
+                        existingChiTietGiay.setGia(importedGia); // Cập nhật giá
+                    if(qrCode.isEmpty() || qrCode==null){
+                        existingChiTietGiay.setQrCode(generateRandomQRCode());
+                    }else{
+                        existingChiTietGiay.setQrCode(qrCode); // Cập nhật QR
+                    }
+                        chiTietGiayService.save(existingChiTietGiay);
+                } else {
+                    // Nếu mã chưa tồn tại, thêm mới
+                    ChiTietGiay chiTietGiay = new ChiTietGiay();
+                    chiTietGiay.setMa(getStringValue(row.getCell(0)));
+                    chiTietGiay.setTen(getStringValue(row.getCell(1)));
+                    chiTietGiay.setGiay(giayService.findByTen(getStringValue(row.getCell(2))));
+                    chiTietGiay.setDeGiay(deGiayService.findByTen(getStringValue(row.getCell(3))));
+                    chiTietGiay.setHang(hangService.findByTen(getStringValue(row.getCell(4))));
+                    chiTietGiay.setKichCo(kichCoService2.findByTen(getStringValue(row.getCell(5))));
+                    chiTietGiay.setLoaiGiay(loaiGiayService.findByTen(getStringValue(row.getCell(6))));
+                    chiTietGiay.setMauSac(mauSacService.findByTen(getStringValue(row.getCell(7))));
+                    chiTietGiay.setMoTa(getStringValue(row.getCell(8)));
+                    chiTietGiay.setGia(getDoubleValue(row.getCell(9)));
+                    chiTietGiay.setSoLuong(getIntegerValue(row.getCell(10)));
+                    chiTietGiay.setTrangThai(getIntegerValue(row.getCell(11)));
+                    //check QR
+                    String generatedQRCode;
+                    do {
+                        generatedQRCode = generateRandomQRCode();
+                    } while (existingMaSet.contains(generatedQRCode));
+
+                    chiTietGiay.setQrCode(generatedQRCode);
+                    existingMaSet.add(generatedQRCode);
+
+
+
+                    // Kiểm tra giá và số lượng
+                    double importedGia1 = getDoubleValue(row.getCell(9));
+                    int importedSoLuong1 = getIntegerValue(row.getCell(10));
+                    if (importedGia1 <= 0 || importedSoLuong1 <= 0 || importedGia1 >= 1000000000 || importedSoLuong1 >= 10000) {
+                        // Nếu giá hoặc số lượng không đúng, có thể thực hiện xử lý tùy ý
+                        return ResponseEntity.badRequest().body("Lỗi: Giá hoặc số lượng không hợp lệ cho sản phẩm có mã: " + ma);
+                    }
+
+                    // Kiểm tra các trường khác không được trống
+                    if (chiTietGiay.getMa() == null || chiTietGiay.getMa().isEmpty() ||
+                            chiTietGiay.getTen() == null || chiTietGiay.getTen().isEmpty() ||
+                            chiTietGiay.getGiay() == null || chiTietGiay.getDeGiay() == null ||
+                            chiTietGiay.getHang() == null || chiTietGiay.getKichCo() == null ||
+                            chiTietGiay.getLoaiGiay() == null || chiTietGiay.getMauSac() == null ||
+                            chiTietGiay.getGia() == null || chiTietGiay.getSoLuong() == null ||
+                            chiTietGiay.getTrangThai() == null) {
+                        return ResponseEntity.badRequest().body("Lỗi: Một hoặc nhiều trường không được trống cho sản phẩm có mã: " + ma);
+                    }
+
+                    chiTietGiayService.save(chiTietGiay);
+
+                    String linkAnh1 = getStringValue(row.getCell(13));
+                    String linkAnh2 = getStringValue(row.getCell(14));
+                    String linkAnh3 = getStringValue(row.getCell(15));
+
+                    // Kiểm tra và lưu link ảnh vào bảng ảnh
+                    saveLinkAnh(chiTietGiay, linkAnh1, 1);
+                    saveLinkAnh(chiTietGiay, linkAnh2, 0);
+                    saveLinkAnh(chiTietGiay, linkAnh3, 0);
+
+                    // Kiểm tra ít nhất 2 ảnh
+                    List<String> links = Arrays.asList(linkAnh1, linkAnh2, linkAnh3);
+                    long numberOfNonNullLinks = links.stream().filter(link -> link != null && !link.isEmpty()).count();
+
+                    if (numberOfNonNullLinks < 2) {
+                        // Nếu ít hơn 2 ảnh, thay thế link ảnh rỗng bằng link mặc định
+                        for (int i = 0; i < links.size(); i++) {
+                            if (links.get(i) == null || links.get(i).isEmpty()) {
+                                links.set(i, "http://res.cloudinary.com/deihbhsfj/image/upload/v1700796874/1c68cc62-7857-46b4-8ce2-b62ad2dc82d1.jpg");
+                            }
+                        }
+
+                        // Lưu lại link ảnh mới vào bảng ảnh
+                        saveLinkAnh(chiTietGiay, links.get(0), 1);
+                        saveLinkAnh(chiTietGiay, links.get(1), 0);
+                    }
+                }
             }
-            // Đóng workbook
             workbook.close();
-
-            return "redirect:/admin/chi-tiet-giay";
+            return ResponseEntity.ok("Tải lên thành công");
         } catch (IOException e) {
             e.printStackTrace();
-            return "redirect:/admin/chi-tiet-giay";
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lỗi khi tải lên danh sách");
+
         }
     }
 
@@ -375,16 +498,23 @@ public class ImportExportFileController {
     //kiểm tra validate
     private String getStringValue(Cell cell) {
         if (cell == null) {
-            return null;
+            return "";
         }
-        if (cell.getCellType() == CellType.STRING) {
-            return cell.getStringCellValue();
-        } else if (cell.getCellType() == CellType.NUMERIC) {
-            // Chuyển đổi giá trị số thành chuỗi
-            return String.valueOf(cell.getNumericCellValue());
+
+        if (cell.getCellType() == CellType.NUMERIC) {
+            double numericValue = cell.getNumericCellValue();
+            long longValue = (long) numericValue;
+            if (numericValue == longValue) {
+                return String.valueOf(longValue);
+            } else {
+                return String.valueOf(numericValue);
+            }
+        } else {
+            cell.setCellType(CellType.STRING);
+            return cell.getStringCellValue().trim();
         }
-        return null;
     }
+
 
     private Double getDoubleValue(Cell cell) {
         if (cell == null) {
@@ -411,12 +541,6 @@ public class ImportExportFileController {
             return Integer.valueOf(cell.getStringCellValue());
         }
         return null;
-    }
-
-    private LocalDateTime parseLocalDateTime(String value) {
-        // Thực hiện chuyển đổi từ chuỗi thành LocalDateTime theo định dạng mong muốn
-        // Ví dụ: DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-        return LocalDateTime.parse(value, DateTimeFormatter.ISO_DATE_TIME);
     }
 
 }

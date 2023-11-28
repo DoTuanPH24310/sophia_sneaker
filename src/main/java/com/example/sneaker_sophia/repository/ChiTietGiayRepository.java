@@ -6,9 +6,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,6 +19,8 @@ import java.util.UUID;
 public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> {
     @Query(value = "SELECT obj FROM ChiTietGiay obj WHERE obj.giay.id IN :listId")
     List<ChiTietGiay> findAllByIdGiay(List<UUID> listId);
+
+
 
     @Query(value = "SELECT obj.id FROM ChiTietGiay obj WHERE obj.giay.id IN :listId")
     List<String> findIdByIdGiay(List<UUID> listId);
@@ -28,17 +32,20 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
     // Hàm tìm kiếm theo cả keyword và tên sản phẩm
 
     @Query("""
-        SELECT ctsp
-        FROM ChiTietGiay ctsp
-        WHERE UPPER(ctsp.ma) LIKE %?1%
-            OR UPPER(ctsp.hang.ten) LIKE %?1%
-            OR UPPER(ctsp.mauSac.ten) LIKE %?1%
-            OR UPPER(ctsp.kichCo.ten) LIKE %?1%
-            OR UPPER(ctsp.deGiay.ten) LIKE %?1%
-            OR UPPER(ctsp.loaiGiay.ten) LIKE %?1%
-            OR UPPER(ctsp.giay.ten) LIKE %?1%
-    """)
-    Page<ChiTietGiay> findByKeyword(String keyword, Pageable pageable);
+    SELECT ctsp
+    FROM ChiTietGiay ctsp
+    WHERE (UPPER(ctsp.ma) LIKE %?1%
+        OR UPPER(ctsp.hang.ten) LIKE %?1%
+        OR UPPER(ctsp.ten) LIKE %?1%
+        OR UPPER(ctsp.mauSac.ten) LIKE %?1%
+        OR UPPER(ctsp.kichCo.ten) LIKE %?1%
+        OR UPPER(ctsp.deGiay.ten) LIKE %?1%
+        OR UPPER(ctsp.loaiGiay.ten) LIKE %?1%
+        OR UPPER(ctsp.giay.ten) LIKE %?1%)
+        AND (?2 = -1 OR ctsp.trangThai = ?2)
+""")
+    Page<ChiTietGiay> findByKeyword(String keyword, String trangThai, Pageable pageable);
+
 
     public Page<ChiTietGiay> findByGiay_TenContainingIgnoreCase(String tenSanPham, Pageable pageable);
 
@@ -57,10 +64,9 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
             "(:loaiGiay IS NULL OR c.loaiGiay = :loaiGiay) AND " +
             "(:mauSac IS NULL OR c.mauSac = :mauSac) AND " +
             "(:kichCo IS NULL OR c.kichCo = :kichCo) AND " +
-            "(:trangThai IS NULL OR c.trangThai = :trangThai) AND " +
+            "(:trangThai IS NULL OR c.trangThai = :trangThai OR (:trangThai = -1 AND c.trangThai IS NOT NULL)) AND " +
             "(:giaMin IS NULL OR c.gia >= :giaMin) AND " +
             "(:giaMax IS NULL OR c.gia <= :giaMax) ")
-
     Page<ChiTietGiay> findChiTietGiayByMultipleParams(
             @Param("giay") Giay giay,
             @Param("deGiay") DeGiay deGiay,
@@ -75,14 +81,12 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
     );
 
 
-        @Query("SELECT MAX(c.ma) FROM ChiTietGiay c")
+
+    @Query("SELECT MAX(c.ma) FROM ChiTietGiay c")
         Integer findMaxMa();
         @Query(value = "SELECT ChiTietGiay.* FROM dbo.ChiTietGiay WHERE ChiTietGiay.IdGiay = (SELECT IdGiay FROM dbo.ChiTietGiay WHERE Id = ?)", nativeQuery = true)
         List<ChiTietGiay> findChiTietGiaysById(UUID uuid);
 
-    @Query("SELECT cg1 FROM ChiTietGiay cg1 WHERE cg1.kichCo = :idKichCo AND EXISTS ("
-            + "SELECT 1 FROM ChiTietGiay cg2 WHERE cg1.giay = cg2.giay AND cg1.id <> cg2.id AND cg1.kichCo <> cg2.kichCo)")
-    ChiTietGiay findChiTietGiayByIdKichCo(@Param("idKichCo") UUID idKichCo);
 
     @Query("SELECT c FROM ChiTietGiay c WHERE " +
             "(c.giay = :giay) AND " +
@@ -108,6 +112,10 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
     // 29/10 cuongdv
     @Query(value = "select Id from ChiTietGiay where ma = ?1", nativeQuery = true)
     UUID getIdCTGByMa(String maCTG);
+
+
+
+
 
 
     @Query(value = "select soLuong from ChiTietGiay where ma =?1", nativeQuery = true)
@@ -144,6 +152,12 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
             @Param("textSearch") String textSearch
     );
 
+    //xóa mềm chi tiết giày
+    @Transactional
+    @Modifying
+    @Query(value = "UPDATE ChiTietGiay SET trangThai = 1 WHERE id = :id", nativeQuery = true)
+    void updateTrangThaiTo1ById(UUID id);
 
+    ChiTietGiay findByMa(String ma);
 }
 

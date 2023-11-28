@@ -5,7 +5,9 @@ import com.example.sneaker_sophia.entity.ChiTietGiay;
 import com.example.sneaker_sophia.entity.DeGiay;
 import com.example.sneaker_sophia.entity.Giay;
 import com.example.sneaker_sophia.entity.Hang;
+import com.example.sneaker_sophia.repository.AnhRepository;
 import com.example.sneaker_sophia.repository.GiayRepository;
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -13,15 +15,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class GiayService {
     @Autowired
     private GiayRepository giayRepository;
+    @Resource(name = "anhRepository")
+    AnhRepository anhRepository;
 
     @Autowired
     private ChiTietGiayService chiTietGiayService;
@@ -48,6 +49,10 @@ public class GiayService {
             return this.giayRepository.save(giay);
         }
         return null;
+    }
+
+    public List<UUID> finGiayByCTG(List<UUID> ctg){
+        return giayRepository.finGiayByCTG(ctg);
     }
 
     public Optional<Giay> findOne(UUID id) {
@@ -108,12 +113,19 @@ public class GiayService {
 
     public List<String> checkedGiay(List<String> listId, Model model) {
         List<String> temp = listId;
+        Map<UUID, String> avtctgMap = new HashMap<>();
+        model.addAttribute("avtctgMap",avtctgMap);
         // Khi chọn All lần đầu tiên
         if (listId.contains("AllG") && check == 0) {
             check = 1;
             listId.remove("AllG");
             model.addAttribute("checkAll", true);
             listCTG = chiTietGiayService.findAllByIdGiay(this.findAllID(0));
+            for (ChiTietGiay ctg: listCTG) {
+                String avtct = anhRepository.getAnhChinhByIdctg(ctg.getId());
+                avtctgMap.put(ctg.getId(),avtct);
+            }
+            model.addAttribute("avtctgMap",avtctgMap);
             model.addAttribute("listCTG", listCTG);
             return this.findAllID(0);
         }
@@ -130,6 +142,11 @@ public class GiayService {
             model.addAttribute("checkAll", false);
             listId.remove("AllG");
             listCTG = chiTietGiayService.findAllByIdGiay(listId);
+            for (ChiTietGiay ctg: listCTG) {
+                String avtct = anhRepository.getAnhChinhByIdctg(ctg.getId());
+                avtctgMap.put(ctg.getId(),avtct);
+            }
+            model.addAttribute("avtctgMap",avtctgMap);
             model.addAttribute("listCTG", listCTG);
             return listId;
         }
@@ -139,6 +156,11 @@ public class GiayService {
         if (check == 1 && listId.contains("AllG") && findAllByTrangThaiEquals(0).size() < listId.size()) {
             listId.remove("AllG");
             model.addAttribute("checkAll", true);
+            for (ChiTietGiay ctg: listCTG) {
+                String avtct = anhRepository.getAnhChinhByIdctg(ctg.getId());
+                avtctgMap.put(ctg.getId(),avtct);
+            }
+            model.addAttribute("avtctgMap",avtctgMap);
             listCTG = chiTietGiayService.findAllByIdGiay(listId);
             model.addAttribute("listCTG", listCTG);
             return listId;
@@ -147,13 +169,24 @@ public class GiayService {
 //      Khi số lượng sản phẩm được chọn bằng với số lượng sản phẩm trong kho
         if (listId.size() == findAllByTrangThaiEquals(0).size() && check == 0) {
             check = 1;
-            model.addAttribute("checkAll", true);
             listCTG = chiTietGiayService.findAllByIdGiay(this.findAllID(0));
+            for (ChiTietGiay ctg: listCTG) {
+                String avtct = anhRepository.getAnhChinhByIdctg(ctg.getId());
+                avtctgMap.put(ctg.getId(),avtct);
+            }
+            model.addAttribute("checkAll", true);
+            model.addAttribute("avtctgMap",avtctgMap);
             model.addAttribute("listCTG", listCTG);
             return listId;
         }
 
         model.addAttribute("listCTG", chiTietGiayService.findAllByIdGiay(temp));
+        for (ChiTietGiay ctg: chiTietGiayService.findAllByIdGiay(temp)) {
+            String avtct = anhRepository.getAnhChinhByIdctg(ctg.getId());
+            avtctgMap.put(ctg.getId(),avtct);
+        }
+        model.addAttribute("avtctgMap",avtctgMap);
+
         return temp;
     }
 

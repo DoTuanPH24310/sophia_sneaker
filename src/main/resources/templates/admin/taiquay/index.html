@@ -930,10 +930,8 @@
         const tbodyDDC = document.getElementById('tbodyDDC');
         const loaihdg = [[${session.loaihdg}]];
         let slt = -1;
-
         const checkIHD = [[${session.checkTTHT}]];
-
-
+        const phiPhip = [[${phiVanChuyen}]];
 
 
         if (checkIHD != null && checkIHD == 1){
@@ -1529,7 +1527,11 @@
             input.classList.add('mt-4');
             input.name = 'phiVanChuyen';
             input.id = 'inputPhiShip';
+            // if(phiPhip > 0){
+            //     input.value = Float.parse(phiPhip);
+            // }else{
             input.value = 0;
+            // }
 
             col3.appendChild(input);
 
@@ -1639,7 +1641,6 @@
 
                     const currentTime = Date.now();
                     const timeSinceLastScan = currentTime - lastScanTime;
-
                     if (timeSinceLastScan >= 1000) { // Chỉ quét mỗi 2 giây
                         lastScanTime = currentTime;
 

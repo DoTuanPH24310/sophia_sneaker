@@ -50,7 +50,7 @@ public class ChiTietGiayController {
 
     @GetMapping("chi-tiet-giay")
     public String listFirstPage(Model model) {
-        return listByPage(1, model, "ngayTao", "asc", null, null, null, null, null, null, null, null, null, null, null, null);
+        return listByPage(1, model, "ngayTao", "asc", null, null, null, null, null, null, null, null, "0", null, null, null);
     }
 
     @GetMapping("chi-tiet-giay/page/{pageNum}")
@@ -65,14 +65,14 @@ public class ChiTietGiayController {
                               @RequestParam(name = "loaiGiay", required = false, defaultValue = "defaultLoaiGiay") String loaiGiay,
                               @RequestParam(name = "mauSac", required = false, defaultValue = "defaultMauSac") String mauSac,
                               @RequestParam(name = "kichCo", required = false, defaultValue = "defaultKichCo") String kichCo,
-                              @RequestParam(name = "trangThai", required = false) String trangThai,
+                              @RequestParam(name = "trangThai", required = false,defaultValue = "-1") String trangThai,
                               @Param("giaMin") Double giaMin,
                               @Param("giaMax") Double giaMax,
                               @RequestParam Map<String, String> params) {
         Page<ChiTietGiay> page;
 
         if ((keyword != null && !keyword.isEmpty()) || (productName != null && !productName.isEmpty())) {
-            page = chiTietGiayService.listByPageAndProductName(pageNum, sortField, sortDir, keyword, productName);
+            page = chiTietGiayService.listByPageAndProductName(pageNum, sortField, sortDir, keyword, productName,trangThai);
         } else if ((giay != null && !giay.equals("defaultGiay"))
                 || (deGiay != null && !deGiay.equals("defaultDeGiay"))
                 || (hang != null && !hang.equals("defaultHang"))
@@ -93,7 +93,7 @@ public class ChiTietGiayController {
                     giaMax
             );
         } else {
-            page = chiTietGiayService.listByPageAndProductName(pageNum, sortField, sortDir, keyword, productName);
+            page = chiTietGiayService.listByPageAndProductName(pageNum, sortField, sortDir, keyword, productName,trangThai);
         }
 
 
@@ -136,7 +136,7 @@ public class ChiTietGiayController {
         model.addAttribute("giay", params != null ? params.get("giay") : null);
         model.addAttribute("giaMin", params != null ? params.get("giaMin") : null);
         model.addAttribute("giaMax", params != null ? params.get("giaMax") : null);
-        model.addAttribute("trangThai", trangThai != null ? trangThai : "0");
+        model.addAttribute("trangThai", trangThai != null ? trangThai : "-1");
         return "admin/chiTietGiay/chiTietGiay";
     }
 
@@ -170,11 +170,23 @@ public class ChiTietGiayController {
         return "admin/chiTietGiay/formEditChiTietGiay";
     }
 
-    @PostMapping("/chi-tiet-giay/save")
+    @PostMapping("/chi-tiet-giay/add")
     public String add(
             @ModelAttribute ChiTietGiay chiTietGiay,
-            @RequestParam("imageFile") MultipartFile[] imageFiles) {
+            @RequestParam("imageFile") MultipartFile[] imageFiles,
+            Model model) {
         try {
+            // Kiểm tra hợp lệ trước khi lưu thông tin
+            if (!chiTietGiayService.validate(chiTietGiay, model)) {
+                model.addAttribute("giay", giayService.getAll());
+                model.addAttribute("hang", hangService.getAll());
+                model.addAttribute("deGiay", deGiayService.getAll());
+                model.addAttribute("mauSac", mauSacService.getAll());
+                model.addAttribute("loaiGiay", loaiGiayService.getAll());
+                model.addAttribute("kichCo", kichCoService.getAll());
+                model.addAttribute("anh", anhService.getAll());
+                return "admin/chiTietGiay/formChiTietGiay";
+            }
             // Lưu chi tiết giày vào cơ sở dữ liệu
             chiTietGiayService.save(chiTietGiay);
 
@@ -210,14 +222,26 @@ public class ChiTietGiayController {
 
         return "redirect:/admin/chi-tiet-giay";
     }
-
     @PostMapping("chi-tiet-giay/update")
     public String update(ChiTietGiay chiTietGiay,
-                         @RequestParam("imageFile") MultipartFile[] imageFiles) {
+                         @RequestParam("imageFile") MultipartFile[] imageFiles,
+                         Model model) {
         try {
+            // Kiểm tra hợp lệ trước khi lưu thông tin
+            if (!chiTietGiayService.validateUpdate(chiTietGiay, model)) {
+                model.addAttribute("giay", giayService.getAll());
+                model.addAttribute("hang", hangService.getAll());
+                model.addAttribute("deGiay", deGiayService.getAll());
+                model.addAttribute("mauSac", mauSacService.getAll());
+                model.addAttribute("loaiGiay", loaiGiayService.getAll());
+                model.addAttribute("kichCo", kichCoService.getAll());
+                model.addAttribute("anh", anhService.getAll());
+                return "admin/chiTietGiay/formEditChiTietGiay";
+            }
+
             // Lưu chi tiết giày vào cơ sở dữ liệu
-            chiTietGiayService.save(chiTietGiay);
             boolean isFirstImage = true;
+
             for (MultipartFile imageFile : imageFiles) {
                 String originalFilename = imageFile.getOriginalFilename();
 
@@ -244,9 +268,8 @@ public class ChiTietGiayController {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            // Xử lý lỗi, có thể thêm thông báo lỗi vào model để hiển thị trên giao diện
         }
-
-        chiTietGiayService.save(chiTietGiay);
         return "redirect:/admin/chi-tiet-giay";
     }
 

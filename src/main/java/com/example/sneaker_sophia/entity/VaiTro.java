@@ -31,8 +31,8 @@ public class VaiTro {
     @Column(name = "Id", columnDefinition = "uniqueidentifier")
     private String id;
 
-    @Column(name = "ma")
-    private String ma;
+//    @Column(name = "ma")
+//    private String ma;
 
     @Column(name = "ten")
     private String ten;

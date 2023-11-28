@@ -434,7 +434,7 @@
                                                                 th:text="${cart.id.chiTietGiay.hang.ten + ' ' + cart.id.chiTietGiay.giay.ten + ' ' + cart.id.chiTietGiay.loaiGiay.ten + ' ' + cart.id.chiTietGiay.mauSac.ten}"></a>
                                     </td>
                                     <td class="product-price"
-                                        th:attr="data-gia=${cart.id.chiTietGiay.gia}">
+                                        th:attr="data-gia=${session['giaMoi_' + cart.id.chiTietGiay.id]}">
                                         <span th:if="${session['giaCu_' + cart.id.chiTietGiay.id] != session['giaMoi_' + cart.id.chiTietGiay.id]}"
                                               class="original-price"
                                               style="text-decoration: line-through; color: red; font-size: 13px"
@@ -464,7 +464,7 @@
 
                                     <td class="product_total">
                                         <span class="productTotalAmount" style="font-size: 15px"
-                                              th:text="${#numbers.formatCurrency(cart.id.chiTietGiay.gia * cart.soLuong)}"> </span>
+                                              th:text="${#numbers.formatCurrency(session['giaMoi_' + cart.id.chiTietGiay.id] * cart.soLuong)}"> </span>
                                     </td>
                                 </tr> <!-- End Cart Single Item-->
                                 </tbody>

@@ -52,8 +52,13 @@ public class CartController {
             }
 
             double totalCartPrice = cartItems.stream()
-                    .mapToDouble(item -> item.getId().getChiTietGiay().getGia() * item.getSoLuong())
+                    .mapToDouble(item -> {
+                        ChiTietGiay chiTietGiay = item.getId().getChiTietGiay();
+                        khuyenMaiWebService.tinhGiaSauKhuyenMai(chiTietGiay, httpSession);
+                        return (Double) httpSession.getAttribute("giaMoi_" + chiTietGiay.getId()) * item.getSoLuong();
+                    })
                     .sum();
+
             Long soLuong = this.cartService.countCartItems(authentication.getName());
 
             model.addAttribute("soLuong", soLuong);

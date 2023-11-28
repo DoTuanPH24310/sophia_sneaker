@@ -33,6 +33,8 @@ public interface CTG_KhuyenMaiRespsitory extends JpaRepository<CTG_KhuyenMai, ID
 
 
 
+
+
 //    @Query(value="delete from CTG_KhuyenMai where CTG_KhuyenMai.IdKhuyenMai =?1",nativeQuery = true)
 //    void deleteByIdKM(Voucher vc);
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html kichCo="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html loaiGiay="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/layouts/layout}">
 <head>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
@@ -29,15 +29,15 @@
             <div class="row mb-3" style="margin-top: 20px; margin-left: 50px; margin-right: 50px">
                 <div class="col-6">
                     <div class="form-floating">
-                        <input type="text" class="form-control" name="maGiamGia" th:field="*{ma}" id="maGiamGia" placeholder="Nhập mã kích cỡ"/>
-                        <label for="maGiamGia" class="form-label">Mã Kích cỡ</label>
+                        <input type="text" class="form-control" name="maGiamGia" th:field="*{ma}" id="maGiamGia" placeholder="Nhập mã loại giày"/>
+                        <label for="maGiamGia" class="form-label">Mã Loại giày</label>
                         <span th:errors="*{ma}" style="color: red"></span>
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="form-floating">
-                        <input type="text" class="form-control" name="tenGiamGia" th:field="*{ten}" id="tenGiamGia" placeholder="Nhập tên kích cỡ"/>
-                        <label for="tenGiamGia" class="form-label">Tên Kích cỡ</label>
+                        <input type="text" class="form-control" name="tenGiamGia" th:field="*{ten}" id="tenGiamGia" placeholder="Nhập tên loại giày"/>
+                        <label for="tenGiamGia" class="form-label">Tên Loại giày</label>
                         <span th:errors="*{ten}" style="color: red"></span>
                     </div>
                 </div>

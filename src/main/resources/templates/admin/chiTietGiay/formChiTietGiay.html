@@ -72,81 +72,27 @@
         }
 
     </style>
-    <script>
-        var selectedImages = []; // Mảng lưu trữ các ảnh đã chọn
-
-        function showSelectedImages(input) {
-            var imageList = document.getElementById("imageList");
-            imageList.innerHTML = ''; // Xóa bỏ danh sách ảnh trước đó
-
-            for (var i = 0; i < input.files.length; i++) {
-                var file = input.files[i];
-
-                if (file) {
-                    var reader = new FileReader();
-
-                    reader.onload = function (e) {
-
-                        var img = document.createElement("img");
-                        img.src = e.target.result;
-
-                        var listItem = document.createElement("li");
-                        listItem.appendChild(img);
-
-                        // Tạo nút xóa và thêm sự kiện xóa
-                        var deleteButton = document.createElement("button");
-                        deleteButton.innerHTML = '<i class="fa fa-times-circle"></i>'; // Biểu tượng X
-                        deleteButton.onclick = function () {
-                            deleteImage(this);
-                        };
-                        listItem.appendChild(deleteButton);
-
-                        imageList.appendChild(listItem);
-                        selectedImages.push(file); // Lưu trữ ảnh đã chọn
-                    };
-
-                    reader.readAsDataURL(file);
-                }
-            }
-        }
-
-
-        function deleteImage(button) {
-            var listItem = button.parentElement;
-            var index = Array.from(listItem.parentElement.children).indexOf(listItem);
-            selectedImages.splice(index, 1); // Xóa ảnh khỏi mảng
-            listItem.remove(); // Xóa phần tử li chứa ảnh
-        }
-
-        function deleteSelectedImages() {
-            // Xóa tất cả các ảnh đã chọn
-            selectedImages = [];
-            var imageList = document.getElementById("imageList");
-            imageList.innerHTML = '';
-        }
-    </script>
-
-
+    <script src="/js/chiTietGiay.js"></script>
 </head>
 <body>
 <section>
     <div layout:fragment="content" class="col-md-9" style="margin: auto">
-        <form method="post" th:action="@{/admin/chi-tiet-giay/save}" th:object="${chiTietGiay}" enctype="multipart/form-data">
+        <form method="post" th:action="@{/admin/chi-tiet-giay/add}" th:object="${chiTietGiay}" onsubmit="return validateForm()"
+              enctype="multipart/form-data">
             <div class="form-group">
                 <div class="row">
                     <div class="col">
                         <label for="maChiTietGiay">Mã chi tiết giày:</label>
                         <input th:field="*{ma}" class="form-control custom-width" id="maChiTietGiay"
                                name="maChiTietGiay">
+                        <p th:text="${errMa}" class="text-danger"></p>
+                        <p id="maValidationMessage" class="text-danger"></p>
                     </div>
                     <div class="col">
-                        <label for="tenGiay">Tên giày:</label>
-                        <select th:field="*{giay}" class="form-control custom-width" id="tenGiay" required=""
-                                name="tenGiay">
-                            <th:block th:each="giay : ${giay}">
-                                <option th:value="${giay.id}">[[${giay.ten}]]</option>
-                            </th:block>
-                        </select>
+                        <label for="tenChiTietGiay">Tên chi tiết giày:</label>
+                        <input th:field="*{ten}" class="form-control custom-width" id="tenChiTietGiay"
+                               name="tenChiTietGiay">
+                        <p id="tenValidationMessage" class="text-danger"></p>
                     </div>
                 </div>
             </div>
@@ -211,8 +157,13 @@
                         </select>
                     </div>
                     <div class="col">
-                        <label for="gia">Giá:</label>
-                        <input th:field="*{gia}" class="form-control custom-width" id="gia" name="gia">
+                        <label for="tenGiay">Kiểu dáng:</label>
+                        <select th:field="*{giay}" class="form-control custom-width" id="tenGiay" required=""
+                                name="tenGiay">
+                            <th:block th:each="giay : ${giay}">
+                                <option th:value="${giay.id}">[[${giay.ten}]]</option>
+                            </th:block>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -222,40 +173,69 @@
                     <div class="col">
                         <label for="soLuong">Số lượng:</label>
                         <input th:field="*{soLuong}" class="form-control custom-width" id="soluong" name="soluong">
+                        <p id="soLuongValidationMessage" class="text-danger"></p>
+                    </div>
+                    <div class="col">
+                        <label for="gia">Giá:</label>
+                        <input th:field="*{gia}" class="form-control custom-width" id="gia" name="gia">
+                        <p id="giaValidationMessage" class="text-danger"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col">
+                        <label for="moTa">Mô tả</label>
+                        <textarea th:field="*{moTa}" class="form-control custom-width" id="moTa"
+                                  name="moTa"></textarea>
+                        <p id="moTaValidationMessage" class="text-danger"></p>
                     </div>
                     <div class="col">
                         <label>Trạng thái:</label>
                         <div>
                             <input class="custom-radio" type="radio" id="active" name="trangThai" value="0" checked>
-                            <label for="active">Active</label>
+                            <label for="active">Hoạt động</label>
 
                             <input class="custom-radio" type="radio" id="inactive" name="trangThai" value="1">
-                            <label for="inactive">Inactive</label>
+
+                            <label for="inactive">Ngưng hoạt động</label>
                         </div>
                     </div>
                 </div>
             </div>
-            <h1>Upload Images</h1>
-            <ul id="imageList">
-                <!-- Danh sách các ảnh đã chọn sẽ được hiển thị ở đây -->
-            </ul>
-
-                <input id="customFileInput" type="file" name="imageFile" multiple required
-                       onchange="showSelectedImages(this)"/>
-                <label for="customFileInput" class="btn btn-danger">
-                    Choose Files
-                </label>
-                <label>
-                <button type="button" class="btn btn-danger" onclick="deleteSelectedImages()">Xóa ảnh đã chọn</button>
-                </label>
-
-            <div class="form-group" style="text-align: center">
-                <input type="submit" class="btn btn-primary" style="height: 50px; margin-top: 50px" value="Submit">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col">
+                        <h1>Upload Images</h1>
+                        <ul id="imageList">
+                            <!-- Danh sách các ảnh đã chọn sẽ được hiển thị ở đây -->
+                        </ul>
+                        <p id="imageValidationMessage" class="text-danger"></p>
+                        <input id="customFileInput" type="file" name="imageFile" multiple
+                               onchange="showSelectedImages(this)"/>
+                        <label for="customFileInput" class="btn btn-danger">
+                            Choose Files
+                        </label>
+                        <label>
+                            <button type="button" class="btn btn-danger" onclick="deleteSelectedImages()">Xóa ảnh đã
+                                chọn
+                            </button>
+                        </label>
+                    </div>
+                    <div class="col">
+                        <label for="moTa">QR CODE</label>
+                        <input th:field="*{qrCode}" class="form-control custom-width" id="qrCode"
+                               name="qrCode">
+                        <p th:text="${errQr}" class="text-danger"></p> <br>
+                        <p id="qrCodeValidationMessage" class="text-danger"></p>
+                    </div>
+                </div>
             </div>
-
+            <div class="form-group" style="text-align: center">
+                <input id="submitButton" type="submit" class="btn btn-primary" style="height: 50px; margin-top: 50px"
+                       value="Submit">
+            </div>
         </form>
-
-
     </div>
 </section>
 </body>

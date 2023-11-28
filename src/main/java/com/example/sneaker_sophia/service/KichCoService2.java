@@ -15,7 +15,4 @@ public class KichCoService2 {
         return kichCoRepository.findKichCoByTen(ten);
     }
 
-    public List<KichCo> findKichCosByIdChiTietGiay(UUID uuid) {
-        return kichCoRepository.findKichCosByIdChiTietGiay(uuid);
-    }
 }

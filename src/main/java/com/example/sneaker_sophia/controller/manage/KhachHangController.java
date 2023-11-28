@@ -65,7 +65,7 @@ public class KhachHangController {
         session.setAttribute("phuong", "-1");
         TaiKhoanRequest khachHang = new TaiKhoanRequest();
         model.addAttribute("khachHangRequest", khachHang);
-        khachHang.setGioiTinh(1);
+        khachHang.setGioiTinh(String.valueOf(1));
         return "admin/khachhang/createkh";
     }
 
@@ -85,6 +85,7 @@ public class KhachHangController {
         session.setAttribute("idkh", id);
         return "admin/khachhang/editkh";
     }
+
     @PostMapping("/store")
     public String create(
             Model model,
@@ -93,28 +94,25 @@ public class KhachHangController {
     ) throws IOException {
         kh_rq.setIdVaiTro(vaiTroRepository.getIdByTenKH());
         String imageURL = "";
-        if(multipartFile.isEmpty()){
-            imageURL = "thumbnail.png";
-        }else{
-            imageURL = fileUpload.uploadFile(multipartFile);
-        }
-
-        kh_rq.setAnhDaiDien(imageURL);
-        if (taiKhoanService.save(kh_rq, model)) {
-            if (kh_rq.getTinh() == null){
-                session.setAttribute("tinh", "-1");
-                session.setAttribute("quan", "-1");
-                session.setAttribute("phuong", "-1");
-            }else{
-                session.setAttribute("tinh", kh_rq.getTinh());
-                session.setAttribute("quan", kh_rq.getQuanHuyen());
-                session.setAttribute("phuong", kh_rq.getPhuongXa());
-                session.setAttribute("anhDaiDien", kh_rq.getAnhDaiDien());
-            }
-
+        session.removeAttribute("tinh");
+        session.removeAttribute("quan");
+        session.removeAttribute("phuong");
+        if (!taiKhoanService.validateAdd(kh_rq, model)) {
+            session.setAttribute("tinh", kh_rq.getTinh());
+            session.setAttribute("quan", kh_rq.getQuanHuyen());
+            session.setAttribute("phuong", kh_rq.getPhuongXa());
             return "admin/khachhang/createkh";
+        }else{
+            if (multipartFile.isEmpty()) {
+                imageURL = "thumbnail.png";
+            } else {
+                imageURL = fileUpload.uploadFile(multipartFile);
+            }
+            kh_rq.setAnhDaiDien(imageURL);
+            taiKhoanService.save(kh_rq, model);
+            return "redirect:/admin/khachhang/hienthi";
         }
-        return "redirect:/admin/khachhang/hienthi";
+
     }
 
     @PostMapping("/update/{id}")
@@ -122,14 +120,20 @@ public class KhachHangController {
             Model model,
             @PathVariable("id") String idTaiKhoan,
             @RequestParam("image") MultipartFile multipartFile,
-            @ModelAttribute("khachHang") TaiKhoanRequest kh_rq
+            @ModelAttribute("khachHang") TaiKhoanRequest kh_rq, HttpSession session
     ) throws IOException {
         TaiKhoanRequest taiKhoan = taiKhoanService.getTaiKhoanById(idTaiKhoan);
         kh_rq.setIdTaiKhoan(idTaiKhoan);
         String imageURL = null;
-        if(multipartFile.isEmpty()){
+        if (!taiKhoanService.validateUppdate(kh_rq, model)) {
+            session.setAttribute("tinh", kh_rq.getTinh());
+            session.setAttribute("quan", kh_rq.getQuanHuyen());
+            session.setAttribute("phuong", kh_rq.getPhuongXa());
+            return "admin/khachhang/editkh";
+        }
+        if (multipartFile.isEmpty()) {
             kh_rq.setAnhDaiDien(taiKhoan.getAnhDaiDien());
-        }else {
+        } else {
             imageURL = fileUpload.uploadFile(multipartFile);
         }
         kh_rq.setAnhDaiDien(imageURL);
@@ -147,15 +151,15 @@ public class KhachHangController {
             @RequestParam("hoTen") String hoTen,
             @RequestParam("sdt") String sdt,
             HttpSession session
-    ){
-        diaChiService.adddc(xa, quan,tinh,dcCuThe, hoTen, sdt, session);
+    ) {
+        diaChiService.adddc(xa, quan, tinh, dcCuThe, hoTen, sdt, session);
         return "redirect:/admin/khachhang/edit/" + session.getAttribute("idkh");
     }
 
     @GetMapping("updateDCMD/{id}")
     public String updateDCMD(
             @PathVariable("id") String iddc, HttpSession session
-    ){
+    ) {
         diaChiService.updateDCMD(iddc, session);
         return "forward:/admin/khachhang/edit/" + session.getAttribute("idkh");
     }

@@ -523,22 +523,22 @@
                                               th:text="${#numbers.formatCurrency(session['giaCu_' + item.id.chiTietGiay.id])}"></span>
                                     </td>
                                     <td >
-                                        <p th:text="${#numbers.formatCurrency(item.id.chiTietGiay.gia * item.soLuong)}"></p>
+<!--                                        <p th:text="${#numbers.formatCurrency(session['giaMoi_' + cart.id.chiTietGiay.id] * item.soLuong)}"></p>-->
                                     </td>
                                 </tr>
                                 </tbody>
                                 <tfoot>
                                 <tr>
-                                    <td colspan="2" style="text-align: center;">Tổng giá sản phẩm</td>
+                                    <td colspan="4" style="text-align: center;">Tổng giá sản phẩm</td>
                                     <td th:text="${#numbers.formatCurrency(total)}"></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="2" style="text-align: center;">Phí vận chuyển</td>
+                                    <td colspan="4" style="text-align: center;">Phí vận chuyển</td>
                                     <td id="shipping-cost" th:value="20000">20000</td>
                                 </tr>
                                 <tr class="order_total">
-                                    <td colspan="2" style="text-align: center;">Tổng tiền đơn hàng</td>
-                                    <td><strong id="totalAmount" th:text="${#numbers.formatCurrency(total) }"></strong>
+                                    <td colspan="4" style="text-align: center;">Tổng tiền đơn hàng</td>
+                                    <td><strong id="totalAmount" th:text="${#numbers.formatCurrency(total)}"></strong>
                                     </td>
                                 </tr>
                                 </tfoot>
@@ -548,7 +548,7 @@
                             <div class="panel-default">
                                 <label class="checkbox-default" for="currencyCod" data-bs-toggle="collapse"
                                        data-bs-target="#methodCod">
-                                    <input type="radio" id="currencyCod" name="hinhThucThanhToan" value="0">
+                                    <input type="radio" id="currencyCod" name="hinhThucThanhToan" value="3">
                                     <span>Thanh toán khi nhận hàng</span>
                                 </label>
 
@@ -561,7 +561,7 @@
                             <div class="panel-default">
                                 <label class="checkbox-default" for="currencyPaypal" data-bs-toggle="collapse"
                                        data-bs-target="#methodPaypal">
-                                    <input type="radio" id="currencyPaypal" name="hinhThucThanhToan" value="1">
+                                    <input type="radio" id="currencyPaypal" name="hinhThucThanhToan" value="2">
                                     <span>VNPay</span>
                                 </label>
                                 <div id="methodPaypal" class="collapse " data-parent="#methodPaypal">

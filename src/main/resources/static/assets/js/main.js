@@ -505,14 +505,14 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    sortSelect.addEventListener("change", function () {
-        // Hủy bỏ độ trễ hiện có nếu có
-        if (timeout) {
-            clearTimeout(timeout);
-        }
-        // Đặt một độ trễ mới 2 giây trước khi gửi yêu cầu lọc
-        timeout = setTimeout(submitForms, 0); // 2 giây
-    });
+    // sortSelect.addEventListener("change", function () {
+    //     // Hủy bỏ độ trễ hiện có nếu có
+    //     if (timeout) {
+    //         clearTimeout(timeout);
+    //     }
+    //     // Đặt một độ trễ mới 2 giây trước khi gửi yêu cầu lọc
+    //     timeout = setTimeout(submitForms, 0); // 2 giây
+    // });
 
     function submitForms() {
         document.getElementById("filterForm").submit();

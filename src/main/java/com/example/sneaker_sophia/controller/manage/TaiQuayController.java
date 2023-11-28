@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 import java.awt.*;
 import java.io.IOException;
 import java.text.NumberFormat;
@@ -62,6 +63,9 @@ public class TaiQuayController {
 
     @Resource(name = "lshdService")
     LSHDService lshdService;
+
+    @Resource(name = "taiQuayService")
+    TaiQuayService taiQuayService;
 
     //    alo ôla
     @GetMapping("/hien-thi")
@@ -115,19 +119,36 @@ public class TaiQuayController {
     //28-10
     @GetMapping("addhdct")
     public String addhdct(
-            @RequestParam("soLuong") Integer soLuong,
-            @RequestParam("maCTG") String maCTG,
+            @RequestParam(value = "soLuong", required = false) String soLuong1,
+            @RequestParam(value = "maCTG", required = false) String maCTG,
             Model model
     ) {
+//        Integer soLuong = taiQuayService.validateADDHDCT(soLuong1, maCTG, model);
+        int soLuong;
+        try {
+            soLuong = Integer.parseInt(soLuong1);
+            if (soLuong <= 0) {
+                model.addAttribute("error", "Vui lòng nhập số lượng dương.");
+                return "redirect:/admin/tai-quay/detail/" + tempIdHD;
+            }
+        } catch (NumberFormatException e) {
+            model.addAttribute("error", "Vui lòng nhập số lượng hợp lệ.");
+            return "redirect:/admin/tai-quay/detail/" + tempIdHD;
+        }
+
         HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
         UUID idCTG = chiTietGiayService.getIdCTGByMa(maCTG);
+        if(idCTG == null){
+            model.addAttribute("error", "Thao tác không hợp lệ.");
+            return "redirect:/admin/tai-quay/detail/" + tempIdHD;
+        }
         HoaDonChiTiet hoaDonChiTietOld = hoaDonChiTietServive.getHDCTByIdCTSP(idCTG, tempIdHD);
         ChiTietGiay chiTietGiay = chiTietGiayService.getChiTietGiayByIdctg(idCTG);
         if (hoaDonChiTietOld == null && soLuong > chiTietGiay.getSoLuong()) {
-            return "forward:/admin/tai-quay/open-soluong/" + idCTG;
+            return "redirect:/admin/tai-quay/open-soluong/" + idCTG;
         }
         if (hoaDonChiTietOld != null && hoaDonChiTietOld.getSoLuong() + soLuong > chiTietGiay.getSoLuong() + hoaDonChiTietOld.getSoLuong()) {
-            return "forward:/admin/tai-quay/open-soluong/" + idCTG;
+            return "redirect:/admin/tai-quay/open-soluong/" + idCTG;
 
         }
         if (hoaDonChiTietServive.getHDCTByIdCTSP(chiTietGiay.getId(), tempIdHD) != null) {
@@ -201,7 +222,7 @@ public class TaiQuayController {
         hoaDonChiTiet.setTrangThai(1);
         chiTietGiayService.save(chiTietGiay);
         hoaDonChiTietServive.addhdct(hoaDonChiTiet);
-        return "forward:/admin/tai-quay/detail/" + tempIdHD;
+        return "redirect:/admin/tai-quay/detail/" + tempIdHD;
     }
 
     @GetMapping("/addHD")
@@ -224,7 +245,7 @@ public class TaiQuayController {
 
     @GetMapping("/detail/{id}")
     public String detail(
-            @PathVariable("id") String id,
+            @PathVariable(value = "id", required = false) String id,
             Model model,
             HttpSession session
     ) {
@@ -267,14 +288,16 @@ public class TaiQuayController {
         Double tienGiam = hoaDonChiTietServive.tienGiam(id) == null ? 0 : hoaDonChiTietServive.tienGiam(id);
         // 20/11
         HinhThucThanhToan hinhThucThanhToan = htttService.getHTTTByIdhd(id);
+        HoaDon hoaDon = hoaDonService.getHoaDonById(id);
         if (hinhThucThanhToan != null) {
             model.addAttribute("tienKhachDua", hinhThucThanhToan.getSoTien());
+            model.addAttribute("phiVanChuyen", hoaDon.getPhiShip());
         }
 
         model.addAttribute("tongTienTruocGiam", tongTienTruocGiam);
         model.addAttribute("tienGiam", tienGiam);
 
-        HoaDon hoaDon = hoaDonService.getHoaDonById(id);
+
         if (hoaDon != null) {
             hoaDon.setTongTien(tongTien);
             hoaDon.setKhuyenMai(tienGiam);
@@ -305,10 +328,13 @@ public class TaiQuayController {
 
     @GetMapping("deletehd/{id}")
     public String deleteHD(
-            @PathVariable("id") String id,
+            @PathVariable(value = "id", required = false) String id,
             @RequestParam(value = "value", required = false) String liDoHuy,
             Model model
     ) {
+        if (liDoHuy.length() > 20){
+            return "redirect:/admin/tai-quay/hien-thi";
+        }
         HoaDon hoaDon = hoaDonService.getHoaDonById(id);
         if (hoaDon.getListHoaDonChiTiet().size() > 0) {
             tempIdHD = id;
@@ -367,7 +393,7 @@ public class TaiQuayController {
     //    30/10
     @GetMapping("chonTK/{id}")
     public String chonTK(
-            Model model, @PathVariable("id") String idkh
+            Model model, @PathVariable(value = "id", required = false) String idkh
             , HttpSession session
     ) {
 //        session.setAttribute("idkh", idkh);
@@ -430,7 +456,7 @@ public class TaiQuayController {
 
     @GetMapping("deleteDC/{id}")
     public String delete(
-            @PathVariable("id") String iddc
+            @PathVariable(value = "id", required = false) String iddc
     ) {
         diaChiService.deleteById(iddc);
         session.setAttribute("errTaiQuay", "Xóa thành công");
@@ -560,21 +586,36 @@ public class TaiQuayController {
     @PostMapping("addhttt")
     public String addhttt(
             Model model,
-            @RequestParam("phuongThuc") Integer phuongThuc,
-            @RequestParam("tienKhachDua") String tienKhachDua,
+            @RequestParam(value = "phuongThuc", required = false) Integer phuongThuc,
+            @RequestParam(value = "tienKhachDua", required = false, defaultValue = "0") String tienKhachDua,
             @RequestParam(value = "xa", required = false) String xa,
             @RequestParam(value = "quan", required = false) String quan,
             @RequestParam(value = "tinh", required = false) String tinh,
             @RequestParam(value = "ghiChu", required = false) String ghiChu,
             @RequestParam(value = "tienDu", required = false) String tienDu,
-            @RequestParam(value = "phiVanChuyen", defaultValue = "0") String phiVanChuyen,
+            @RequestParam(value = "phiVanChuyen", defaultValue = "0", required = false) String phiVanChuyen,
             HttpServletResponse response
     ) throws IOException {
         HinhThucThanhToan hinhThucThanhToan = htttService.getHTTTByIdhd(tempIdHD);
-//        HinhThucThanhToan hinhThucThanhToan1 = htttService.getHTTTByIdhd(tempIdHD);
-
+        phiVanChuyen = phiVanChuyen.replaceAll("[^\\d]", "");
+        tienKhachDua = tienKhachDua.replaceAll("[^\\d]", "");
+        try {
+            Double phiShip = Double.parseDouble(phiVanChuyen);
+            if (phiShip < 0) {
+                model.addAttribute("error", "Vui lòng phí vận chuyển > 0.");
+                return "redirect:/admin/tai-quay/detail/" + tempIdHD;
+            }
+        } catch (NumberFormatException e) {
+            model.addAttribute("error", "Vui lòng nhập phí vận chuyển không hợp lệ.");
+            return "redirect:/admin/tai-quay/detail/" + tempIdHD;
+        }
         Double tongTien = hoaDonChiTietServive.tongTienSauGiam(tempIdHD);
         HoaDon hoaDon = hoaDonService.getHoaDonById(tempIdHD);
+        List<HoaDonChiTiet> listhdct = hoaDonChiTietServive.getHDCTByIdHD(tempIdHD);
+        if(listhdct.size() == 0){
+            System.out.println("Thanh toan that bai");
+            return "redirect:/admin/tai-quay/detail/" + tempIdHD;
+        }
         if (hinhThucThanhToan != null) {
             tienKhachDua = tienKhachDua.replaceAll("[^\\d]", "");
             hinhThucThanhToan.setSoTien(Double.parseDouble(tienKhachDua));
@@ -591,6 +632,9 @@ public class TaiQuayController {
 
         if (!tempIdKH.equals("") && hoaDon.getLoaiHoaDon() == 2) {
             TaiKhoanRequest taiKhoan = taiKhoanService.getTaiKhoanById(tempIdKH);
+            if(!taiQuayService.validateAđhttt(xa, quan, tinh)){
+                return "redirect:/admin/tai-quay/detail/" + tempIdHD;
+            }
             hoaDon.setTenKhachHang(taiKhoan.getTen());
             hoaDon.setSoDienThoai(taiKhoan.getSdt());
             hoaDon.setDiaChi(taiKhoan.getDiaChiCuThe() + "," + xa + "," + quan + "," + tinh);
@@ -602,9 +646,10 @@ public class TaiQuayController {
 //            phiVanChuyen = phiVanChuyen.replaceAll("[^\\d]", "");
 //            hoaDon.setPhiShip(Double.parseDouble(phiVanChuyen));
 //        }
-        if(phuongThuc == 3){
+        // lưu lại thông tin khi trả sau
+        if (phuongThuc == 3) {
             hoaDon.setTienThua(0.0);
-        }else{
+        } else {
             hoaDon.setTienThua(Double.parseDouble(tienKhachDua) - tongTien - Double.parseDouble(phiVanChuyen));
         }
 

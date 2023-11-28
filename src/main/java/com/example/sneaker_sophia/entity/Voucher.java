@@ -7,6 +7,7 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -19,6 +20,8 @@ import java.util.UUID;
 @Getter
 @Setter
 @Builder
+@EntityListeners(AuditingEntityListener.class)
+@ToString
 @Table(name = "KhuyenMai")
 public class Voucher {
     @Id
@@ -43,10 +46,10 @@ public class Voucher {
     private Integer phanTramGiam;
 
     @Column(name = "ngayBatDau")
-    private LocalDate ngayBatDau;
+    private LocalDateTime ngayBatDau;
 
     @Column(name = "ngayKetThuc")
-    private LocalDate ngayKetThuc;
+    private LocalDateTime ngayKetThuc;
 
     @CreatedBy
     @Column(name = "nguoiTao")

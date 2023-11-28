@@ -2,6 +2,7 @@ package com.example.sneaker_sophia.dto;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -17,14 +18,15 @@ public class VoucherDTO {
 
     private String ten;
 
-    private Integer phanTramGiam;
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate ngayBatDau;
+    private String phanTramGiam;
 
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate ngayKetThuc;
+    private Object ngayBatDau;
 
-//    private String moTa;
+    private String soLuong;
+
+
+
+    private Object ngayKetThuc;
+
 }

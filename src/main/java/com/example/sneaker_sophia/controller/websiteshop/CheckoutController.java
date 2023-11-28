@@ -54,9 +54,18 @@ public class CheckoutController {
                 for (GioHangChiTiet item : cartItems) {
                     ChiTietGiay chiTietGiay = item.getId().getChiTietGiay();
 
-                    double subtotal = chiTietGiay.getGia() * item.getSoLuong();
-                    total += subtotal;
+                    double giaBan = chiTietGiay.getGia();
+                    int soLuong = item.getSoLuong();
+
+                    if (soLuong > 0) {
+                        double subtotal = giaBan * soLuong;
+                        total += subtotal;
+                    } else {
+                        double giaKhuyenMai = (Double) session.getAttribute("giaMoi_" + chiTietGiay.getId());
+                        total += giaKhuyenMai;
+                    }
                 }
+
 
                 if (diaChi != null) {
 
@@ -209,12 +218,14 @@ public class CheckoutController {
         String maHD = (String) session.getAttribute("maHD");
         if (responseCode != null && responseCode.equals("00")) {
             HoaDon hoaDon = hoaDonWebRepository.findByMaHoaDOn(maHD);
+            HinhThucThanhToan hinhThuc = new HinhThucThanhToan();
             System.out.println("Payment callback called!");
             if (hoaDon != null) {
                 double amountPaid = getAmountPaidFromVnPayResponse(amountPaidString);
                 hoaDon.setTongTien(hoaDon.getTongTien() + amountPaid);
                 hoaDon.setTrangThai(3); // Assuming 2 represents a paid status, adjust it based on your needs
                 hoaDonWebRepository.save(hoaDon);
+                hinhThuc.setSoTien(amountPaid);
                 System.out.println("Payment callback called!");
                 return "redirect/check-out/success";
             } else {
