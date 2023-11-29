@@ -469,7 +469,7 @@ public class TaiQuayController {
             @PathVariable(value = "id", required = false) String iddc
     ) {
         diaChiService.deleteById(iddc);
-        alertInfo.alert("errTaiQuay","Xóa thành công");
+        alertInfo.alert("successTaiQuay","Xóa thành công");
         return "forward:/admin/tai-quay/detail/" + tempIdHD;
     }
 
@@ -500,6 +500,7 @@ public class TaiQuayController {
         diaChi.setSdt(sdt);
         diaChi.setDiaChiMacDinh(1);
         diaChiService.saveDC(diaChi);
+        alertInfo.alert("successTaiQuay","Địa chỉ đã được thêm");
         return "redirect:/admin/tai-quay/detail/" + tempIdHD;
     }
 

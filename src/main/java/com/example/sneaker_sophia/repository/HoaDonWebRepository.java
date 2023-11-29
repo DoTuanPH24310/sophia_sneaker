@@ -20,7 +20,7 @@ public interface HoaDonWebRepository extends JpaRepository<HoaDon, String> {
     HoaDon findByMaHoaDOn(String hoadon);
 
 
-    List<HoaDon> findByTaiKhoanAndLoaiHoaDonEquals(TaiKhoan tk,Integer lhd);
+    List<HoaDon> findByTaiKhoanAndLoaiHoaDonEqualsOrderByCreatedDateDesc(TaiKhoan tk,Integer lhd);
 
 
 

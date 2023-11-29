@@ -215,7 +215,6 @@ public class QLHDController {
                 alertInfo.alert("errTaiQuay",null);
                 return "redirect:/admin/hoa-don/hien-thi";
             }
-
         }
         alertInfo.alert("successTaiQuay","Đơn hàng đã hoàn thành");
         return "redirect:/admin/hoa-don/hien-thi";
@@ -269,7 +268,6 @@ public class QLHDController {
         }
         alertInfo.alert("successTaiQuay","Đơn hàng đã được giao");
         return "redirect:/admin/hoa-don/detail/" + tempIdHD;
-
     }
 
     @GetMapping("updatehddg/{id}")

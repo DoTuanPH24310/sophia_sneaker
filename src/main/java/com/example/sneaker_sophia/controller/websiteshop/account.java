@@ -57,7 +57,7 @@ public class account {
         Map<String, Double> tongTienMap = new HashMap<>();
         TaiKhoan taiKhoan = loginRepository.findByEmail(authentication.getName());
 //        Double tongTien =
-        List<HoaDon> listHD = hoaDonWebRepository.findByTaiKhoanAndLoaiHoaDonEquals(taiKhoan,3);
+        List<HoaDon> listHD = hoaDonWebRepository.findByTaiKhoanAndLoaiHoaDonEqualsOrderByCreatedDateDesc(taiKhoan,3);
         for (HoaDon hd: listHD){
             tongTienMap.put(hd.getId(),hoaDonChiTietServive.tongTienSauGiam(hd.getId()));
         }
