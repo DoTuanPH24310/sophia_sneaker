@@ -17,17 +17,15 @@ public interface HoaDonChiTietWebRepository extends JpaRepository<HoaDonChiTiet,
             "   WHEN :unit = 'DAY' THEN DAY(h.createdDate) " +
             "   WHEN :unit = 'MONTH' THEN MONTH(h.createdDate) " +
             "   WHEN :unit = 'YEAR' THEN YEAR(h.createdDate) END AS datePart, " +
-            "h.chiTietGiay.hang.ten || ' ' || h.chiTietGiay.giay.ten || ' ' || h.chiTietGiay.ten || ' ' || h.chiTietGiay.mauSac.ten AS tenGiay, " +
+            "h.chiTietGiay.hang.ten || ' ' || h.chiTietGiay.giay.ten || ' ' || h.chiTietGiay.ten || ' ' || h.chiTietGiay.mauSac.ten|| ' ' || h.chiTietGiay.loaiGiay.ten AS tenGiay, " +
             "SUM(h.soLuong) AS tongSoLuong " +
             "FROM HoaDonChiTiet h " +
             "WHERE h.createdDate BETWEEN :startDate AND :endDate " +
-            "GROUP BY datePart, h.chiTietGiay.hang.ten, h.chiTietGiay.ten, h.chiTietGiay.giay.ten,h.chiTietGiay.mauSac.ten " +
-            "ORDER BY tongSoLuong DESC " +
-            "LIMIT 10")
+            "GROUP BY datePart, h.chiTietGiay.hang.ten, h.chiTietGiay.ten, h.chiTietGiay.giay.ten, h.chiTietGiay.mauSac.ten,h.chiTietGiay.loaiGiay.ten,h.chiTietGiay.kichCo.ten,h.chiTietGiay.id " +
+            "ORDER BY tongSoLuong DESC")
     List<Object[]> getTop10ChiTietSanPham(
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate,
             @Param("unit") String unit);
-
 
 }

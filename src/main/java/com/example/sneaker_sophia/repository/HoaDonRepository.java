@@ -94,21 +94,17 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
     );
 
     // thống kê
-    @Query("SELECT COUNT(h) FROM HoaDon h WHERE h.trangThai = 1 " +
-            "AND (:ngayBatDau IS NULL OR h.createdDate >= :ngayBatDau) " +
-            "AND (:ngayKetThuc IS NULL OR h.createdDate <= :ngayKetThuc)")
-    int countHoaDonTrangThaiThanhCongByDate(
+
+    @Query("SELECT h.trangThai, COUNT(h) FROM HoaDon h " +
+            "WHERE " +
+            "(:ngayBatDau IS NULL OR h.createdDate >= :ngayBatDau) " +
+            "AND (:ngayKetThuc IS NULL OR h.createdDate <= :ngayKetThuc) " +
+            "GROUP BY h.trangThai")
+    List<Object[]> countHoaDonByDateAndStatus(
             @Param("ngayBatDau") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime ngayBatDau,
             @Param("ngayKetThuc") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime ngayKetThuc
     );
 
-    @Query("SELECT COUNT(h) FROM HoaDon h WHERE h.trangThai = 6 " +
-            "AND (:ngayBatDau IS NULL OR h.createdDate >= :ngayBatDau) " +
-            "AND (:ngayKetThuc IS NULL OR h.createdDate <= :ngayKetThuc)")
-    int countHoaDonTrangThaiHuyByDate(
-            @Param("ngayBatDau") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime ngayBatDau,
-            @Param("ngayKetThuc") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime ngayKetThuc
-    );
 
     @Query("SELECT SUM(h.tongTien) FROM HoaDon h WHERE " +
             "(:ngayBatDau IS NULL OR h.createdDate >= :ngayBatDau) AND " +

@@ -7,8 +7,6 @@ import com.example.sneaker_sophia.repository.HoaDonWebRepository;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -124,30 +122,21 @@ public class HoaDonService {
     public Integer soHDDG(){
         return hoaDonRepository.soHDDG();
     }
-
-    public List<Object[]> getDoanhThuTheoThang(LocalDateTime ngayBatDau, LocalDateTime ngayKetThuc, String unit) {
-        return hoaDonWebRepository.getDoanhThuTheoThang(ngayBatDau,ngayKetThuc, unit);
-    }
-
     //thông kê
-
-    public int countHoaDonTrangThaiThanhCongByDate(LocalDateTime ngayBatDau,LocalDateTime ngayKetThuc){
-        return hoaDonRepository.countHoaDonTrangThaiThanhCongByDate(ngayBatDau,ngayKetThuc);
-    }
-
-    public int countHoaDonTrangThaiHuyByDate(LocalDateTime ngayBatDau,LocalDateTime ngayKetThuc){
-        return hoaDonRepository.countHoaDonTrangThaiHuyByDate(ngayBatDau,ngayKetThuc);
+    public List<Object[]> getDoanhThuTheoThang(LocalDateTime ngayBatDau, LocalDateTime ngayKetThuc, String unit, LocalDateTime endDateMinusOneYear,LocalDateTime startDateMinusOneYear) {
+        return hoaDonWebRepository.getDoanhThuTheoThang(ngayBatDau,ngayKetThuc, unit,endDateMinusOneYear,startDateMinusOneYear);
     }
 
     public Double calculateTongTienByDate(LocalDateTime ngayBatDau,LocalDateTime ngayKetThuc){
         return hoaDonRepository.calculateTongTienByDate(ngayBatDau,ngayKetThuc);
     }
 
+    public List<Object[]> countHoaDonByDateAndStatus(LocalDateTime ngayBatDau,LocalDateTime ngayKetThuc){
+        return hoaDonRepository.countHoaDonByDateAndStatus(ngayBatDau,ngayKetThuc);
+    }
+
     public int countHoaDonByDateRange(LocalDateTime ngayBatDau,LocalDateTime ngayKetThuc){
         return hoaDonRepository.countHoaDonByDateRange(ngayBatDau,ngayKetThuc);
     }
-
-    public  List<Object[]> countHoaDonByTrangThai(LocalDateTime ngayBatDau,LocalDateTime ngayKetThuc){
-        return hoaDonWebRepository.countHoaDonByNgayTao(ngayBatDau,ngayKetThuc);
-    }
+    // END thông kê
 }

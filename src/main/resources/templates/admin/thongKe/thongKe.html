@@ -145,7 +145,7 @@
                         <!-- Bar Chart -->
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Top 10 sản phẩm bán chạy nhất</h6>
+                                <h6 class="m-0 font-weight-bold text-primary">Top 10 sản phẩm bán chạy nhất theo số lượng</h6>
                             </div>
                             <div class="card-body">
                                 <div class="chart-bar">
@@ -163,7 +163,7 @@
                         <div class="card shadow mb-4">
                             <!-- Card Header - Dropdown -->
                             <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Donut Chart</h6>
+                                <h6 class="m-0 font-weight-bold text-primary">Tổng số hóa đơn: <span class="m-0 font-weight-bold text-danger" id="soHoaDon">df </span> </h6>
                             </div>
                             <!-- Card Body -->
                             <div class="card-body">
@@ -171,7 +171,18 @@
                                     <canvas id="myPieChart"></canvas>
                                 </div>
                                 <hr>
-                                Styling for the donut chart can be found in the
+                                <div class="row">
+                                <div class="col-6">
+                                    <h6 class="m-0 font-italic-bold text-primary">Hóa đơn thành công: <span class="m-0 font-weight-bold text-danger" id="hoaDonThanhCong"> </span> </h6>
+                                    <h6 class="m-0 font-italic-bold text-primary">Hóa đơn chờ xác nhận: <span class="m-0 font-weight-bold text-danger" id="hoaDonchoXacNhan"> </span> </h6>
+                                    <h6 class="m-0 font-italic-bold text-primary">Hóa đơn chờ giao: <span class="m-0 font-weight-bold text-danger" id="hoaDonChoGiao"> </span> </h6>
+                                </div>
+                                <div class="col-6">
+                                    <h6 class="m-0 font-italic-bold text-primary">Hóa đơn chờ thanh toán: <span class="m-0 font-weight-bold text-danger" id="hoaDonCho"> </span> </h6>
+                                    <h6 class="m-0 font-italic-bold text-primary">Hóa đơn đang giao: <span class="m-0 font-weight-bold text-danger" id="hoaDonDangGiao"> </span> </h6>
+                                    <h6 class="m-0 font-italic-bold text-primary">Hóa đơn hủy: <span class="m-0 font-weight-bold text-danger" id="hoaDonHuy"> </span> </h6>
+                                </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -199,27 +210,23 @@
 
         <script>
             var today = new Date();
-
             // Cộng thêm 1 năm
             var preYear = new Date(today);
             preYear.setMonth(0)
             preYear.setDate(1)
+
+            today.setHours(6, 59, 59, 999);
+
+            // Định dạng thành chuỗi YYYY-MM-DDThh:mm (định dạng của datetime-local)
+            var todayString = today.toISOString().slice(0, 16);
 
             // Định dạng thành chuỗi YYYY-MM-DDThh:mm (định dạng của datetime-local)
             var preYearString = preYear.toISOString().slice(0, 16);
             var Year = new Date().toISOString().slice(0, 16);
             // Đặt giá trị mặc định cho input ngày bắt đầu và ngày kết thúc
             document.getElementById("NBDHoaDon").value = preYearString;
-            document.getElementById("NKTHoaDon").value = Year;
+            document.getElementById("NKTHoaDon").value = todayString;
 
-            $(document).ready(function () {
-                // Make an asynchronous request to your API endpoint
-                $.get("/api/thong-ke", function (data) {
-                    // Update HTML elements with API data
-                    $("#doanhThu").text(data.doanhThu);
-                    // Similar updates for other elements
-                });
-            });
         </script>
         <!-- Bootstrap core JavaScript-->
         <script src="/vendor/jquery/jquery.min.js"></script>

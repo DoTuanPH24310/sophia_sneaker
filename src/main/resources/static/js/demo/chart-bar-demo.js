@@ -27,26 +27,11 @@ function number_format(number, decimals, dec_point, thousands_sep) {
     return s.join(dec);
 }
 
-
-// Lấy tham chiếu đến các ô input
-var ngayBatDauInput = document.getElementById("NBDHoaDon");
-var ngayKetThucInput = document.getElementById("NKTHoaDon");
-
-// Thêm sự kiện input cho cả hai ô
-ngayBatDauInput.addEventListener("input", function () {
-    callApiAndUpdateBarChart();
-});
-
-ngayKetThucInput.addEventListener("input", function () {
-    callApiAndUpdateBarChart();
-});
-
 // Hàm để gọi API và cập nhật biểu đồ
 function callApiAndUpdateBarChart() {
     // Lấy giá trị mới của ngayBatDau và ngayKetThuc
     var ngayBatDauValue = ngayBatDauInput.value;
     var ngayKetThucValue = ngayKetThucInput.value;
-
     // Tạo URL mới với giá trị ngayBatDau và ngayKetThuc mới
     var url = "/api/chart/product?ngayBatDau=" + encodeURIComponent(ngayBatDauValue) + "&ngayKetThuc=" + encodeURIComponent(ngayKetThucValue);
     var ctx = document.getElementById("myBarChart");
@@ -62,7 +47,7 @@ function callApiAndUpdateBarChart() {
                 data: {
                     labels: data.map(item =>item[1]),
                     datasets: [{
-                        label: "SL",
+                        label: "SL: ",
                         backgroundColor: "#4e73df",
                         hoverBackgroundColor: "#2e59d9",
                         borderColor: "#4e73df",

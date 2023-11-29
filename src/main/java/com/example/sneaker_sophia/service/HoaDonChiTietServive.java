@@ -122,4 +122,9 @@ public class HoaDonChiTietServive {
     public Double tienGiam(String idhd){
         return hoaDonCTRepository.tienGiam(idhd);
     }
+
+    //thong ke
+    public Integer sumSoLuongByHoaDonTrangThaiEquals1(){
+        return hoaDonCTRepository.sumSoLuongByHoaDonTrangThaiEquals1();
+    }
 }

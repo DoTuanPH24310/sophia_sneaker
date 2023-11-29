@@ -26,7 +26,23 @@ function number_format(number, decimals, dec_point, thousands_sep) {
     }
     return s.join(dec);
 }
+//check năm
+function mapMonthToLabel(item) {
+    const value = item[0];
 
+    // Kiểm tra nếu giá trị là một số và có đúng 4 chữ số
+    if (typeof value === 'number' && value.toString().length === 4) {
+        return 'Năm ' + value;
+    } else if (typeof value === 'number' && value >= 1 && value <= 12) {
+        return 'Tháng ' + value;
+    } else {
+        return 'Không xác định';
+    }
+}
+// định dạngh tiền
+function formatCurrency(number) {
+    return new Intl.NumberFormat('vi-VN').format(number);
+}
 // Area Chart Example
 var areaChart = document.getElementById("myAreaChart");
 // Lấy các phần tử DOM của ô ngày bắt đầu và kết thúc
@@ -36,13 +52,15 @@ var ngayKetThucInput = document.getElementById("NKTHoaDon");
 // Sự kiện khi giá trị của ô ngày bắt đầu thay đổi
 ngayBatDauInput.addEventListener("input", function () {
     callApiAndUpdateChart();
-    callApiThongKe()
+    callApiAndUpdatePieChart();
+    callApiAndUpdateBarChart();
 });
 
 // Sự kiện khi giá trị của ô ngày kết thúc thay đổi
 ngayKetThucInput.addEventListener("input", function () {
     callApiAndUpdateChart();
-    callApiThongKe()
+    callApiAndUpdatePieChart();
+    callApiAndUpdateBarChart();
 });
 
 // Hàm gọi API và cập nhật biểu đồ
@@ -54,7 +72,6 @@ function callApiAndUpdateChart() {
     // Tạo URL với thông tin ngày
     var url = "http://localhost:8080/api/chart/revenue?ngayBatDau=" + encodeURIComponent(ngayBatDau) + "&ngayKetThuc=" + encodeURIComponent(ngayKetThuc);
 
-    console.log(encodeURIComponent(ngayBatDau) + "&ngayKetThuc=" + encodeURIComponent(ngayKetThuc))
     // Gửi request đến URL tương ứng
     fetch(url)
         .then(response => response.json())
@@ -70,8 +87,9 @@ function callApiAndUpdateChart() {
         .then(response => response.json())
         .then(data => {
             // Cập nhật biểu đồ với dữ liệu mới
-            $("#doanhThu").text(data.doanhThu);
-            $("#sanPhamDaBan").text(data.doanhThu);
+            $("#doanhThu").text(formatCurrency(data.doanhThu));
+            $("#sanPhamDaBan").text(data.soSanPham);
+            $("#soHoaDon").text(data.soHoaDon);
         })
         .catch(error => console.error('Error:', error));
 }
@@ -84,10 +102,10 @@ function updateChart(data) {
         myLineChart = new Chart(areaChart, {
             type: 'line',
             data: {
-                labels: data.map(item => item[0]),
+                labels: data.map(item => mapMonthToLabel(item)),
                 datasets: [
                     {
-                        label: "Doanh thu tháng này",
+                        label: "Doanh thu ",
                         lineTension: 0.3,
                         backgroundColor: "rgba(78, 115, 223, 0.05)",
                         borderColor: "rgba(78, 115, 223, 1)",
@@ -102,7 +120,7 @@ function updateChart(data) {
                         data: data.map(item => item[1]),
                     },
                     {
-                        label: "Tháng trước",
+                        label: "So với cùng kỳ",
                         lineTension: 0.3,
                         backgroundColor: "rgba(223, 78, 78, 0.05)",
                         borderColor: "rgba(223, 78, 78, 1)",
@@ -160,7 +178,7 @@ function updateChart(data) {
                     }],
                 },
                 legend: {
-                    display: false
+                    display: true
                 },
                 tooltips: {
                     backgroundColor: "rgb(255,255,255)",
@@ -187,7 +205,7 @@ function updateChart(data) {
         });
     } else {
         // Nếu biểu đồ đã tồn tại, cập nhật dữ liệu
-        myLineChart.data.labels = data.map(item => item[0]);
+        myLineChart.data.labels = data.map(item => mapMonthToLabel(item));
         myLineChart.data.datasets[0].data = data.map(item => item[1]);
         myLineChart.update();
     }

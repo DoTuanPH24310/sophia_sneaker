@@ -36,8 +36,6 @@ public class ThongKeController {
 //        List<Object[]> revenueDataList = hoaDonService.getDoanhThuTheoThang(ngayBatDau,ngayKetThuc);
 //        model.addAttribute("listHDCT",hoaDonChiTietDTService.findAll());
         model.addAttribute("soHoaDon", hoaDonService.countHoaDonByDateRange(ngayBatDau, ngayKetThuc));
-        model.addAttribute("soHoaDonThanhCong", hoaDonService.countHoaDonTrangThaiThanhCongByDate(ngayBatDau, ngayKetThuc));
-        model.addAttribute("soHoaDonHuy", hoaDonService.countHoaDonTrangThaiHuyByDate(ngayBatDau, ngayKetThuc));
         model.addAttribute("doanhThu", hoaDonService.calculateTongTienByDate(ngayBatDau, ngayKetThuc));
 
         return "admin/thongKe/thongKe";

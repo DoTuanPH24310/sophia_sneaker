@@ -2,6 +2,7 @@ package com.example.sneaker_sophia.controller.manage;
 
 import com.example.sneaker_sophia.repository.HoaDonWebRepository;
 import com.example.sneaker_sophia.service.HoaDonChiTietDTService;
+import com.example.sneaker_sophia.service.HoaDonChiTietServive;
 import com.example.sneaker_sophia.service.HoaDonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +26,8 @@ public class ChartRestController {
     HoaDonChiTietDTService hoaDonChiTietDTService;
     @Autowired
     HoaDonWebRepository hoaDonWebRepository;
+    @Autowired
+    HoaDonChiTietServive hoaDonChiTietServive;
 
     @GetMapping("/revenue")
     public List<Object[]> getRevenueChartData(@RequestParam(name = "ngayBatDau", required = false)
@@ -31,10 +35,14 @@ public class ChartRestController {
                                               @RequestParam(name = "ngayKetThuc", required = false)
                                               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime ngayKetThuc,
                                               Model model) {
-        List<Object[]> revenueDataList = hoaDonService.getDoanhThuTheoThang(ngayBatDau, ngayKetThuc, hoaDonWebRepository.determineTimeUnit(ngayBatDau, ngayKetThuc));
-        System.out.println("nít" + hoaDonWebRepository.determineTimeUnit(ngayBatDau, ngayKetThuc));
+        // Trừ đi một năm từ endDate
+        LocalDateTime endDateMinusOneYear = ngayKetThuc.minus(1, ChronoUnit.YEARS);
+        LocalDateTime startDateMinusOneYear = ngayBatDau.minus(1, ChronoUnit.YEARS);
+
+        // Gọi truy vấn với tham số endDateMinusOneYear
+        List<Object[]> result = hoaDonService.getDoanhThuTheoThang(ngayBatDau, ngayKetThuc,  hoaDonWebRepository.determineTimeUnit(ngayBatDau, ngayKetThuc), endDateMinusOneYear,startDateMinusOneYear);
         model.addAttribute("listHDCT", hoaDonChiTietDTService.findAll());
-        return revenueDataList;
+        return result;
     }
 
     @GetMapping("/product")
@@ -54,7 +62,7 @@ public class ChartRestController {
                                               @RequestParam(name = "ngayKetThuc", required = false)
                                               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime ngayKetThuc,
                                               Model model) {
-        List<Object[]> statusDataList = hoaDonService.countHoaDonByTrangThai(ngayBatDau, ngayKetThuc);
+        List<Object[]> statusDataList = hoaDonService.countHoaDonByDateAndStatus(ngayBatDau, ngayKetThuc);
         model.addAttribute("listHDCT", hoaDonChiTietDTService.findAll());
         return statusDataList;
     }
@@ -67,12 +75,9 @@ public class ChartRestController {
 
 
         Map<String, Object> result = Map.of(
-                "ngayBatDau", ngayBatDau,
-                "ngayKetThuc", ngayKetThuc,
+                "doanhThu", hoaDonService.calculateTongTienByDate(ngayBatDau, ngayKetThuc),
                 "soHoaDon", hoaDonService.countHoaDonByDateRange(ngayBatDau, ngayKetThuc),
-                "soHoaDonThanhCong", hoaDonService.countHoaDonTrangThaiThanhCongByDate(ngayBatDau, ngayKetThuc),
-                "soHoaDonHuy", hoaDonService.countHoaDonTrangThaiHuyByDate(ngayBatDau, ngayKetThuc),
-                "doanhThu", hoaDonService.calculateTongTienByDate(ngayBatDau, ngayKetThuc)
+                "soSanPham", hoaDonChiTietServive.sumSoLuongByHoaDonTrangThaiEquals1()
         );
         return result;
     }
