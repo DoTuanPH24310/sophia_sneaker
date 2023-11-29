@@ -935,6 +935,7 @@
         const checkIHD = [[${session.checkTTHT}]];
         const phiPhip = [[${phiVanChuyen}]];
         const httt = [[${httt}]];
+        const tthd = [[${trangThaiDon}]];
 
 
         if (checkIHD != null && checkIHD == 1) {
@@ -1474,7 +1475,12 @@
         function loadding() {
             if (idKh == null) {
                 customSwitches.checked = false;
-                alert("Chưa chọn khách hàng");
+                let type = 'error';
+                let icon = 'fa-solid fa-circle-exclamation';
+                let title = 'Thất bại!';
+                let text = "Chưa chọn khách hàng";
+                createToast(type, icon, title, text);
+                removeSeesion('errTaiQuay');
                 return;
             }
             if (customSwitches.checked) {
@@ -1486,6 +1492,16 @@
                     url: 'http://localhost:8080/api/hoa-don/updateGiaoHang/' + idHoaDon,
                 })
             } else {
+                if(tthd == 4){
+                    customSwitches.checked = true;
+                    let type = 'error';
+                    let icon = 'fa-solid fa-circle-exclamation';
+                    let title = 'Thất bại!';
+                    let text = "Không thay đổi đơn giao hàng";
+                    createToast(type, icon, title, text);
+                    removeSeesion('errTaiQuay');
+                    return;
+                }
                 document.getElementById('phuongThucTraSau').style.display = "none";
                 document.getElementById('blockTienKhachDua').style.display = "flex";
                 document.getElementById('blockTienThua').style.display = "flex";

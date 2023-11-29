@@ -258,7 +258,6 @@ public class TaiQuayController {
         tempIdHD = id;
         session.setAttribute("idHoaDon", id);
         session.setAttribute("checkBill", true);
-        System.out.println(session.getAttribute("mySessionAttribute"));
         List<HoaDon> list = hoaDonService.getHoaDonByTrangThai();
         model.addAttribute("listHDC", list);
         model.addAttribute("maHD", id);
@@ -278,7 +277,6 @@ public class TaiQuayController {
             tongTien += (hdct.getDonGia() * (1 - ((hdct.getPhanTramGiam()) / 100.0)) * hdct.getSoLuongGiam()) +
                     (hdct.getDonGia() * (hdct.getSoLuong() - hdct.getSoLuongGiam()));
             avtctgMap.put(idctg, avtctg);
-
             model.addAttribute("avtctgMap", avtctgMap);
         }
 
@@ -299,6 +297,7 @@ public class TaiQuayController {
             model.addAttribute("tienKhachDua", hinhThucThanhToan.getSoTien());
             model.addAttribute("phiVanChuyen", hoaDon.getPhiShip());
             model.addAttribute("httt",hinhThucThanhToan.getTrangThai());
+            model.addAttribute("trangThaiDon",hoaDon.getTrangThai());
         }
 
         model.addAttribute("tongTienTruocGiam", tongTienTruocGiam);

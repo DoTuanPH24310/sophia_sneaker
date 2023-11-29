@@ -287,26 +287,24 @@
                                 <thead>
                                 <tr>
                                     <th>Đơn hàng</th>
-                                    <th>Date</th>
-                                    <th>Status</th>
-                                    <th>Total</th>
-                                    <th>Actions</th>
+                                    <th>Ngày đặt</th>
+                                    <th>Tổng tiền</th>
+                                    <th>Trạng thái</th>
+                                    <th>Hành động</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>May 10, 2018</td>
-                                    <td><span class="success">Completed</span></td>
-                                    <td>$25.00 for 1 item</td>
-                                    <td><a href="../cart.html" class="view">view</a></td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>May 10, 2018</td>
-                                    <td>Processing</td>
-                                    <td>$17.00 for 1 item</td>
-                                    <td><a href="../cart.html" class="view">view</a></td>
+                                <tr th:each="hd, start : ${listHD}">
+                                    <td th:text="${start.index+1}"></td>
+                                    <td th:text="${#temporals.format(hd.createdDate,'dd-MM-yyyy HH:mm:ss')}"></td>
+                                    <td th:text="${#numbers.formatCurrency(tongTienMap[hd.id] +hd.phiShip)}"></td>
+                                    <td th:if="${hd.trangThai == 3}">Chờ xác nhận</td>
+                                    <td th:if="${hd.trangThai == 4}">Chờ giao</td>
+                                    <td th:if="${hd.trangThai == 5}">Đang giao</td>
+                                    <td th:if="${hd.trangThai == 1}">Hoàn thành</td>
+                                    <td th:if="${hd.trangThai == 6}">Hủy</td>
+
+                                    <td><a th:href="@{/my-account/detail/{idhd}(idhd=${hd.id})}" class="view btn btn-success">Xem</a></td>
                                 </tr>
                                 </tbody>
                             </table>

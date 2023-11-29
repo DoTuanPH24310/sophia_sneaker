@@ -38,8 +38,6 @@ public class QLHDController {
     @Resource(name = "lshdService")
     LSHDService lshdService;
 
-
-
     @Autowired
     HttpSession session;
 
@@ -94,8 +92,8 @@ public class QLHDController {
                 UUID idctg = hdct.getChiTietGiay().getId();
                 String avtctg = anhRepository.getAnhChinhByIdctg(idctg);
                 avtctgMap.put(idctg, avtctg);
-                model.addAttribute("avtctgMap", avtctgMap);
             }
+            model.addAttribute("avtctgMap", avtctgMap);
             HinhThucThanhToan hinhThucThanhToan = htttService.getHTTTByIdhd(idhd);
             if (hinhThucThanhToan != null) {
                 model.addAttribute("httt", hinhThucThanhToan);
