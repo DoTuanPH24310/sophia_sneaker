@@ -494,28 +494,29 @@
                             <div class="col-12">
                                 <div class="default-form-box">
                                     <label>Họ tên người nhận hàng</label>
-                                    <input type="text" th:field="*{ten}">
+                                    <input type="text" th:field="*{ten}" id="nameTen">
                                     <span th:errors="*{ten}" style="color: red"></span>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="default-form-box">
                                     <label>Số điện thoại <span>*</span></label>
-                                    <input type="text" th:field="*{sdt}">
+                                    <input type="text" th:field="*{sdt}" id="nameSoDienThoai">
                                     <span th:errors="*{sdt}" style="color: red"></span>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="default-form-box">
                                     <label> Địa chỉ email <span>*</span></label>
-                                    <input type="text" th:field="*{email}">
-                                    <span th:errors="*{email}" style="color: red"></span>
+                                    <input type="text" th:field="*{email}" id="nameEmail">
+                                    <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
+                                          style="color: red"></span>
                                 </div>
                             </div>
                             <div class="col-4">
                                 <div class="default-form-box">
                                     <label for="province">Tỉnh<span>*</span></label>
-                                    <select class="country_option nice-select wide" id="province" name="tinh"
+                                    <select class="country_option nice-select wide" id="province"
                                             th:field="*{tinh}" placeholder="Chọn tỉnh">
                                         <option value="">Chọn tỉnh</option>
                                         <option value=""></option>
@@ -552,7 +553,7 @@
                                 <div class="default-form-box">
                                     <label>Địa chỉ cụ thể <span>*</span></label>
                                     <input placeholder="House number and street name" type="text"
-                                           th:field="*{diaChiCuThe}">
+                                           th:field="*{diaChiCuThe}" id="nameDiaChiCuThe">
                                     <span th:errors="*{diaChiCuThe}" style="color: red"></span>
                                 </div>
                             </div>
@@ -600,13 +601,19 @@
                                             <span th:unless="${session['giaCu_' + item.id] != session['giaMoi_' + item.id]}"
                                                   th:text="${#numbers.formatCurrency(session['giaCu_' + item.id])}"></span>
                                         </td>
-                                        <td th:text="${#numbers.formatCurrency(item.gia * item.soLuong)}"></td>
+                                        <td>
+                                            <p th:text="${#numbers.formatCurrency(session['giaMoi_' + item.id] * item.soLuong)}"></p>
+                                        </td>
                                     </tr>
                                     </tbody>
                                     <tfoot>
                                     <tr>
                                         <td colspan="4" style="text-align: center;">Tổng giá sản phẩm</td>
-                                        <td th:text="${#numbers.formatCurrency(total)}"></td>
+                                        <td>
+                                            <!--                                            <p th:text="${#numbers.formatCurrency(tongTienGiam)}"-->
+                                            <!--                                               style="text-decoration: line-through; color: red; font-size: 13px"></p>-->
+                                            <p th:text="${#numbers.formatCurrency(total)}"></p>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td colspan="4" style="text-align: center;">Phí vận chuyển</td>
@@ -1079,82 +1086,69 @@
     }
 
 
-
-
-    var isFormChecked = true;
-
     document.getElementById("btnThanhToan").addEventListener("click", function (event) {
-        // Kiểm tra hình thức thanh toán đã được chọn chưa
-        if (isFormChecked) {
-            return;
-        }
+        event.preventDefault();
 
-        // Kiểm tra hình thức thanh toán đã được chọn chưa
-        var paymentMethod = document.querySelector('input[name="hinhThucThanhToan"]:checked');
-        if (!paymentMethod) {
-            alert("Vui lòng chọn hình thức thanh toán!");
+
+        var paymentMethod = document.querySelector('input[name="hinhThucThanhToan"]:checked').id;
+        if (paymentMethod === "currencyCod") {
+            let selectTinh = document.getElementById('province');
+            let selectHuyen = document.getElementById('district');
+            let selectXa = document.getElementById('ward');
+            let tinh = selectTinh.options[selectTinh.selectedIndex].textContent;
+            let huyen = selectHuyen.options[selectHuyen.selectedIndex].textContent;
+            let xa = selectXa.options[selectXa.selectedIndex].textContent;
+
+            let action = formThanhToan.getAttribute('action') + '?thanhPho=' + tinh + '&' + 'huyen=' + huyen + '&' + 'xa=' + xa;
+            console.log(action);
+            formThanhToan.setAttribute('action', action);
+            formThanhToan.submit();
+        } else {
             event.preventDefault();
-            return;
-        }
 
-        // Kiểm tra các trường thông tin địa chỉ
-        var ten = document.getElementById("ten").value.trim();
-        var sdt = document.getElementById("sdt").value.trim();
-        var email = document.getElementById("email").value.trim();
-        var tinh = document.getElementById("province").value.trim();
-        var quanHuyen = document.getElementById("district").value.trim();
-        var phuongXa = document.getElementById("ward").value.trim();
-        var diaChiCuThe = document.getElementById("diaChiCuThe").value.trim();
+            let selectTinh = document.getElementById('province');
+            let selectHuyen = document.getElementById('district');
+            let selectXa = document.getElementById('ward');
+            let tinh = selectTinh.options[selectTinh.selectedIndex].textContent;
+            let huyen = selectHuyen.options[selectHuyen.selectedIndex].textContent;
+            let xa = selectXa.options[selectXa.selectedIndex].textContent;
 
-        // Kiểm tra tất cả các trường thông tin địa chỉ đã được nhập hay chưa
+            let action = formThanhToan.getAttribute('action') + '?thanhPho=' + tinh + '&' + 'huyen=' + huyen + '&' + 'xa=' + xa;
+            console.log(action);
+            formThanhToan.setAttribute('action', action);
+            formThanhToan.submit();
+            let tenn = document.getElementById('nameTen').value;
+            let sdtn = document.getElementById('nameSoDienThoai').value;
+            let emailn = document.getElementById('nameEmail').value;
+            let tinhh = document.getElementById('province').value;
+            let quanHuyenn = document.getElementById('district').value;
+            let phuongXan = document.getElementById('ward').value;
+            let diaChiCuThen = document.getElementById('nameDiaChiCuThe').value;
 
+            if (
+                tenn != null && tenn.trim() !== '' &&
+                sdtn != null && sdtn.trim() !== '' &&
+                emailn != null && emailn.trim() !== '' &&
+                tinhh != null && tinhh.trim() !== '' &&
+                quanHuyenn != null && quanHuyenn.trim() !== '' &&
+                phuongXan != null && phuongXan.trim() !== '' &&
+                diaChiCuThen != null && diaChiCuThen.trim() !== ''
 
-        // Nếu là thanh toán khi nhận hàng, kiểm tra địa chỉ cụ thể
-        if (paymentMethod.id === "currencyCod") {
-            document.getElementById("formThanhToan").submit();
-            return;
-        }
-
-        // Nếu là thanh toán qua VNPay, kiểm tra xem đã nhận được đường link thanh toán chưa
-        if (paymentMethod.id === "currencyPaypal") {
-            fetch("/api/payment/create_payment?totalAmount=" + encodeURIComponent(document.getElementById("totalAmount").innerText))
-                .then(response => response.text())
-                .then(paymentUrl => {
-                    if (!ten || !sdt || !email || !tinh || !quanHuyen || !phuongXa || !diaChiCuThe) {
-                        alert("Vui lòng điền đầy đủ thông tin địa chỉ!");
-                        event.preventDefault();
-                        return;
-                    }
-
-                    // Kiểm tra xem link thanh toán có hợp lệ không
-                    if (paymentUrl.trim() === "") {
-                        alert("Có lỗi xảy ra khi tạo đường link thanh toán. Vui lòng thử lại sau.");
-                        event.preventDefault();
-                    } else {
-                        // Nếu mọi kiểm tra thành công, submit form
+            ) {
+                fetch("/api/payment/create_payment?totalAmount=" + encodeURIComponent(document.getElementById("totalAmount").innerText))
+                    .then(response => response.text())
+                    .then(paymentUrl => {
+                        console.log("Received Payment URL:", paymentUrl);
                         document.getElementById("formThanhToan").action = paymentUrl;
-                        document.getElementById("formThanhToan").submit();
-                    }
-                })
-                .catch(error => {
+                        formThanhToan.submit();
+
+                    }).catch(error => {
                     console.error("Error fetching payment URL:", error);
                 });
-        } else {
-            // Nếu mọi kiểm tra thành công, submit form
-            document.getElementById("formThanhToan").submit();
+            }
+
         }
 
-        isFormChecked = true;
-        alert("Đã kiểm tra thông tin thành công. Nhấn thanh toán để tiếp tục!");
-    });
-
-
-    document.getElementById("formThanhToan").addEventListener("submit", function (event) {
-        if (document.getElementById("formThanhToan").action.includes("/api/payment/create_payment")) {
-            event.preventDefault();
-            document.getElementById("formThanhToan").action = "/check-out/thanhtoan";
-            document.getElementById("formThanhToan").submit();
-        }
     });
 
 

@@ -13,8 +13,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class EmailService {
@@ -153,21 +152,22 @@ public class EmailService {
 
     public void themSanPhamVaoHoaDonChiTiet(List<CartItem> cartItems, HoaDon hoaDon) {
         double total = 0.0;
-        for (CartItem cartItem : cartItems) {
-            total += cartItem.getGia() * cartItem.getSoLuong();
-        }
         double tongTienDonHang = 0.0;
         int tongSoLuongGiam = 0;
         Integer tongGiamGia = 0;
+        int phanTramGiam = 0;
         int soLuongGiam = 0;
         double tongTienGiam = 0.0;
+        Map<UUID, Integer> soLuongGiamTheoSanPham = new HashMap<>();
+
         for (CartItem cartItem : cartItems) {
             HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
             ChiTietGiay chiTietGiay = chiTietGiayRepository.findById(cartItem.getId()).orElse(null);
+            total += chiTietGiay.getGia() * cartItem.getSoLuong();
 
             int soLuongMua = cartItem.getSoLuong();
             int soLuongHienTai = chiTietGiay.getSoLuong();
-            int soLuongPhieuGiamDaSuDung = 0;
+            int soLuongPhieuGiamDaSuDung = soLuongGiamTheoSanPham.getOrDefault(cartItem.getId(), 0);
             if (soLuongHienTai >= soLuongMua) {
                 List<CTG_KhuyenMai> listCTG_KM = chiTietGiay.getListCTG_KM();
                 // Tính toán số lượng giảm và giảm giá tương ứng
@@ -180,14 +180,12 @@ public class EmailService {
                         int soLuongGiamApDung = Math.min(soLuongGiam - soLuongPhieuGiamDaSuDung, soLuongMua);
 
                         // Cập nhật số lượng giảm giá của sản phẩm
-                        tongSoLuongGiam = soLuongGiamApDung;
+                        soLuongGiamTheoSanPham.put(cartItem.getId(), soLuongPhieuGiamDaSuDung + soLuongGiamApDung);
                         session.setAttribute("tongSoLuongGiam" + chiTietGiay.getId(), tongSoLuongGiam);
                         // Cập nhật giảm giá của sản phẩm
-                        int phanTramGiam = ctg.getId().getVoucher().getPhanTramGiam();
+                        phanTramGiam = ctg.getId().getVoucher().getPhanTramGiam();
                         int giamGia = phanTramGiam * soLuongGiam;
                         tongGiamGia = giamGia;
-                        hoaDonChiTiet.setPhanTramGiam(tongGiamGia);
-                        hoaDonChiTiet.setSoLuongGiam(soLuongGiam);
                         // Cập nhật tổng số tiền giảm
                         double donGia = chiTietGiay.getGia();
                         int giam = ctg.getId().getVoucher().getPhanTramGiam();
@@ -202,32 +200,23 @@ public class EmailService {
                     }
                 }
 
-                // Cập nhật số lượng tồn sau khi giảm giá
                 chiTietGiay.setSoLuong(soLuongHienTai - soLuongMua);
                 chiTietGiayRepository.save(chiTietGiay);
             } else {
                 return; // Xử lý khi số lượng không đủ
             }
 
+            chiTietGiay.setSoLuong(soLuongHienTai - soLuongMua);
+            chiTietGiayRepository.save(chiTietGiay);
+            hoaDonChiTiet.setSoLuong(cartItem.getSoLuong());
+            hoaDonChiTiet.setDonGia(chiTietGiay.getGia());
+            hoaDonChiTiet.setChiTietGiay(chiTietGiay);
+            hoaDonChiTiet.setPhanTramGiam(phanTramGiam);
+            hoaDonChiTiet.setSoLuongGiam(soLuongGiamTheoSanPham.getOrDefault(cartItem.getId(), 0));
+            hoaDonChiTiet.setHoaDon(hoaDon);
 
-            if (chiTietGiay != null) {
-
-                if (soLuongHienTai >= soLuongMua) {
-                    chiTietGiay.setSoLuong(soLuongHienTai - soLuongMua);
-                    chiTietGiayRepository.save(chiTietGiay);
-                    hoaDonChiTiet.setSoLuong(cartItem.getSoLuong());
-                    hoaDonChiTiet.setDonGia(chiTietGiay.getGia());
-                    hoaDonChiTiet.setChiTietGiay(chiTietGiay);
-                    hoaDonChiTiet.setHoaDon(hoaDon);
-
-                    hoaDon.getListHoaDonChiTiet().add(hoaDonChiTiet);
-                    this.hoaDonChiTietWebRepository.save(hoaDonChiTiet);
-                } else {
-                    System.err.println("Not enough stock for product with ID: " + cartItem.getId());
-                }
-            } else {
-                System.err.println("Product details not found for ID: " + cartItem.getId());
-            }
+            hoaDon.getListHoaDonChiTiet().add(hoaDonChiTiet);
+            this.hoaDonChiTietWebRepository.save(hoaDonChiTiet);
         }
         hoaDon.setTongTien(tongTienDonHang);
         hoaDon.setKhuyenMai(tongTienGiam);
@@ -236,7 +225,7 @@ public class EmailService {
     }
 
 
-    public HoaDon taoHoaDonMoi(TaiKhoan taiKhoan, Integer hinhThucThanhToan) {
+    public HoaDon taoHoaDonMoi(TaiKhoan taiKhoan, Integer hinhThucThanhToan, String diaChi, String tinh, String huyen, String xa) {
         HoaDon hoaDonMoi = new HoaDon();
         int soHD = this.hoaDonRepository.soHD() + 1;
         hoaDonMoi.setMaHoaDOn("HD" + soHD);
@@ -244,7 +233,7 @@ public class EmailService {
         hoaDonMoi.setLoaiHoaDon(3);
         hoaDonMoi.setTenKhachHang(taiKhoan.getTen());
         hoaDonMoi.setSoDienThoai(taiKhoan.getSdt());
-        hoaDonMoi.setDiaChi(diaChiTamChu.taoDiaChiString(taiKhoan.getDiaChiList()));
+        hoaDonMoi.setDiaChi(diaChi + "-" + xa + "-" + huyen + "-" + tinh);
         hoaDonMoi.setPhiShip(20000.0);
         hoaDonMoi.setTienThua(0.0);
         hoaDonMoi.setTrangThai(3);

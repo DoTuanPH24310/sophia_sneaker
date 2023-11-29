@@ -41,6 +41,8 @@ WebsiteshopController {
     LoaiGiayService loaiGiayService;
     @Autowired
     private CartService cartService;
+    @Autowired
+    HoaDonChiTietServive hoaDonChiTietServive;
     @GetMapping("/home")
     public String home(Model model,HttpSession httpSession){
         List<ChiTietGiay> productList = chiTietGiayService.getAll();
@@ -65,6 +67,7 @@ WebsiteshopController {
         model.addAttribute("soLuong", soLuong);
         model.addAttribute("totalCartPrice", totalCartPrice);
         model.addAttribute("cartItems", cartItems);
+        model.addAttribute("top10",hoaDonChiTietServive.findTop10IdChiTietGiay());
 
         return "website/websiteShop/index";
     }
