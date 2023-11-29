@@ -157,11 +157,19 @@ public class ThanhToanService {
         Optional<DiaChi> defaultDiaChi = taiKhoan.getDiaChiList().stream()
                 .filter(diaChi -> diaChi.getDiaChiMacDinh() == 1)
                 .findFirst();
+        if (!defaultDiaChi.isPresent()) {
+            DiaChi newDiaChi = new DiaChi();
+            diaChiDTO.loadDiaChiDTO(newDiaChi);
+            newDiaChi.setTaiKhoan(taiKhoan);
+            diaChiTamChu.save(newDiaChi);
+        } else {
+            // Cập nhật thông tin địa chỉ mặc định nếu có
+            defaultDiaChi.ifPresent(existingDefaultDiaChi -> {
+                diaChiDTO.loadDiaChiDTO(existingDefaultDiaChi);
+                diaChiTamChu.save(existingDefaultDiaChi);
+            });
+        }
 
-        defaultDiaChi.ifPresent(existingDefaultDiaChi -> {
-            diaChiDTO.loadDiaChiDTO(existingDefaultDiaChi); // Cập nhật thông tin địa chỉ
-            this.diaChiTamChu.save(existingDefaultDiaChi);
-        });
     }
 
     public List<GioHangChiTiet> getCartItemsByEmail(String email) {

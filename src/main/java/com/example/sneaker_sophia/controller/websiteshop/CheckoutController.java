@@ -339,6 +339,8 @@ public class CheckoutController {
                 if (hinhThuc != null) {
                     hinhThuc.setSoTien(hinhThuc.getSoTien() + amountPaid);
                     this.hinhThucThanhToanWebRepository.save(hinhThuc); // Update HinhThucThanhToan in the database
+                    hoaDon.setTrangThai(3);
+
                 }
                 return "redirect:/check-out/success";
             } else {

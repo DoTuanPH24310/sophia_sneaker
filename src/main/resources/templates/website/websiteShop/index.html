@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<html lang="zxx" xmlns:th="http://www.thymeleaf.org">
-
+<html lang="html" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/website/layout/layout}">
 
 <meta http-equiv="content-type" content="text/html;charset=UTF-8"/><!-- /Added by HTTrack -->
 <head>
@@ -9,96 +10,10 @@
 
     <title>HONO - Multi Purpose HTML Template</title>
 
-    <!-- ::::::::::::::Favicon icon::::::::::::::-->
-    <link rel="shortcut icon" href="/assets/images/favicon.ico" type="image/png">
-
-    <!-- Use the minified version files listed below for better performance and remove the files listed above -->
-    <link rel="stylesheet" href="/assets/css/vendor/vendor.min.css">
-    <link rel="stylesheet" href="/assets/css/plugins/plugins.min.css">
-    <link rel="stylesheet" href="/assets/css/style.min.css">
-
 </head>
 
-<body>
+<body layout:fragment="content2">
 <!-- Start Header Area -->
-<header class="header-section d-none d-xl-block">
-    <div class="header-wrapper">
-        <div class="header-bottom header-bottom-color--golden section-fluid sticky-header sticky-color--golden">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-12 d-flex align-items-center justify-content-between">
-                        <!-- Start Header Logo -->
-                        <div class="header-logo">
-                            <div class="logo">
-                                <a th:href="@{/sophia-store/product}"><img src="/assets/images/logo/logo_black.png"
-                                                                           alt=""></a>
-                            </div>
-                        </div>
-                        <!-- End Header Logo -->
-
-                        <!-- Start Header Main Menu -->
-                        <div class="main-menu menu-color--black menu-hover-color--golden">
-                            <nav>
-                                <ul>
-                                    <li>
-                                        <a class="active main-menu-link" th:href="@{/sophia-store/home}">Trang chủ </a>
-                                        <!-- Sub Menu -->
-                                    </li>
-                                    <li class="has-megaitem">
-                                        <a th:href="@{/sophia-store/product}">Sản phẩm </a>
-                                    </li>
-                                    <li class="has-dropdown">
-                                        <a href="">Bài Viết</a>
-                                    </li>
-                                    <li class="has-dropdown">
-                                        <a href="#">Trang</a>
-                                    </li>
-                                    <li>
-                                        <a href="about-us.html">Về chúng tôi</a>
-                                    </li>
-                                    <li>
-                                        <a href="contact-us.html">Liên hệ</a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
-                        <!-- End Header Main Menu Start -->
-
-                        <!-- Start Header Action Link -->
-                        <ul class="header-action-link action-color--black action-hover-color--golden">
-                            <li>
-                                <a th:href="@{/my-account/home}" class="offcanvas-toggle">
-                                    <i class="icon-user"></i>
-                                    <span class="item-count">3</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#offcanvas-add-cart" class="offcanvas-toggle">
-                                    <i class="icon-bag"></i>
-                                    <span class="item-count" th:text="${soLuong}"></span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#search">
-                                    <i class="icon-magnifier"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#offcanvas-about" class="offacnvas offside-about offcanvas-toggle">
-                                    <i class="icon-menu"></i>
-                                </a>
-                            </li>
-                        </ul>
-                        <!-- End Header Action Link -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</header>
-<!-- Start Header Area -->
-
-<!-- Start Mobile Header -->
 <div class="mobile-header mobile-header-bg-color--golden section-fluid d-lg-block d-xl-none">
     <div class="container">
         <div class="row">
@@ -533,7 +448,7 @@
                             <div class="col-auto">
                                 <div class="hero-slider-content">
                                     <h4 class="subtitle">New collection</h4>
-                                    <h1 class="title" style="margin-top: -500px">Giày Nike <br> Air Force 1</h1>
+                                    <h1 class="title">Best Of HiFi <br> Loud Speaker</h1>
                                     <a href="../product-details-default.html" class="btn btn-lg btn-pink">shop now </a>
                                 </div>
                             </div>
@@ -566,9 +481,11 @@
                         </div>
                         <div class="content">
                             <h6 class="title">GIAO HÀNG MIỄN PHÍ</h6>
-                            <p>Nhận lại 10% tiền mặt, giao hàng miễn phí, trả lại miễn phí và hơn thế nữa tại hơn 1000 nhà bán lẻ hàng đầu!</p>
+                            <p>Nhận lại 10% tiền mặt, giao hàng miễn phí, trả lại miễn phí và hơn thế nữa tại hơn 1000
+                                nhà bán lẻ hàng đầu!</p>
                         </div>
                     </div>
+                </div>
                 </div>
                 <!-- End Service Promo Single Item -->
                 <!-- Start Service Promo Single Item -->
@@ -627,7 +544,8 @@
                     <div class="banner-single-item banner-style-1 banner-animation img-responsive"
                          data-aos="fade-up" data-aos-delay="0">
                         <div class="image">
-                            <img src="https://trungsneaker.com/wp-content/uploads/2023/04/kiotviet_7a7384b04b3c381fed2e9f125704be41.jpeg" alt="" style="height: 433px">
+                            <img src="https://trungsneaker.com/wp-content/uploads/2023/04/kiotviet_7a7384b04b3c381fed2e9f125704be41.jpeg"
+                                 alt="" style="height: 433px">
                         </div>
                         <div class="content" style="margin-right:250px; margin-top:-70px">
                             <h4 class="title">Nike Air
@@ -650,7 +568,8 @@
                             <div class="banner-single-item banner-style-2 banner-animation img-responsive"
                                  data-aos="fade-up" data-aos-delay="0">
                                 <div class="image">
-                                    <img src="https://kingshoes.vn/data/upload/media/fb8942-133-giay-nike-court-vision-low-next-nature-chinh-hang-den-king-shoes-12.jpeg" alt="" style="height: 433px">
+                                    <img src="https://kingshoes.vn/data/upload/media/fb8942-133-giay-nike-court-vision-low-next-nature-chinh-hang-den-king-shoes-12.jpeg"
+                                         alt="" style="height: 433px">
                                 </div>
                                 <div class="content" style="padding-top: 300px">
                                     <h4 class="title">Nike Court <br>
@@ -666,7 +585,8 @@
                             <div class="banner-single-item banner-style-2 banner-animation img-responsive"
                                  data-aos="fade-up" data-aos-delay="200">
                                 <div class="image">
-                                    <img src="https://assets.adidas.com/images/w_600,f_auto,q_auto/0ffde794971e4799b543afaf0070ae44_9366/Giay_adidas_4D_FWD_Xam_HP3205_01_standard.jpg" alt="" style="height: 433px">
+                                    <img src="https://assets.adidas.com/images/w_600,f_auto,q_auto/0ffde794971e4799b543afaf0070ae44_9366/Giay_adidas_4D_FWD_Xam_HP3205_01_standard.jpg"
+                                         alt="" style="height: 433px">
                                 </div>
                                 <div class="content" style="padding-top: 300px">
                                     <h4 class="title">Adidas 4D<br>
@@ -677,38 +597,38 @@
                             </div>
                         </div>
                         <!-- End Banner Single Item -->
-<!--                        &lt;!&ndash; Start Banner Single Item &ndash;&gt;-->
-<!--                        <div class="col-lg-6 col-sm-6 mb-6">-->
-<!--                            <div class="banner-single-item banner-style-2 banner-animation img-responsive"-->
-<!--                                 data-aos="fade-up" data-aos-delay="0">-->
-<!--                                <div class="image">-->
-<!--                                    <img src="https://assets.adidas.com/images/w_600,f_auto,q_auto/0ffde794971e4799b543afaf0070ae44_9366/Giay_adidas_4D_FWD_Xam_HP3205_01_standard.jpg" alt="">-->
-<!--                                </div>-->
-<!--                                <div class="content">-->
-<!--                                    <h4 class="title">Adidas 4D FWD<br>-->
-<!--                                        stools</h4>-->
-<!--                                    <a href="../product-details-default.html" class="link-text"><span>Mua-->
-<!--                                                ngay</span></a>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        &lt;!&ndash; End Banner Single Item &ndash;&gt;-->
-<!--                        &lt;!&ndash; Start Banner Single Item &ndash;&gt;-->
-<!--                        <div class="col-lg-6 col-sm-6 mb-6">-->
-<!--                            <div class="banner-single-item banner-style-2 banner-animation img-responsive"-->
-<!--                                 data-aos="fade-up" data-aos-delay="0">-->
-<!--                                <div class="image">-->
-<!--                                    <img src="https://kallos.co/cdn/shop/products/85_White_GX2214_01_standard.jpg?v=1674061939" alt="">-->
-<!--                                </div>-->
-<!--                                <div class="content">-->
-<!--                                    <h4 class="title">Adidas Centennial 85 Low<br>-->
-<!--                                        stools</h4>-->
-<!--                                    <a href="../product-details-default.html" class="link-text"><span>Mua-->
-<!--                                                ngay</span></a>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        &lt;!&ndash; End Banner Single Item &ndash;&gt;-->
+                        <!--                        &lt;!&ndash; Start Banner Single Item &ndash;&gt;-->
+                        <!--                        <div class="col-lg-6 col-sm-6 mb-6">-->
+                        <!--                            <div class="banner-single-item banner-style-2 banner-animation img-responsive"-->
+                        <!--                                 data-aos="fade-up" data-aos-delay="0">-->
+                        <!--                                <div class="image">-->
+                        <!--                                    <img src="https://assets.adidas.com/images/w_600,f_auto,q_auto/0ffde794971e4799b543afaf0070ae44_9366/Giay_adidas_4D_FWD_Xam_HP3205_01_standard.jpg" alt="">-->
+                        <!--                                </div>-->
+                        <!--                                <div class="content">-->
+                        <!--                                    <h4 class="title">Adidas 4D FWD<br>-->
+                        <!--                                        stools</h4>-->
+                        <!--                                    <a href="../product-details-default.html" class="link-text"><span>Mua-->
+                        <!--                                                ngay</span></a>-->
+                        <!--                                </div>-->
+                        <!--                            </div>-->
+                        <!--                        </div>-->
+                        <!--                        &lt;!&ndash; End Banner Single Item &ndash;&gt;-->
+                        <!--                        &lt;!&ndash; Start Banner Single Item &ndash;&gt;-->
+                        <!--                        <div class="col-lg-6 col-sm-6 mb-6">-->
+                        <!--                            <div class="banner-single-item banner-style-2 banner-animation img-responsive"-->
+                        <!--                                 data-aos="fade-up" data-aos-delay="0">-->
+                        <!--                                <div class="image">-->
+                        <!--                                    <img src="https://kallos.co/cdn/shop/products/85_White_GX2214_01_standard.jpg?v=1674061939" alt="">-->
+                        <!--                                </div>-->
+                        <!--                                <div class="content">-->
+                        <!--                                    <h4 class="title">Adidas Centennial 85 Low<br>-->
+                        <!--                                        stools</h4>-->
+                        <!--                                    <a href="../product-details-default.html" class="link-text"><span>Mua-->
+                        <!--                                                ngay</span></a>-->
+                        <!--                                </div>-->
+                        <!--                            </div>-->
+                        <!--                        </div>-->
+                        <!--                        &lt;!&ndash; End Banner Single Item &ndash;&gt;-->
                     </div>
                 </div>
             </div>
@@ -1224,7 +1144,8 @@
         <div class="banner-single-item banner-style-4 banner-animation banner-color--golden float-left img-responsive"
              data-aos="fade-up" data-aos-delay="0">
             <div class="image">
-                <img class="img-fluid" src="https://vapa.vn/wp-content/uploads/2022/12/hinh-nen-nike-001.jpg" alt="" style="weight:421px; height:588px">
+                <img class="img-fluid" src="https://vapa.vn/wp-content/uploads/2022/12/hinh-nen-nike-001.jpg" alt=""
+                     style="weight:421px; height:588px">
             </div>
             <a href="../product-details-default.html" class="content">
                 <div class="inner">
@@ -1239,7 +1160,8 @@
         <div class="banner-single-item banner-style-4 banner-animation banner-color--golden float-left img-responsive"
              data-aos="fade-up" data-aos-delay="200">
             <div class="image">
-                <img class="img-fluid" src="https://i.pinimg.com/236x/1c/d1/bb/1cd1bb912c470e7d0ce0c0958277b32a.jpg" alt="" style="weight:421px; height:588px">
+                <img class="img-fluid" src="https://i.pinimg.com/236x/1c/d1/bb/1cd1bb912c470e7d0ce0c0958277b32a.jpg"
+                     alt="" style="weight:421px; height:588px">
             </div>
             <a href="../product-details-default.html" class="content">
                 <div class="inner">
@@ -1254,7 +1176,8 @@
         <div class="banner-single-item banner-style-4 banner-animation banner-color--golden float-left img-responsive"
              data-aos="fade-up" data-aos-delay="400">
             <div class="image">
-                <img class="img-fluid" src="https://img.salehere.co.th/p/1200x0/2020/04/07/9yxxc2ucoxtk.jpg" alt="" style="weight:421px; height:588px">
+                <img class="img-fluid" src="https://img.salehere.co.th/p/1200x0/2020/04/07/9yxxc2ucoxtk.jpg" alt=""
+                     style="weight:421px; height:588px">
             </div>
             <a href="../product-details-default.html" class="content">
                 <div class="inner">
@@ -1269,7 +1192,9 @@
         <div class="banner-single-item banner-style-4 banner-animation banner-color--golden float-left img-responsive"
              data-aos="fade-up" data-aos-delay="600">
             <div class="image">
-                <img class="img-fluid" src="https://i.pinimg.com/originals/f3/3f/7f/f33f7fc07e5b5f7c519c1e444d88a18b.jpg" alt="" style="weight:421px; height:588px">
+                <img class="img-fluid"
+                     src="https://i.pinimg.com/originals/f3/3f/7f/f33f7fc07e5b5f7c519c1e444d88a18b.jpg" alt=""
+                     style="weight:421px; height:588px">
             </div>
             <a href="../product-details-default.html" class="content">
                 <div class="inner">
@@ -1506,80 +1431,6 @@
 <!--</div>-->
 <!--&lt;!&ndash; End Instagramr Section &ndash;&gt;-->
 
-<!-- Start Footer Section -->
-<footer class="footer-section footer-bg section-top-gap-100">
-    <div class="footer-wrapper">
-        <!-- Start Footer Top -->
-        <div class="footer-top">
-            <div class="container">
-                <div class="row mb-n6">
-                    <div class="col-lg-3 col-sm-6 mb-6">
-                        <!-- Start Footer Single Item -->
-                        <div class="footer-widget-single-item footer-widget-color--golden" data-aos="fade-up"
-                             data-aos-delay="0">
-                            <h5 class="title">INFORMATION</h5>
-                            <ul class="footer-nav">
-                                <li><a href="#">Delivery Information</a></li>
-                                <li><a href="#">Terms & Conditions</a></li>
-                                <li><a href="../contact-us.html">Contact</a></li>
-                                <li><a href="#">Returns</a></li>
-                            </ul>
-                        </div>
-                        <!-- End Footer Single Item -->
-                    </div>
-                    <div class="col-lg-3 col-sm-6 mb-6">
-                        <!-- Start Footer Single Item -->
-                        <div class="footer-widget-single-item footer-widget-color--golden" data-aos="fade-up"
-                             data-aos-delay="200">
-                            <h5 class="title">MY ACCOUNT</h5>
-                            <ul class="footer-nav">
-                                <li><a href="../productwebsite/my-account.html">My account</a></li>
-                                <li><a href="../wishlist.html">Wishlist</a></li>
-                                <li><a href="../privacy-policy.html">Privacy Policy</a></li>
-                                <li><a href="../faq.html">Frequently Questions</a></li>
-                                <li><a href="#">Order History</a></li>
-                            </ul>
-                        </div>
-                        <!-- End Footer Single Item -->
-                    </div>
-                    <div class="col-lg-3 col-sm-6 mb-6">
-                        <!-- Start Footer Single Item -->
-                        <div class="footer-widget-single-item footer-widget-color--golden" data-aos="fade-up"
-                             data-aos-delay="400">
-                            <h5 class="title">CATEGORIES</h5>
-                            <ul class="footer-nav">
-                                <li><a href="#">Decorative</a></li>
-                                <li><a href="#">Kitchen utensils</a></li>
-                                <li><a href="#">Chair & Bar stools</a></li>
-                                <li><a href="#">Sofas and Armchairs</a></li>
-                                <li><a href="#">Interior lighting</a></li>
-                            </ul>
-                        </div>
-                        <!-- End Footer Single Item -->
-                    </div>
-                    <div class="col-lg-3 col-sm-6 mb-6">
-                        <!-- Start Footer Single Item -->
-                        <div class="footer-widget-single-item footer-widget-color--golden" data-aos="fade-up"
-                             data-aos-delay="600">
-                            <h5 class="title">ABOUT US</h5>
-                            <div class="footer-about">
-                                <p>We are a team of designers and developers that create high quality Magento,
-                                    Prestashop, Opencart.</p>
-
-                                <address class="address">
-                                    <span>Address: Your address goes here.</span>
-                                    <span>Email: demo@example.com</span>
-                                </address>
-                            </div>
-                        </div>
-                        <!-- End Footer Single Item -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</footer>
-
 <!-- End Footer Section -->
 
 <!-- material-scrolltop button -->
@@ -1808,11 +1659,6 @@
     </div>
 </div> <!-- End Modal Quickview cart -->
 
-<script src="/assets/js/vendor/vendor.min.js"></script>
-<script src="/assets/js/plugins/plugins.min.js"></script>
-
-<!-- Main JS -->
-<script src="/assets/js/main.js"></script>
 </body>
 
 
