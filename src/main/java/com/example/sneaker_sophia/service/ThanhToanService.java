@@ -66,7 +66,7 @@ public class ThanhToanService {
         hoaDon.setLoaiHoaDon(3);
         hoaDon.setTenKhachHang(taiKhoan.getTen());
         hoaDon.setSoDienThoai(taiKhoan.getSdt());
-        hoaDon.setDiaChi(diaChi + "-" + xa + "-" + huyen + "-" + tinh);
+        hoaDon.setDiaChi(diaChi + ", " + xa + ", " + huyen + ", " + tinh);
         hoaDon.setPhiShip(20000.0);
         hoaDon.setTrangThai(3);
         hoaDon.setTongTien(0.0);

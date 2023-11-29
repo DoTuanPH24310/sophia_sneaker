@@ -233,7 +233,7 @@ public class EmailService {
         hoaDonMoi.setLoaiHoaDon(3);
         hoaDonMoi.setTenKhachHang(taiKhoan.getTen());
         hoaDonMoi.setSoDienThoai(taiKhoan.getSdt());
-        hoaDonMoi.setDiaChi(diaChi + "-" + xa + "-" + huyen + "-" + tinh);
+        hoaDonMoi.setDiaChi(diaChi + ", " + xa + ", " + huyen + ", " + tinh);
         hoaDonMoi.setPhiShip(20000.0);
         hoaDonMoi.setTienThua(0.0);
         hoaDonMoi.setTrangThai(3);
