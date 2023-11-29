@@ -656,7 +656,7 @@
 
                             <siv class="col-4">
                                 <button class="btn btn-primary mx-2" onclick="findKH();">Tìm kiếm</button>
-                                <button href="" class="btn btn-primary" onclick="findAllKH();">Làm mới</button>
+                                <button href="" class="btn btn-danger" onclick="findAllKH();">Làm mới</button>
                             </siv>
                         </div>
 
@@ -697,7 +697,7 @@
 
     <!-- Modal đổi địa chỉ -->
     <div class="modal fade" id="modalDoiDiaChi" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" style="max-width: 1300px;">
+        <div class="modal-dialog" style="max-width: 1350px;">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Danh sách địa chỉ</h5>
@@ -726,17 +726,17 @@
                         </div>
 
                         <div class="row">
-                            <div class="table table-wrapper-scroll-y my-custom-scrollbar">
+                            <div class="table table-wrapper-scroll-y my-custom-scrollbar" style="height: 450px">
                                 <table id="table" class="table  table-borderless  formTable">
                                     <thead>
                                     <tr class="bg-light">
-                                        <th width="10%">Tên/SĐT</th>
-                                        <th width="8%">D/c cụ thể</th>
+                                        <th width="12%">Tên/SĐT</th>
+                                        <th width="12%">D/c cụ thể</th>
                                         <th width="17%">Phường/xã</th>
                                         <th width="17%">Quận/Huyện</th>
                                         <th width="17%">Tỉnh/Thành Phố</th>
-                                        <th width="13%">Trạng thái</th>
-                                        <th width="18%">Thao tác</th>
+                                        <th width="6%">Trạng thái</th>
+                                        <th width="19%">Thao tác</th>
                                     </tr>
                                     </thead>
                                     <tbody id="tbodyDDC">
@@ -888,7 +888,7 @@
                             <video id="video" height="500px" autoplay></video>
                         </div>
                         <div class="row" style="float: bottom">
-                            <div class="col-6">
+                            <div  class="col-6">
                                 <div id="result" class="mt-1" th:text="${qrCodeResult}"></div>
                             </div>
                             <div class="col-6" style="float: right">
@@ -1415,6 +1415,7 @@
             buttonChon.text = 'Chọn'
             buttonChon.classList.add('btn');
             buttonChon.classList.add('btn-warning');
+            buttonChon.style.display = 'inline';
 
 
             buttonSua.href = '/admin/tai-quay/deleteDC/' + x.id + '#labelKhachhang';
@@ -1422,6 +1423,7 @@
             buttonSua.classList.add('btn');
             buttonSua.classList.add('btn-danger');
             buttonSua.classList.add('mx-1');
+            buttonSua.style.display = 'inline';
             buttonSua.addEventListener("click", function (event) {
                 let x = confirm("Bạn chắc chắn muốn xóa");
                 if (!x) {
@@ -1431,15 +1433,15 @@
 
             let row = tbodyDDC.insertRow();
             let idHTML = index + 1;
-            let selectTinh = '<select disabled id="province' + idHTML + '" class="form-control text-center"></select>'
-            let selectQuan = '<select disabled id="district' + idHTML + '" class="form-control text-center"></select>'
-            let selectXa = '<select disabled id="ward' + idHTML + '" class="form-control text-center"></select>'
+            let selectTinh = '<select disabled id="province' + idHTML + '" class="text-center" style="border: 0px;appearance: none;"></select>'
+            let selectQuan = '<select disabled id="district' + idHTML + '" class="text-center" style="border: 0px;appearance: none;"></select>'
+            let selectXa = '<select disabled id="ward' + idHTML + '" class="text-center" style="border: 0px;appearance: none;"></select>'
             let checkBox = '';
 
             if (x.diaChiMacDinh == 1) {
-                checkBox = '  <button class="btn btn-success">Mặc định</button>';
+                checkBox = '<button style="font-size: 10px" class="btn btn-success">Mặc định</button>';
             }
-            row.insertCell().innerHTML = x.ten + '/' + x.sdt;
+            row.insertCell().innerHTML = x.ten + '<br>' + x.sdt;
             row.insertCell().innerHTML = x.diaChiCuThe;
             row.insertCell().innerHTML = selectXa;
             row.insertCell().innerHTML = selectQuan;

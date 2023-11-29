@@ -1089,7 +1089,7 @@
     document.getElementById("btnThanhToan").addEventListener("click", function (event) {
         event.preventDefault();
 
-
+        const formThanhToan = document.getElementById("formThanhToan");
         var paymentMethod = document.querySelector('input[name="hinhThucThanhToan"]:checked').id;
         if (paymentMethod === "currencyCod") {
             let selectTinh = document.getElementById('province');
@@ -1119,16 +1119,13 @@
             formThanhToan.submit();
             let tenn = document.getElementById('nameTen').value;
             let sdtn = document.getElementById('nameSoDienThoai').value;
-            let emailn = document.getElementById('nameEmail').value;
             let tinhh = document.getElementById('province').value;
             let quanHuyenn = document.getElementById('district').value;
             let phuongXan = document.getElementById('ward').value;
             let diaChiCuThen = document.getElementById('nameDiaChiCuThe').value;
-
             if (
                 tenn != null && tenn.trim() !== '' &&
                 sdtn != null && sdtn.trim() !== '' &&
-                emailn != null && emailn.trim() !== '' &&
                 tinhh != null && tinhh.trim() !== '' &&
                 quanHuyenn != null && quanHuyenn.trim() !== '' &&
                 phuongXan != null && phuongXan.trim() !== '' &&

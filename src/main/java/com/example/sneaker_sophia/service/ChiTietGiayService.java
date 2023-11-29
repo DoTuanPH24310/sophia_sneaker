@@ -54,7 +54,7 @@ public class ChiTietGiayService {
 
 
     public List<ChiTietGiay> findAllByTrangThaiEquals(int trangThai) {
-        return chiTietGiayRepository.findAllByTrangThaiEquals(trangThai);
+        return chiTietGiayRepository.findAllAndOrder(trangThai);
     }
 
     public List<String> findIdByIdGiay(List<String> listIDGiay) {
@@ -122,7 +122,7 @@ public class ChiTietGiayService {
     public static final int PRODUCT_DETAIL_PER_PAGE = 10;
 
     public List<ChiTietGiay> getAll() {
-        return chiTietGiayRepository.findAll();
+        return chiTietGiayRepository.findAllAndOrder(0);
     }
 
     public void save(ChiTietGiay chiTietGiay) {

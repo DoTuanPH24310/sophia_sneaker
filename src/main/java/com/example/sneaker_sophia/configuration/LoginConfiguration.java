@@ -52,6 +52,10 @@ public class LoginConfiguration {
                         .successHandler(new CustomSuccessHandler())
                         .permitAll()
                 )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login/home")
+                )
                 .exceptionHandling(exceptions -> exceptions
                         .accessDeniedPage("/login/home")
                         .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login/home"))
