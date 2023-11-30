@@ -111,6 +111,21 @@ public class EmailService {
         guiEmail(message);
     }
 
+    public void guiEmailOTP(String email, String matKhau) {
+        if (email == null) {
+            System.err.println("Email address is null");
+            return;
+        }
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(email);
+        message.setSubject("Cảm ơn bạn đã sử mua hàng tại sophia-store");
+        message.setText("Chúng tôi đã nhận được yêu cầu của bạn." +
+                "\n  Mã OTP của bạn là: " + matKhau);
+
+        guiEmail(message);
+    }
+
     public void guiEmailXacNhanThanhToan(String email, HoaDon hoaDon) {
         if (email == null) {
             System.err.println("Email address is null");

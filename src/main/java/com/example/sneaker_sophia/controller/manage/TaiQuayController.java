@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import java.awt.*;
 import java.io.IOException;
 import java.text.NumberFormat;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
@@ -169,10 +170,24 @@ public class TaiQuayController {
 
         // giam slt trong km
         List<Voucher> voucherList = kmService.getAllKMByIdctg(idCTG);
-
+        Voucher voucherCTG = kmService.getKMByIdctg(idCTG);
 
         if (chiTietGiayService.tongKMByIdctg(idCTG) != null) {
-            hoaDonChiTiet.setPhanTramGiam(chiTietGiayService.tongKMByIdctg(idCTG));
+            if (hoaDonChiTietOld != null) {
+                if(voucherCTG.getSoLuong() >= soLuong){
+                    hoaDonChiTiet.setPhanTramGiam((chiTietGiayService.tongKMByIdctg(idCTG) * soLuong) + hoaDonChiTietOld.getPhanTramGiam());
+                }else{
+                    hoaDonChiTiet.setPhanTramGiam((chiTietGiayService.tongKMByIdctg(idCTG) * voucherCTG.getSoLuong()) + hoaDonChiTietOld.getPhanTramGiam());
+                }
+
+            }
+            else{
+                if(voucherCTG.getSoLuong() >= soLuong){
+                    hoaDonChiTiet.setPhanTramGiam((chiTietGiayService.tongKMByIdctg(idCTG) * soLuong));
+                }else {
+                    hoaDonChiTiet.setPhanTramGiam((chiTietGiayService.tongKMByIdctg(idCTG) * voucherCTG.getSoLuong()));
+                }
+            }
         } else {
             if (hoaDonChiTietOld != null) {
                 hoaDonChiTiet.setSoLuongGiam(hoaDonChiTietOld.getSoLuongGiam());
@@ -218,8 +233,9 @@ public class TaiQuayController {
             kmService.saveVC(voucher);
 
         }
-
+        LocalDateTime localDateTime = LocalDateTime.now();
         hoaDonChiTiet.setDonGia(chiTietGiay.getGia());
+        hoaDonChiTiet.setCreatedDate(localDateTime);
 //        hoaDonChiTiet.setIdHoaDonCT(idHoaDonCT);
         hoaDonChiTiet.setHoaDon(hoaDonService.getHoaDonById(tempIdHD));
         hoaDonChiTiet.setChiTietGiay(chiTietGiay);
@@ -274,7 +290,9 @@ public class TaiQuayController {
         for (HoaDonChiTiet hdct : listhdct) {
             UUID idctg = hdct.getChiTietGiay().getId();
             String avtctg = anhRepository.getAnhChinhByIdctg(idctg);
-            tongTien += (hdct.getDonGia() * (1 - ((hdct.getPhanTramGiam()) / 100.0)) * hdct.getSoLuongGiam()) +
+//            tongTien += (hdct.getDonGia() * (1 - ((hdct.getPhanTramGiam()) / 100.0)) * hdct.getSoLuongGiam()) +
+//                    (hdct.getDonGia() * (hdct.getSoLuong() - hdct.getSoLuongGiam()));
+            tongTien += ((hdct.getSoLuongGiam() * hdct.getDonGia()) - ((((hdct.getPhanTramGiam()) / 100.0)) * hdct.getDonGia())) +
                     (hdct.getDonGia() * (hdct.getSoLuong() - hdct.getSoLuongGiam()));
             avtctgMap.put(idctg, avtctg);
             model.addAttribute("avtctgMap", avtctgMap);
@@ -610,6 +628,9 @@ public class TaiQuayController {
         HinhThucThanhToan hinhThucThanhToan = htttService.getHTTTByIdhd(tempIdHD);
         phiVanChuyen = phiVanChuyen.replaceAll("[^\\d]", "");
         tienKhachDua = tienKhachDua.replaceAll("[^\\d]", "");
+
+
+
         try {
             Double phiShip = Double.parseDouble(phiVanChuyen);
             if (phiShip < 0) {

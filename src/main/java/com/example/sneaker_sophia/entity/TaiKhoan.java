@@ -93,7 +93,9 @@ public class TaiKhoan {
     public TaiKhoan(TaiKhoanRequest nhanVienRequest) {
         this.setTen(nhanVienRequest.getTen());
         this.setEmail(nhanVienRequest.getEmail());
-        this.setNgaySinh(LocalDate.parse(nhanVienRequest.getNgaySinh()));
+        if (!nhanVienRequest.getNgaySinh().equals("")){
+            this.setNgaySinh(LocalDate.parse(nhanVienRequest.getNgaySinh()));
+        }
         this.setGioiTinh(Integer.parseInt(nhanVienRequest.getGioiTinh()));
         this.setCanCuoc(nhanVienRequest.getCanCuoc());
         this.setSdt(nhanVienRequest.getSdt());
@@ -102,5 +104,12 @@ public class TaiKhoan {
         this.setVaiTro(VaiTro.builder().id(nhanVienRequest.getIdVaiTro()).build());
     }
 
+    public void getTaiKhoanKH(TaiKhoanRequest taiKhoanRequest){
+        this.setTen(taiKhoanRequest.getTen());
+        this.setEmail(taiKhoanRequest.getEmail());
+        this.setSdt(taiKhoanRequest.getSdt());
+        this.setMatKhau(taiKhoanRequest.getMatKhau());
+        this.setVaiTro(VaiTro.builder().id(taiKhoanRequest.getIdVaiTro()).build());
+    }
 
 }

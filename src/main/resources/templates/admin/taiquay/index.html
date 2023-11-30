@@ -164,23 +164,23 @@
                         </td>
 
                         <td>
-                            <span th:if="${hdct.donGia * hdct.soLuong == ((hdct.donGia * (1- ((hdct.phanTramGiam) / 100.0)) * hdct.soLuongGiam)
-                                              + (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}">
+                            <span th:if="${hdct.donGia * hdct.soLuong == (((hdct.soLuongGiam * hdct.donGia) - ((((hdct.phanTramGiam) / 100.0)) * hdct.donGia)) +
+                    (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}">
 
-                                                 <span th:text="${#numbers.formatCurrency((hdct.donGia * (1- ((hdct.phanTramGiam) / 100.0)) * hdct.soLuongGiam)
-                                              + (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}"
+                                                 <span th:text="${#numbers.formatCurrency(((hdct.soLuongGiam * hdct.donGia) - ((((hdct.phanTramGiam) / 100.0)) * hdct.donGia)) +
+                    (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}"
                                                        style="font-size: 15px"></span>
                             </span>
 
 
-                            <span th:unless="${hdct.donGia * hdct.soLuong == ((hdct.donGia * (1- ((hdct.phanTramGiam) / 100.0)) * hdct.soLuongGiam)
-                                              + (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}">
+                            <span th:unless="${hdct.donGia * hdct.soLuong == (((hdct.soLuongGiam * hdct.donGia) - ((((hdct.phanTramGiam) / 100.0)) * hdct.donGia)) +
+                    (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}">
                                 <span th:text="${#numbers.formatCurrency(hdct.donGia * hdct.soLuong)}"
                                       style="text-decoration: line-through; color: red; font-size: 13px"></span>
                                                             <br>
                                 <!--                                                            hdct.soLuong * (hdct.donGia - (hdct.donGia * ((hdct.phanTramGiam) / 100.0))) -->
-                                             <span th:text="${#numbers.formatCurrency((hdct.donGia * (1- ((hdct.phanTramGiam) / 100.0)) * hdct.soLuongGiam)
-                                              + (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}"
+                                             <span th:text="${#numbers.formatCurrency(((hdct.soLuongGiam * hdct.donGia) - ((((hdct.phanTramGiam) / 100.0)) * hdct.donGia)) +
+                    (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}"
                                                    style="font-size: 15px"></span>
                             </span>
                         </td>
@@ -1494,6 +1494,7 @@
                     url: 'http://localhost:8080/api/hoa-don/updateGiaoHang/' + idHoaDon,
                 })
             } else {
+
                 if(tthd == 4){
                     customSwitches.checked = true;
                     let type = 'error';
