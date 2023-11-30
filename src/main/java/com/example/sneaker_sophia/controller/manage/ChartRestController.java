@@ -34,13 +34,14 @@ public class ChartRestController {
                                               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime ngayBatDau,
                                               @RequestParam(name = "ngayKetThuc", required = false)
                                               @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime ngayKetThuc,
+                                              @RequestParam(name = "unit", required = false) String unit,
                                               Model model) {
         // Trừ đi một năm từ endDate
         LocalDateTime endDateMinusOneYear = ngayKetThuc.minus(1, ChronoUnit.YEARS);
         LocalDateTime startDateMinusOneYear = ngayBatDau.minus(1, ChronoUnit.YEARS);
 
         // Gọi truy vấn với tham số endDateMinusOneYear
-        List<Object[]> result = hoaDonService.getDoanhThuTheoThang(ngayBatDau, ngayKetThuc,  hoaDonWebRepository.determineTimeUnit(ngayBatDau, ngayKetThuc), endDateMinusOneYear,startDateMinusOneYear);
+        List<Object[]> result = hoaDonService.getDoanhThuTheoThang(ngayBatDau, ngayKetThuc, unit, endDateMinusOneYear,startDateMinusOneYear);
         model.addAttribute("listHDCT", hoaDonChiTietDTService.findAll());
         return result;
     }

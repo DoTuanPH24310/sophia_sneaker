@@ -48,6 +48,7 @@ var areaChart = document.getElementById("myAreaChart");
 // Lấy các phần tử DOM của ô ngày bắt đầu và kết thúc
 var ngayBatDauInput = document.getElementById("NBDHoaDon");
 var ngayKetThucInput = document.getElementById("NKTHoaDon");
+var unit = document.getElementById("unit");
 
 // Sự kiện khi giá trị của ô ngày bắt đầu thay đổi
 ngayBatDauInput.addEventListener("input", function () {
@@ -63,15 +64,22 @@ ngayKetThucInput.addEventListener("input", function () {
     callApiAndUpdateBarChart();
 });
 
+unit.addEventListener("select", function () {
+    callApiAndUpdateChart();
+    callApiAndUpdatePieChart();
+    callApiAndUpdateBarChart();
+});
+
 // Hàm gọi API và cập nhật biểu đồ
 function callApiAndUpdateChart() {
     // Lấy giá trị từ ô ngày bắt đầu và ngày kết thúc
     var ngayBatDau = ngayBatDauInput.value;
     var ngayKetThuc = ngayKetThucInput.value;
+    var unit = ngayKetThucInput.value;
 
     // Tạo URL với thông tin ngày
     var url = "http://localhost:8080/api/chart/revenue?ngayBatDau=" + encodeURIComponent(ngayBatDau) + "&ngayKetThuc=" + encodeURIComponent(ngayKetThuc);
-
+    console.log('sá'+url)
     // Gửi request đến URL tương ứng
     fetch(url)
         .then(response => response.json())

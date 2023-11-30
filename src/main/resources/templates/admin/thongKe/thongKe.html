@@ -18,33 +18,6 @@
             margin-left: 15px;
         }
     </style>
-<!--    <script>-->
-<!--        document.addEventListener('DOMContentLoaded', function () {-->
-<!--            var thongKeForm = document.getElementById('thongKeForm');-->
-<!--            var ngayBatDauInput = document.getElementById('NBDHoaDon');-->
-<!--            var ngayKetThucInput = document.getElementById('NKTHoaDon');-->
-
-<!--            ngayBatDauInput.addEventListener('change', function () {-->
-<!--                thongKeForm.submit();-->
-<!--            });-->
-
-<!--            ngayKetThucInput.addEventListener('change', function () {-->
-<!--                thongKeForm.submit();-->
-<!--            });-->
-<!--        });-->
-<!--    </script>-->
-<!--    <script th:inline="javascript">-->
-<!--        $(document).ready(function () {-->
-<!--            // Lấy giá trị từ model và đặt cho các input fields-->
-<!--            var ngayBatDau = /*[[${ngayBatDau}]]*/ '';-->
-<!--            var ngayKetThuc = /*[[${ngayKetThuc}]]*/ '';-->
-
-<!--            // Đặt giá trị cho input fields-->
-<!--            $('#NBDHoaDon').val(ngayBatDau);-->
-<!--            $('#NKTHoaDon').val(ngayKetThuc);-->
-<!--        });-->
-<!--    </script>-->
-
 
 </head>
 <body>
@@ -64,6 +37,17 @@
                     <div class="form-floating">
                         <input type="datetime-local" class="form-control" name="ngayKetThuc" id="NKTHoaDon"/>
                         <label for="NKTHoaDon" class="form-label">Đến ngày</label>
+                    </div>
+                </div>
+
+                <div class="col-2">
+                    <div class="form-floating">
+                        <select name="unit" id="unit" class="form-control">
+                            <option value="MONTH">Tháng</option>
+                            <option value="DAY">Ngày</option>
+                            <option value="YEAR">Năm</option>
+                        </select>
+                        <label for="NKTHoaDon" class="form-label">Thống kê theo</label>
                     </div>
                 </div>
             </form>
