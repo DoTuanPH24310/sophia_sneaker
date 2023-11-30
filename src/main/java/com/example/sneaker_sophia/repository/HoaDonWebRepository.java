@@ -1,5 +1,6 @@
 package com.example.sneaker_sophia.repository;
 
+import com.example.sneaker_sophia.entity.ChiTietGiay;
 import com.example.sneaker_sophia.entity.HoaDon;
 import com.example.sneaker_sophia.entity.TaiKhoan;
 import org.springframework.data.jpa.repository.JpaRepository;
