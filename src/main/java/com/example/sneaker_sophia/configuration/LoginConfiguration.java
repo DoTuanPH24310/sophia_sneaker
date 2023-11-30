@@ -38,12 +38,10 @@ public class LoginConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
         http.csrf().disable().cors().disable();
         http
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
-//                        .requestMatchers("/user/**").hasAuthority("USER")
                         .anyRequest().permitAll()
                 )
                 .formLogin(login -> login
@@ -52,6 +50,10 @@ public class LoginConfiguration {
                         .successHandler(new CustomSuccessHandler())
                         .permitAll()
                 )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login/home")
+                )
                 .exceptionHandling(exceptions -> exceptions
                         .accessDeniedPage("/login/home")
                         .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login/home"))
@@ -59,6 +61,7 @@ public class LoginConfiguration {
 
         return http.build();
     }
+
 
     @Bean
     public AuthenticationSuccessEventListener customAuthenticationSuccessEventListener() {

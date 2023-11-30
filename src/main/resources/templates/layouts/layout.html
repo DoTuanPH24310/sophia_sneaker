@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html lang="en" xmlns:th="http://www.thymeleaf.org"  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.ultraq.net.nz/thymeleaf/layout ">
 
@@ -22,24 +22,21 @@
         }
          .notifications {
              position: fixed;
-             top: 81px;
-             left: 1170px;
+             top: 30px;
+             right: -20px;
          }
 
 
 
         .thongBao {
             position: relative;
-            color: #fff;
             margin-bottom: 10px;
-            width: 300px;
+            width: 350px;
             display: grid;
-            grid-template-columns: 70px 1fr 70px;
-            border-radius: 5px;
+            background-color: white;
+            grid-template-columns: 60px 1fr 70px;
+            box-shadow: 2px 2px 4px 4px #999999;
             --color: #0abf30;
-            background-image: linear-gradient(
-                    to right, #0abf3055, #22242f 150%
-            );
             animation: show 0.3s ease 1 forwards
         }
 
@@ -48,17 +45,16 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: x-large;
+            font-size: 20px;
         }
 
         .thongBao .title {
-            font-size: 23px;
-            font-weight: bold;
+            font-size: 18px;
+            color: black;
         }
 
         .thongBao span, .thongBao i:nth-child(3) {
-            color: #fff;
-            opacity: 0.8;
+            color: black;
         }
 
         @keyframes show {
@@ -84,8 +80,7 @@
             width: 100%;
             height: 3px;
             content: '';
-            box-shadow: 0 0 10px var(--color);
-            animation: timeOut 2s linear 1 forwards
+            animation: timeOut 3s linear 1 forwards
         }
 
         @keyframes timeOut {
@@ -96,9 +91,7 @@
 
         .thongBao.error {
             --color: #f24d4c;
-            background-image: linear-gradient(
-                    to right, rgba(241, 77, 76, 0.33), #22242F 100%
-            );
+            box-shadow: 2px 2px 4px 4px #999999;
         }
 
 
@@ -134,6 +127,7 @@
 <div class="wrapper">
 
     <nav id="sidebar">
+        <div class="notifications"></div>
         <div class="sidebar-header">
             <h3><img src="/img/logosophia.jpg" class="img-fluid"/><span>SOPHIA STORE</span></h3>
         </div>
@@ -294,7 +288,7 @@
 
             </div>
         </div>
-        <div class="notifications"></div>
+
         <div class="main-content" style=" background-color: #EAEAEA;">
             <div class="row">
                 <section layout:fragment="content">
@@ -306,9 +300,53 @@
 
 </div>
 
-<script type="text/javascript">
-    function thongBao(s) {
-        alert(s);
+<script th:inline="javascript">
+    const notifications = document.querySelector('.notifications');
+    const errhd = [[${session.errTaiQuay}]];
+    const successhd =[[${session.successTaiQuay}]]
+    if (errhd != null) {
+        window.addEventListener("DOMContentLoaded", function () {
+            let type = 'error';
+            let icon = 'fa-solid fa-circle-exclamation';
+            let title = 'Thất bại!';
+            let text = errhd;
+            createToast(type, icon, title, text);
+            removeSeesion('errTaiQuay');
+        })
+    }
+    if (successhd != null){
+        window.addEventListener("DOMContentLoaded", function () {
+            let type = 'success';
+            let icon = 'fa-solid fa-circle-check';
+            let title = 'Thành công!';
+            let text = successhd;
+            createToast(type, icon, title, text);
+            removeSeesion('successTaiQuay');
+        })
+    }
+
+    function removeSeesion(name) {
+        $.ajax({
+            type: 'get',
+            url: 'http://localhost:8080/api/hoa-don/deleteSession/' + name,
+        })
+    }
+
+    function createToast(type, icon, title, text) {
+        let newToast = document.createElement('div');
+        newToast.innerHTML = `
+            <div class="thongBao ${type}">
+                <i class="${icon}"></i>
+                <div class="content">
+                    <div class="title">${title}</div>
+                    <span>${text}</span>
+                </div>
+                <i class="fa-solid fa-xmark" onclick="(this.parentElement).remove()"></i>
+            </div>`;
+        notifications.appendChild(newToast);
+        newToast.timeOut = setTimeout(
+            ()=>newToast.remove(), 3000
+        )
     }
 
     $(document).ready(function () {
@@ -322,16 +360,6 @@
         });
 
     });
-
-    // $(document).ready(function () {
-    //     $('#exampleModal').modal('show');
-    // });
-    //
-    // $(document).ready(function () {
-    //     $('#modalSoLuong').modal('show');
-    // });
-
-
 </script>
 </body>
 
