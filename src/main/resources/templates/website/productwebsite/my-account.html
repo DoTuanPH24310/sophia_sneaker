@@ -8,10 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <title>HONO - Multi Purpose HTML Template</title>
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-          rel="stylesheet"/>
+    <!--    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"-->
+    <!--          rel="stylesheet"/>-->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
 </head>
 <style>
     .btn-white-text-hover {
@@ -201,8 +200,8 @@
                         </li>
                         <li><a href="#orders" data-bs-toggle="tab"
                                class="nav-link btn btn-block btn-md btn-black-default-hover">Lịch sử mua</a></li>
-                        <li><a href="#address" data-bs-toggle="tab"
-                               class="nav-link btn btn-block btn-md btn-black-default-hover">Địa chỉ</a></li>
+                        <!--                        <li><a href="#address" data-bs-toggle="tab"-->
+                        <!--                               class="nav-link btn btn-block btn-md btn-black-default-hover">Địa chỉ</a></li>-->
                         <li><a th:href="@{/logout}"
                                class="nav-link btn btn-block btn-md btn-black-default-hover">Đăng xuất</a></li>
                     </ul>
@@ -235,7 +234,8 @@
                                     <td th:if="${hd.trangThai == 1}">Hoàn thành</td>
                                     <td th:if="${hd.trangThai == 6}">Hủy</td>
 
-                                    <td><a th:href="@{/my-account/detail/{idhd}(idhd=${hd.id})}" class="view btn btn-success">Xem</a></td>
+                                    <td><a th:href="@{/my-account/detail/{idhd}(idhd=${hd.id})}"
+                                           class="view btn btn-success">Xem</a></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -270,71 +270,6 @@
                             </table>
                         </div>
                     </div>
-                    <div class="tab-pane" id="address">
-                        <div class="container row">
-                            <div class="col-6">
-                                <div class="default-form-box">
-                                    <span style="font-size: 20px; float:left;">Địa chỉ</span>
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <!-- Thêm địa chỉ theo id tai khoản -->
-
-
-
-                            </div>
-                        </div>
-                        <div class="container" th:each="listDiaChi, start : ${diaChiList}">
-                            <div class="mt-5">
-                                <div class="d-style btn btn-brc-tp border-2 bgc-white btn-outline-blue btn-h-outline-blue btn-a-outline-blue w-100  shadow-sm">
-                                    <div class="row align-items-center">
-                                        <div class="col-12">
-                                            <span style="float: left"
-                                                  class="pt-3 text-170 text-600 text-primary-d1 letter-spacing"
-                                                  th:text="${listDiaChi.ten + ' | ' + listDiaChi.sdt}"></span>
-                                        </div>
-
-                                        <div class="col-12">
-                                            <div class="default-form-box">
-                                                <span style="float:left;" th:text="${listDiaChi.diaChiCuThe}"></span>
-                                            </div>
-
-                                        </div>
-                                        <div class="col-8">
-                                            <div style="float: left" class="default-form-box">
-                                                <!--                                                <input th:value="${listDiaChi.phuongXa}" readonly="readonly"-->
-                                                <!--                                                       th:id="${'ward'+start.index}"-->
-                                                <!--                                                       type="text">-->
-                                                <span th:text="${listDiaChi.phuongXa}"
-                                                      th:id="${'ward'+start.index}"
-                                                      type="text"></span>
-                                                <span th:text="', '"></span>
-                                                <span th:text="${listDiaChi.quanHuyen}"
-                                                      th:id="${'district'+start.index}"
-                                                      type="text"></span>
-                                                <span th:text="', '"></span>
-                                                <span th:text="${listDiaChi.tinh}"
-                                                      th:id="${'province'+start.index}"
-                                                      type="text"></span>
-                                            </div>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="default-form-box">
-                                                <button th:if="${listDiaChi.diaChiMacDinh == 1}" class="btn btn-success "
-                                                        style="border-radius: 30px; font-size: 12px; height: 40px">
-                                                    Mặc định
-                                                </button>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                                <hr>
-                            </div>
-                        </div>
-                    </div>
-
-
 
 
                     <div class="tab-pane fade show active" id="account-details">
@@ -342,10 +277,12 @@
                         <div class="login">
                             <div class="login_form_container">
                                 <div class="account_login_form">
-                                    <form th:action="@{/my-account/update-account}" th:object="${account}" method="post">
+                                    <form th:action="@{/my-account/update-account}" th:object="${account}"
+                                          method="post">
                                         <div class="form-group mb-3">
                                             <label>Email</label>
-                                            <input type="text" class="form-control" th:field="*{email}" name="email-name" readonly>
+                                            <input type="text" class="form-control" th:field="*{email}"
+                                                   name="email-name" readonly>
                                             <span th:errors="*{email}" style="color: red"></span>
 
                                         </div>
@@ -353,14 +290,16 @@
                                         <div class="form-row">
                                             <div class="form-group col-md-6 mb-3">
                                                 <label>Tên</label>
-                                                <input type="text" class="form-control" th:field="*{ten}" name="ten-name">
+                                                <input type="text" class="form-control" th:field="*{ten}"
+                                                       name="ten-name">
                                                 <span th:errors="*{ten}" style="color: red"></span>
 
                                             </div>
 
                                             <div class="form-group col-md-6 mb-3">
                                                 <label>Số điện thoại</label>
-                                                <input type="text" class="form-control" th:field="*{sdt}" name="sdt-name">
+                                                <input type="text" class="form-control" th:field="*{sdt}"
+                                                       name="sdt-name">
                                                 <span th:errors="*{sdt}" style="color: red"></span>
 
                                             </div>
@@ -371,17 +310,20 @@
                                                 <div class="input-radio">
                                                     <div class="custom-control custom-radio custom-control-inline">
                                                         <input type="radio" id="namRadio" name="gioiTinh"
-                                                               class="custom-control-input" th:field="*{gioiTinh}" th:value="1">
+                                                               class="custom-control-input" th:field="*{gioiTinh}"
+                                                               th:value="1">
                                                         <label class="custom-control-label" for="namRadio">Nam</label>
                                                     </div>
                                                     <div class="custom-control custom-radio custom-control-inline">
                                                         <input type="radio" id="nuRadio" name="gioiTinh"
-                                                               class="custom-control-input" th:field="*{gioiTinh}" th:value="2">
+                                                               class="custom-control-input" th:field="*{gioiTinh}"
+                                                               th:value="2">
                                                         <label class="custom-control-label" for="nuRadio">Nữ</label>
                                                     </div>
                                                     <div class="custom-control custom-radio custom-control-inline">
                                                         <input type="radio" id="khacRadio" name="gioiTinh"
-                                                               class="custom-control-input" th:field="*{gioiTinh}" th:value="3">
+                                                               class="custom-control-input" th:field="*{gioiTinh}"
+                                                               th:value="3">
                                                         <label class="custom-control-label" for="khacRadio">Khác</label>
                                                     </div>
                                                     <span th:errors="*{gioiTinh}" style="color: red"></span>
@@ -391,14 +333,94 @@
 
                                             <div class="form-group col-md-6 mb-3">
                                                 <label>Ngày sinh</label>
-                                                <input type="date" class="form-control" th:field="*{ngaySinh}"  name="birthday" >
+                                                <input type="date" class="form-control" th:field="*{ngaySinh}"
+                                                       name="birthday">
                                                 <span th:errors="*{ngaySinh}" style="color: red"></span>
 
                                             </div>
                                         </div>
                                         <div class="save_button mt-3">
-                                            <button class="btn btn-dark btn-md btn-light" type="submit">Save</button>
+                                            <div class="row">
+                                                <div class="col-10">
+                                                    <p>
+                                                        <a class="btn btn-light" data-bs-toggle="collapse"
+                                                           href="#collapseExample" role="button" aria-expanded="false"
+                                                           aria-controls="collapseExample">
+                                                            Địa chỉ
+                                                        </a>
+                                                        <!--                                                        <button class="btn btn-primary" type="button"-->
+                                                        <!--                                                                data-toggle="collapse" data-target="#collapseExample"-->
+                                                        <!--                                                                aria-expanded="false" aria-controls="collapseExample">-->
+                                                        <!--                                                            Button with data-target-->
+                                                        <!--                                                        </button>-->
+                                                    </p>
+                                                    <div class="collapse" id="collapseExample">
+                                                        <div style="width: 827px;" class="card card-body">
+                                                            <div class="container"
+                                                                 th:each="listDiaChi, start : ${diaChiList}">
+                                                                <div class="mt-2">
+                                                                    <div class="d-style btn btn-brc-tp border-2 bgc-white btn-outline-blue btn-h-outline-blue btn-a-outline-blue w-100  shadow-sm">
+                                                                        <div class="row align-items-center">
+                                                                            <div class="col-12">
+                                            <span style="float: left"
+                                                  class="pt-3 text-170 text-600 text-primary-d1 letter-spacing"
+                                                  th:text="${listDiaChi.ten + ' | ' + listDiaChi.sdt}"></span>
+                                                                            </div>
+
+                                                                            <div class="col-12">
+                                                                                <div class="default-form-box">
+                                                                                        <span style="float:left;"
+                                                                                              th:text="${listDiaChi.diaChiCuThe}"></span>
+                                                                                </div>
+
+                                                                            </div>
+                                                                            <div class="col-8">
+                                                                                <div style="float: left"
+                                                                                     class="default-form-box">
+                                                                                    <!--                                                <input th:value="${listDiaChi.phuongXa}" readonly="readonly"-->
+                                                                                    <!--                                                       th:id="${'ward'+start.index}"-->
+                                                                                    <!--                                                       type="text">-->
+                                                                                    <span th:text="${listDiaChi.phuongXa}"
+                                                                                          th:id="${'ward'+start.index}"
+                                                                                          type="text"></span>
+                                                                                    <span th:text="', '"></span>
+                                                                                    <span th:text="${listDiaChi.quanHuyen}"
+                                                                                          th:id="${'district'+start.index}"
+                                                                                          type="text"></span>
+                                                                                    <span th:text="', '"></span>
+                                                                                    <span th:text="${listDiaChi.tinh}"
+                                                                                          th:id="${'province'+start.index}"
+                                                                                          type="text"></span>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-4">
+                                                                                <div class="default-form-box">
+                                                                                    <button th:if="${listDiaChi.diaChiMacDinh == 1}"
+                                                                                            class="btn btn-success "
+                                                                                            style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                                                        Mặc định
+                                                                                    </button>
+                                                                                </div>
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+                                                                    <hr>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-2">
+                                                    <button style="float: right" class="btn btn-dark btn-md"
+                                                            type="submit">Lưu
+                                                    </button>
+                                                </div>
+                                            </div>
+
                                         </div>
+
+
                                     </form>
                                 </div>
                             </div>
