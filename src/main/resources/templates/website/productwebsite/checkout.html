@@ -759,7 +759,6 @@
                                 class="btn btn-primary float-right text-white " data-bs-toggle="modal"
                                 data-bs-target="#modalThemDiaChi">Thêm Đ/C
                         </button>
-
                         <button th:unless="${session.get('countDC') < 5}" class="btn btn-primary float-right"
                                 disabled>(*) Thêm Đ/C
                         </button>
@@ -803,7 +802,7 @@
 <div class="modal fade" id="modalThemDiaChi" tabindex="-1" data-backdrop="static"
      aria-labelledby="exampleModalLabel"
      aria-hidden="true">
-    <form action="/admin/tai-quay/adddc#labeltaiKhoan" method="post" id="formThemDiaChi">
+    <form action="/check-out/adddc" method="post" id="formThemDiaChi">
         <div class="modal-dialog" style="width: 500px;">
             <div class="modal-content">
                 <div class="modal-header">
@@ -898,6 +897,32 @@
         }
     }
 
+
+    if (document.getElementById('formThemDiaChi') != null){
+        document.getElementById('formThemDiaChi').addEventListener('submit', function (event) {
+
+            let ten = document.getElementById('inputTenTDC').value;
+            let sdt = document.getElementById('inputSDTTDC').value;
+            let tinh = document.getElementById('provincetdc').value;
+            let quan = document.getElementById('districttdc').value;
+            let xa = document.getElementById('wardtdc').value;
+            let chiTiet = document.getElementById('inputDCCTTDC').value;
+            var bieuThucChu = /[a-zA-Z]/;
+            var bieuThucDacBiet = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/;
+            if (ten.trim().length == 0 || sdt.trim().length == 0 || chiTiet.trim().length == 0 || tinh == -1 || quan == -1 || xa == -1) {
+                alert("Vui lòng nhập đủ các trường đánh dấu (*)");
+                event.preventDefault();
+
+            } else if (bieuThucChu.test(sdt) || bieuThucDacBiet.test(sdt) ||  !sdt.startsWith('0') || (sdt.trim().length != 11 && sdt.trim().length != 10) ) {
+                alert("Số điện thoại gồm 10 - 11 số và bắt đầu bằng 0");
+                event.preventDefault();
+            } else {
+                alert("Thêm thành công")
+            }
+        });
+    }
+
+
     function apiDiaChiGender(idTinh, idQuan, idXa, tinh, quan, phuong) {
         const host = "https://provinces.open-api.vn/api/";
         let renderData = (array, select) => {
@@ -987,18 +1012,20 @@
     function loadTrDDC(x, index) {
         let buttonChon = document.createElement('a');
         let buttonSua = document.createElement('a');
-        buttonChon.href = '/admin/tai-quay/updateDCMD/' + x.id + '#labelKhachhang';
+        buttonChon.href = '/check-out/updateDCMD/' + x.id ;
         buttonChon.text = 'Chọn'
         buttonChon.classList.add('btn');
         buttonChon.classList.add('btn-warning');
+        buttonChon.classList.add('text-white');
         buttonChon.style.display = 'inline';
 
 
-        buttonSua.href = '/admin/tai-quay/deleteDC/' + x.id + '#labelKhachhang';
+        buttonSua.href = '/check-out/deleteDC/' + x.id ;
         buttonSua.text = 'Xóa'
         buttonSua.classList.add('btn');
         buttonSua.classList.add('btn-danger');
         buttonSua.classList.add('mx-1');
+        buttonSua.classList.add('text-white');
         buttonSua.style.display = 'inline';
         buttonSua.addEventListener("click", function (event) {
             let x = confirm("Bạn chắc chắn muốn xóa");
@@ -1082,7 +1109,6 @@
     $("#ward").change(() => {
         printResult();
     });
-
     const printResult = () => {
         if ($("#district").val() !== "" && $("#province").val() !== "" && $("#ward").val() !== "") {
             let result = $("#province option:selected").text() +

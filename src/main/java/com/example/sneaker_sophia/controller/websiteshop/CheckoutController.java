@@ -9,6 +9,7 @@ import com.example.sneaker_sophia.repository.HinhThucThanhToanWebRepository;
 import com.example.sneaker_sophia.repository.HoaDonWebRepository;
 import com.example.sneaker_sophia.repository.LoginRepository;
 import com.example.sneaker_sophia.service.*;
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -45,6 +46,8 @@ public class CheckoutController {
     private DiaChiCheckoutService diaChiService;
     @Autowired
     private GioHangService gioHangService;
+    @Resource(name = "diaChiService")
+    DiaChiService diaChiServiceTQ;
     @Autowired
     private HoaDonWebRepository hoaDonWebRepository;
 
@@ -251,6 +254,7 @@ public class CheckoutController {
                             @RequestParam(value = "huyen", required = false) String huyen,
                             @RequestParam(value = "xa", required = false) String xa,
                             Model model, HttpSession session) {
+
         try {
             session.removeAttribute("tinh");
             session.removeAttribute("quan");
@@ -340,7 +344,7 @@ public class CheckoutController {
                     hinhThuc.setSoTien(hinhThuc.getSoTien() + amountPaid);
                     this.hinhThucThanhToanWebRepository.save(hinhThuc); // Update HinhThucThanhToan in the database
                     hoaDon.setTrangThai(3);
-
+                    this.hoaDonWebRepository.save(hoaDon);
                 }
                 return "redirect:/check-out/success";
             } else {
@@ -374,4 +378,63 @@ public class CheckoutController {
     }
 
 
+    @PostMapping("adddc")
+    public String adddc(
+            @RequestParam(value = "xa",required = false) Integer xa,
+            @RequestParam(value = "quan",required = false) Integer quan,
+            @RequestParam(value = "tinh",required = false) Integer tinh,
+            @RequestParam(value = "dcCuThe",required = false) String dcCuThe,
+            @RequestParam(value = "hoTen",required = false) String hoTen,
+            @RequestParam(value = "sdt",required = false) String sdt
+    ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        TaiKhoan taiKhoan = this.loginRepository.findByEmail(authentication.getName());
+        DiaChi diaChi = new DiaChi();
+        DiaChi diaChiMD = diaChiServiceTQ.getDiaChiByIdTaiKhoan(taiKhoan.getId());
+        if (diaChiMD.getDiaChiMacDinh() == 1) {
+            diaChiMD.setDiaChiMacDinh(0);
+            diaChiServiceTQ.saveDC(diaChiMD);
+        }
+        diaChi.setTaiKhoan(taiKhoan);
+        diaChi.setPhuongXa(xa);
+        diaChi.setQuanHuyen(quan);
+        diaChi.setTinh(tinh);
+        diaChi.setDiaChiCuThe(dcCuThe);
+        diaChi.setTen(hoTen);
+        diaChi.setSdt(sdt);
+        diaChi.setDiaChiMacDinh(1);
+        diaChiServiceTQ.saveDC(diaChi);
+//        alertInfo.alert("successTaiQuay","Địa chỉ đã được thêm");
+        return "redirect:/check-out/home";
+    }
+
+    @GetMapping("deleteDC/{id}")
+    public String delete(
+            @PathVariable(value = "id", required = false) String iddc
+    ) {
+        diaChiServiceTQ.deleteById(iddc);
+//        alertInfo.alert("successTaiQuay","Xóa thành công");
+        return "redirect:/check-out/home";
+    }
+
+
+    @GetMapping("updateDCMD/{id}")
+    public String updateDCMD(
+            @PathVariable("id") String iddc
+    ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        TaiKhoan taiKhoan = this.loginRepository.findByEmail(authentication.getName());
+        DiaChi diaChiThuong = diaChiServiceTQ.getDiaChiById(iddc);
+        DiaChi diaChiMD = diaChiServiceTQ.getDiaChiByIdTaiKhoan(taiKhoan.getId());
+        if (diaChiMD.getDiaChiMacDinh() == 1) {
+            diaChiMD.setDiaChiMacDinh(0);
+            diaChiServiceTQ.saveDC(diaChiMD);
+        }
+        if (diaChiThuong.getDiaChiMacDinh() == 0) {
+            diaChiThuong.setDiaChiMacDinh(1);
+            diaChiServiceTQ.saveDC(diaChiThuong);
+        }
+//        alertInfo.alert("successTaiQuay","Địa chỉ đã được thay đổi");
+        return "redirect:/check-out/home";
+    }
 }

@@ -57,11 +57,15 @@
                         <!-- End Header Main Menu Start -->
                         <!-- Start Header Action Link -->
                         <ul class="header-action-link action-color--black action-hover-color--golden">
-                            <li>
+                            <li class="has-dropdown">
                                 <a th:href="${#authorization.expression('isAuthenticated()') ? '/my-account/home' : '/login/home'}">
                                     <i class="icon-user" ></i>
-                                    <span class="item-count">3</span>
-
+<!--                                    <span class="item-count">3</span>-->
+                                    <ul class="sub-menu">
+                                        <li><a href="index.html">Hồ sơ cá nhân</a></li>
+                                        <li><a href="index-2.html">Đơn mua</a></li>
+                                        <li><a th:href="@{/logout}">Đăng Xuất</a></li>
+                                    </ul>
                                 </a>
                             </li>
                             <li>
