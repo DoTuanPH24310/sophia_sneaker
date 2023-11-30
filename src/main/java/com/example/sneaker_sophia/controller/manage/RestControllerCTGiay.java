@@ -1,4 +1,4 @@
-package com.example.sneaker_sophia.controller;
+package com.example.sneaker_sophia.controller.manage;
 
 
 import com.example.sneaker_sophia.dto.DTO_API_CTG;

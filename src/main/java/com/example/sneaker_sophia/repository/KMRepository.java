@@ -12,4 +12,12 @@ import java.util.UUID;
 public interface KMRepository extends JpaRepository<Voucher, UUID> {
     @Query(value = "select KM.* from CTG_KhuyenMai ctg_km join KhuyenMai KM on ctg_km.IdKhuyenMai = KM.Id where  IdCTG = ?1 and KM.trangThai = 1", nativeQuery = true)
     List<Voucher> getAllKMByIdctg(UUID idctg);
+
+    @Query(value = "select KM.* from CTG_KhuyenMai ctg_km join KhuyenMai KM on ctg_km.IdKhuyenMai = KM.Id where  IdCTG = ?1 and KM.trangThai = 2", nativeQuery = true)
+    List<Voucher> getAllKMByIdctgHH(UUID idctg);
+
+    @Query(value = "select KM.* from CTG_KhuyenMai ctg_km join KhuyenMai KM on ctg_km.IdKhuyenMai = KM.Id where  IdCTG = ?1 and KM.trangThai = 1", nativeQuery = true)
+    Voucher getKMByIdctg(UUID idctg);
+
 }
+

@@ -10,14 +10,13 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 
 @Repository
 public interface CTG_KhuyenMaiRespsitory extends JpaRepository<CTG_KhuyenMai, IDVoucher> {
 
-    @Query(value = "select sum(obj.id.voucher.phanTramGiam) from CTG_KhuyenMai obj where obj.id.chiTietGiay.id =?1")
-    Integer sumPhanTram(UUID id);
 
     @Modifying
     @Transactional

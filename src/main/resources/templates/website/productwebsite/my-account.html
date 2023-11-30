@@ -10,19 +10,8 @@
     <title>HONO - Multi Purpose HTML Template</title>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
           rel="stylesheet"/>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-
 </head>
-<style>
-    .btn-white-text-hover {
-        color: #fff;
-    }
 
-    .btn-white-text-hover:hover {
-        color: #b19361;
-    }
-
-</style>
 <body layout:fragment="content2">
 <!-- Start Mobile Header -->
 <div class="mobile-header mobile-header-bg-color--golden section-fluid d-lg-block d-xl-none">
@@ -218,26 +207,24 @@
                                 <thead>
                                 <tr>
                                     <th>Đơn hàng</th>
-                                    <th>Date</th>
-                                    <th>Status</th>
-                                    <th>Total</th>
-                                    <th>Actions</th>
+                                    <th>Ngày đặt</th>
+                                    <th>Tổng tiền</th>
+                                    <th>Trạng thái</th>
+                                    <th>Hành động</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>May 10, 2018</td>
-                                    <td><span class="success">Completed</span></td>
-                                    <td>$25.00 for 1 item</td>
-                                    <td><a href="../cart.html" class="view">view</a></td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>May 10, 2018</td>
-                                    <td>Processing</td>
-                                    <td>$17.00 for 1 item</td>
-                                    <td><a href="../cart.html" class="view">view</a></td>
+                                <tr th:each="hd, start : ${listHD}">
+                                    <td th:text="${start.index+1}"></td>
+                                    <td th:text="${#temporals.format(hd.createdDate,'dd-MM-yyyy HH:mm:ss')}"></td>
+                                    <td th:text="${#numbers.formatCurrency(tongTienMap[hd.id] +hd.phiShip)}"></td>
+                                    <td th:if="${hd.trangThai == 3}">Chờ xác nhận</td>
+                                    <td th:if="${hd.trangThai == 4}">Chờ giao</td>
+                                    <td th:if="${hd.trangThai == 5}">Đang giao</td>
+                                    <td th:if="${hd.trangThai == 1}">Hoàn thành</td>
+                                    <td th:if="${hd.trangThai == 6}">Hủy</td>
+
+                                    <td><a th:href="@{/my-account/detail/{idhd}(idhd=${hd.id})}" class="view btn btn-success">Xem</a></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -278,7 +265,7 @@
                                 <div class="d-style btn btn-brc-tp border-2 bgc-white btn-outline-blue btn-h-outline-blue btn-a-outline-blue w-100 my-2 py-3 shadow-sm">
                                     <!-- Basic Plan -->
                                     <div class="row align-items-center">
-                                        <div class="col-6">
+                                        <div class="col-12 col-md-4">
                                             <h4 class="pt-3 text-170 text-600 text-primary-d1 letter-spacing"
                                                 th:text="${listDiaChi.ten}"></h4>
                                             <div class="text-secondary-d1 text-120">
@@ -286,14 +273,7 @@
                                                                                                     th:text="${listDiaChi.sdt}"></span>
                                             </div>
                                         </div>
-                                        <div class="col-6">
-                                            <a href="#"
-                                               class="f-n-hover btn btn-success btn-raised px-4 py-15 w-25 text-600">Mặc định</a>
-                                            <a href="#"
-                                               class="f-n-hover btn btn-warning btn-raised px-4 py-65 w-25 text-600">Chỉnh sửa</a>
-                                            <a href="#"
-                                               class="f-n-hover btn btn-danger btn-raised px-4 py-65 w-25 text-600">Xóa</a>
-                                        </div>
+
                                         <div class="col-12">
                                             <div class="default-form-box">
                                                 <label>Địa chỉ cụ thể <span>*</span></label>
@@ -325,73 +305,72 @@
                                             </div>
                                         </div>
 
-
+                                        <div class="col-12 col-md-4 text-center">
+                                            <a href="#"
+                                               class="f-n-hover btn btn-warning btn-raised px-4 py-25 w-75 text-600">Chỉnh
+                                                sửa</a>
+                                            <a href="#"
+                                               class="f-n-hover btn btn-success btn-raised px-4 py-25 w-75 text-600">Chỉnh
+                                                sửa</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="tab-pane fade show active" id="account-details">
-                        <h3>Hồ sơ cá nhân</h3>
+                        <h3>Account details </h3>
                         <div class="login">
                             <div class="login_form_container">
                                 <div class="account_login_form">
-                                    <form th:action="@{/my-account/update-account}" th:object="${account}" method="post">
-                                        <div class="form-group mb-3">
+                                    <form action="#">
+                                        <p>Already have an account? <a href="#">Log in instead!</a></p>
+                                        <div class="input-radio">
+                                                <span class="custom-radio"><input type="radio" value="1"
+                                                                                  name="id_gender"> Mr.</span>
+                                            <span class="custom-radio"><input type="radio" value="1"
+                                                                              name="id_gender"> Mrs.</span>
+                                        </div>
+                                        <br>
+                                        <div class="default-form-box mb-20">
+                                            <label>First Name</label>
+                                            <input type="text" name="first-name">
+                                        </div>
+                                        <div class="default-form-box mb-20">
+                                            <label>Last Name</label>
+                                            <input type="text" name="last-name">
+                                        </div>
+                                        <div class="default-form-box mb-20">
                                             <label>Email</label>
-                                            <input type="text" class="form-control" th:field="*{email}" name="email-name" readonly>
-                                            <span th:errors="*{email}" style="color: red"></span>
-
+                                            <input type="text" name="email-name">
                                         </div>
-
-                                        <div class="form-row">
-                                            <div class="form-group col-md-6 mb-3">
-                                                <label>Tên</label>
-                                                <input type="text" class="form-control" th:field="*{ten}" name="ten-name">
-                                                <span th:errors="*{ten}" style="color: red"></span>
-
-                                            </div>
-
-                                            <div class="form-group col-md-6 mb-3">
-                                                <label>Số điện thoại</label>
-                                                <input type="text" class="form-control" th:field="*{sdt}" name="sdt-name">
-                                                <span th:errors="*{sdt}" style="color: red"></span>
-
-                                            </div>
+                                        <div class="default-form-box mb-20">
+                                            <label>Password</label>
+                                            <input type="password" name="user-password">
                                         </div>
-                                        <div class="form-row">
-                                            <div class="form-group col-md-6 mb-3">
-                                                <label>Giới tính</label>
-                                                <div class="input-radio">
-                                                    <div class="custom-control custom-radio custom-control-inline">
-                                                        <input type="radio" id="namRadio" name="gioiTinh"
-                                                               class="custom-control-input" th:field="*{gioiTinh}" th:value="1">
-                                                        <label class="custom-control-label" for="namRadio">Nam</label>
-                                                    </div>
-                                                    <div class="custom-control custom-radio custom-control-inline">
-                                                        <input type="radio" id="nuRadio" name="gioiTinh"
-                                                               class="custom-control-input" th:field="*{gioiTinh}" th:value="2">
-                                                        <label class="custom-control-label" for="nuRadio">Nữ</label>
-                                                    </div>
-                                                    <div class="custom-control custom-radio custom-control-inline">
-                                                        <input type="radio" id="khacRadio" name="gioiTinh"
-                                                               class="custom-control-input" th:field="*{gioiTinh}" th:value="3">
-                                                        <label class="custom-control-label" for="khacRadio">Khác</label>
-                                                    </div>
-                                                    <span th:errors="*{gioiTinh}" style="color: red"></span>
-
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group col-md-6 mb-3">
-                                                <label>Ngày sinh</label>
-                                                <input type="date" class="form-control" th:field="*{ngaySinh}"  name="birthday" >
-                                                <span th:errors="*{ngaySinh}" style="color: red"></span>
-
-                                            </div>
+                                        <div class="default-form-box mb-20">
+                                            <label>Birthdate</label>
+                                            <input type="date" name="birthday">
                                         </div>
+                                        <span class="example">
+                                                (E.g.: 05/31/1970)
+                                            </span>
+                                        <br>
+                                        <label class="checkbox-default" for="offer">
+                                            <input type="checkbox" id="offer">
+                                            <span>Receive offers from our partners</span>
+                                        </label>
+                                        <br>
+                                        <label class="checkbox-default checkbox-default-more-text" for="newsletter">
+                                            <input type="checkbox" id="newsletter">
+                                            <span>Sign up for our newsletter<br><em>You may unsubscribe at any
+                                                        moment. For that purpose, please find our contact info in the
+                                                        legal notice.</em></span>
+                                        </label>
                                         <div class="save_button mt-3">
-                                            <button class="btn btn-dark btn-md btn-light" type="submit">Save</button>
+                                            <button class="btn btn-md btn-black-default-hover"
+                                                    type="submit">Save
+                                            </button>
                                         </div>
                                     </form>
                                 </div>

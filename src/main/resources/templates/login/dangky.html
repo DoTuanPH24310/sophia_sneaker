@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.0/mdb.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct"
+            crossorigin="anonymous"></script>
+
+    <!--google fonts -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet"/>
+    <!-- MDB -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.0/mdb.min.css" rel="stylesheet"/>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!--google material icon-->
+
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.0.0/dist/jsQR.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+</head>
+
+<body>
+
+<div style="background-color: white; height: 680px" class="col-md-12">
+    <!--        <form th:action="@{/admin/khachhang/store}" method="post"  enctype="multipart/form-data">-->
+    <!--            <div class="row mt-3">-->
+    <!--                <div class="col-2">-->
+
+    <!--                </div>-->
+    <!--                <div class="col-1">-->
+
+    <!--                </div>-->
+    <!--                <div class="col-9">-->
+    <!--                    <div class="row mt-3">-->
+    <!--                        <div class="col-6">-->
+    <!--                            <label for="tenNhanVien"><span style="color: #c82333">*</span> Tên</label>-->
+    <!--                            <input id="tenNhanVien" type="text" class="form-control"-->
+    <!--                                   placeholder="Tên nhân viên">-->
+    <!--                            <span class="text-danger" th:text="${errTen}"></span>-->
+
+    <!--                        </div>-->
+    <!--                        <div class="col-6">-->
+    <!--                            <label for="email"><span style="color: #c82333">*</span> Email</label>-->
+    <!--                            <input id="email" type="text" class="form-control"  placeholder="Email">-->
+    <!--                            <span class="text-danger" th:text="${errEmail}"></span>-->
+    <!--                        </div>-->
+    <!--                    </div>-->
+
+    <!--                    <div class="row mt-3">-->
+
+    <!--                        <div class="col-6">-->
+    <!--                            <label for="soDienThoai"><span style="color: #c82333">*</span> Số điện thoại</label>-->
+    <!--                            <input id="soDienThoai" type="text" class="form-control"-->
+    <!--                                   placeholder="Số điện thoại">-->
+    <!--                            <span class="text-danger" th:text="${errSDT}"></span>-->
+    <!--                        </div>-->
+    <!--                    </div>-->
+    <!--                    <div class="row mt-3">-->
+    <!--                        <div class="col-4">-->
+    <!--                            <label for="province"><span style="color: #c82333">*</span>Tỉnh/Thành phố</label>-->
+    <!--                            <select id="province" class="form-control">-->
+    <!--                                <option value="">&#45;&#45;Chọn Tỉnh/Thành phố&#45;&#45;</option>-->
+    <!--                            </select>-->
+    <!--                            <span class="text-danger" th:text="${errTinh}"></span>-->
+    <!--                        </div>-->
+    <!--                        <div class="col-4">-->
+    <!--                            <label for="district"><span style="color: #c82333">*</span>Quận/Huyện</label>-->
+    <!--                            <select  id="district" class="form-control">-->
+    <!--                                <option value="">&#45;&#45;Chọn Quận/Huyện&#45;&#45;</option>-->
+    <!--                            </select>-->
+    <!--                            <span class="text-danger" th:text="${errQuanHuyen}"></span>-->
+    <!--                        </div>-->
+
+    <!--                        <div class="col-4">-->
+    <!--                            <label for="ward"><span style="color: #c82333">*</span>Phường/Xã</label>-->
+    <!--                            <select  id="ward" class="form-control">-->
+    <!--                                <option value="">&#45;&#45;Chọn Phường/Xã&#45;&#45;</option>-->
+    <!--                            </select>-->
+    <!--                            <span class="text-danger" th:text="${errPhuongXa}"></span>-->
+    <!--                        </div>-->
+    <!--                    </div>-->
+    <!--                    <div class="row mt-3">-->
+    <!--                        <div class="col-12">-->
+    <!--                            <label for="dcCuThe"><span style="color: #c82333">*</span>Số nhà/Ngõ/Đường</label>-->
+    <!--                            <input id="dcCuThe" type="text"  class="form-control" placeholder="Địa chỉ cụ thể">-->
+    <!--                            <span class="text-danger" th:text="${errDCCuThe}"></span>-->
+    <!--                        </div>-->
+    <!--                    </div>-->
+
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--            <button class="btn btn-primary mt-3" style="float: right" type="submit">-->
+    <!--                Thêm mới-->
+    <!--            </button>-->
+    <!--        </form>-->
+    <section class="vh-100" style="background-color: #eee;">
+        <div class="container h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-lg-12 col-xl-11">
+                    <div class="card text-black" style="border-radius: 25px;">
+                        <div class="card-body p-md-5">
+                            <div class="row justify-content-center">
+                                <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+
+                                    <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Đăng ký</p>
+
+                                    <form action="/register/add" method="post" th:object="${khachHang}"
+                                          class="mx-1 mx-md-4">
+
+                                        <div class="d-flex flex-row align-items-center mb-4">
+                                            <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                                            <div class=" flex-fill mb-0">
+                                                <input type="text" id="form3Example1c" th:field="*{ten}"
+                                                       class="form-control" placeholder="Tên của bạn"/>
+                                                <span class="text-danger" th:text="${errTen}"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex flex-row align-items-center mb-4">
+                                            <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
+                                            <div class=" flex-fill mb-0">
+                                                <input type="text" id="sdt" th:field="*{sdt}" class="form-control"
+                                                       placeholder="Số điện thoại"/>
+
+                                                <span class="text-danger" th:text="${errSDT}"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex flex-row align-items-center mb-4">
+                                            <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
+                                            <div class=" flex-fill mb-0">
+                                                <input type="email" th:field="*{email}"
+                                                       class="form-control" placeholder="Email"/>
+                                                <span class="text-danger" th:text="${errEmail}"></span>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-row align-items-center mb-4">
+                                            <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
+                                            <div class=" flex-fill mb-0">
+                                                <input type="password" id="passwordInput" placeholder="Mật khẩu" th:field="*{matKhau}" class="form-control"/>
+
+                                                <span class="text-danger" th:text="${errMatKhau}"></span>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex flex-row align-items-center mb-4">
+                                            <i class="fas fa-key fa-lg me-3 fa-fw"></i>
+                                            <div class=" flex-fill mb-0">
+                                                <input type="password" id="confirmPasswordInput" placeholder="Nhập lại mật khẩu" th:field="*{XNmatKhau}" class="form-control"/>
+
+                                                <span class="text-danger" th:text="${errNLMatKhau}"></span>
+                                            </div>
+                                        </div>
+
+                                        <div th:if="${showEmailVerification}">
+                                            <div class="d-flex flex-row align-items-center mb-4">
+                                                <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
+                                                <div class="flex-fill mb-0">
+                                                    <input type="text" id="verificationCode" name="otp" th:field="*{otp}"  class="form-control"
+                                                           placeholder="Mã xác thực email"/>
+                                                    <span class="text-danger" th:text="${errOTP}"></span>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                                            <button type="submit" class="btn btn-primary btn-lg">Đăng ký</button>
+                                        </div>
+
+                                    </form>
+
+                                </div>
+                                <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
+
+                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"
+                                         class="img-fluid" alt="Sample image">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+            integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js"
+            integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Lấy thẻ form
+            var form = document.querySelector('form');
+
+            // Lắng nghe sự kiện submit của form
+            form.addEventListener('submit', function () {
+                // Lấy giá trị của mật khẩu và nhập lại mật khẩu
+                var passwordValue = document.getElementById('passwordInput').value;
+                var confirmPasswordValue = document.getElementById('confirmPasswordInput').value;
+
+                // Lưu giá trị mật khẩu vào localStorage
+                localStorage.setItem('password', passwordValue);
+
+                // Lưu giá trị nhập lại mật khẩu vào localStorage
+                localStorage.setItem('confirmPassword', confirmPasswordValue);
+            });
+
+            // Kiểm tra xem có giá trị mật khẩu và nhập lại mật khẩu đã được lưu trong localStorage hay không
+            var savedPassword = localStorage.getItem('password');
+            var savedConfirmPassword = localStorage.getItem('confirmPassword');
+
+            if (savedPassword) {
+                // Nếu có, thiết lập giá trị mật khẩu cho input
+                document.getElementById('passwordInput').value = savedPassword;
+            }
+
+            if (savedConfirmPassword) {
+                // Nếu có, thiết lập giá trị nhập lại mật khẩu cho input
+                document.getElementById('confirmPasswordInput').value = savedConfirmPassword;
+            }
+        });
+    </script>
+</div>
+</body>
+</html>

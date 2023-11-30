@@ -43,6 +43,11 @@ public class TaiKhoanRequest {
 
     private String ghiChu;
 
+    private String matKhau;
+
+    private String XNmatKhau;
+
+    private String otp;
     public TaiKhoanRequest(TaiKhoanDiaChi taiKhoanDiaChi) {
         this.setIdTaiKhoan(taiKhoanDiaChi.getTaiKhoan().getId());
         this.setTen(taiKhoanDiaChi.getTaiKhoan().getTen());
@@ -57,5 +62,6 @@ public class TaiKhoanRequest {
         this.setQuanHuyen(taiKhoanDiaChi.getDiaChi().getQuanHuyen());
         this.setPhuongXa(taiKhoanDiaChi.getDiaChi().getPhuongXa());
         this.setDiaChiCuThe(taiKhoanDiaChi.getDiaChi().getDiaChiCuThe());
+        this.setMatKhau(taiKhoanDiaChi.getTaiKhoan().getMatKhau());
     }
 }

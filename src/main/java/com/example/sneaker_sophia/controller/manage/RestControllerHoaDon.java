@@ -32,7 +32,9 @@ public class RestControllerHoaDon {
 
     @GetMapping("/updateTaiQuay/{idHD}")
     public void updateTQ(@PathVariable("idHD") HoaDon hd) {
-        hd.setLoaiHoaDon(1);
+        if (hd.getTrangThai() == 2){
+            hd.setLoaiHoaDon(1);
+        }
         hoaDonService.savehd(hd);
     }
 

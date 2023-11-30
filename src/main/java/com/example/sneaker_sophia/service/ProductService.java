@@ -21,6 +21,10 @@ import java.util.Set;
 
 @Service
 public class ProductService {
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @Autowired
     private ProductRepository productRepository;
 
@@ -55,16 +59,4 @@ public class ProductService {
         return filteredProducts;
     }
 
-
-    public List<ChiTietGiay> getTop10BestSelling() {
-        List<Object[]> results = productRepository.findTop10BestSelling();
-        List<ChiTietGiay> topSellingChiTietGiayList = new ArrayList<>();
-
-        for (Object[] result : results) {
-            ChiTietGiay chiTietGiay = (ChiTietGiay) result[0];
-            topSellingChiTietGiayList.add(chiTietGiay);
-        }
-
-        return topSellingChiTietGiayList;
-    }
 }
