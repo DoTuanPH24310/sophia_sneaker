@@ -981,13 +981,7 @@
             });
         }
 
-        let errhd = [[${session.errTaiQuay}]];
-        if (errhd != null) {
-            window.addEventListener("load", function () {
-                alert(errhd);
-                removeSeesion('errTaiQuay');
-            })
-        }
+
         window.addEventListener('load', function () {
             validateTienThua();
         })
@@ -1015,7 +1009,6 @@
                     let title = 'Thất bại!';
                     let text = 'Số tiền khách đưa còn thiếu';
                     createToast(type, icon, title, text);
-
                 } else {
                     if (confirm('Xác nhận thanh toán đơn hàng')) {
                         document.getElementById('formXacNhanDonHang').submit();
