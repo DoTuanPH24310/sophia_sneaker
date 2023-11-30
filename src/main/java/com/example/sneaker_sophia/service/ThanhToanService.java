@@ -63,16 +63,12 @@ public class ThanhToanService {
         HoaDon hoaDon = new HoaDon();
         hoaDon.setMaHoaDOn("HD" + soHD);
         hoaDon.setTaiKhoan(taiKhoan);
-        if(hinhThucThanhToan == 3) {
-            hoaDon.setLoaiHoaDon(3);
-        }else if(hinhThucThanhToan == 2){
-            hoaDon.setLoaiHoaDon(2);
-        }
+        hoaDon.setLoaiHoaDon(3);
         hoaDon.setTenKhachHang(taiKhoan.getTen());
         hoaDon.setSoDienThoai(taiKhoan.getSdt());
         hoaDon.setDiaChi(diaChi + ", " + xa + ", " + huyen + ", " + tinh);
         hoaDon.setPhiShip(20000.0);
-        hoaDon.setTrangThai(2);
+        hoaDon.setTrangThai(3);
         hoaDon.setTongTien(0.0);
         hoaDon.setTienThua(0.0);
         hoaDon.setTongTien(tongTienDonHang);

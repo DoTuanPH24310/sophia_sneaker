@@ -251,7 +251,6 @@ public class CheckoutController {
                             @RequestParam(value = "huyen", required = false) String huyen,
                             @RequestParam(value = "xa", required = false) String xa,
                             Model model, HttpSession session) {
-
         try {
             session.removeAttribute("tinh");
             session.removeAttribute("quan");
@@ -341,7 +340,7 @@ public class CheckoutController {
                     hinhThuc.setSoTien(hinhThuc.getSoTien() + amountPaid);
                     this.hinhThucThanhToanWebRepository.save(hinhThuc); // Update HinhThucThanhToan in the database
                     hoaDon.setTrangThai(3);
-                    this.hoaDonWebRepository.save(hoaDon);
+
                 }
                 return "redirect:/check-out/success";
             } else {

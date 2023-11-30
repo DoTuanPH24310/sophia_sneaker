@@ -251,11 +251,7 @@ public class EmailService {
         hoaDonMoi.setDiaChi(diaChi + ", " + xa + ", " + huyen + ", " + tinh);
         hoaDonMoi.setPhiShip(20000.0);
         hoaDonMoi.setTienThua(0.0);
-        if(hinhThucThanhToan == 3) {
-            hoaDonMoi.setLoaiHoaDon(3);
-        }else if(hinhThucThanhToan == 2){
-            hoaDonMoi.setLoaiHoaDon(2);
-        }
+        hoaDonMoi.setTrangThai(3);
 
         hoaDonMoi = this.hoaDonWebRepository.save(hoaDonMoi);
 
