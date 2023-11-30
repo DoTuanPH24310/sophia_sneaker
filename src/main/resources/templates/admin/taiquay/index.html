@@ -164,23 +164,23 @@
                         </td>
 
                         <td>
-                            <span th:if="${hdct.donGia * hdct.soLuong == ((hdct.donGia * (1- ((hdct.phanTramGiam) / 100.0)) * hdct.soLuongGiam)
-                                              + (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}">
+                            <span th:if="${hdct.donGia * hdct.soLuong == (((hdct.soLuongGiam * hdct.donGia) - ((((hdct.phanTramGiam) / 100.0)) * hdct.donGia)) +
+                    (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}">
 
-                                                 <span th:text="${#numbers.formatCurrency((hdct.donGia * (1- ((hdct.phanTramGiam) / 100.0)) * hdct.soLuongGiam)
-                                              + (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}"
+                                                 <span th:text="${#numbers.formatCurrency(((hdct.soLuongGiam * hdct.donGia) - ((((hdct.phanTramGiam) / 100.0)) * hdct.donGia)) +
+                    (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}"
                                                        style="font-size: 15px"></span>
                             </span>
 
 
-                            <span th:unless="${hdct.donGia * hdct.soLuong == ((hdct.donGia * (1- ((hdct.phanTramGiam) / 100.0)) * hdct.soLuongGiam)
-                                              + (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}">
+                            <span th:unless="${hdct.donGia * hdct.soLuong == (((hdct.soLuongGiam * hdct.donGia) - ((((hdct.phanTramGiam) / 100.0)) * hdct.donGia)) +
+                    (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}">
                                 <span th:text="${#numbers.formatCurrency(hdct.donGia * hdct.soLuong)}"
                                       style="text-decoration: line-through; color: red; font-size: 13px"></span>
                                                             <br>
                                 <!--                                                            hdct.soLuong * (hdct.donGia - (hdct.donGia * ((hdct.phanTramGiam) / 100.0))) -->
-                                             <span th:text="${#numbers.formatCurrency((hdct.donGia * (1- ((hdct.phanTramGiam) / 100.0)) * hdct.soLuongGiam)
-                                              + (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}"
+                                             <span th:text="${#numbers.formatCurrency(((hdct.soLuongGiam * hdct.donGia) - ((((hdct.phanTramGiam) / 100.0)) * hdct.donGia)) +
+                    (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}"
                                                    style="font-size: 15px"></span>
                             </span>
                         </td>
@@ -380,17 +380,19 @@
                         </div>
                         <div class="col-3">
 
-                            <input id="tienMat" onchange="displayTraSau();" type="radio" value="1" checked name="phuongThuc">
+                            <input id="tienMat" onchange="displayTraSau();" type="radio" value="1" checked
+                                   name="phuongThuc">
                             <label for="tienMat"><h6>Tiền mặt</h6></label>
                         </div>
                         <div class="col-3">
 
-                            <input id="chuyenKhoan" onchange="displayTraSau();"  type="radio" value="2" name="phuongThuc">
-                            <label  for="chuyenKhoan"><h6>Chuyển khoản</h6></label>
+                            <input id="chuyenKhoan" onchange="displayTraSau();" type="radio" value="2"
+                                   name="phuongThuc">
+                            <label for="chuyenKhoan"><h6>Chuyển khoản</h6></label>
                         </div>
 
                         <div class="col-2" id="phuongThucTraSau" style="display: none;">
-                            <input  id="traSau" onchange="displayTraSau();" type="radio" value="3" name="phuongThuc">
+                            <input id="traSau" onchange="displayTraSau();" type="radio" value="3" name="phuongThuc">
                             <label for="traSau"><h6>Trả sau</h6></label>
                         </div>
 
@@ -934,11 +936,11 @@
         const phiPhip = [[${phiVanChuyen}]];
 
 
-        if (checkIHD != null && checkIHD == 1){
+        if (checkIHD != null && checkIHD == 1) {
             removeSeesion('checkTTHT');
             window.onload = function () {
                 $('#modalInHoaDon').modal('show');
-                document.getElementById('inHoaDon').href ='http://localhost:8080/admin/tai-quay/pdf/'+ idHoaDon;
+                document.getElementById('inHoaDon').href = 'http://localhost:8080/admin/tai-quay/pdf/' + idHoaDon;
                 document.getElementById('inHoaDon').addEventListener('click', function () {
                     $('#modalInHoaDon').modal('hide');
                 });
@@ -947,16 +949,16 @@
         }
 
         let myLinks = document.querySelectorAll('.myLinkHuy');
-        if (myLinks != null){
-            myLinks.forEach(function(link) {
-                link.addEventListener('click', function(event) {
+        if (myLinks != null) {
+            myLinks.forEach(function (link) {
+                link.addEventListener('click', function (event) {
                     event.preventDefault();
                     let hrefValue = link.getAttribute('href');
-                    let mess =  prompt("Nhập lí do hủy: ");
-                    if (mess.trim().length == 0 || mess == null){
+                    let mess = prompt("Nhập lí do hủy: ");
+                    if (mess.trim().length == 0 || mess == null) {
                         alert("Vui lòng nhập lí do");
-                    }else {
-                        window.location.href = hrefValue +"?value="+mess;
+                    } else {
+                        window.location.href = hrefValue + "?value=" + mess;
                     }
                 });
             });
@@ -1004,7 +1006,7 @@
                         document.getElementById('formXacNhanDonHang').submit();
                     }
                 }
-            }else {
+            } else {
                 if (confirm('Xác nhận thanh toán đơn hàng')) {
                     document.getElementById('formXacNhanDonHang').submit();
                 }
@@ -1451,6 +1453,7 @@
                 loadTrDDC(data[index], index);
             }
         }
+
         if (idKh != null) {
             if (loaihdg == 2) {
                 customSwitches.checked = true; // Đánh dấu checkbox là checked
@@ -1471,13 +1474,13 @@
             if (customSwitches.checked) {
                 form.style.display = "block";
                 displayPhiShip();
-                document.getElementById('phuongThucTraSau').style.display ="block";
+                document.getElementById('phuongThucTraSau').style.display = "block";
                 $.ajax({
                     type: 'get',
                     url: 'http://localhost:8080/api/hoa-don/updateGiaoHang/' + idHoaDon,
                 })
             } else {
-                document.getElementById('phuongThucTraSau').style.display ="none";
+                document.getElementById('phuongThucTraSau').style.display = "none";
                 document.getElementById('blockTienKhachDua').style.display = "flex";
                 document.getElementById('blockTienThua').style.display = "flex";
                 document.getElementById('tienMat').checked = true;
@@ -1498,12 +1501,12 @@
 
         function displayTraSau() {
             let checkTraSau = document.getElementById('traSau');
-            if(checkTraSau.checked){
-                document.getElementById('blockTienKhachDua').style.display ="none";
-                document.getElementById('blockTienThua').style.display ="none";
-            }else {
-                document.getElementById('blockTienKhachDua').style.display ="flex";
-                document.getElementById('blockTienThua').style.display ="flex";
+            if (checkTraSau.checked) {
+                document.getElementById('blockTienKhachDua').style.display = "none";
+                document.getElementById('blockTienThua').style.display = "none";
+            } else {
+                document.getElementById('blockTienKhachDua').style.display = "flex";
+                document.getElementById('blockTienThua').style.display = "flex";
             }
 
         }

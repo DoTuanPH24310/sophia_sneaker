@@ -18,6 +18,14 @@ public class KMService {
         return kmRepository.getAllKMByIdctg(idctg);
     }
 
+    public List<Voucher> getAllKMByIdctgHH(UUID idctg){
+        return kmRepository.getAllKMByIdctgHH(idctg);
+    }
+
+    public Voucher getKMByIdctg(UUID idctg){
+        return kmRepository.getKMByIdctg(idctg);
+    }
+
     public void saveVC(Voucher voucher){
         kmRepository.save(voucher);
     }

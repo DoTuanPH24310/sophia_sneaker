@@ -151,6 +151,10 @@ public class QLHDController {
             }
             HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
             if (hoaDon != null) {
+                List<HoaDonChiTiet> listhdct = hoaDonChiTietServive.getHDCTByIdHD(hoaDon.getId());
+                if(listhdct.size() == 0){
+                    return "redirect:/admin/hoa-don/hien-thi";
+                }
                 hoaDon.setTrangThai(5);
                 LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
                 lichSuHoaDon.setHoaDon(hoaDon);
@@ -171,11 +175,14 @@ public class QLHDController {
 
     ) {
         session.setAttribute("tabActive", "tabDangGiao");
+
         if (listhddg == null) {
             return "redirect:/admin/hoa-don/hien-thi";
         }
         if (ghiChu == null) {
             ghiChu = "";
+        }else if (ghiChu.length() > 20){
+                return "redirect:/admin/hoa-don/detail/" + tempIdHD;
         }
         for (String idhd : listhddg) {
             try {
@@ -240,6 +247,10 @@ public class QLHDController {
         }
         HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
         if (hoaDon != null) {
+            List<HoaDonChiTiet> listhdct = hoaDonChiTietServive.getHDCTByIdHD(hoaDon.getId());
+            if(listhdct.size() == 0){
+                return "redirect:/admin/hoa-don/hien-thi";
+            }
             hoaDon.setTrangThai(5);
             LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
             lichSuHoaDon.setHoaDon(hoaDon);
