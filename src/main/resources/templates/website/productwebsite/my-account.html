@@ -271,64 +271,72 @@
                         </div>
                     </div>
                     <div class="tab-pane" id="address">
+                        <div class="container row">
+                            <div class="col-6">
+                                <div class="default-form-box">
+                                    <span style="font-size: 20px; float:left;">Địa chỉ</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <!-- Thêm địa chỉ theo id tai khoản -->
+
+
+
+                            </div>
+                        </div>
                         <div class="container" th:each="listDiaChi, start : ${diaChiList}">
                             <div class="mt-5">
-                                <div class="d-style btn btn-brc-tp border-2 bgc-white btn-outline-blue btn-h-outline-blue btn-a-outline-blue w-100 my-2 py-3 shadow-sm">
-                                    <!-- Basic Plan -->
+                                <div class="d-style btn btn-brc-tp border-2 bgc-white btn-outline-blue btn-h-outline-blue btn-a-outline-blue w-100  shadow-sm">
                                     <div class="row align-items-center">
-                                        <div class="col-6">
-                                            <h4 class="pt-3 text-170 text-600 text-primary-d1 letter-spacing"
-                                                th:text="${listDiaChi.ten}"></h4>
-                                            <div class="text-secondary-d1 text-120">
-                                                <span class="ml-n15 align-text-bottom"></span><span class="text-180"
-                                                                                                    th:text="${listDiaChi.sdt}"></span>
-                                            </div>
-                                        </div>
-                                        <div class="col-6">
-                                            <a href="#"
-                                               class="f-n-hover btn btn-success btn-raised px-4 py-15 w-25 text-600">Mặc định</a>
-                                            <a href="#"
-                                               class="f-n-hover btn btn-warning btn-raised px-4 py-65 w-25 text-600">Chỉnh sửa</a>
-                                            <a href="#"
-                                               class="f-n-hover btn btn-danger btn-raised px-4 py-65 w-25 text-600">Xóa</a>
-                                        </div>
                                         <div class="col-12">
-                                            <div class="default-form-box">
-                                                <label>Địa chỉ cụ thể <span>*</span></label>
-                                                <input th:value="${listDiaChi.diaChiCuThe}" readonly="readonly"
-                                                       type="text">
-                                            </div>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="default-form-box">
-                                                <label>Xã <span>*</span></label>
-                                                <input th:value="${listDiaChi.phuongXa}" readonly="readonly"
-                                                       th:id="${'ward'+start.index}"
-                                                       type="text">
-                                            </div>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="default-form-box">
-                                                <label>Huyện <span>*</span></label>
-                                                <input th:value="${listDiaChi.quanHuyen}" readonly="readonly"
-                                                       th:id="${'district'+start.index}"
-                                                       type="text">
-                                            </div>
-                                        </div>
-                                        <div class="col-4">
-                                            <div class="default-form-box">
-                                                <label>Tỉnh<span>*</span></label>
-                                                <input th:value="${listDiaChi.tinh}" readonly="readonly" type="text"
-                                                       th:id="${'province'+start.index}">
-                                            </div>
+                                            <span style="float: left"
+                                                  class="pt-3 text-170 text-600 text-primary-d1 letter-spacing"
+                                                  th:text="${listDiaChi.ten + ' | ' + listDiaChi.sdt}"></span>
                                         </div>
 
+                                        <div class="col-12">
+                                            <div class="default-form-box">
+                                                <span style="float:left;" th:text="${listDiaChi.diaChiCuThe}"></span>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-8">
+                                            <div style="float: left" class="default-form-box">
+                                                <!--                                                <input th:value="${listDiaChi.phuongXa}" readonly="readonly"-->
+                                                <!--                                                       th:id="${'ward'+start.index}"-->
+                                                <!--                                                       type="text">-->
+                                                <span th:text="${listDiaChi.phuongXa}"
+                                                      th:id="${'ward'+start.index}"
+                                                      type="text"></span>
+                                                <span th:text="', '"></span>
+                                                <span th:text="${listDiaChi.quanHuyen}"
+                                                      th:id="${'district'+start.index}"
+                                                      type="text"></span>
+                                                <span th:text="', '"></span>
+                                                <span th:text="${listDiaChi.tinh}"
+                                                      th:id="${'province'+start.index}"
+                                                      type="text"></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-4">
+                                            <div class="default-form-box">
+                                                <button th:if="${listDiaChi.diaChiMacDinh == 1}" class="btn btn-success "
+                                                        style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                    Mặc định
+                                                </button>
+                                            </div>
+                                        </div>
 
                                     </div>
                                 </div>
+                                <hr>
                             </div>
                         </div>
                     </div>
+
+
+
+
                     <div class="tab-pane fade show active" id="account-details">
                         <h3>Hồ sơ cá nhân</h3>
                         <div class="login">
@@ -673,24 +681,23 @@
             let x = 'ward' + i;
             let y = 'district' + i;
             let z = 'province' + i;
-            const provinceCode = document.getElementById(z).value;
-            const districtCode = document.getElementById(y).value;
+            const provinceCode = document.getElementById(z).textContent;
+            const districtCode = document.getElementById(y).textContent;
             const districtInput = document.getElementById(y);
             const provinceInput = document.getElementById(z);
             let wardInput = document.getElementById(x);
-            let wardCode = document.getElementById(x).value;
+            let wardCode = document.getElementById(x).textContent;
             fetchWardName(wardCode).then(name => {
-                wardInput.value = name;
+                wardInput.textContent = name;
             });
             fetchProvinceName(provinceCode).then(name => {
-                provinceInput.value = name;
+                provinceInput.textContent = name;
             });
 
             fetchDistrictName(districtCode).then(name => {
-                districtInput.value = name;
+                districtInput.textContent = name;
             });
         }
-
     }
 
     checked();
