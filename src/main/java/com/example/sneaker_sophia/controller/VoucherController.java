@@ -10,7 +10,6 @@ import com.example.sneaker_sophia.service.CTG_KhuyenMaiService;
 import com.example.sneaker_sophia.service.ChiTietGiayService;
 import com.example.sneaker_sophia.service.GiayService;
 import com.example.sneaker_sophia.service.VoucherService;
-import com.example.sneaker_sophia.validate.AlertInfo;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.BeanUtils;
@@ -49,10 +48,8 @@ public class VoucherController {
     @Autowired
     private CTG_KhuyenMaiService ctg_khuyenMaiService;
 
-    @Autowired
-    private AlertInfo alertInfo;
 
-
+    public static int checkSession = 0;
 
 //    @Async
 //    @Scheduled(cron = "0 * * * * *")
@@ -67,6 +64,12 @@ public class VoucherController {
 
     @GetMapping("/hien-thi")
     public String hienThi(Model model, @RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo, HttpSession session) {
+        if (session.getAttribute("mess") != null) {
+            if (checkSession != 0) {
+                session.removeAttribute("mess");
+            }
+            checkSession = 1;
+        }
         Pageable pageable = PageRequest.of(pageNo, 10);
         Page page = voucherService.locVaTimKiem(pageable, model);
         model.addAttribute("listVC", page);
@@ -100,12 +103,13 @@ public class VoucherController {
         voucherService.addAttributeModel(model, listId, listIDCTG);
         if (button.equals("button")) {
             if (listIDCTG.size() <= 0 || listIDCTG.contains("false")) {
-                alertInfo.alert("errTaiQuay","Vui lòng chọn sản phẩm khuyến mại");
+                model.addAttribute("err", "Vui lòng chọn sản phẩm khuyến mại");
                 return "admin/voucher/add";
             }
             if (listIDCTG.size() > 0 && voucherService.validate(vc, model, listIDCTG)) {
                 voucherService.saveVoucher(vc, listIDCTG);
-                alertInfo.alert("successTaiQuay","Khuyến mại đã được thêm");
+                checkSession = 0;
+                session.setAttribute("mess", "Khuyến mại đã được thêm");
                 return "redirect:/admin/voucher/hien-thi";
             }
         }
@@ -115,7 +119,8 @@ public class VoucherController {
     @GetMapping("/view-update/{id}")
     public String viewUpdate(Model model, @PathVariable("id") Voucher vc) {
         if (vc.getTrangThai() != 0) {
-            alertInfo.alert("errTaiQuay","Trạng thái khuyến mại thay đổi. Thao tác lại");
+            checkSession = 0;
+            session.setAttribute("mess", "Trạng thái khuyến mại đã thay đổi. Vui lòng thao tác lại");
             return "redirect:/admin/voucher/hien-thi";
         }
         VoucherReq voucherReq = new VoucherReq();
@@ -166,18 +171,21 @@ public class VoucherController {
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable("id") Voucher vc) {
         if (vc.getTrangThai() == 1) {
-            alertInfo.alert("errTaiQuay","Trạng thái khuyến mại thay đổi. Thao tác lại");
+            checkSession = 0;
+            session.setAttribute("mess", "Trạng thái khuyến mại đã thay đổi. Vui lòng thao tác lại");
             return "redirect:/admin/voucher/hien-thi";
 
         }
         if (vc.getTrangThai() == 0) {
             ctg_khuyenMaiService.deleteByIdKM(vc);
             voucherService.delete(vc);
-            alertInfo.alert("successTaiQuay","Khuyến mại đã được xóa");
+            checkSession = 0;
+            session.setAttribute("mess", "Xóa thành công");
             return "redirect:/admin/voucher/hien-thi#table";
         }
         vc.setTrangThai(3);
-        alertInfo.alert("successTaiQuay","Khuyến mại đã được xóa");
+        checkSession = 0;
+        session.setAttribute("mess", "Xóa thành công");
         voucherService.update(vc);
         return "redirect:/admin/voucher/hien-thi#table";
     }
@@ -196,12 +204,13 @@ public class VoucherController {
         voucherService.addAttributeModel(model, listId, listIDCTG);
         if (button.equals("button")) {
             if (listIDCTG.size() <= 0 || listIDCTG.contains("false")) {
-                alertInfo.alert("errTaiQuay","Vui lòng chọn sản phẩm khuyến mại");
+                model.addAttribute("err", "Vui lòng chọn sản phẩm khuyến mại");
                 return "admin/voucher/update";
             }
             if (listIDCTG.size() > 0 && voucherService.validate(vc, model, listIDCTG)) {
                 voucherService.saveVoucher(vc, listIDCTG);
-                alertInfo.alert("successTaiQuay","Khuyến mại đã được cập nhật");
+                checkSession = 0;
+                session.setAttribute("mess", "Khuyến mại đã được cập nhật");
                 return "redirect:/admin/voucher/hien-thi#table";
             }
         }

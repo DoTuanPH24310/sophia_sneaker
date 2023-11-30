@@ -1,7 +1,8 @@
+
 <!DOCTYPE html>
 
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/layouts/layout}">
+      layout:decorate="~{/layouts/layout}" >
 
 <head>
     <meta charset="UTF-8">
@@ -19,6 +20,7 @@
 
             border: 1px solid #dee2e6;
         }
+
 
 
         .formTable {
@@ -45,7 +47,7 @@
 
 
     <div class="row">
-        <h3 style="font-weight: bold; text-align: center;" class="mt-2">Quản Lý Giảm Giá</h3>
+        <h3 style="font-weight: bold; text-align: center;" class="mt-2">Quản Lý Khuyến Mại</h3>
         <div class="col-1"></div>
         <div class="col-10 mt-4 formTable">
             <h5 style="font-weight: bold;" class="mt-3">Bộ lọc</h5>
@@ -57,7 +59,7 @@
                         <label> Tìm kiếm </label>
                         <input style="border-radius: 10px;" type="text" th:value="${textSearch}" class="form-control"
                                name="textSearch"
-                               placeholder="Nhập mã hoặc tên Giảm Giá...">
+                               placeholder="Nhập mã hoặc tên khuyến mại...">
                         <p class="text-danger"></p>
                     </div>
 
@@ -90,7 +92,7 @@
 
     <!-- Danh sách vourcher -->
     <div class="row mt-3">
-        <h5 style="font-weight: bold; text-align: center;" class="mt-3">Danh sách Giảm Giá </h5>
+        <h5 style="font-weight: bold; text-align: center;" class="mt-3">Danh sách khuyến mại </h5>
         <hr>
         <div class="table table-wrapper-scroll-y my-custom-scrollbar">
             <a class="btn btn-primary mt-1 mb-2 float-right" th:href="@{/admin/voucher/view-add}">
@@ -99,7 +101,7 @@
             <table id="table" class="table  table-borderless  formTable">
                 <thead>
                 <tr class="bg-light">
-                    <th scope="col" width="2%">Mã</th>
+                    <th scope="col" width="2%">Mã </th>
                     <th scope="col" width="18%">Tên</th>
                     <th scope="col" width="7%">Giá trị</th>
                     <th scope="col" width="14%">Ngày bắt đầu</th>
@@ -120,22 +122,19 @@
                     <td th:text="${#temporals.format(vc.ngayKetThuc, 'dd-MM-yyyy HH:mm')}"></td>
                     <td th:text="${#temporals.format(vc.createdDate, 'dd-MM-yyyy HH:mm')}"></td>
                     <td th:if="${vc.trangThai ==0}">
-                        <button class="btn btn-primary"
-                                style="border-radius: 30px; font-size: 12px; height: 40px; width: 130px">
+                        <button class="btn btn-primary" style="border-radius: 30px; font-size: 12px; height: 40px; width: 130px">
                             Sắp diễn ra
                         </button>
                     </td>
 
                     <td th:if="${vc.trangThai ==1}">
-                        <button class="btn btn-success"
-                                style="border-radius: 30px; font-size: 12px; height: 40px;width: 130px">
-                            Đang diễn ra
+                        <button class="btn btn-success" style="border-radius: 30px; font-size: 12px; height: 40px;width: 130px">
+                          Đang diễn ra
                         </button>
                     </td>
 
                     <td th:if="${vc.trangThai ==2}">
-                        <button class="btn btn-danger"
-                                style="border-radius: 30px; font-size: 12px; height: 40px;width: 130px">
+                        <button class="btn btn-danger" style="border-radius: 30px; font-size: 12px; height: 40px;width: 130px">
                             Hết hạn
                         </button>
                     </td>
@@ -149,19 +148,20 @@
                         </a>
 
 
-                        <button  th:if="${vc.trangThai == 1}" disabled
-                           class="btn btn-danger "
-                           style=" padding: 5px 10px; font-size: 12px;">
-                            <i class="material-icons text-white mt-1" title="Xóa">delete</i>
-                        </button>
 
-                        <a th:if="${vc.trangThai == 0 || vc.trangThai == 2}"
-                           th:href="@{/admin/voucher/delete/{id}(id = ${vc.id})}"
-                           onclick="return confirm('Bạn chắc chăn muốn xóa');"
+
+                        <a th:if="${vc.trangThai == 1}" onclick="thongBao('Không xóa được khuyến mại đang diễn ra');"
                            class="btn btn-danger "
                            style=" padding: 5px 10px; font-size: 12px;">
                             <i class="material-icons text-white mt-1" title="Xóa">delete</i>
                         </a>
+
+                        <a th:if="${vc.trangThai == 0 || vc.trangThai == 2}" th:href="@{/admin/voucher/delete/{id}(id = ${vc.id})}"  onclick="return confirm('Bạn chắc chăn muốn xóa');"
+                           class="btn btn-danger "
+                           style=" padding: 5px 10px; font-size: 12px;">
+                            <i class="material-icons text-white mt-1" title="Xóa">delete</i>
+                        </a>
+
 
 
                     </td>
@@ -210,15 +210,13 @@
     </div>
 
     <script th:inline="javascript">
-        function thongBao() {
-            let type = 'error';
-            let icon = 'fa-solid fa-circle-exclamation';
-            let title = 'Thất bại!';
-            let text = 'Không xóa được Giảm Giá đang diễn ra';
-            createToast(type, icon, title, text);
-            removeSeesion('errTaiQuay');
+        let mess = [[${session.mess}]];
+        console.log(mess);
+        if (mess != '' && mess != null){
+            window.addEventListener("load", function () {
+                alert(mess);
+            });
         }
-
     </script>
 
 </div>

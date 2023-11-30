@@ -28,17 +28,11 @@ public interface TaiKhoanRepository extends JpaRepository<TaiKhoan, String> {
             "and (:search is null or tk.ten like %:search% or tk.sdt like %:search%)")
     Page<TaiKhoan> getALlNhanVienTT(@Param("search") String search, @Param("trangThai") Integer trangThai, Pageable pageable);
 
-    @Query(value = "SELECT tk FROM TaiKhoan tk " +
-            "JOIN VaiTro vt ON tk.vaiTro.id = vt.id " +
-            "WHERE vt.ten = 'Khach Hang' AND ((:trangThai IS NULL And :trangThai IN (0, 1)) OR tk.trangThai = :trangThai) " +
-            "AND (:search IS NULL OR tk.ten LIKE %:search% OR tk.sdt LIKE %:search%)")
-    Page<TaiKhoan> getAllKhachHang(@Param("search") String search, @Param("trangThai") Integer trangThai, Pageable pageable);
-
-
-
-    // 27/11
-    @Query(value = "select tk from TaiKhoan tk join VaiTro vt on tk.vaiTro.id = vt.id where vt.ten = 'Khach Hang' and tk.trangThai = 1")
-    List<TaiKhoan> getAllTaiKhoanByTrangThai();
+    @Query(value = "select tk from TaiKhoan tk " +
+            "join VaiTro vt on tk.vaiTro.id = vt.id " +
+            "where (vt.ten = 'Khach Hang' and (:trangThai is null or :trangThai = -1 or tk.trangThai = :trangThai)) " +
+            "and (:search is null or tk.ten like %:search% or tk.sdt like %:search%)")
+    Page<TaiKhoan> getALlKhachHang(@Param("search") String search, @Param("trangThai") Integer trangThai, Pageable pageable);
 
 
     @Query(value = "select anhDaiDien from TaiKhoan where Id = ?1", nativeQuery = true)

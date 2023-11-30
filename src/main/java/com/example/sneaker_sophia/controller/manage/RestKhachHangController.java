@@ -25,7 +25,7 @@ public class RestKhachHangController {
 
     @GetMapping("/findAll")
     public ResponseEntity<?> findAllKH(){
-        return ResponseEntity.ok(taiKhoanService.getAllTaiKhoanByTrangThai());
+        return ResponseEntity.ok(taiKhoanService.findAllKhachHang());
     }
 
     @GetMapping("/findByText")

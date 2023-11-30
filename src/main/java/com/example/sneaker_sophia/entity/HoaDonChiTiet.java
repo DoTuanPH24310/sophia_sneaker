@@ -43,6 +43,7 @@ public class HoaDonChiTiet {
     @Column(name = "nguoiTao")
     private String createdBy;
 
+    @CreatedDate
     @Column(name = "ngayTao")
     private LocalDateTime createdDate;
 

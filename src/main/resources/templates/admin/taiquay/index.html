@@ -164,23 +164,23 @@
                         </td>
 
                         <td>
-                            <span th:if="${hdct.donGia * hdct.soLuong == (((hdct.soLuongGiam * hdct.donGia) - ((((hdct.phanTramGiam) / 100.0)) * hdct.donGia)) +
-                    (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}">
+                            <span th:if="${hdct.donGia * hdct.soLuong == ((hdct.donGia * (1- ((hdct.phanTramGiam) / 100.0)) * hdct.soLuongGiam)
+                                              + (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}">
 
-                                                 <span th:text="${#numbers.formatCurrency(((hdct.soLuongGiam * hdct.donGia) - ((((hdct.phanTramGiam) / 100.0)) * hdct.donGia)) +
-                    (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}"
+                                                 <span th:text="${#numbers.formatCurrency((hdct.donGia * (1- ((hdct.phanTramGiam) / 100.0)) * hdct.soLuongGiam)
+                                              + (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}"
                                                        style="font-size: 15px"></span>
                             </span>
 
 
-                            <span th:unless="${hdct.donGia * hdct.soLuong == (((hdct.soLuongGiam * hdct.donGia) - ((((hdct.phanTramGiam) / 100.0)) * hdct.donGia)) +
-                    (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}">
+                            <span th:unless="${hdct.donGia * hdct.soLuong == ((hdct.donGia * (1- ((hdct.phanTramGiam) / 100.0)) * hdct.soLuongGiam)
+                                              + (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}">
                                 <span th:text="${#numbers.formatCurrency(hdct.donGia * hdct.soLuong)}"
                                       style="text-decoration: line-through; color: red; font-size: 13px"></span>
                                                             <br>
                                 <!--                                                            hdct.soLuong * (hdct.donGia - (hdct.donGia * ((hdct.phanTramGiam) / 100.0))) -->
-                                             <span th:text="${#numbers.formatCurrency(((hdct.soLuongGiam * hdct.donGia) - ((((hdct.phanTramGiam) / 100.0)) * hdct.donGia)) +
-                    (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}"
+                                             <span th:text="${#numbers.formatCurrency((hdct.donGia * (1- ((hdct.phanTramGiam) / 100.0)) * hdct.soLuongGiam)
+                                              + (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))}"
                                                    style="font-size: 15px"></span>
                             </span>
                         </td>
@@ -380,19 +380,17 @@
                         </div>
                         <div class="col-3">
 
-                            <input id="tienMat" onchange="displayTraSau();" type="radio" value="1" checked
-                                   name="phuongThuc">
+                            <input id="tienMat" onchange="displayTraSau();" type="radio" value="1" checked name="phuongThuc">
                             <label for="tienMat"><h6>Tiền mặt</h6></label>
                         </div>
                         <div class="col-3">
 
-                            <input id="chuyenKhoan" onchange="displayTraSau();" type="radio" value="2"
-                                   name="phuongThuc">
-                            <label for="chuyenKhoan"><h6>Chuyển khoản</h6></label>
+                            <input id="chuyenKhoan" onchange="displayTraSau();"  type="radio" value="2" name="phuongThuc">
+                            <label  for="chuyenKhoan"><h6>Chuyển khoản</h6></label>
                         </div>
 
                         <div class="col-2" id="phuongThucTraSau" style="display: none;">
-                            <input id="traSau" onchange="displayTraSau();" type="radio" value="3" name="phuongThuc">
+                            <input  id="traSau" onchange="displayTraSau();" type="radio" value="3" name="phuongThuc">
                             <label for="traSau"><h6>Trả sau</h6></label>
                         </div>
 
@@ -934,15 +932,13 @@
         let slt = -1;
         const checkIHD = [[${session.checkTTHT}]];
         const phiPhip = [[${phiVanChuyen}]];
-        const httt = [[${httt}]];
-        const tthd = [[${trangThaiDon}]];
 
 
-        if (checkIHD != null && checkIHD == 1) {
+        if (checkIHD != null && checkIHD == 1){
             removeSeesion('checkTTHT');
             window.onload = function () {
                 $('#modalInHoaDon').modal('show');
-                document.getElementById('inHoaDon').href = 'http://localhost:8080/admin/tai-quay/pdf/' + idHoaDon;
+                document.getElementById('inHoaDon').href ='http://localhost:8080/admin/tai-quay/pdf/'+ idHoaDon;
                 document.getElementById('inHoaDon').addEventListener('click', function () {
                     $('#modalInHoaDon').modal('hide');
                 });
@@ -951,20 +947,16 @@
         }
 
         let myLinks = document.querySelectorAll('.myLinkHuy');
-        if (myLinks != null) {
-            myLinks.forEach(function (link) {
-                link.addEventListener('click', function (event) {
+        if (myLinks != null){
+            myLinks.forEach(function(link) {
+                link.addEventListener('click', function(event) {
                     event.preventDefault();
                     let hrefValue = link.getAttribute('href');
-                    let mess = prompt("Nhập lí do hủy: ");
-                    if (mess.trim().length == 0 || mess == null) {
-                        let type = 'error';
-                        let icon = 'fa-solid fa-circle-exclamation';
-                        let title = 'Thất bại!';
-                        let text = 'Bạn chưa nhập lí do';
-                        createToast(type, icon, title, text);
-                    } else {
-                        window.location.href = hrefValue + "?value=" + mess;
+                    let mess =  prompt("Nhập lí do hủy: ");
+                    if (mess.trim().length == 0 || mess == null){
+                        alert("Vui lòng nhập lí do");
+                    }else {
+                        window.location.href = hrefValue +"?value="+mess;
                     }
                 });
             });
@@ -981,7 +973,13 @@
             });
         }
 
-
+        let errhd = [[${session.errTaiQuay}]];
+        if (errhd != null) {
+            window.addEventListener("load", function () {
+                alert(errhd);
+                removeSeesion('errTaiQuay');
+            })
+        }
         window.addEventListener('load', function () {
             validateTienThua();
         })
@@ -991,12 +989,7 @@
             let tienKhachDua = document.getElementById('tienKhachDua').value;
             let phiShip = document.getElementById('inputPhiShip') == null ? 0 : parseFloat(document.getElementById('inputPhiShip').value);
             if (tongTien == null || tongTien == 0) {
-                let type = 'error';
-                let icon = 'fa-solid fa-circle-exclamation';
-                let title = 'Thất bại!';
-                let text = 'Vui lòng chọn sản phẩm';
-                createToast(type, icon, title, text);
-                return;
+                alert("VUi lòng chọn sản phẩm mua hàng");
             }
 
             console.log(document.getElementById('traSau').checked);
@@ -1004,17 +997,14 @@
                 tienKhachDua = tienKhachDua.replace(/[^\d.]/g, '');
                 tienKhachDua = parseFloat(tienKhachDua.replace(/\./g, ''));
                 if (tienKhachDua - (tongTien + phiShip) < 0) {
-                    let type = 'error';
-                    let icon = 'fa-solid fa-circle-exclamation';
-                    let title = 'Thất bại!';
-                    let text = 'Số tiền khách đưa còn thiếu';
-                    createToast(type, icon, title, text);
+                    alert("Số tiền khách đưa còn thiếu");
+
                 } else {
                     if (confirm('Xác nhận thanh toán đơn hàng')) {
                         document.getElementById('formXacNhanDonHang').submit();
                     }
                 }
-            } else {
+            }else {
                 if (confirm('Xác nhận thanh toán đơn hàng')) {
                     document.getElementById('formXacNhanDonHang').submit();
                 }
@@ -1025,12 +1015,10 @@
         document.getElementById('formSoluong').addEventListener('submit', function (event) {
             let inputValue = document.getElementById('inputSoLuong').value;
             if (slt == -1 || (slt - inputValue < 0)) {
-                let type = 'error';
-                let icon = 'fa-solid fa-circle-exclamation';
-                let title = 'Thất bại!';
-                let text = 'Không đủ số lượng tồn';
-                createToast(type, icon, title, text);
+                alert("Không đủ số lượng tồn");
                 event.preventDefault();
+            } else {
+                alert("Đã thêm vào giỏ hàng");
             }
         });
 
@@ -1418,7 +1406,6 @@
             buttonChon.text = 'Chọn'
             buttonChon.classList.add('btn');
             buttonChon.classList.add('btn-warning');
-            buttonChon.style.display = 'inline';
 
 
             buttonSua.href = '/admin/tai-quay/deleteDC/' + x.id + '#labelKhachhang';
@@ -1426,7 +1413,6 @@
             buttonSua.classList.add('btn');
             buttonSua.classList.add('btn-danger');
             buttonSua.classList.add('mx-1');
-            buttonSua.style.display = 'inline';
             buttonSua.addEventListener("click", function (event) {
                 let x = confirm("Bạn chắc chắn muốn xóa");
                 if (!x) {
@@ -1436,15 +1422,15 @@
 
             let row = tbodyDDC.insertRow();
             let idHTML = index + 1;
-            let selectTinh = '<select disabled id="province' + idHTML + '" class="text-center" style="border: 0px;appearance: none;"></select>'
-            let selectQuan = '<select disabled id="district' + idHTML + '" class="text-center" style="border: 0px;appearance: none;"></select>'
-            let selectXa = '<select disabled id="ward' + idHTML + '" class="text-center" style="border: 0px;appearance: none;"></select>'
+            let selectTinh = '<select disabled id="province' + idHTML + '" class="form-control text-center"></select>'
+            let selectQuan = '<select disabled id="district' + idHTML + '" class="form-control text-center"></select>'
+            let selectXa = '<select disabled id="ward' + idHTML + '" class="form-control text-center"></select>'
             let checkBox = '';
 
             if (x.diaChiMacDinh == 1) {
-                checkBox = '<button style="font-size: 10px" class="btn btn-success">Mặc định</button>';
+                checkBox = '  <button class="btn btn-success">Mặc định</button>';
             }
-            row.insertCell().innerHTML = x.ten + '<br>' + x.sdt;
+            row.insertCell().innerHTML = x.ten + '/' + x.sdt;
             row.insertCell().innerHTML = x.diaChiCuThe;
             row.insertCell().innerHTML = selectXa;
             row.insertCell().innerHTML = selectQuan;
@@ -1465,7 +1451,6 @@
                 loadTrDDC(data[index], index);
             }
         }
-
         if (idKh != null) {
             if (loaihdg == 2) {
                 customSwitches.checked = true; // Đánh dấu checkbox là checked
@@ -1480,34 +1465,19 @@
         function loadding() {
             if (idKh == null) {
                 customSwitches.checked = false;
-                let type = 'error';
-                let icon = 'fa-solid fa-circle-exclamation';
-                let title = 'Thất bại!';
-                let text = "Chưa chọn khách hàng";
-                createToast(type, icon, title, text);
-                removeSeesion('errTaiQuay');
+                alert("Chưa chọn khách hàng");
                 return;
             }
             if (customSwitches.checked) {
                 form.style.display = "block";
                 displayPhiShip();
-                document.getElementById('phuongThucTraSau').style.display = "block";
+                document.getElementById('phuongThucTraSau').style.display ="block";
                 $.ajax({
                     type: 'get',
                     url: 'http://localhost:8080/api/hoa-don/updateGiaoHang/' + idHoaDon,
                 })
             } else {
-                if(tthd == 4){
-                    customSwitches.checked = true;
-                    let type = 'error';
-                    let icon = 'fa-solid fa-circle-exclamation';
-                    let title = 'Thất bại!';
-                    let text = "Không thay đổi đơn giao hàng";
-                    createToast(type, icon, title, text);
-                    removeSeesion('errTaiQuay');
-                    return;
-                }
-                document.getElementById('phuongThucTraSau').style.display = "none";
+                document.getElementById('phuongThucTraSau').style.display ="none";
                 document.getElementById('blockTienKhachDua').style.display = "flex";
                 document.getElementById('blockTienThua').style.display = "flex";
                 document.getElementById('tienMat').checked = true;
@@ -1528,12 +1498,12 @@
 
         function displayTraSau() {
             let checkTraSau = document.getElementById('traSau');
-            if (checkTraSau.checked) {
-                document.getElementById('blockTienKhachDua').style.display = "none";
-                document.getElementById('blockTienThua').style.display = "none";
-            } else {
-                document.getElementById('blockTienKhachDua').style.display = "flex";
-                document.getElementById('blockTienThua').style.display = "flex";
+            if(checkTraSau.checked){
+                document.getElementById('blockTienKhachDua').style.display ="none";
+                document.getElementById('blockTienThua').style.display ="none";
+            }else {
+                document.getElementById('blockTienKhachDua').style.display ="flex";
+                document.getElementById('blockTienThua').style.display ="flex";
             }
 
         }
@@ -1557,21 +1527,11 @@
             input.classList.add('mt-4');
             input.name = 'phiVanChuyen';
             input.id = 'inputPhiShip';
-            let formattedPhiShip = 0;
-            if (phiPhip != null && phiPhip > 0) {
-                formattedPhiShip = phiPhip.toLocaleString('vi-VN', {
-                    style: 'currency',
-                    currency: 'VND'
-                });
-
-                input.value = (formattedPhiShip);
-            } else {
-                formattedPhiShip = '0'.toLocaleString('vi-VN', {
-                    style: 'currency',
-                    currency: 'VND'
-                });
-                input.value = formattedPhiShip;
-            }
+            // if(phiPhip > 0){
+            //     input.value = Float.parse(phiPhip);
+            // }else{
+            input.value = 0;
+            // }
 
             col3.appendChild(input);
 
@@ -1757,23 +1717,15 @@
         let tienKhachDuaInput = document.getElementById("tienKhachDua");
         let tienDuSpan = document.getElementById("tienDu");
         let tongTienHD = parseFloat(tongTien);
-        window.addEventListener('load', function () {
-            validateTienThua();
-        })
+
+        // Lắng nghe sự kiện khi người dùng nhập số tiền khách đưa
         tienKhachDuaInput.addEventListener('input', function () {
             validateTienThua();
         });
 
         function validateTienThua() {
             if (tongTien == null) return;
-            if(httt != null){
-                if (httt == 2){
-                    document.getElementById('chuyenKhoan').checked = true;
-                }else if(httt == 3){
-                    document.getElementById('traSau').checked = true;
-                }
 
-            }
             let tienKhachDua = tienKhachDuaInput.value.replace(/[^\d.]/g, '');
             let phiShip = document.getElementById('inputPhiShip') == null ? '0.' : document.getElementById('inputPhiShip').value;
             phiShip = phiShip.replace(/[^\d.]/g, '');

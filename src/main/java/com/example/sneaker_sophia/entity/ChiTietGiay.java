@@ -51,7 +51,6 @@ public class ChiTietGiay {
     @JoinColumn(name = "IdDeGiay", referencedColumnName = "Id")
     private DeGiay deGiay;
 
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "IdHang", referencedColumnName = "Id")
     private Hang hang;

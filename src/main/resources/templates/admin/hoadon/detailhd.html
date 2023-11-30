@@ -237,7 +237,7 @@
 
                 <div class="row mt-2">
                     <div class="col-7">
-                    <span>Trạng thái: &ensp;&ensp;&ensp;&ensp;
+                <span>Trạng thái: &ensp;&ensp;&ensp;&ensp;
                     <button class="bg-info text-light"
                             style="border-radius: 50px; border: white; width: 150px;">
                         <span th:if="${hoaDon.trangThai == 1}">Thành công</span>
@@ -448,9 +448,11 @@
                 fillTimeLine('icon1', 'text1', value, 'Chờ Xác nhận', 'uil-comment-alt-question');
             }
             value = check('6');
-            if (value != null &&  listLSHD.length == 2) {
+            if (value != null && listLSHD.length == 2) {
                 fillTimeLine('icon2', 'text2', value, 'Hủy', 'uil-trash-alt');
             }
+
+
             value = check('4');
             if (value != null && value.hoaDon.loaiHoaDon != 1) {
                 fillTimeLine('icon2', 'text2', value, 'Chờ giao', 'uil-clock-nine');

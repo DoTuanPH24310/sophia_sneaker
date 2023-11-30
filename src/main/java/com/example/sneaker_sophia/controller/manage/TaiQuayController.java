@@ -4,7 +4,6 @@ import com.example.sneaker_sophia.entity.*;
 import com.example.sneaker_sophia.repository.AnhRepository;
 import com.example.sneaker_sophia.request.TaiKhoanRequest;
 import com.example.sneaker_sophia.service.*;
-import com.example.sneaker_sophia.validate.AlertInfo;
 import com.lowagie.text.*;
 import com.lowagie.text.Font;
 import com.lowagie.text.pdf.BaseFont;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import java.awt.*;
 import java.io.IOException;
 import java.text.NumberFormat;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
@@ -68,9 +66,6 @@ public class TaiQuayController {
 
     @Resource(name = "taiQuayService")
     TaiQuayService taiQuayService;
-
-    @Autowired
-    private AlertInfo alertInfo;
 
     //    alo ôla
     @GetMapping("/hien-thi")
@@ -128,32 +123,31 @@ public class TaiQuayController {
             @RequestParam(value = "maCTG", required = false) String maCTG,
             Model model
     ) {
+//        Integer soLuong = taiQuayService.validateADDHDCT(soLuong1, maCTG, model);
         int soLuong;
         try {
             soLuong = Integer.parseInt(soLuong1);
             if (soLuong <= 0) {
-                alertInfo.alert("errTaiQuay",null);
+                model.addAttribute("error", "Vui lòng nhập số lượng dương.");
                 return "redirect:/admin/tai-quay/detail/" + tempIdHD;
             }
         } catch (NumberFormatException e) {
-            alertInfo.alert("errTaiQuay",null);
+            model.addAttribute("error", "Vui lòng nhập số lượng hợp lệ.");
             return "redirect:/admin/tai-quay/detail/" + tempIdHD;
         }
 
         HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
         UUID idCTG = chiTietGiayService.getIdCTGByMa(maCTG);
         if(idCTG == null){
-            alertInfo.alert("errTaiQuay",null);
+            model.addAttribute("error", "Thao tác không hợp lệ.");
             return "redirect:/admin/tai-quay/detail/" + tempIdHD;
         }
         HoaDonChiTiet hoaDonChiTietOld = hoaDonChiTietServive.getHDCTByIdCTSP(idCTG, tempIdHD);
         ChiTietGiay chiTietGiay = chiTietGiayService.getChiTietGiayByIdctg(idCTG);
         if (hoaDonChiTietOld == null && soLuong > chiTietGiay.getSoLuong()) {
-            alertInfo.alert("errTaiQuay","Không đủ số lượng tồn");
             return "redirect:/admin/tai-quay/open-soluong/" + idCTG;
         }
         if (hoaDonChiTietOld != null && hoaDonChiTietOld.getSoLuong() + soLuong > chiTietGiay.getSoLuong() + hoaDonChiTietOld.getSoLuong()) {
-            alertInfo.alert("errTaiQuay","Không đủ số lượng tồn");
             return "redirect:/admin/tai-quay/open-soluong/" + idCTG;
 
         }
@@ -170,24 +164,10 @@ public class TaiQuayController {
 
         // giam slt trong km
         List<Voucher> voucherList = kmService.getAllKMByIdctg(idCTG);
-        Voucher voucherCTG = kmService.getKMByIdctg(idCTG);
+
 
         if (chiTietGiayService.tongKMByIdctg(idCTG) != null) {
-            if (hoaDonChiTietOld != null) {
-                if(voucherCTG.getSoLuong() >= soLuong){
-                    hoaDonChiTiet.setPhanTramGiam((chiTietGiayService.tongKMByIdctg(idCTG) * soLuong) + hoaDonChiTietOld.getPhanTramGiam());
-                }else{
-                    hoaDonChiTiet.setPhanTramGiam((chiTietGiayService.tongKMByIdctg(idCTG) * voucherCTG.getSoLuong()) + hoaDonChiTietOld.getPhanTramGiam());
-                }
-
-            }
-            else{
-                if(voucherCTG.getSoLuong() >= soLuong){
-                    hoaDonChiTiet.setPhanTramGiam((chiTietGiayService.tongKMByIdctg(idCTG) * soLuong));
-                }else {
-                    hoaDonChiTiet.setPhanTramGiam((chiTietGiayService.tongKMByIdctg(idCTG) * voucherCTG.getSoLuong()));
-                }
-            }
+            hoaDonChiTiet.setPhanTramGiam(chiTietGiayService.tongKMByIdctg(idCTG));
         } else {
             if (hoaDonChiTietOld != null) {
                 hoaDonChiTiet.setSoLuongGiam(hoaDonChiTietOld.getSoLuongGiam());
@@ -233,9 +213,8 @@ public class TaiQuayController {
             kmService.saveVC(voucher);
 
         }
-        LocalDateTime localDateTime = LocalDateTime.now();
+
         hoaDonChiTiet.setDonGia(chiTietGiay.getGia());
-        hoaDonChiTiet.setCreatedDate(localDateTime);
 //        hoaDonChiTiet.setIdHoaDonCT(idHoaDonCT);
         hoaDonChiTiet.setHoaDon(hoaDonService.getHoaDonById(tempIdHD));
         hoaDonChiTiet.setChiTietGiay(chiTietGiay);
@@ -243,7 +222,6 @@ public class TaiQuayController {
         hoaDonChiTiet.setTrangThai(1);
         chiTietGiayService.save(chiTietGiay);
         hoaDonChiTietServive.addhdct(hoaDonChiTiet);
-        alertInfo.alert("successTaiQuay","Sản phẩm đã được thêm");
         return "redirect:/admin/tai-quay/detail/" + tempIdHD;
     }
 
@@ -274,6 +252,7 @@ public class TaiQuayController {
         tempIdHD = id;
         session.setAttribute("idHoaDon", id);
         session.setAttribute("checkBill", true);
+        System.out.println(session.getAttribute("mySessionAttribute"));
         List<HoaDon> list = hoaDonService.getHoaDonByTrangThai();
         model.addAttribute("listHDC", list);
         model.addAttribute("maHD", id);
@@ -290,11 +269,10 @@ public class TaiQuayController {
         for (HoaDonChiTiet hdct : listhdct) {
             UUID idctg = hdct.getChiTietGiay().getId();
             String avtctg = anhRepository.getAnhChinhByIdctg(idctg);
-//            tongTien += (hdct.getDonGia() * (1 - ((hdct.getPhanTramGiam()) / 100.0)) * hdct.getSoLuongGiam()) +
-//                    (hdct.getDonGia() * (hdct.getSoLuong() - hdct.getSoLuongGiam()));
-            tongTien += ((hdct.getSoLuongGiam() * hdct.getDonGia()) - ((((hdct.getPhanTramGiam()) / 100.0)) * hdct.getDonGia())) +
+            tongTien += (hdct.getDonGia() * (1 - ((hdct.getPhanTramGiam()) / 100.0)) * hdct.getSoLuongGiam()) +
                     (hdct.getDonGia() * (hdct.getSoLuong() - hdct.getSoLuongGiam()));
             avtctgMap.put(idctg, avtctg);
+
             model.addAttribute("avtctgMap", avtctgMap);
         }
 
@@ -314,8 +292,6 @@ public class TaiQuayController {
         if (hinhThucThanhToan != null) {
             model.addAttribute("tienKhachDua", hinhThucThanhToan.getSoTien());
             model.addAttribute("phiVanChuyen", hoaDon.getPhiShip());
-            model.addAttribute("httt",hinhThucThanhToan.getTrangThai());
-            model.addAttribute("trangThaiDon",hoaDon.getTrangThai());
         }
 
         model.addAttribute("tongTienTruocGiam", tongTienTruocGiam);
@@ -357,13 +333,12 @@ public class TaiQuayController {
             Model model
     ) {
         if (liDoHuy.length() > 20){
-            alertInfo.alert("errTaiQuay","Tối đa 20 kí tự");
             return "redirect:/admin/tai-quay/hien-thi";
         }
         HoaDon hoaDon = hoaDonService.getHoaDonById(id);
         if (hoaDon.getListHoaDonChiTiet().size() > 0) {
             tempIdHD = id;
-            alertInfo.alert("errTaiQuay","Không thể hủy hóa đơn đã thêm sản phẩm");
+            session.setAttribute("errTaiQuay", "Không thể xóa hóa đơn đã thêm sản phẩm");
             return "forward:/admin/tai-quay/detail/" + tempIdHD;
         }
 
@@ -376,7 +351,6 @@ public class TaiQuayController {
         hoaDonService.savehd(hoaDon);
         List<HoaDon> list = hoaDonService.getHoaDonByTrangThai();
         model.addAttribute("listHDC", list);
-        alertInfo.alert("successTaiQuay","Hóa đơn đã được hủy");
         return "redirect:/admin/tai-quay/hien-thi";
     }
 
@@ -387,7 +361,7 @@ public class TaiQuayController {
             Model model
     ) {
         hoaDonChiTietServive.deleteHDCT(idctsp, tempIdHD);
-        alertInfo.alert("successTaiQuay","Sản phẩm đã được xóa");
+        session.setAttribute("errTaiQuay", "Xóa thành công");
         List<HoaDon> list = hoaDonService.getHoaDonByTrangThai();
         model.addAttribute("listHDC", list);
         return "redirect:/admin/tai-quay/detail/" + tempIdHD;
@@ -433,7 +407,6 @@ public class TaiQuayController {
         hoaDon.setTenKhachHang(nhanVienRequest.getTen());
         hoaDon.setSoDienThoai(nhanVienRequest.getSdt());
         hoaDonService.savehd(hoaDon);
-        alertInfo.alert("successTaiQuay","Khách hàng đã được thêm");
         return "forward:/admin/tai-quay/detail/" + tempIdHD;
 
     }
@@ -477,7 +450,6 @@ public class TaiQuayController {
             diaChiThuong.setDiaChiMacDinh(1);
             diaChiService.saveDC(diaChiThuong);
         }
-        alertInfo.alert("successTaiQuay","Địa chỉ đã được thay đổi");
         return "forward:/admin/tai-quay/detail/" + tempIdHD;
     }
 
@@ -487,7 +459,7 @@ public class TaiQuayController {
             @PathVariable(value = "id", required = false) String iddc
     ) {
         diaChiService.deleteById(iddc);
-        alertInfo.alert("successTaiQuay","Xóa thành công");
+        session.setAttribute("errTaiQuay", "Xóa thành công");
         return "forward:/admin/tai-quay/detail/" + tempIdHD;
     }
 
@@ -518,7 +490,6 @@ public class TaiQuayController {
         diaChi.setSdt(sdt);
         diaChi.setDiaChiMacDinh(1);
         diaChiService.saveDC(diaChi);
-        alertInfo.alert("successTaiQuay","Địa chỉ đã được thêm");
         return "redirect:/admin/tai-quay/detail/" + tempIdHD;
     }
 
@@ -628,9 +599,6 @@ public class TaiQuayController {
         HinhThucThanhToan hinhThucThanhToan = htttService.getHTTTByIdhd(tempIdHD);
         phiVanChuyen = phiVanChuyen.replaceAll("[^\\d]", "");
         tienKhachDua = tienKhachDua.replaceAll("[^\\d]", "");
-
-
-
         try {
             Double phiShip = Double.parseDouble(phiVanChuyen);
             if (phiShip < 0) {
@@ -704,7 +672,7 @@ public class TaiQuayController {
 
         hoaDonService.savehd(hoaDon);
         session.setAttribute("checkTTHT", true);
-        alertInfo.alert("successTaiQuay","Thanh toán thành công");
+
         return "redirect:/admin/tai-quay/hien-thi";
     }
 

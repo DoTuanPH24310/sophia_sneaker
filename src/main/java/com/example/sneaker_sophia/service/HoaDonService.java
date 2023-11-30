@@ -23,8 +23,6 @@ public class HoaDonService {
     @Autowired
     private HttpSession session;
 
-
-
     public Integer soHD() {
         return hoaDonRepository.soHD();
     }

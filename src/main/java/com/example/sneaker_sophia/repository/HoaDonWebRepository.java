@@ -1,7 +1,7 @@
 package com.example.sneaker_sophia.repository;
 
+import com.example.sneaker_sophia.entity.ChiTietGiay;
 import com.example.sneaker_sophia.entity.HoaDon;
-import com.example.sneaker_sophia.entity.TaiKhoan;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,10 +18,4 @@ public interface HoaDonWebRepository extends JpaRepository<HoaDon, String> {
     List<Object[]> getDoanhThuTheoThang(@Param("nam") int nam);
 
     HoaDon findByMaHoaDOn(String hoadon);
-
-
-    List<HoaDon> findByTaiKhoanAndLoaiHoaDonEqualsOrderByCreatedDateDesc(TaiKhoan tk,Integer lhd);
-
-
-
 }

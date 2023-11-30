@@ -40,6 +40,8 @@ WebsiteshopController {
     @Autowired
     LoaiGiayService loaiGiayService;
     @Autowired
+    private ProductService productService;
+    @Autowired
     private CartService cartService;
     @Autowired
     HoaDonChiTietServive hoaDonChiTietServive;
@@ -55,10 +57,13 @@ WebsiteshopController {
         List<GioHangChiTiet> cartItems = cartService.getCartItems(authentication.getName());
 
         // Tính giá sau khuyến mãi cho từng sản phẩm trong giỏ hàng
-        for (GioHangChiTiet cartItem : cartItems) {
-            ChiTietGiay chiTietGiay = cartItem.getId().getChiTietGiay();
-            khuyenMaiWebService.tinhGiaSauKhuyenMai(chiTietGiay, httpSession);
+        for (ChiTietGiay chiTietGiay : productList) {
+            this.khuyenMaiWebService.tinhGiaSauKhuyenMai(chiTietGiay, httpSession);
+            model.addAttribute("giaCu_" + chiTietGiay.getId(), httpSession.getAttribute("giaCu"));
+            model.addAttribute("giaMoi_" + chiTietGiay.getId(), httpSession.getAttribute("giaMoi"));
         }
+
+        List<ChiTietGiay> chiTietGiays = this.productService.getTop10BestSelling();
 
         double totalCartPrice = cartItems.stream()
                 .mapToDouble(item -> item.getId().getChiTietGiay().getGia() * item.getSoLuong())
@@ -66,6 +71,7 @@ WebsiteshopController {
         Long soLuong = this.cartService.countCartItems(authentication.getName());
         model.addAttribute("soLuong", soLuong);
         model.addAttribute("totalCartPrice", totalCartPrice);
+        model.addAttribute("chiTietGiays", chiTietGiays);
         model.addAttribute("cartItems", cartItems);
         model.addAttribute("top10",hoaDonChiTietServive.findTop10IdChiTietGiay());
 

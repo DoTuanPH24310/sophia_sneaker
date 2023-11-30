@@ -3,7 +3,6 @@ package com.example.sneaker_sophia.service;
 import com.example.sneaker_sophia.dto.VoucherDTO;
 import com.example.sneaker_sophia.entity.*;
 import com.example.sneaker_sophia.repository.VoucherRepository;
-import com.example.sneaker_sophia.validate.AlertInfo;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.servlet.ServletRequest;
 import org.springframework.beans.BeanUtils;
@@ -16,7 +15,10 @@ import org.springframework.ui.Model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 
 @Service
@@ -26,11 +28,6 @@ public class VoucherService {
 
     @Autowired
     private ServletRequest request;
-
-
-    @Autowired
-    private AlertInfo alertInfo;
-
 
     @Autowired
     private GiayService giayService;
@@ -58,11 +55,11 @@ public class VoucherService {
         String txtSearchReq = request.getParameter("textSearch");
         String trangThaiReq = request.getParameter("trangThai");
         String txtSearch = txtSearchReq == null || txtSearchReq.isBlank() ? null : "%" + txtSearchReq + "%";
-        Integer check = trangThaiReq == null || trangThaiReq.isBlank() || trangThaiReq.equals("-1") ? null : Integer.parseInt(trangThaiReq);
+        Integer check = trangThaiReq == null || trangThaiReq.isBlank()|| trangThaiReq.equals("-1") ? null : Integer.parseInt(trangThaiReq);
         model.addAttribute("textSearch", txtSearchReq);
         model.addAttribute("trangThai", trangThaiReq);
         if (trangThaiReq != null && trangThaiReq.equals("-1") && txtSearchReq.trim().length() == 0) {
-            return voucherRepository.findAllAndSort(pageable);
+            return  voucherRepository.findAllAndSort(pageable);
         }
         page = voucherRepository.locVaTimKiem(check, txtSearch, pageable);
         return page;
@@ -80,7 +77,7 @@ public class VoucherService {
         if (vc.getTen() == null || vc.getTen().trim().length() == 0) {
             errTen = "Vui lòng nhập tên";
             check++;
-        } else if (vc.getTen().length() > 49) {
+        }else if (vc.getTen().length() > 49){
             errTen = "Tối đa 50 kí tự";
             check++;
 
@@ -106,6 +103,15 @@ public class VoucherService {
         } else if (ptg <= 0 || ptg > 100) {
             errGiaTri = "Từ 1 - 100";
             check++;
+        } else {
+            Map<UUID, Integer> map = checkPhanTram(chiTietGiayService.convertStringListToUUIDList(listIDCTG), ptg);
+            if (!map.isEmpty()) {
+                err = "Tồn tại các khuyến mại trước đó:  \n\n";
+                for (Map.Entry<UUID, Integer> entry : map.entrySet()) {
+                    err += "Giày: " + chiTietGiayService.findMaByIdCTG(entry.getKey()) + "- Chỉ giảm được tối đa: " + entry.getValue() + "%\n";
+                }
+                check++;
+            }
 
         }
         if (vc.getSoLuong() == null || vc.getSoLuong().trim().length() == 0) {
@@ -159,6 +165,7 @@ public class VoucherService {
         model.addAttribute("errGiaTri", errGiaTri);
         model.addAttribute("errNBD", errNBD);
         model.addAttribute("errNKT", errNKT);
+        model.addAttribute("err", err);
         model.addAttribute("errSoLuong", errSoLuong);
         return check == 0;
     }
@@ -221,8 +228,8 @@ public class VoucherService {
         List<Voucher> list = voucherRepository.findAll();
         String maTemp = "VC0" + list.size();
         int count = 1;
-        while (voucherRepository.findByMa(maTemp).size() != 0) {
-            maTemp = "VC0" + (list.size() + count);
+        while (voucherRepository.findByMa(maTemp).size() != 0){
+            maTemp = "VC0" + (list.size() +count);
             count++;
         }
         voucher.setMa(maTemp);
@@ -268,15 +275,22 @@ public class VoucherService {
         }
 
     }
-//
-//    public List<String> checkPhanTram(List<UUID> listCTG) {
-//        List<String> listMaCTG = new ArrayList<>();
-//        for (UUID x : listCTG) {
-//            List<String> ma = chCtg_khuyenMaiService.exitsKhuyenMai(x);
-//            listMaCTG.add(ma);
-//        }
-//        return listMaCTG;
-//    }
+
+    public Map checkPhanTram(List<UUID> listCTG, Integer phanTram) {
+        Map<UUID, Integer> map = new HashMap<>();
+        Integer count = 0;
+        Integer temp = 0;
+        for (UUID x : listCTG) {
+            count = chCtg_khuyenMaiService.sumPhanTram(x);
+            if (count != null) {
+                temp = 100 - (count + phanTram);
+                if (temp < 0) {
+                    map.put(x, 100 - count);
+                }
+            }
+        }
+        return map;
+    }
 
 //    Chỉ hiện nút sửa khi trạng thái sắp diễn ra
 //    Chỉ hiện nút xóa khi trạng thái là sắp diễn ra hoặc đã hết hạn

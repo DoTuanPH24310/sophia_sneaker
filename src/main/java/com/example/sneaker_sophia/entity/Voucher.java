@@ -45,9 +45,6 @@ public class Voucher {
     @Column(name = "phanTramGiam")
     private Integer phanTramGiam;
 
-    @Column(name = "soLuongGiam")
-    private Integer soLuongGiam;
-
     @Column(name = "ngayBatDau")
     private LocalDateTime ngayBatDau;
 

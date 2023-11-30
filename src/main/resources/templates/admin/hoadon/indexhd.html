@@ -640,11 +640,9 @@
         $(document).ready(function () {
             $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
                 activeTab = $(e.target).attr("href");
-
                 findErrTable(activeTab);
                 resetSelectAndTab();
                 eventCheckbox();
-
             });
         });
 
@@ -782,9 +780,6 @@ type="checkbox">`;
             document.getElementById('errchoXacNhan').innerHTML = '';
             document.getElementById('errdangGiao').innerHTML = '';
             document.getElementById('errhuy').innerHTML = '';
-            document.getElementById('selectAllCG').checked = false;
-            document.getElementById('selectAllDG').checked = false;
-            document.getElementById('selectAllCXN').checked = false;
         }
 
         function fillter() {

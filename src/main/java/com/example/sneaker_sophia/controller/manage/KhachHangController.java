@@ -5,7 +5,6 @@ import com.example.sneaker_sophia.entity.DiaChi;
 import com.example.sneaker_sophia.repository.VaiTroRepository;
 import com.example.sneaker_sophia.request.TaiKhoanRequest;
 import com.example.sneaker_sophia.service.DiaChiService;
-import com.example.sneaker_sophia.service.EmailService;
 import com.example.sneaker_sophia.service.FileUpload;
 import com.example.sneaker_sophia.service.TaiKhoanService;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -45,7 +43,7 @@ public class KhachHangController {
             @Parameter(hidden = true) Pageable pageable,
             @RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
             @RequestParam(value = "textSearch", required = false) String search,
-            @RequestParam(value = "trangThai", required = false, defaultValue = "1") Integer trangThai,
+            @RequestParam(value = "trangThai", required = false) Integer trangThai,
             HttpSession session
     ) {
         Page<NhanVienDTO> list = taiKhoanService.getAllKhachHang(search, trangThai, pageable);
@@ -99,7 +97,7 @@ public class KhachHangController {
         session.removeAttribute("tinh");
         session.removeAttribute("quan");
         session.removeAttribute("phuong");
-        if (!taiKhoanService.validateAddKH(kh_rq, model)) {
+        if (!taiKhoanService.validateAdd(kh_rq, model)) {
             session.setAttribute("tinh", kh_rq.getTinh());
             session.setAttribute("quan", kh_rq.getQuanHuyen());
             session.setAttribute("phuong", kh_rq.getPhuongXa());
@@ -112,7 +110,6 @@ public class KhachHangController {
             }
             kh_rq.setAnhDaiDien(imageURL);
             taiKhoanService.save(kh_rq, model);
-
             return "redirect:/admin/khachhang/hienthi";
         }
 
@@ -128,7 +125,7 @@ public class KhachHangController {
         TaiKhoanRequest taiKhoan = taiKhoanService.getTaiKhoanById(idTaiKhoan);
         kh_rq.setIdTaiKhoan(idTaiKhoan);
         String imageURL = null;
-        if (!taiKhoanService.validateUppdateKH(idTaiKhoan, kh_rq, model)) {
+        if (!taiKhoanService.validateUppdate(kh_rq, model)) {
             session.setAttribute("tinh", kh_rq.getTinh());
             session.setAttribute("quan", kh_rq.getQuanHuyen());
             session.setAttribute("phuong", kh_rq.getPhuongXa());

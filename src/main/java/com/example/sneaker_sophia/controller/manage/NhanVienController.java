@@ -100,7 +100,7 @@ public class NhanVienController {
         session.removeAttribute("tinh");
         session.removeAttribute("quan");
         session.removeAttribute("phuong");
-        if (!taiKhoanService.validateAddNV(nv_rq, model)) {
+        if (!taiKhoanService.validateAdd(nv_rq, model)) {
             session.setAttribute("tinh", nv_rq.getTinh());
             session.setAttribute("quan", nv_rq.getQuanHuyen());
             session.setAttribute("phuong", nv_rq.getPhuongXa());
