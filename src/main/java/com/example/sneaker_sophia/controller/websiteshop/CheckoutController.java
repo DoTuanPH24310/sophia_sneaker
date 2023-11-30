@@ -111,9 +111,9 @@ public class CheckoutController {
                         diaChi = new DiaChi();
                     }
                     model.addAttribute("diaChi", diaChi);
-
                     model.addAttribute("cartItems", cartItems);
                     model.addAttribute("tongSoLuongGiam", tongSoLuongGiam);
+                    session.setAttribute("idkhOL",taiKhoan.getId());
                     return "website/productwebsite/checkout";
                 }
             }

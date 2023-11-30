@@ -399,7 +399,7 @@
                             </div>
                             <div class="col-4">
                                 <div class="default-form-box">
-                                    <button type="button" class="btn btn-golden mt-8"
+                                    <button type="button" onclick="loadAllDC();" class="btn btn-golden mt-8"
                                             data-bs-toggle="modal"
                                             data-bs-target="#modalDoiDiaChi">
                                         Đổi địa chỉ
@@ -756,7 +756,7 @@
                         <!-- Thêm địa chỉ theo id tai khoản -->
 
                         <button th:if="${session.get('countDC') < 5}" onclick="themDiaChi();"
-                                class="btn btn-primary float-right " data-bs-toggle="modal"
+                                class="btn btn-primary float-right text-white " data-bs-toggle="modal"
                                 data-bs-target="#modalThemDiaChi">Thêm Đ/C
                         </button>
 
@@ -772,17 +772,17 @@
                     <div class="table table-wrapper-scroll-y my-custom-scrollbar" style="height: 450px">
                         <table id="table" class="table  table-borderless  formTable">
                             <thead>
-                            <tr class="bg-light" style="vertical-align: middle;">
+                            <tr class="bg-light" style="vertical-align: middle; text-align: center;">
                                 <th width="12%">Tên/SĐT</th>
                                 <th width="12%">D/c cụ thể</th>
                                 <th width="17%">Phường/xã</th>
                                 <th width="17%">Quận/Huyện</th>
                                 <th width="17%">Tỉnh/Thành Phố</th>
-                                <th width="6%">Trạng thái</th>
+                                <th width="10%">Trạng thái</th>
                                 <th width="19%">Thao tác</th>
                             </tr>
                             </thead>
-                            <tbody id="tbodyDDC">
+                            <tbody id="tbodyDDC"  style="vertical-align: middle; text-align: center;">
 
 
                             </tbody>
@@ -808,7 +808,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Thêm địa chỉ</h5>
-                    <a type="button" class="close" onclick="resetModalTDC();" data-dismiss="modal"
+                    <a type="button" class="close" onclick="resetModalTDC();" data-bs-dismiss="modal"
                        aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </a>
@@ -857,7 +857,7 @@
                 </div>
                 <div class="modal-footer">
                     <!--                    ?link day nha thang ngiu-->
-                    <button type="submit" id="validXacNhanThemTK" class="btn btn-primary">Xác nhận</button>
+                    <button type="submit" id="validXacNhanThemTK" class="btn btn-primary text-white">Xác nhận</button>
                 </div>
             </div>
         </div>
@@ -873,10 +873,164 @@
         integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-<script>
+<script th:inline="javascript">
     const tinh = '[[${#strings.isEmpty(session.tinh) ? -1 : session.tinh}]]';
     const quan = '[[${#strings.isEmpty(session.quan) ? -1 : session.quan}]]';
     let phuong = '[[${#strings.isEmpty(session.phuong) ? -1 : session.phuong}]]';
+    const idKh = [[${session.idkhOL}]];
+    const tbodyDDC = document.getElementById('tbodyDDC');
+
+
+    function loadAllDC() {
+        $.ajax({
+            type: 'get',
+            url: 'http://localhost:8080/api/khachHang/findListDiaChi?value=' + idKh,
+            success: function (data) {
+                loadAllTableDC(data);
+            }
+        })
+    }
+
+    function loadAllTableDC(data) {
+        tbodyDDC.innerHTML = '';
+        for (let index = 0; index < data.length; index++) {
+            loadTrDDC(data[index], index);
+        }
+    }
+
+    function apiDiaChiGender(idTinh, idQuan, idXa, tinh, quan, phuong) {
+        const host = "https://provinces.open-api.vn/api/";
+        let renderData = (array, select) => {
+            let row = `<option  value="">--Chọn Tỉnh/Thành phố--</option>`;
+            array.forEach(element => {
+                if (tinh === element.code) {
+                    renderDataDis(element.districts, idQuan);
+                    row = `<option selected value="${element.name}">${element.name}</option>`;
+                }
+            });
+            document.querySelector("#" + select).innerHTML = row;
+        }
+
+        let renderDataDis = (array, select) => {
+            let row = `<option disable value="">--Chọn--</option>`;
+            array.forEach(element => {
+                if (quan === element.code) {
+                    renderDataWar(element.wards, idXa);
+                    row = `<option selected value="${element.name}">${element.name}</option>`;
+                }
+            });
+
+            document.querySelector("#" + select).innerHTML = row;
+        }
+
+        let renderDataWar = (array, select) => {
+            let row = `<option disable value="">--Chọn--</option>`;
+            array.forEach(element => {
+                if (phuong === element.code) {
+                    row = `<option selected value="${element.name}">${element.name}</option>`;
+                }
+            });
+
+            document.querySelector("#" + select).innerHTML = row;
+        }
+
+        let callAPI = (api) => {
+            return axios.get(api)
+                .then((response) => {
+                    renderData(response.data, idTinh);
+                });
+        };
+        callAPI('https://provinces.open-api.vn/api/?depth=3');
+    }
+
+    function themDiaChi() {
+        // modalContentDDC.style.opacity = '0.6';
+        const host = "https://provinces.open-api.vn/api/";
+        let callAPI = (api) => {
+            return axios.get(api)
+                .then((response) => {
+                    renderData(response.data, "provincetdc");
+                });
+        }
+        callAPI('https://provinces.open-api.vn/api/?depth=1');
+        let callApiDistrict = (api) => {
+            return axios.get(api)
+                .then((response) => {
+                    renderData(response.data.districts, "districttdc");
+                });
+        }
+        let callApiWard = (api) => {
+            return axios.get(api)
+                .then((response) => {
+                    renderData(response.data.wards, "wardtdc");
+                });
+        }
+
+        let renderData = (array, select) => {
+            let row = ' <option disable value="">--Chọn--</option>';
+            array.forEach(element => {
+                row += `<option value="${element.code}">${element.name}</option>`
+            });
+            document.querySelector("#" + select).innerHTML = row
+        }
+        $("#provincetdc").change(() => {
+            callApiDistrict(host + "p/" + $("#provincetdc").val() + "?depth=2");
+
+        });
+        $("#districttdc").change(() => {
+            callApiWard(host + "d/" + $("#districttdc").val() + "?depth=2");
+
+        });
+
+    }
+
+    function loadTrDDC(x, index) {
+        let buttonChon = document.createElement('a');
+        let buttonSua = document.createElement('a');
+        buttonChon.href = '/admin/tai-quay/updateDCMD/' + x.id + '#labelKhachhang';
+        buttonChon.text = 'Chọn'
+        buttonChon.classList.add('btn');
+        buttonChon.classList.add('btn-warning');
+        buttonChon.style.display = 'inline';
+
+
+        buttonSua.href = '/admin/tai-quay/deleteDC/' + x.id + '#labelKhachhang';
+        buttonSua.text = 'Xóa'
+        buttonSua.classList.add('btn');
+        buttonSua.classList.add('btn-danger');
+        buttonSua.classList.add('mx-1');
+        buttonSua.style.display = 'inline';
+        buttonSua.addEventListener("click", function (event) {
+            let x = confirm("Bạn chắc chắn muốn xóa");
+            if (!x) {
+                event.preventDefault();
+            }
+        })
+
+        let row = tbodyDDC.insertRow();
+        let idHTML = index + 1;
+        let selectTinh = '<select disabled id="province' + idHTML + '" class="text-center" style="border: 0px;appearance: none;"></select>'
+        let selectQuan = '<select disabled id="district' + idHTML + '" class="text-center" style="border: 0px;appearance: none;"></select>'
+        let selectXa = '<select disabled id="ward' + idHTML + '" class="text-center" style="border: 0px;appearance: none;"></select>'
+        let checkBox = '';
+
+        if (x.diaChiMacDinh == 1) {
+            checkBox = '<button style="font-size: 10px" class="btn btn-success text-white">Mặc định</button>';
+        }
+        row.insertCell().innerHTML = x.ten + '<br>' + x.sdt;
+        row.insertCell().innerHTML = x.diaChiCuThe;
+        row.insertCell().innerHTML = selectXa;
+        row.insertCell().innerHTML = selectQuan;
+        row.insertCell().innerHTML = selectTinh;
+        row.insertCell().innerHTML = checkBox;
+        let action = row.insertCell();
+
+        if (x.diaChiMacDinh != 1) {
+            action.appendChild(buttonChon);
+            action.appendChild(buttonSua);
+        }
+        apiDiaChiGender('province' + idHTML, 'district' + idHTML, 'ward' + idHTML, x.tinh, x.quanHuyen, x.phuongXa);
+    }
 
     const host = "https://provinces.open-api.vn/api/";
 
@@ -979,6 +1133,8 @@
         }
 
     }
+
+
 
 
     document.getElementById("btnThanhToan").addEventListener("click", function (event) {
