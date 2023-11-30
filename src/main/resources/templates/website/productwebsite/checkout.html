@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="zxx" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-
-
+<html lang="html" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/website/layout/layout}">
 <meta http-equiv="content-type" content="text/html;charset=UTF-8"/><!-- /Added by HTTrack -->
 <head>
     <meta charset="UTF-8">
@@ -9,93 +9,11 @@
 
     <title>HONO - Multi Purpose HTML Template</title>
 
-    <!-- ::::::::::::::Favicon icon::::::::::::::-->
-    <link rel="shortcut icon" href="/assets/images/favicon.ico" type="image/png">
-    <link rel="stylesheet" href="/assets/css/vendor/vendor.min.css">
-    <link rel="stylesheet" href="/assets/css/plugins/plugins.min.css">
-    <link rel="stylesheet" href="/assets/css/style.min.css">
 
 </head>
 
-<body>
+<body layout:fragment="content2">
 <!-- Start Header Area -->
-<header class="header-section d-none d-xl-block">
-    <div class="header-wrapper">
-        <div class="header-bottom header-bottom-color--golden section-fluid sticky-header sticky-color--golden">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-12 d-flex align-items-center justify-content-between">
-                        <!-- Start Header Logo -->
-                        <div class="header-logo">
-                            <div class="logo">
-                                <a th:href="@{/sophia-store/product}"><img src="/assets/images/logo/logo_black.png"
-                                                                           alt=""></a>
-                            </div>
-                        </div>
-                        <!-- End Header Logo -->
-
-                        <!-- Start Header Main Menu -->
-                        <div class="main-menu menu-color--black menu-hover-color--golden">
-                            <nav>
-                                <ul>
-                                    <li>
-                                        <a class="active main-menu-link" th:href="@{/sophia-store/home}">Trang chủ </a>
-                                        <!-- Sub Menu -->
-                                    </li>
-                                    <li class="has-megaitem">
-                                        <a th:href="@{/sophia-store/product}">Sản phẩm </a>
-                                    </li>
-                                    <li class="has-dropdown">
-                                        <a href="">Bài Viết</a>
-                                    </li>
-                                    <li class="has-dropdown">
-                                        <a href="#">Trang</a>
-                                    </li>
-                                    <li>
-                                        <a href="about-us.html">Về chúng tôi</a>
-                                    </li>
-                                    <li>
-                                        <a href="contact-us.html">Liên hệ</a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
-                        <!-- End Header Main Menu Start -->
-
-                        <!-- Start Header Action Link -->
-                        <ul class="header-action-link action-color--black action-hover-color--golden">
-                            <li>
-                                <a href="#offcanvas-wishlish" class="offcanvas-toggle">
-                                    <i class="icon-user"></i>
-                                    <span class="item-count">3</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a th:href="@{/my-account/home}" class="offcanvas-toggle">
-                                    <i class="icon-bag"></i>
-                                    <span class="item-count" th:text="${soLuong}"></span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#search">
-                                    <i class="icon-magnifier"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#offcanvas-about" class="offacnvas offside-about offcanvas-toggle">
-                                    <i class="icon-menu"></i>
-                                </a>
-                            </li>
-                        </ul>
-                        <!-- End Header Action Link -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</header>
-<!-- Start Header Area -->
-
 <!-- Start Mobile Header -->
 <div class="mobile-header mobile-header-bg-color--golden section-fluid d-lg-block d-xl-none">
     <div class="container">
@@ -407,39 +325,40 @@
 <!-- ...:::: Start Checkout Section:::... -->
 <div class="checkout-section">
     <div class="container">
-        <!-- Start User Details Checkout Form -->
-        <div class="checkout_form" data-aos="fade-up" data-aos-delay="400">
-            <div class="row">
-                <div class="col-lg-6 col-md-6">
-                    <form th:object="${diaChi}" method="post">
+        <form th:object="${diaChi}" th:action="@{/check-out/thanh-toan}" method="post" id="formThanhToan">
+
+            <!-- Start User Details Checkout Form -->
+            <div class="checkout_form" data-aos="fade-up" data-aos-delay="400">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6">
                         <h3>Thông tin địa chỉ</h3>
                         <div class="row">
                             <div class="col-12">
                                 <div class="default-form-box">
                                     <label>Họ tên người nhận hàng</label>
-                                    <input type="text" th:field="*{ten}" disabled>
+                                    <input type="text" th:field="*{ten}" id="nameTen">
                                     <span th:errors="*{ten}" style="color: red"></span>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="default-form-box">
                                     <label>Số điện thoại <span>*</span></label>
-                                    <input type="text" th:field="*{sdt}" disabled>
+                                    <input type="text" th:field="*{sdt}" id="nameSoDienThoai">
                                     <span th:errors="*{sdt}" style="color: red"></span>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="default-form-box">
                                     <label> Địa chỉ email <span>*</span></label>
-                                    <input type="text" th:field="*{taiKhoan.email}" disabled>
-                                    <span th:errors="*{taiKhoan.email}" style="color: red"></span>
+                                    <input type="text" th:value="${email}" disabled>
+                                    <!--                                                                        <span th:errors="*{taiKhoan.email}" style="color: red"></span>-->
                                 </div>
                             </div>
                             <div class="col-4">
                                 <div class="default-form-box">
                                     <label for="province">Tỉnh<span>*</span></label>
-                                    <select class="country_option nice-select wide" id="province" name="tinh"
-                                            th:field="*{tinh}" placeholder="Chọn tỉnh" disabled>
+                                    <select class="country_option nice-select wide" id="province"
+                                            th:field="*{tinh}" placeholder="Chọn tỉnh">
                                         <option value="">Chọn tỉnh</option>
                                         <option value=""></option>
                                     </select>
@@ -449,8 +368,8 @@
                             <div class="col-4">
                                 <div class="default-form-box">
                                     <label for="district">Huyện <span>*</span></label>
-                                    <select class="country_option nice-select wide" name="quanHuyen" id="district"
-                                            th:field="*{quanHuyen}" placeholder="Chọn huyện" disabled>
+                                    <select class="country_option nice-select wide" id="district"
+                                            th:field="*{quanHuyen}" placeholder="Chọn huyện">
                                         <option value="">Chọn quận huyện</option>
                                         <option value=""></option>
                                     </select>
@@ -460,8 +379,8 @@
                             <div class="col-4">
                                 <div class="default-form-box">
                                     <label for="ward">Xã <span>*</span></label>
-                                    <select class="country_option nice-select wide" id="ward" name="phuongXa"
-                                            th:field="*{phuongXa}" placeholder="Chọn xã" disabled>
+                                    <select class="country_option nice-select wide" id="ward"
+                                            th:field="*{phuongXa}" placeholder="Chọn xã">
                                         <option value="">Chọn phường xã</option>
                                         <option value=""></option>
                                     </select>
@@ -470,194 +389,131 @@
                             </div>
 
 
-                            <div class="col-12">
+                            <div class="col-8">
                                 <div class="default-form-box">
                                     <label>Địa chỉ cụ thể <span>*</span></label>
-                                    <input placeholder="House number and street name" type="text"
-                                           th:field="*{diaChiCuThe}" disabled>
+                                    <input placeholder="House number and street name" type="text" id="nameDiaChiCuThe"
+                                           th:field="*{diaChiCuThe}">
                                     <span th:errors="*{diaChiCuThe}" style="color: red"></span>
                                 </div>
                             </div>
+                            <div class="col-4">
+                                <div class="default-form-box">
+                                    <button type="button" class="btn btn-golden mt-8"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modalDoiDiaChi">
+                                        Đổi địa chỉ
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                    </form>
-                </div>
-                <div class="col-lg-6 col-md-6">
-                    <form th:action="@{/check-out/thanh-toan}" method="post" id="formThanhToan">
-                        <h3>Đơn hàng của bạn</h3>
-                        <div class="order_table table-responsive">
-                            <table>
-                                <thead>
-                                <tr>
-                                    <th>Ảnh</th>
-                                    <th>Sản phẩm</th>
-                                    <th>Số lượng</th>
-                                    <th>Đơn giá</th>
-                                    <th>Thành tiền</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr th:each="item : ${cartItems}">
-                                    <td class="product_thumb">
-                                        <img class="offcanvas-cart-image"
-                                             th:src="@{${item.id.chiTietGiay.anhs.get(0).getDuongDan()}}"
-                                             style="width: 92px; height: 92px"
-                                             alt="">
-                                    </td>
-                                    <td >
-                                    <p th:text="${item.id.chiTietGiay.hang.ten + ' ' + item.id.chiTietGiay.giay.ten + ' ' + item.id.chiTietGiay.loaiGiay.ten + ' ' + item.id.chiTietGiay.mauSac.ten}"></p>
-                                    </td>
-                                    <td>
-                                        <p th:text="${item.soLuong}"></p>
-                                    </td>
-                                    <td>
+                    </div>
+                    <div class="col-lg-6 col-md-6">
+                        <form th:action="@{/check-out/thanh-toan}" method="post">
+                            <h3>Đơn hàng của bạn</h3>
+                            <div class="order_table table-responsive">
+                                <table>
+                                    <thead>
+                                    <tr>
+                                        <th>Ảnh</th>
+                                        <th>Sản phẩm</th>
+                                        <th>Số lượng</th>
+                                        <th>Đơn giá</th>
+                                        <th>Thành tiền</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="item : ${cartItems}">
+                                        <td class="product_thumb">
+                                            <img class="offcanvas-cart-image"
+                                                 th:src="@{${item.id.chiTietGiay.anhs.get(0).getDuongDan()}}"
+                                                 style="width: 92px; height: 92px"
+                                                 alt="">
+                                        </td>
+                                        <td>
+                                            <p th:text="${item.id.chiTietGiay.hang.ten + ' ' + item.id.chiTietGiay.giay.ten + ' ' + item.id.chiTietGiay.loaiGiay.ten + ' ' + item.id.chiTietGiay.mauSac.ten}"></p>
+                                        </td>
+                                        <td>
+                                            <p th:text="${item.soLuong}"></p>
+                                        </td>
+                                        <td>
                                         <span th:if="${session['giaCu_' + item.id.chiTietGiay.id] != session['giaMoi_' + item.id.chiTietGiay.id]}"
                                               class="original-price"
                                               style="text-decoration: line-through; color: red; font-size: 13px"
                                               th:text="${#numbers.formatCurrency(session['giaCu_' + item.id.chiTietGiay.id])}"></span>
-                                        <br>
-                                        <span class="discounted-price"
-                                              th:if="${session['giaCu_' + item.id.chiTietGiay.id] != session['giaMoi_' + item.id.chiTietGiay.id]}"
-                                              th:text="${#numbers.formatCurrency(session['giaMoi_' + item.id.chiTietGiay.id])}"></span>
+                                            <br>
+                                            <span class="discounted-price"
+                                                  th:if="${session['giaCu_' + item.id.chiTietGiay.id] != session['giaMoi_' + item.id.chiTietGiay.id]}"
+                                                  th:text="${#numbers.formatCurrency(session['giaMoi_' + item.id.chiTietGiay.id])}"></span>
 
-                                        <span th:unless="${session['giaCu_' + item.id.chiTietGiay.id] != session['giaMoi_' + item.id.chiTietGiay.id]}"
-                                              th:text="${#numbers.formatCurrency(session['giaCu_' + item.id.chiTietGiay.id])}"></span>
-                                    </td>
-                                    <td >
-                                        <p th:text="${#numbers.formatCurrency(item.id.chiTietGiay.gia * item.soLuong)}"></p>
-                                    </td>
-                                </tr>
-                                </tbody>
-                                <tfoot>
-                                <tr>
-                                    <td colspan="2" style="text-align: center;">Tổng giá sản phẩm</td>
-                                    <td th:text="${#numbers.formatCurrency(total)}"></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2" style="text-align: center;">Phí vận chuyển</td>
-                                    <td id="shipping-cost" th:value="20000">20000</td>
-                                </tr>
-                                <tr class="order_total">
-                                    <td colspan="2" style="text-align: center;">Tổng tiền đơn hàng</td>
-                                    <td><strong id="totalAmount" th:text="${#numbers.formatCurrency(total) }"></strong>
-                                    </td>
-                                </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-                        <div class="payment_method">
-                            <div class="panel-default">
-                                <label class="checkbox-default" for="currencyCod" data-bs-toggle="collapse"
-                                       data-bs-target="#methodCod">
-                                    <input type="radio" id="currencyCod" name="hinhThucThanhToan" value="0">
-                                    <span>Thanh toán khi nhận hàng</span>
-                                </label>
+                                            <span th:unless="${session['giaCu_' + item.id.chiTietGiay.id] != session['giaMoi_' + item.id.chiTietGiay.id]}"
+                                                  th:text="${#numbers.formatCurrency(session['giaCu_' + item.id.chiTietGiay.id])}"></span>
+                                        </td>
+                                        <td>
+                                            <p th:text="${#numbers.formatCurrency(session['giaMoi_' + item.id.chiTietGiay.id] * item.soLuong)}"></p>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <td colspan="4" style="text-align: center;">Tổng giá sản phẩm</td>
+                                        <td th:text="${#numbers.formatCurrency(total)}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" style="text-align: center;">Phí vận chuyển</td>
+                                        <td id="shipping-cost" th:value="20000">20000</td>
+                                    </tr>
+                                    <tr class="order_total">
+                                        <td colspan="4" style="text-align: center;">Tổng tiền đơn hàng</td>
+                                        <td><strong id="totalAmount"
+                                                    th:text="${#numbers.formatCurrency(total)}"></strong>
+                                        </td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <div class="payment_method">
+                                <div class="panel-default">
+                                    <label class="checkbox-default" for="currencyCod" data-bs-toggle="collapse"
+                                           data-bs-target="#methodCod">
+                                        <input type="radio" id="currencyCod" name="hinhThucThanhToan" value="3">
+                                        <span>Thanh toán khi nhận hàng</span>
+                                    </label>
 
-                                <div id="methodCod" class="collapse" data-parent="#methodCod">
-                                    <div class="card-body1">
-                                        <p>Vui lòng nhập địa chỉ giao và kiểm tra đúng nơi nhận hàng.</p>
+                                    <div id="methodCod" class="collapse" data-parent="#methodCod">
+                                        <div class="card-body1">
+                                            <p>Vui lòng nhập địa chỉ giao và kiểm tra đúng nơi nhận hàng.</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="panel-default">
-                                <label class="checkbox-default" for="currencyPaypal" data-bs-toggle="collapse"
-                                       data-bs-target="#methodPaypal">
-                                    <input type="radio" id="currencyPaypal" name="hinhThucThanhToan" value="1">
-                                    <span>VNPay</span>
-                                </label>
-                                <div id="methodPaypal" class="collapse " data-parent="#methodPaypal">
-                                    <div class="card-body1">
-                                        <p>Pay via PayPal; you can pay with your credit card if you don’t have a
-                                            PayPal account.</p>
+                                <div class="panel-default">
+                                    <label class="checkbox-default" for="currencyPaypal" data-bs-toggle="collapse"
+                                           data-bs-target="#methodPaypal">
+                                        <input type="radio" id="currencyPaypal" name="hinhThucThanhToan" value="2">
+                                        <span>VNPay</span>
+                                    </label>
+                                    <div id="methodPaypal" class="collapse " data-parent="#methodPaypal">
+                                        <div class="card-body1">
+                                            <p>Pay via PayPal; you can pay with your credit card if you don’t have a
+                                                PayPal account.</p>
+                                        </div>
                                     </div>
                                 </div>
+                                <div class="order_button pt-3">
+                                    <button id="btnThanhToan" class="btn btn-md btn-black-default-hover" type="submit">
+                                        Thanh
+                                        toán
+                                    </button>
+                                </div>
                             </div>
-                            <div class="order_button pt-3">
-                                <button id="btnThanhToan" class="btn btn-md btn-black-default-hover" type="submit">Thanh
-                                    toán
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
-            </div>
-        </div> <!-- Start User Details Checkout Form -->
+            </div> <!-- Start User Details Checkout Form -->
+        </form>
     </div>
 </div><!-- ...:::: End Checkout Section:::... -->
 
-<!-- Start Footer Section -->
-<footer class="footer-section footer-bg section-top-gap-100">
-    <div class="footer-wrapper">
-        <!-- Start Footer Top -->
-        <div class="footer-top">
-            <div class="container">
-                <div class="row mb-n6">
-                    <div class="col-lg-3 col-sm-6 mb-6">
-                        <!-- Start Footer Single Item -->
-                        <div class="footer-widget-single-item footer-widget-color--golden" data-aos="fade-up"
-                             data-aos-delay="0">
-                            <h5 class="title">INFORMATION</h5>
-                            <ul class="footer-nav">
-                                <li><a href="#">Delivery Information</a></li>
-                                <li><a href="#">Terms & Conditions</a></li>
-                                <li><a href="../contact-us.html">Contact</a></li>
-                                <li><a href="#">Returns</a></li>
-                            </ul>
-                        </div>
-                        <!-- End Footer Single Item -->
-                    </div>
-                    <div class="col-lg-3 col-sm-6 mb-6">
-                        <!-- Start Footer Single Item -->
-                        <div class="footer-widget-single-item footer-widget-color--golden" data-aos="fade-up"
-                             data-aos-delay="200">
-                            <h5 class="title">MY ACCOUNT</h5>
-                            <ul class="footer-nav">
-                                <li><a href="my-account.html">My account</a></li>
-                                <li><a href="../wishlist.html">Wishlist</a></li>
-                                <li><a href="../privacy-policy.html">Privacy Policy</a></li>
-                                <li><a href="../faq.html">Frequently Questions</a></li>
-                                <li><a href="#">Order History</a></li>
-                            </ul>
-                        </div>
-                        <!-- End Footer Single Item -->
-                    </div>
-                    <div class="col-lg-3 col-sm-6 mb-6">
-                        <!-- Start Footer Single Item -->
-                        <div class="footer-widget-single-item footer-widget-color--golden" data-aos="fade-up"
-                             data-aos-delay="400">
-                            <h5 class="title">CATEGORIES</h5>
-                            <ul class="footer-nav">
-                                <li><a href="#">Decorative</a></li>
-                                <li><a href="#">Kitchen utensils</a></li>
-                                <li><a href="#">Chair & Bar stools</a></li>
-                                <li><a href="#">Sofas and Armchairs</a></li>
-                                <li><a href="#">Interior lighting</a></li>
-                            </ul>
-                        </div>
-                        <!-- End Footer Single Item -->
-                    </div>
-                    <div class="col-lg-3 col-sm-6 mb-6">
-                        <!-- Start Footer Single Item -->
-                        <div class="footer-widget-single-item footer-widget-color--golden" data-aos="fade-up"
-                             data-aos-delay="600">
-                            <h5 class="title">ABOUT US</h5>
-                            <div class="footer-about">
-                                <p>We are a team of designers and developers that create high quality Magento,
-                                    Prestashop, Opencart.</p>
-
-                                <address class="address">
-                                    <span>Address: Your address goes here.</span>
-                                    <span>Email: demo@example.com</span>
-                                </address>
-                            </div>
-                        </div>
-                        <!-- End Footer Single Item -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</footer>
-<!-- End Footer Section -->
 
 <!-- material-scrolltop button -->
 <button class="material-scrolltop" type="button"></button>
@@ -882,10 +738,134 @@
     </div>
 </div> <!-- End Modal Quickview cart -->
 
-<script src="/assets/js/vendor/vendor.min.js"></script>
-<script src="/assets/js/plugins/plugins.min.js"></script>
-<!-- Main JS -->
-<script src="/assets/js/main.js"></script>
+<!--Modal đổi địa chỉ-->
+<div class="modal fade" id="modalDoiDiaChi" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="width: 1200px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Danh sách địa chỉ</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row mb-2">
+                    <div class="col-6"></div>
+                    <div class="col-6  ">
+                        <!-- Thêm địa chỉ theo id tai khoản -->
+
+                        <button th:if="${session.get('countDC') < 5}" onclick="themDiaChi();"
+                                class="btn btn-primary float-right " data-bs-toggle="modal"
+                                data-bs-target="#modalThemDiaChi">Thêm Đ/C
+                        </button>
+
+                        <button th:unless="${session.get('countDC') < 5}" class="btn btn-primary float-right"
+                                disabled>(*) Thêm Đ/C
+                        </button>
+                    </div>
+
+
+                </div>
+
+                <div class="row">
+                    <div class="table table-wrapper-scroll-y my-custom-scrollbar" style="height: 450px">
+                        <table id="table" class="table  table-borderless  formTable">
+                            <thead>
+                            <tr class="bg-light" style="vertical-align: middle;">
+                                <th width="12%">Tên/SĐT</th>
+                                <th width="12%">D/c cụ thể</th>
+                                <th width="17%">Phường/xã</th>
+                                <th width="17%">Quận/Huyện</th>
+                                <th width="17%">Tỉnh/Thành Phố</th>
+                                <th width="6%">Trạng thái</th>
+                                <th width="19%">Thao tác</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tbodyDDC">
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+                <div th:unless="${session.get('countDC') < 5}" class="row mt-2">
+                    <h6>(*) Chỉ được thêm tối đa 5 đa địa chỉ</h6>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalThemDiaChi" tabindex="-1" data-backdrop="static"
+     aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <form action="/admin/tai-quay/adddc#labeltaiKhoan" method="post" id="formThemDiaChi">
+        <div class="modal-dialog" style="width: 500px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Thêm địa chỉ</h5>
+                    <a type="button" class="close" onclick="resetModalTDC();" data-dismiss="modal"
+                       aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-6">
+
+                                <label><span style="color: #c82333">*</span> Họ và Tên</label>
+                                <input type="text" name="hoTen" id="inputTenTDC"
+                                       class="form-control">
+                            </div>
+                            <div class="col-6">
+                                <label><span style="color: #c82333">*</span> Số điện thoại</label>
+                                <input type="text" name="sdt"
+                                       class="form-control" id="inputSDTTDC">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label for="provincetdc"><span style="color: #c82333">*</span> Tỉnh/Thành phố</label>
+                            <select id="provincetdc" name="tinh" class="form-control">
+                                <option value="-1">---Chọn Tỉnh/Thành Phố----</option>
+                            </select>
+                        </div>
+
+                        <div class="row">
+                            <label for="districttdc"><span style="color: #c82333">*</span> Quận/Huyện</label>
+                            <select name="quan" class="form-control" id="districttdc">
+                                <option value="-1">---Chọn----</option>
+                            </select>
+                        </div>
+
+                        <div class="row">
+                            <label for="wardtdc"><span style="color: #c82333">*</span> Xã/Phường</label>
+                            <select name="xa" class="form-control" id="wardtdc">
+                                <option value="-1">---Chọn----</option>
+                            </select>
+                        </div>
+
+                        <div class="row">
+                            <label><span style="color: #c82333">*</span> Đ/C chi tiết</label>
+                            <input name="dcCuThe" class="form-control" id="inputDCCTTDC" type="text">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <!--                    ?link day nha thang ngiu-->
+                    <button type="submit" id="validXacNhanThemTK" class="btn btn-primary">Xác nhận</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
         integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -894,151 +874,176 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script>
-    const tinh = [[${session.tinh}]];
-    const quan = [[${session.quan}]];
-    let phuong = [[${session.phuong}]];
+    const tinh = '[[${#strings.isEmpty(session.tinh) ? -1 : session.tinh}]]';
+    const quan = '[[${#strings.isEmpty(session.quan) ? -1 : session.quan}]]';
+    let phuong = '[[${#strings.isEmpty(session.phuong) ? -1 : session.phuong}]]';
+
     const host = "https://provinces.open-api.vn/api/";
 
-    var renderData = (array, select) => {
-        let row = ' <option disable value="">--Chọn Tỉnh/Thành phố--</option';
+    const renderOptions = (array, selectId, placeholder) => {
+        let options = '';
+        // Add placeholder regardless of whether the array is empty
+        options += `<option disable value="">${placeholder}</option>`;
         array.forEach(element => {
-            if (tinh === element.code) {
-                renderDataDis(element.districts, "district");
-                row = `<option selected value="${element.code}">${element.name}</option>`;
-            } else {
-                row += `<option value="${element.code}">${element.name}</option>`;
-            }
+            options += `<option value="${element.code}">${element.name}</option>`;
         });
-        document.querySelector("#" + select).innerHTML = row;
-    }
+        document.querySelector("#" + selectId).innerHTML = options;
+    };
 
-    var renderDataDis = (array, select) => {
-        let row = ' <option disable value="">--Chọn Quận/Huyện--</option>';
-        array.forEach(element => {
-            if (quan === element.code) {
-                renderDataWar(element.wards, "ward");
-                row = `<option selected value="${element.code}">${element.name}</option>`;
-            } else {
-                row += `<option value="${element.code}">${element.name}</option>`;
-            }
-
-        });
-
-        document.querySelector("#" + select).innerHTML = row;
-    }
-
-    var renderDataWar = (array, select) => {
-        let row = ' <option disable value="">--Chọn Phường/Xã--</option>';
-        array.forEach(element => {
-            if (phuong === element.code) {
-                row = `<option selected value="${element.code}">${element.name}</option>`;
-                console.log(element);
-            } else {
-                row += `<option value="${element.code}">${element.name}</option>`;
-            }
-
-        });
-        document.querySelector("#" + select).innerHTML = row;
-    }
-
-    var callAPI = (api) => {
+    const callAPI = (api, selectId, renderFunction) => {
         return axios.get(api)
             .then((response) => {
-                renderData(response.data, "province");
+                renderFunction(response.data, selectId);
+            })
+            .catch((error) => {
+                console.error(error);
             });
     };
-    callAPI('https://provinces.open-api.vn/api/?depth=3');
-
-
-    var callApiDistrict = (api) => {
-        return axios.get(api)
-            .then((response) => {
-                renderDataDis(response.data.districts, "district");
-            });
-    };
-    var callApiWard = (api) => {
-        return axios.get(api)
-            .then((response) => {
-                renderDataWar(response.data.wards, "ward");
-            });
-    }
 
     $("#province").change(() => {
-        phuong = 0;
-        callApiDistrict(host + "p/" + $("#province").val() + "?depth=2")
-        callApiWard(host + "d/" + $("#district").val() + "?depth=2");
+        const selectedProvinceCode = $("#province").val();
+
+        // Call API to load districts based on the selected province
+        callAPI(host + "p/" + selectedProvinceCode + "?depth=2", "district", (data, selectId) => {
+            renderOptions(data.districts, selectId, "--Chọn Quận/Huyện--");
+        });
+
+        // Call API to load wards based on the selected district
+        callAPI(host + "d/" + $("#district").val() + "?depth=2", "ward", (data, selectId) => {
+            renderOptions(data.wards, selectId, "--Chọn Phường/Xã--");
+        });
+
         printResult();
     });
-
 
     $("#district").change(() => {
-        callApiWard(host + "d/" + $("#district").val() + "?depth=2");
+        // Call API to load wards based on the selected district
+        callAPI(host + "d/" + $("#district").val() + "?depth=2", "ward", (data, selectId) => {
+            renderOptions(data.wards, selectId, "--Chọn Phường/Xã--");
+        });
+
         printResult();
     });
+
     $("#ward").change(() => {
         printResult();
-    })
+    });
 
-    var printResult = () => {
-        if ($("#district").val() != "" && $("#province").val() != "" &&
-            $("#ward").val() != "") {
+    const printResult = () => {
+        if ($("#district").val() !== "" && $("#province").val() !== "" && $("#ward").val() !== "") {
             let result = $("#province option:selected").text() +
                 " | " + $("#district option:selected").text() + " | " +
                 $("#ward option:selected").text();
-            $("#result").text(result)
+            $("#result").text(result);
+        }
+    };
+
+    callAPI(host + "?depth=2", "province", (data, selectId) => {
+        renderOptions(data, selectId, "--Chọn Tỉnh/Thành phố--");
+        renderOptions([], "district", "--Chọn Quận/Huyện--");
+        renderOptions([], "ward", "--Chọn Phường/Xã--");
+    });
+
+    if (tinh !== "-1") {
+        callAPI(host + "?depth=3", "province", (data, selectId) => {
+            renderOptions(data, selectId, "--Chọn Tỉnh/Thành phố--");
+
+            $("#province").val(tinh);
+
+            callAPI(host + "p/" + tinh + "?depth=2", "district", (districtData, districtSelectId) => {
+                renderOptions(districtData.districts, districtSelectId, "--Chọn Quận/Huyện--");
+
+                $("#district").val(quan);
+
+                callAPI(host + "d/" + quan + "?depth=2", "ward", (wardData, wardSelectId) => {
+                    renderOptions(wardData.wards, wardSelectId, "--Chọn Phường/Xã--");
+
+                    $("#ward").val(phuong);
+                    printResult();
+                });
+            });
+        });
+    } else {
+        renderOptions([], "district", "--Chọn Quận/Huyện--");
+        renderOptions([], "ward", "--Chọn Phường/Xã--");
+
+
+        if (myLinksXNTC != null) {
+            myLinksXNTC.addEventListener('click', function (event) {
+                event.preventDefault();
+                let mess = prompt("Nhập ghi chú : ");
+                let action = actionFormXNTC.getAttribute('action') + '?value=' + mess;
+
+                actionFormXNTC.submit();
+            });
         }
 
     }
 
+
     document.getElementById("btnThanhToan").addEventListener("click", function (event) {
+        event.preventDefault();
+
+        const formThanhToan = document.getElementById("formThanhToan");
         var paymentMethod = document.querySelector('input[name="hinhThucThanhToan"]:checked').id;
-        var formData = {};
-        var formElements = document.getElementById("formThanhToan").elements;
-        for (var i = 0; i < formElements.length; i++) {
-            var element = formElements[i];
-            if (element.name) {
-                formData[element.name] = element.value;
-            }
-        }
-
-        // Store selected values of dropdowns
-        formData["selectedProvince"] = $("#province").val();
-        formData["selectedDistrict"] = $("#district").val();
-        formData["selectedWard"] = $("#ward").val();
-        sessionStorage.setItem("checkoutFormData", JSON.stringify(formData));
         if (paymentMethod === "currencyCod") {
-            event.preventDefault();
-            var selectedProvince = $("#province").val();
-            var selectedDistrict = $("#district").val();
-            var selectedWard = $("#ward").val();
+            let selectTinh = document.getElementById('province');
+            let selectHuyen = document.getElementById('district');
+            let selectXa = document.getElementById('ward');
+            let tinh = selectTinh.options[selectTinh.selectedIndex].textContent;
+            let huyen = selectHuyen.options[selectHuyen.selectedIndex].textContent;
+            let xa = selectXa.options[selectXa.selectedIndex].textContent;
 
-            if (!selectedProvince || !selectedDistrict || !selectedWard) {
-                console.error("Please select values for all dropdowns");
-                return;
-            }
-
-            document.getElementById("formThanhToan").submit();
+            let action = formThanhToan.getAttribute('action') + '?thanhPho=' + tinh + '&' + 'huyen=' + huyen + '&' + 'xa=' + xa;
+            console.log(action);
+            formThanhToan.setAttribute('action', action);
+            formThanhToan.submit();
         } else {
-            fetch("/api/payment/create_payment?totalAmount=" + encodeURIComponent(document.getElementById("totalAmount").innerText))
-                .then(response => response.text())
-                .then(paymentUrl => {
-                    console.log("Received Payment URL:", paymentUrl);
-                    document.getElementById("formThanhToan").action = paymentUrl;
-                    document.getElementById("formThanhToan").submit();
-                })
-                .catch(error => {
+            event.preventDefault();
+
+            let selectTinh = document.getElementById('province');
+            let selectHuyen = document.getElementById('district');
+            let selectXa = document.getElementById('ward');
+            let tinh = selectTinh.options[selectTinh.selectedIndex].textContent;
+            let huyen = selectHuyen.options[selectHuyen.selectedIndex].textContent;
+            let xa = selectXa.options[selectXa.selectedIndex].textContent;
+
+            let action = formThanhToan.getAttribute('action') + '?thanhPho=' + tinh + '&' + 'huyen=' + huyen + '&' + 'xa=' + xa;
+            console.log(action);
+            formThanhToan.setAttribute('action', action);
+            formThanhToan.submit();
+            let tenn = document.getElementById('nameTen').value;
+            let sdtn = document.getElementById('nameSoDienThoai').value;
+            let tinhh = document.getElementById('province').value;
+            let quanHuyenn = document.getElementById('district').value;
+            let phuongXan = document.getElementById('ward').value;
+            let diaChiCuThen = document.getElementById('nameDiaChiCuThe').value;
+            if (
+                tenn != null && tenn.trim() !== '' &&
+                sdtn != null && sdtn.trim() !== '' &&
+                tinhh != null && tinhh.trim() !== '' &&
+                quanHuyenn != null && quanHuyenn.trim() !== '' &&
+                phuongXan != null && phuongXan.trim() !== '' &&
+                diaChiCuThen != null && diaChiCuThen.trim() !== ''
+
+            ) {
+                fetch("/api/payment/create_payment?totalAmount=" + encodeURIComponent(document.getElementById("totalAmount").innerText))
+                    .then(response => response.text())
+                    .then(paymentUrl => {
+                        console.log("Received Payment URL:", paymentUrl);
+                        document.getElementById("formThanhToan").action = paymentUrl;
+                        formThanhToan.submit();
+
+                    }).catch(error => {
                     console.error("Error fetching payment URL:", error);
                 });
+            }
+
         }
+
     });
 
-    document.getElementById("formThanhToan").addEventListener("submit", function (event) {
-        if (document.getElementById("formThanhToan").action.includes("/api/payment/create_payment")) {
-            event.preventDefault();
-            document.getElementById("formThanhToan").action = "/check-out/thanh-toan";
-            document.getElementById("formThanhToan").submit();
-        }
-    });
+
 </script>
 </body>
 

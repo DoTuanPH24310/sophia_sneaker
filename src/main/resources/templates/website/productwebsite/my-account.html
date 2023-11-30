@@ -1,98 +1,18 @@
 <!DOCTYPE html>
-<html lang="zxx" xmlns:th="http://www.thymeleaf.org">
-
-
+<html lang="html" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/website/layout/layout}">
 <meta http-equiv="content-type" content="text/html;charset=UTF-8"/><!-- /Added by HTTrack -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <title>HONO - Multi Purpose HTML Template</title>
-
-    <!-- ::::::::::::::Favicon icon::::::::::::::-->
-    <link rel="shortcut icon" href="/assets/images/favicon.ico" type="image/png">
-    <link rel="stylesheet" href="/assets/css/vendor/vendor.min.css">
-    <link rel="stylesheet" href="/assets/css/plugins/plugins.min.css">
-    <link rel="stylesheet" href="/assets/css/style.min.css">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
           rel="stylesheet"/>
 </head>
 
-<body>
-<!-- Start Header Area -->
-<header class="header-section d-none d-xl-block">
-    <div class="header-wrapper">
-        <div class="header-bottom header-bottom-color--golden section-fluid sticky-header sticky-color--golden">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-12 d-flex align-items-center justify-content-between">
-                        <!-- Start Header Logo -->
-                        <div class="header-logo">
-                            <div class="logo">
-                                <a th:href="@{/sophia-store/product}"><img src="/assets/images/logo/logo_black.png"
-                                                                           alt=""></a>
-                            </div>
-                        </div>
-                        <!-- End Header Logo -->
-                        <!-- Start Header Main Menu -->
-                        <div class="main-menu menu-color--black menu-hover-color--golden">
-                            <nav>
-                                <ul>
-                                    <li>
-                                        <a class="active main-menu-link" th:href="@{/sophia-store/home}">Trang chủ </a>
-                                    </li>
-                                    <li class="has-megaitem">
-                                        <a th:href="@{/sophia-store/product}">Sản phẩm </a>
-                                    </li>
-                                    <li class="has-dropdown">
-                                        <a href="">Bài Viết</a>
-                                    </li>
-                                    <li class="has-dropdown">
-                                        <a href="#">Trang</a>
-                                    </li>
-                                    <li>
-                                        <a href="about-us.html">Về chúng tôi</a>
-                                    </li>
-                                    <li>
-                                        <a href="contact-us.html">Liên hệ</a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
-                        <!-- End Header Main Menu Start -->
-                        <!-- Start Header Action Link -->
-                        <ul class="header-action-link action-color--black action-hover-color--golden">
-                            <li>
-                                <a th:href="@{/my-account/home}">
-                                    <i class="icon-user"></i>
-                                    <span class="item-count">3</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#offcanvas-add-cart" class="offcanvas-toggle">
-                                    <i class="icon-bag"></i>
-                                    <span class="item-count" th:text="${soLuong}"></span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#search">
-                                    <i class="icon-magnifier"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#offcanvas-about" class="offacnvas offside-about offcanvas-toggle">
-                                    <i class="icon-menu"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</header>
-<!-- Start Header Area -->
-
+<body layout:fragment="content2">
 <!-- Start Mobile Header -->
 <div class="mobile-header mobile-header-bg-color--golden section-fluid d-lg-block d-xl-none">
     <div class="container">
@@ -272,7 +192,7 @@
                                class="nav-link btn btn-block btn-md btn-black-default-hover">Lịch sử mua</a></li>
                         <li><a href="#address" data-bs-toggle="tab"
                                class="nav-link btn btn-block btn-md btn-black-default-hover">Địa chỉ</a></li>
-                        <li><a href="../login.html"
+                        <li><a th:href="@{/logout}"
                                class="nav-link btn btn-block btn-md btn-black-default-hover">Đăng xuất</a></li>
                     </ul>
                 </div>
@@ -287,26 +207,24 @@
                                 <thead>
                                 <tr>
                                     <th>Đơn hàng</th>
-                                    <th>Date</th>
-                                    <th>Status</th>
-                                    <th>Total</th>
-                                    <th>Actions</th>
+                                    <th>Ngày đặt</th>
+                                    <th>Tổng tiền</th>
+                                    <th>Trạng thái</th>
+                                    <th>Hành động</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>May 10, 2018</td>
-                                    <td><span class="success">Completed</span></td>
-                                    <td>$25.00 for 1 item</td>
-                                    <td><a href="../cart.html" class="view">view</a></td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>May 10, 2018</td>
-                                    <td>Processing</td>
-                                    <td>$17.00 for 1 item</td>
-                                    <td><a href="../cart.html" class="view">view</a></td>
+                                <tr th:each="hd, start : ${listHD}">
+                                    <td th:text="${start.index+1}"></td>
+                                    <td th:text="${#temporals.format(hd.createdDate,'dd-MM-yyyy HH:mm:ss')}"></td>
+                                    <td th:text="${#numbers.formatCurrency(tongTienMap[hd.id] +hd.phiShip)}"></td>
+                                    <td th:if="${hd.trangThai == 3}">Chờ xác nhận</td>
+                                    <td th:if="${hd.trangThai == 4}">Chờ giao</td>
+                                    <td th:if="${hd.trangThai == 5}">Đang giao</td>
+                                    <td th:if="${hd.trangThai == 1}">Hoàn thành</td>
+                                    <td th:if="${hd.trangThai == 6}">Hủy</td>
+
+                                    <td><a th:href="@{/my-account/detail/{idhd}(idhd=${hd.id})}" class="view btn btn-success">Xem</a></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -464,81 +382,6 @@
         </div>
     </div>
 </div> <!-- ...:::: End Account Dashboard Section:::... -->
-
-<!-- Start Footer Section -->
-<footer class="footer-section footer-bg section-top-gap-100">
-    <div class="footer-wrapper">
-        <!-- Start Footer Top -->
-        <div class="footer-top">
-            <div class="container">
-                <div class="row mb-n6">
-                    <div class="col-lg-3 col-sm-6 mb-6">
-                        <!-- Start Footer Single Item -->
-                        <div class="footer-widget-single-item footer-widget-color--golden" data-aos="fade-up"
-                             data-aos-delay="0">
-                            <h5 class="title">INFORMATION</h5>
-                            <ul class="footer-nav">
-                                <li><a href="#">Delivery Information</a></li>
-                                <li><a href="#">Terms & Conditions</a></li>
-                                <li><a href="../contact-us.html">Contact</a></li>
-                                <li><a href="#">Returns</a></li>
-                            </ul>
-                        </div>
-                        <!-- End Footer Single Item -->
-                    </div>
-                    <div class="col-lg-3 col-sm-6 mb-6">
-                        <!-- Start Footer Single Item -->
-                        <div class="footer-widget-single-item footer-widget-color--golden" data-aos="fade-up"
-                             data-aos-delay="200">
-                            <h5 class="title">MY ACCOUNT</h5>
-                            <ul class="footer-nav">
-                                <li><a href="my-account.html">My account</a></li>
-                                <li><a href="../wishlist.html">Wishlist</a></li>
-                                <li><a href="../privacy-policy.html">Privacy Policy</a></li>
-                                <li><a href="../faq.html">Frequently Questions</a></li>
-                                <li><a href="#">Order History</a></li>
-                            </ul>
-                        </div>
-                        <!-- End Footer Single Item -->
-                    </div>
-                    <div class="col-lg-3 col-sm-6 mb-6">
-                        <!-- Start Footer Single Item -->
-                        <div class="footer-widget-single-item footer-widget-color--golden" data-aos="fade-up"
-                             data-aos-delay="400">
-                            <h5 class="title">CATEGORIES</h5>
-                            <ul class="footer-nav">
-                                <li><a href="#">Decorative</a></li>
-                                <li><a href="#">Kitchen utensils</a></li>
-                                <li><a href="#">Chair & Bar stools</a></li>
-                                <li><a href="#">Sofas and Armchairs</a></li>
-                                <li><a href="#">Interior lighting</a></li>
-                            </ul>
-                        </div>
-                        <!-- End Footer Single Item -->
-                    </div>
-                    <div class="col-lg-3 col-sm-6 mb-6">
-                        <!-- Start Footer Single Item -->
-                        <div class="footer-widget-single-item footer-widget-color--golden" data-aos="fade-up"
-                             data-aos-delay="600">
-                            <h5 class="title">ABOUT US</h5>
-                            <div class="footer-about">
-                                <p>We are a team of designers and developers that create high quality Magento,
-                                    Prestashop, Opencart.</p>
-
-                                <address class="address">
-                                    <span>Address: Your address goes here.</span>
-                                    <span>Email: demo@example.com</span>
-                                </address>
-                            </div>
-                        </div>
-                        <!-- End Footer Single Item -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</footer>
-<!-- End Footer Section -->
 
 <!-- material-scrolltop button -->
 <button class="material-scrolltop" type="button"></button>
@@ -763,11 +606,6 @@
     </div>
 </div> <!-- End Modal Quickview cart -->
 
-<script src="/assets/js/vendor/vendor.min.js"></script>
-<script src="/assets/js/plugins/plugins.min.js"></script>
-
-<!-- Main JS -->
-<script src="/assets/js/main.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
         integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -789,7 +627,6 @@
         }
     }
 
-    // Function to fetch the name of a district based on its code
     async function fetchDistrictName(code) {
         try {
             const response = await fetch(`${host}d/${code}`);
@@ -801,7 +638,6 @@
         }
     }
 
-    // Function to fetch the name of a ward based on its code
     async function fetchWardName(code) {
         try {
             const response = await fetch(`${host}w/${code}`);
@@ -839,7 +675,6 @@
     }
 
     checked();
-
 
 </script>
 </body>

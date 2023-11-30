@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="zxx" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-
-
+<html lang="html" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/website/layout/layout}">
 <meta http-equiv="content-type" content="text/html;charset=UTF-8"/><!-- /Added by HTTrack -->
 <head>
     <meta charset="UTF-8">
@@ -9,94 +9,9 @@
 
     <title>HONO - Multi Purpose HTML Template</title>
 
-    <!-- ::::::::::::::Favicon icon::::::::::::::-->
-    <link rel="shortcut icon" href="/assets/images/favicon.ico" type="image/png">
-
-    <link rel="stylesheet" href="/assets/css/vendor/vendor.min.css">
-    <link rel="stylesheet" href="/assets/css/plugins/plugins.min.css">
-    <link rel="stylesheet" href="/assets/css/style.min.css">
-
 </head>
 
-<body>
-<!-- Start Header Area -->
-<header class="header-section d-none d-xl-block">
-    <div class="header-wrapper">
-        <div class="header-bottom header-bottom-color--golden section-fluid sticky-header sticky-color--golden">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-12 d-flex align-items-center justify-content-between">
-                        <!-- Start Header Logo -->
-                        <div class="header-logo">
-                            <div class="logo">
-                                <a th:href="@{/sophia-store/product}"><img src="/assets/images/logo/logo_black.png"
-                                                                           alt=""></a>
-                            </div>
-                        </div>
-                        <!-- End Header Logo -->
-
-                        <!-- Start Header Main Menu -->
-                        <div class="main-menu menu-color--black menu-hover-color--golden">
-                            <nav>
-                                <ul>
-                                    <li>
-                                        <a class="active main-menu-link" th:href="@{/sophia-store/home}">Trang chủ </a>
-                                        <!-- Sub Menu -->
-                                    </li>
-                                    <li class="has-megaitem">
-                                        <a th:href="@{/sophia-store/product}">Sản phẩm </a>
-                                    </li>
-                                    <li class="has-dropdown">
-                                        <a href="">Bài Viết</a>
-                                    </li>
-                                    <li class="has-dropdown">
-                                        <a href="#">Trang</a>
-                                    </li>
-                                    <li>
-                                        <a href="about-us.html">Về chúng tôi</a>
-                                    </li>
-                                    <li>
-                                        <a href="contact-us.html">Liên hệ</a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
-                        <!-- End Header Main Menu Start -->
-
-                        <!-- Start Header Action Link -->
-                        <ul class="header-action-link action-color--black action-hover-color--golden">
-                            <li>
-                                <a href="#offcanvas-wishlish" class="offcanvas-toggle">
-                                    <i class="icon-user"></i>
-                                    <span class="item-count">3</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a th:href="@{/my-account/home}" class="offcanvas-toggle">
-                                    <i class="icon-bag"></i>
-                                    <span class="item-count" th:text="${soLuong}"></span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#search">
-                                    <i class="icon-magnifier"></i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#offcanvas-about" class="offacnvas offside-about offcanvas-toggle">
-                                    <i class="icon-menu"></i>
-                                </a>
-                            </li>
-                        </ul>
-                        <!-- End Header Action Link -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</header>
-<!-- Start Header Area -->
-
+<body layout:fragment="content2">
 <!-- Start Mobile Header -->
 <div class="mobile-header mobile-header-bg-color--golden section-fluid d-lg-block d-xl-none">
     <div class="container">
@@ -494,28 +409,29 @@
                             <div class="col-12">
                                 <div class="default-form-box">
                                     <label>Họ tên người nhận hàng</label>
-                                    <input type="text" th:field="*{ten}">
+                                    <input type="text" th:field="*{ten}" id="nameTen">
                                     <span th:errors="*{ten}" style="color: red"></span>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="default-form-box">
                                     <label>Số điện thoại <span>*</span></label>
-                                    <input type="text" th:field="*{sdt}">
+                                    <input type="text" th:field="*{sdt}" id="nameSoDienThoai">
                                     <span th:errors="*{sdt}" style="color: red"></span>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="default-form-box">
                                     <label> Địa chỉ email <span>*</span></label>
-                                    <input type="text" th:field="*{email}">
-                                    <span th:errors="*{email}" style="color: red"></span>
+                                    <input type="text" th:field="*{email}" id="nameEmail">
+                                    <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
+                                          style="color: red"></span>
                                 </div>
                             </div>
                             <div class="col-4">
                                 <div class="default-form-box">
                                     <label for="province">Tỉnh<span>*</span></label>
-                                    <select class="country_option nice-select wide" id="province" name="tinh"
+                                    <select class="country_option nice-select wide" id="province"
                                             th:field="*{tinh}" placeholder="Chọn tỉnh">
                                         <option value="">Chọn tỉnh</option>
                                         <option value=""></option>
@@ -527,7 +443,7 @@
                             <div class="col-4">
                                 <div class="default-form-box">
                                     <label for="district">Huyện <span>*</span></label>
-                                    <select class="country_option nice-select wide" name="quanHuyen" id="district"
+                                    <select class="country_option nice-select wide" id="district"
                                             th:field="*{quanHuyen}" placeholder="Chọn huyện">
                                         <option value="">Chọn quận huyện</option>
                                         <option value=""></option>
@@ -538,7 +454,7 @@
                             <div class="col-4">
                                 <div class="default-form-box">
                                     <label for="ward">Xã <span>*</span></label>
-                                    <select class="country_option nice-select wide" id="ward" name="phuongXa"
+                                    <select class="country_option nice-select wide" id="ward"
                                             th:field="*{phuongXa}" placeholder="Chọn xã">
                                         <option value="">Chọn phường xã</option>
                                         <option value=""></option>
@@ -552,7 +468,7 @@
                                 <div class="default-form-box">
                                     <label>Địa chỉ cụ thể <span>*</span></label>
                                     <input placeholder="House number and street name" type="text"
-                                           th:field="*{diaChiCuThe}">
+                                           th:field="*{diaChiCuThe}" id="nameDiaChiCuThe">
                                     <span th:errors="*{diaChiCuThe}" style="color: red"></span>
                                 </div>
                             </div>
@@ -600,13 +516,19 @@
                                             <span th:unless="${session['giaCu_' + item.id] != session['giaMoi_' + item.id]}"
                                                   th:text="${#numbers.formatCurrency(session['giaCu_' + item.id])}"></span>
                                         </td>
-                                        <td th:text="${#numbers.formatCurrency(item.gia * item.soLuong)}"></td>
+                                        <td>
+                                            <p th:text="${#numbers.formatCurrency(session['giaMoi_' + item.id] * item.soLuong)}"></p>
+                                        </td>
                                     </tr>
                                     </tbody>
                                     <tfoot>
                                     <tr>
                                         <td colspan="4" style="text-align: center;">Tổng giá sản phẩm</td>
-                                        <td th:text="${#numbers.formatCurrency(total)}"></td>
+                                        <td>
+                                            <!--                                            <p th:text="${#numbers.formatCurrency(tongTienGiam)}"-->
+                                            <!--                                               style="text-decoration: line-through; color: red; font-size: 13px"></p>-->
+                                            <p th:text="${#numbers.formatCurrency(total)}"></p>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td colspan="4" style="text-align: center;">Phí vận chuyển</td>
@@ -625,7 +547,7 @@
                                 <div class="panel-default">
                                     <label class="checkbox-default" for="currencyCod" data-bs-toggle="collapse"
                                            data-bs-target="#methodCod">
-                                        <input type="radio" id="currencyCod" name="hinhThucThanhToan" value="0" checked>
+                                        <input type="radio" id="currencyCod" name="hinhThucThanhToan" value="3" checked>
                                         <span>Thanh toán khi nhận hàng</span>
                                     </label>
 
@@ -638,7 +560,7 @@
                                 <div class="panel-default">
                                     <label class="checkbox-default" for="currencyPaypal" data-bs-toggle="collapse"
                                            data-bs-target="#methodPaypal">
-                                        <input type="radio" id="currencyPaypal" name="hinhThucThanhToan" value="1">
+                                        <input type="radio" id="currencyPaypal" name="hinhThucThanhToan" value="2">
                                         <span>VNPay</span>
                                     </label>
                                     <div id="methodPaypal" class="collapse " data-parent="#methodPaypal">
@@ -663,82 +585,6 @@
 
     </div>
 </div><!-- ...:::: End Checkout Section:::... -->
-
-<!-- Start Footer Section -->
-<footer class="footer-section footer-bg section-top-gap-100">
-    <div class="footer-wrapper">
-        <!-- Start Footer Top -->
-        <div class="footer-top">
-            <div class="container">
-                <div class="row mb-n6">
-                    <div class="col-lg-3 col-sm-6 mb-6">
-                        <!-- Start Footer Single Item -->
-                        <div class="footer-widget-single-item footer-widget-color--golden" data-aos="fade-up"
-                             data-aos-delay="0">
-                            <h5 class="title">INFORMATION</h5>
-                            <ul class="footer-nav">
-                                <li><a href="#">Delivery Information</a></li>
-                                <li><a href="#">Terms & Conditions</a></li>
-                                <li><a href="../contact-us.html">Contact</a></li>
-                                <li><a href="#">Returns</a></li>
-                            </ul>
-                        </div>
-                        <!-- End Footer Single Item -->
-                    </div>
-                    <div class="col-lg-3 col-sm-6 mb-6">
-                        <!-- Start Footer Single Item -->
-                        <div class="footer-widget-single-item footer-widget-color--golden" data-aos="fade-up"
-                             data-aos-delay="200">
-                            <h5 class="title">MY ACCOUNT</h5>
-                            <ul class="footer-nav">
-                                <li><a href="my-account.html">My account</a></li>
-                                <li><a href="../wishlist.html">Wishlist</a></li>
-                                <li><a href="../privacy-policy.html">Privacy Policy</a></li>
-                                <li><a href="../faq.html">Frequently Questions</a></li>
-                                <li><a href="#">Order History</a></li>
-                            </ul>
-                        </div>
-                        <!-- End Footer Single Item -->
-                    </div>
-                    <div class="col-lg-3 col-sm-6 mb-6">
-                        <!-- Start Footer Single Item -->
-                        <div class="footer-widget-single-item footer-widget-color--golden" data-aos="fade-up"
-                             data-aos-delay="400">
-                            <h5 class="title">CATEGORIES</h5>
-                            <ul class="footer-nav">
-                                <li><a href="#">Decorative</a></li>
-                                <li><a href="#">Kitchen utensils</a></li>
-                                <li><a href="#">Chair & Bar stools</a></li>
-                                <li><a href="#">Sofas and Armchairs</a></li>
-                                <li><a href="#">Interior lighting</a></li>
-                            </ul>
-                        </div>
-                        <!-- End Footer Single Item -->
-                    </div>
-                    <div class="col-lg-3 col-sm-6 mb-6">
-                        <!-- Start Footer Single Item -->
-                        <div class="footer-widget-single-item footer-widget-color--golden" data-aos="fade-up"
-                             data-aos-delay="600">
-                            <h5 class="title">ABOUT US</h5>
-                            <div class="footer-about">
-                                <p>We are a team of designers and developers that create high quality Magento,
-                                    Prestashop, Opencart.</p>
-
-                                <address class="address">
-                                    <span>Address: Your address goes here.</span>
-                                    <span>Email: demo@example.com</span>
-                                </address>
-                            </div>
-                        </div>
-                        <!-- End Footer Single Item -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</footer>
-
-<!-- End Footer Section -->
 
 <!-- material-scrolltop button -->
 <button class="material-scrolltop" type="button"></button>
@@ -981,8 +827,6 @@
 
     const host = "https://provinces.open-api.vn/api/";
 
-    // Function to render options for a select element
-    // Function to render options for a select element
     const renderOptions = (array, selectId, placeholder) => {
         let options = '';
         // Add placeholder regardless of whether the array is empty
@@ -994,7 +838,6 @@
     };
 
 
-    // Function to handle API calls
     const callAPI = (api, selectId, renderFunction) => {
         return axios.get(api)
             .then((response) => {
@@ -1005,16 +848,13 @@
             });
     };
 
-    // Event listener for province change
     $("#province").change(() => {
         const selectedProvinceCode = $("#province").val();
 
-        // Call API to load districts based on the selected province
         callAPI(host + "p/" + selectedProvinceCode + "?depth=2", "district", (data, selectId) => {
             renderOptions(data.districts, selectId, "--Chọn Quận/Huyện--");
         });
 
-        // Call API to load wards based on the selected district
         callAPI(host + "d/" + $("#district").val() + "?depth=2", "ward", (data, selectId) => {
             renderOptions(data.wards, selectId, "--Chọn Phường/Xã--");
         });
@@ -1022,7 +862,6 @@
         printResult();
     });
 
-    // Event listener for district change
     $("#district").change(() => {
         // Call API to load wards based on the selected district
         callAPI(host + "d/" + $("#district").val() + "?depth=2", "ward", (data, selectId) => {
@@ -1032,12 +871,10 @@
         printResult();
     });
 
-    // Event listener for ward change
     $("#ward").change(() => {
         printResult();
     });
 
-    // Function to print the selected result
     const printResult = () => {
         if ($("#district").val() !== "" && $("#province").val() !== "" && $("#ward").val() !== "") {
             let result = $("#province option:selected").text() +
@@ -1078,89 +915,71 @@
         renderOptions([], "ward", "--Chọn Phường/Xã--");
     }
 
-
-
-
-    var isFormChecked = true;
-
     document.getElementById("btnThanhToan").addEventListener("click", function (event) {
-        // Kiểm tra hình thức thanh toán đã được chọn chưa
-        if (isFormChecked) {
-            return;
-        }
+        event.preventDefault();
 
-        // Kiểm tra hình thức thanh toán đã được chọn chưa
-        var paymentMethod = document.querySelector('input[name="hinhThucThanhToan"]:checked');
-        if (!paymentMethod) {
-            alert("Vui lòng chọn hình thức thanh toán!");
+        var paymentMethod = document.querySelector('input[name="hinhThucThanhToan"]:checked').id;
+        if (paymentMethod === "currencyCod") {
+            let selectTinh = document.getElementById('province');
+            let selectHuyen = document.getElementById('district');
+            let selectXa = document.getElementById('ward');
+            let tinh = selectTinh.options[selectTinh.selectedIndex].textContent;
+            let huyen = selectHuyen.options[selectHuyen.selectedIndex].textContent;
+            let xa = selectXa.options[selectXa.selectedIndex].textContent;
+
+            let action = formThanhToan.getAttribute('action') + '?thanhPho=' + tinh + '&' + 'huyen=' + huyen + '&' + 'xa=' + xa;
+            console.log(action);
+            formThanhToan.setAttribute('action', action);
+            formThanhToan.submit();
+        } else {
             event.preventDefault();
-            return;
-        }
 
-        // Kiểm tra các trường thông tin địa chỉ
-        var ten = document.getElementById("ten").value.trim();
-        var sdt = document.getElementById("sdt").value.trim();
-        var email = document.getElementById("email").value.trim();
-        var tinh = document.getElementById("province").value.trim();
-        var quanHuyen = document.getElementById("district").value.trim();
-        var phuongXa = document.getElementById("ward").value.trim();
-        var diaChiCuThe = document.getElementById("diaChiCuThe").value.trim();
+            let selectTinh = document.getElementById('province');
+            let selectHuyen = document.getElementById('district');
+            let selectXa = document.getElementById('ward');
+            let tinh = selectTinh.options[selectTinh.selectedIndex].textContent;
+            let huyen = selectHuyen.options[selectHuyen.selectedIndex].textContent;
+            let xa = selectXa.options[selectXa.selectedIndex].textContent;
 
-        // Kiểm tra tất cả các trường thông tin địa chỉ đã được nhập hay chưa
+            let action = formThanhToan.getAttribute('action') + '?thanhPho=' + tinh + '&' + 'huyen=' + huyen + '&' + 'xa=' + xa;
+            console.log(action);
+            formThanhToan.setAttribute('action', action);
+            formThanhToan.submit();
+            let tenn = document.getElementById('nameTen').value;
+            let sdtn = document.getElementById('nameSoDienThoai').value;
+            let emailn = document.getElementById('nameEmail').value;
+            let tinhh = document.getElementById('province').value;
+            let quanHuyenn = document.getElementById('district').value;
+            let phuongXan = document.getElementById('ward').value;
+            let diaChiCuThen = document.getElementById('nameDiaChiCuThe').value;
 
+            if (
+                tenn != null && tenn.trim() !== '' &&
+                sdtn != null && sdtn.trim() !== '' &&
+                emailn != null && emailn.trim() !== '' &&
+                tinhh != null && tinhh.trim() !== '' &&
+                quanHuyenn != null && quanHuyenn.trim() !== '' &&
+                phuongXan != null && phuongXan.trim() !== '' &&
+                diaChiCuThen != null && diaChiCuThen.trim() !== ''
 
-        // Nếu là thanh toán khi nhận hàng, kiểm tra địa chỉ cụ thể
-        if (paymentMethod.id === "currencyCod") {
-            document.getElementById("formThanhToan").submit();
-            return;
-        }
-
-        // Nếu là thanh toán qua VNPay, kiểm tra xem đã nhận được đường link thanh toán chưa
-        if (paymentMethod.id === "currencyPaypal") {
-            fetch("/api/payment/create_payment?totalAmount=" + encodeURIComponent(document.getElementById("totalAmount").innerText))
-                .then(response => response.text())
-                .then(paymentUrl => {
-                    if (!ten || !sdt || !email || !tinh || !quanHuyen || !phuongXa || !diaChiCuThe) {
-                        alert("Vui lòng điền đầy đủ thông tin địa chỉ!");
-                        event.preventDefault();
-                        return;
-                    }
-
-                    // Kiểm tra xem link thanh toán có hợp lệ không
-                    if (paymentUrl.trim() === "") {
-                        alert("Có lỗi xảy ra khi tạo đường link thanh toán. Vui lòng thử lại sau.");
-                        event.preventDefault();
-                    } else {
-                        // Nếu mọi kiểm tra thành công, submit form
+            ) {
+                fetch("/api/payment/create_payment?totalAmount=" + encodeURIComponent(document.getElementById("totalAmount").innerText))
+                    .then(response => response.text())
+                    .then(paymentUrl => {
+                        console.log("Received Payment URL:", paymentUrl);
                         document.getElementById("formThanhToan").action = paymentUrl;
-                        document.getElementById("formThanhToan").submit();
-                    }
-                })
-                .catch(error => {
+                        formThanhToan.submit();
+
+                    }).catch(error => {
                     console.error("Error fetching payment URL:", error);
                 });
-        } else {
-            // Nếu mọi kiểm tra thành công, submit form
-            document.getElementById("formThanhToan").submit();
+            }
+
         }
 
-        isFormChecked = true;
-        alert("Đã kiểm tra thông tin thành công. Nhấn thanh toán để tiếp tục!");
-    });
-
-
-    document.getElementById("formThanhToan").addEventListener("submit", function (event) {
-        if (document.getElementById("formThanhToan").action.includes("/api/payment/create_payment")) {
-            event.preventDefault();
-            document.getElementById("formThanhToan").action = "/check-out/thanhtoan";
-            document.getElementById("formThanhToan").submit();
-        }
     });
 
 
 </script>
-
 </body>
-
-
 </html>

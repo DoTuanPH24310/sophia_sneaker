@@ -13,8 +13,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class EmailService {
@@ -42,7 +41,8 @@ public class EmailService {
 
     @Autowired
     private HoaDonChiTietWebRepository hoaDonChiTietWebRepository;
-
+    @Autowired
+    private VoucherRepository voucherRepository;
     @Autowired
     private LichSuHoaDonWebRepository lichSuHoaDonWebRepository;
     @Autowired
@@ -166,42 +166,81 @@ public class EmailService {
     }
 
     public void themSanPhamVaoHoaDonChiTiet(List<CartItem> cartItems, HoaDon hoaDon) {
+        double total = 0.0;
+        double tongTienDonHang = 0.0;
+        int tongSoLuongGiam = 0;
+        Integer tongGiamGia = 0;
+        int phanTramGiam = 0;
+        int soLuongGiam = 0;
+        double tongTienGiam = 0.0;
+        Map<UUID, Integer> soLuongGiamTheoSanPham = new HashMap<>();
+
         for (CartItem cartItem : cartItems) {
             HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
-
-            hoaDonChiTiet.setSoLuong(cartItem.getSoLuong());
-            hoaDonChiTiet.setDonGia(cartItem.getGia());
-            hoaDonChiTiet.setTrangThai(1);
-
             ChiTietGiay chiTietGiay = chiTietGiayRepository.findById(cartItem.getId()).orElse(null);
+            total += chiTietGiay.getGia() * cartItem.getSoLuong();
 
-            if (chiTietGiay != null) {
-                int soLuongMua = cartItem.getSoLuong();
-                int soLuongHienTai = chiTietGiay.getSoLuong();
+            int soLuongMua = cartItem.getSoLuong();
+            int soLuongHienTai = chiTietGiay.getSoLuong();
+            int soLuongPhieuGiamDaSuDung = soLuongGiamTheoSanPham.getOrDefault(cartItem.getId(), 0);
+            if (soLuongHienTai >= soLuongMua) {
+                List<CTG_KhuyenMai> listCTG_KM = chiTietGiay.getListCTG_KM();
+                // Tính toán số lượng giảm và giảm giá tương ứng
+                for (CTG_KhuyenMai ctg : listCTG_KM) {
+                    // Kiểm tra trạng thái giảm giá
+                    if (ctg.getId().getVoucher().getTrangThai() == 1 && ctg.getId().getVoucher().getSoLuong() > 0) {
+                        if (ctg.getId().getVoucher() != null) {
+                            soLuongGiam = ctg.getId().getVoucher().getSoLuong();
+                        }
+                        int soLuongGiamApDung = Math.min(soLuongGiam - soLuongPhieuGiamDaSuDung, soLuongMua);
 
-                if (soLuongHienTai >= soLuongMua) {
-                    chiTietGiay.setSoLuong(soLuongHienTai - soLuongMua);
-                    chiTietGiayRepository.save(chiTietGiay);
+                        // Cập nhật số lượng giảm giá của sản phẩm
+                        soLuongGiamTheoSanPham.put(cartItem.getId(), soLuongPhieuGiamDaSuDung + soLuongGiamApDung);
+                        session.setAttribute("tongSoLuongGiam" + chiTietGiay.getId(), tongSoLuongGiam);
+                        // Cập nhật giảm giá của sản phẩm
+                        phanTramGiam = ctg.getId().getVoucher().getPhanTramGiam();
+                        int giamGia = phanTramGiam * soLuongGiam;
+                        tongGiamGia = giamGia;
+                        // Cập nhật tổng số tiền giảm
+                        double donGia = chiTietGiay.getGia();
+                        int giam = ctg.getId().getVoucher().getPhanTramGiam();
+                        double tienGiam = donGia * giam / 100 * soLuongGiamApDung;
+                        tongTienGiam += tienGiam;
+                        tongTienDonHang = total - tongTienGiam;
+                        soLuongPhieuGiamDaSuDung += soLuongGiamApDung;
 
-                    hoaDonChiTiet.setChiTietGiay(chiTietGiay);
-                    hoaDonChiTiet.setHoaDon(hoaDon);
-
-                    hoaDon.getListHoaDonChiTiet().add(hoaDonChiTiet);
-                    this.hoaDonChiTietWebRepository.save(hoaDonChiTiet);
-                } else {
-                    System.err.println("Not enough stock for product with ID: " + cartItem.getId());
+                        // Trừ đi số lượng đã sử dụng từ bảng giảm giá
+                        ctg.getId().getVoucher().setSoLuong(ctg.getId().getVoucher().getSoLuong() - soLuongGiamApDung);
+                        voucherRepository.save(ctg.getId().getVoucher());
+                    }
                 }
+
+                chiTietGiay.setSoLuong(soLuongHienTai - soLuongMua);
+                chiTietGiayRepository.save(chiTietGiay);
             } else {
-                System.err.println("Product details not found for ID: " + cartItem.getId());
+                return; // Xử lý khi số lượng không đủ
             }
+
+            chiTietGiay.setSoLuong(soLuongHienTai - soLuongMua);
+            chiTietGiayRepository.save(chiTietGiay);
+            hoaDonChiTiet.setSoLuong(cartItem.getSoLuong());
+            hoaDonChiTiet.setDonGia(chiTietGiay.getGia());
+            hoaDonChiTiet.setChiTietGiay(chiTietGiay);
+            hoaDonChiTiet.setPhanTramGiam(phanTramGiam);
+            hoaDonChiTiet.setSoLuongGiam(soLuongGiamTheoSanPham.getOrDefault(cartItem.getId(), 0));
+            hoaDonChiTiet.setHoaDon(hoaDon);
+
+            hoaDon.getListHoaDonChiTiet().add(hoaDonChiTiet);
+            this.hoaDonChiTietWebRepository.save(hoaDonChiTiet);
         }
+        hoaDon.setTongTien(tongTienDonHang);
+        hoaDon.setKhuyenMai(tongTienGiam);
+        this.hoaDonRepository.save(hoaDon);
 
     }
 
 
-    public HoaDon taoHoaDonMoi(TaiKhoan taiKhoan, Integer hinhThucThanhToan) {
-        Cart cart = (Cart) session.getAttribute("cart");
-        List<CartItem> cartItems = cart.getItems();
+    public HoaDon taoHoaDonMoi(TaiKhoan taiKhoan, Integer hinhThucThanhToan, String diaChi, String tinh, String huyen, String xa) {
         HoaDon hoaDonMoi = new HoaDon();
         int soHD = this.hoaDonRepository.soHD() + 1;
         hoaDonMoi.setMaHoaDOn("HD" + soHD);
@@ -209,12 +248,10 @@ public class EmailService {
         hoaDonMoi.setLoaiHoaDon(3);
         hoaDonMoi.setTenKhachHang(taiKhoan.getTen());
         hoaDonMoi.setSoDienThoai(taiKhoan.getSdt());
-        hoaDonMoi.setDiaChi(diaChiTamChu.taoDiaChiString(taiKhoan.getDiaChiList()));
+        hoaDonMoi.setDiaChi(diaChi + ", " + xa + ", " + huyen + ", " + tinh);
         hoaDonMoi.setPhiShip(20000.0);
-        hoaDonMoi.setTongTien(0.0);
         hoaDonMoi.setTienThua(0.0);
         hoaDonMoi.setTrangThai(3);
-//        hoaDonMoi.setKhuyenMai();
 
         hoaDonMoi = this.hoaDonWebRepository.save(hoaDonMoi);
 

@@ -41,11 +41,13 @@ WebsiteshopController {
     LoaiGiayService loaiGiayService;
     @Autowired
     private CartService cartService;
+    @Autowired
+    HoaDonChiTietServive hoaDonChiTietServive;
     @GetMapping("/home")
-    public String home(Model model, HttpSession httpSession) {
-        List<Giay> productList = giayService.getAll();
-        productList.sort(Comparator.comparing(Giay::getId));
-        List<Giay> top16Products = productList.subList(0, Math.min(productList.size(), 16));
+    public String home(Model model,HttpSession httpSession){
+        List<ChiTietGiay> productList = chiTietGiayService.getAll();
+        productList.sort(Comparator.comparing(ChiTietGiay::getNgayTao));
+        List<ChiTietGiay> top16Products = productList.subList(0, Math.min(productList.size(), 16));
         model.addAttribute("products", top16Products);
 
         // cart
@@ -65,6 +67,7 @@ WebsiteshopController {
         model.addAttribute("soLuong", soLuong);
         model.addAttribute("totalCartPrice", totalCartPrice);
         model.addAttribute("cartItems", cartItems);
+        model.addAttribute("top10",hoaDonChiTietServive.findTop10IdChiTietGiay());
 
         return "website/websiteShop/index";
     }

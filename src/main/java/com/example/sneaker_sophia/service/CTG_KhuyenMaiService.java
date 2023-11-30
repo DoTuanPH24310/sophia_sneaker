@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -19,10 +20,6 @@ public class CTG_KhuyenMaiService {
 
     public CTG_KhuyenMai save(CTG_KhuyenMai ctg_khuyenMai) {
         return ctg_khuyenMaiRespsitory.save(ctg_khuyenMai);
-    }
-
-    public Integer sumPhanTram(UUID id) {
-        return ctg_khuyenMaiRespsitory.sumPhanTram(id);
     }
 
     public void deleteByIdKM(Voucher vc) {

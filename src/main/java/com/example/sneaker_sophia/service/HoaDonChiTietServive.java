@@ -162,4 +162,8 @@ public class HoaDonChiTietServive {
     public Double tienGiam(String idhd) {
         return hoaDonCTRepository.tienGiam(idhd);
     }
+
+    public List<Object[]> findTop10IdChiTietGiay(){
+        return hoaDonCTRepository.findTop10IdChiTietGiay();
+    }
 }
