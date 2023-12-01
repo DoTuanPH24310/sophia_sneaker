@@ -324,7 +324,7 @@
 
 <!-- ...:::: Start Checkout Section:::... -->
 <div class="checkout-section">
-    <div class="container w-80">
+    <div class="container">
         <form th:object="${diaChi}" th:action="@{/check-out/thanh-toan}" method="post" id="formThanhToan">
 
             <!-- Start User Details Checkout Form -->
@@ -406,6 +406,16 @@
                                     </button>
                                 </div>
                             </div>
+                            <div class="col-12">
+                                <label class="checkbox-default" for="currencyCod" data-bs-toggle="collapse">
+                                    <input type="radio" name="giaoHang" checked>
+                                    <span>Giao hàng tiêu chuẩn</span>
+                                    <br>
+                                    <br>
+                                    <span>Giao tại Hà Nội: 20.000đ
+                                            Các địa chỉ khác: 30.000đ</span>
+                                </label>
+                            </div>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6">
@@ -461,7 +471,7 @@
                                     </tr>
                                     <tr>
                                         <td colspan="4" style="text-align: center;">Phí vận chuyển</td>
-                                        <td id="shipping-cost">Vui Lòng chọn địa chỉ</td>
+                                        <td id="shipping-cost" name="shipping">Vui Lòng chọn địa chỉ</td>
                                     </tr>
                                     <tr class="order_total">
                                         <td colspan="4" style="text-align: center;">Tổng tiền đơn hàng</td>
@@ -875,7 +885,8 @@
     const tinh = '[[${#strings.isEmpty(session.tinh) ? -1 : session.tinh}]]';
     const quan = '[[${#strings.isEmpty(session.quan) ? -1 : session.quan}]]';
     let phuong = '[[${#strings.isEmpty(session.phuong) ? -1 : session.phuong}]]';
-
+    const tinhtinh = '[[${#strings.isEmpty(session.selectedProvince) ? "' + -1 + '" : session.selectedProvince}]]';
+    console.log(tinhtinh)
     const idKh = [[${session.idkhOL}]];
     const tbodyDDC = document.getElementById('tbodyDDC');
 
@@ -1080,23 +1091,35 @@
                 console.error(error);
             });
     };
-
+    // const tinhtinh = '[[${#strings.isEmpty(session.selectedProvince) ? "' + selectedProvinceCode + '" : session.selectedProvince}]]';
     let initialTotalAmount;
-    let tinhtinh = document.getElementById('province').value;
-    console.log(tinhtinh)
+
     // Lấy giá trị tổng tiền ban đầu khi trang web được tải lần đầu
     initialTotalAmount = parseFloat($("#totalAmount").data("id"));
-    $("#province").change(() => {
-        const selectedProvinceCode = $("#province").val();
-        console.log(selectedProvinceCode)
+
+    // Hàm cập nhật tổng tiền
+    function updateTotalAmount(newTotal, shippingFee) {
+        console.log("New Total:", newTotal);
+
+        // Calculate the total amount including the shipping fee
+        const totalAmountWithShipping = newTotal + shippingFee;
+
+        // Display and format the total amount with shipping
+        $("#totalAmount").text(`${totalAmountWithShipping.toLocaleString()} ₫`);
+
+        // Display and format the shipping cost
+        $("#shipping-cost").text(`${shippingFee.toLocaleString()} ₫`);
+    }
+
+    // Hàm cập nhật phí vận chuyển khi chọn tỉnh
+    function updateShippingFee(selectedProvinceCode) {
         if (!selectedProvinceCode) {
             // Chưa chọn địa chỉ
             $("#shipping-cost").text("Vui lòng chọn địa chỉ");
-            // Sử dụng tổng tiền ban đầu
-            updateTotalAmount(initialTotalAmount);
+            return 0;
         } else {
             // Đã chọn địa chỉ, xác định phí vận chuyển dựa trên giá trị của tỉnh
-            const shippingFee = tinhtinh === "1" ? 20000 : 30000;
+            const shippingFee = selectedProvinceCode === "1" ? 20000 : 30000;
 
             // Hiển thị phí vận chuyển
             $("#shipping-cost").text(shippingFee + "đ");
@@ -1104,9 +1127,20 @@
             // Cập nhật giá trị phí vận chuyển trong form ẩn
             $("#feeShipped").val(shippingFee);
 
-            // Gọi hàm updateTotalAmount với tổng tiền ban đầu cộng với phí vận chuyển mới
-            updateTotalAmount(initialTotalAmount + shippingFee);
+            return shippingFee;
         }
+    }
+
+    // Sự kiện khi chọn tỉnh
+    $("#province").change(() => {
+        const selectedProvinceCode = $("#province").val();
+
+        // Cập nhật phí vận chuyển khi chọn tỉnh và lấy giá trị phí vận chuyển
+        const shippingFee = updateShippingFee(selectedProvinceCode);
+
+        // Gọi hàm updateTotalAmount với tổng tiền ban đầu cộng với phí vận chuyển mới
+        updateTotalAmount(initialTotalAmount, shippingFee);
+
         console.log("Initial Total:", $("#totalAmount").text());
 
         // Gọi các hàm renderOptions và printResult
@@ -1121,33 +1155,7 @@
         printResult();
     });
 
-    $(document).ready(() => {
-        // Lấy giá trị tỉnh từ session
-        const selectedProvinceCode = $("#province").val();
-
-        // Nếu tỉnh đã được chọn, cập nhật phí vận chuyển và tổng tiền
-        if (selectedProvinceCode) {
-            updateShippingAndTotal(selectedProvinceCode);
-        }
-
-        // Gắn sự kiện change để cập nhật khi người dùng thay đổi tỉnh
-        $("#province").change(() => {
-            const selectedProvinceCode = $("#province").val();
-            updateShippingAndTotal(selectedProvinceCode);
-        });
-
-        // Gọi sự kiện change khi trang web được tải lần đầu tiên
-        $("#province").change();
-    });
-
-    // Hàm cập nhật tổng tiền
-    function updateTotalAmount(newTotal) {
-        console.log("New Total:", newTotal);
-        // Hiển thị và định dạng tổng tiền mới
-        $("#totalAmount").text(`${newTotal.toLocaleString()} ₫`);
-
-    }
-
+    // Sự kiện khi chọn quận/huyện
     $("#district").change(() => {
         // Call API to load wards based on the selected district
         callAPI(host + "d/" + $("#district").val() + "?depth=2", "ward", (data, selectId) => {
@@ -1156,6 +1164,16 @@
 
         printResult();
     });
+
+    // Call updateTotalAmount with the initial total (you may adjust this based on your scenario)
+    updateTotalAmount(initialTotalAmount, calculateShippingFee());
+
+    function calculateShippingFee() {
+        const selectedProvince = '[[${session.selectedProvince}]]';
+        return selectedProvince === '1' ? 20000 : 30000;
+    }
+
+
 
     $("#ward").change(() => {
         printResult();
