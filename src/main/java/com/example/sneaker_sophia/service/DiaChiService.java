@@ -7,7 +7,6 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.UUID;
@@ -108,7 +107,6 @@ public class DiaChiService {
         return diaChiRepository.getCountDiaChi(UUID.fromString(idTaiKhoan));
     }
 
-    // 1/12
     public boolean validateAddDc(String dcCuThe, String hoTen, String sdt, Model model) {
         int i = 0;
         String errTen = null, errSDT = null, errDCCuThe = null;
@@ -129,7 +127,7 @@ public class DiaChiService {
             errTen = "Không để trống tên";
             i++;
         }
-        if(dcCuThe.equals("")){
+        if (dcCuThe.equals("")) {
             errDCCuThe = "Không để trống địa chỉ cụ thể";
             i++;
         }
@@ -139,3 +137,4 @@ public class DiaChiService {
         return i == 0;
     }
 }
+

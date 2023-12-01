@@ -437,8 +437,6 @@ public class TaiQuayController {
         return "redirect:/admin/tai-quay/detail/" + tempIdHD;
 
     }
-
-
     @GetMapping("updatelhd")
     public String updateLoaiHDGH() {
         HoaDon hoaDon = hoaDonService.getHoaDonById(tempIdHD);
@@ -852,7 +850,6 @@ public class TaiQuayController {
         p.setAlignment(Paragraph.ALIGN_CENTER);
         document.add(p);
     }
-
     private void writeTableData(PdfPTable table, String idHD) {
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         List<HoaDonChiTiet> list = hoaDonChiTietServive.getHDCTByIdHD(idHD);

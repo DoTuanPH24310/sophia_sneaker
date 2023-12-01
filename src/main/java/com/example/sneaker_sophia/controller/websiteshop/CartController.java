@@ -7,6 +7,7 @@ import com.example.sneaker_sophia.repository.LoginRepository;
 import com.example.sneaker_sophia.service.CartService;
 import com.example.sneaker_sophia.service.ChiTietGiayService;
 import com.example.sneaker_sophia.service.KhuyenMaiWebService;
+import com.example.sneaker_sophia.validate.AlertInfo;
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,8 @@ public class CartController {
 
     @Autowired
     private LoginRepository loginRepository;
+    @Autowired
+    private AlertInfo alertInfo;
     @Autowired
     private GioHangRepository gioHangRepository;
 
@@ -98,7 +101,7 @@ public class CartController {
     public String addToCart(@PathVariable("id") UUID chiTietGiayId, Model model, HttpSession httpSession) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
+            ChiTietGiay chiTietGiay = this.chiTietGiayRepository.findById(chiTietGiayId).orElse(null);
             if (authentication != null && authentication.isAuthenticated() && !authentication.getPrincipal().equals("anonymousUser")) {
                 // Người dùng đã đăng nhập
                 TaiKhoan taiKhoan = loginRepository.findByEmail(authentication.getName());
@@ -112,6 +115,7 @@ public class CartController {
                         .mapToDouble(item -> item.getId().getChiTietGiay().getGia() * item.getSoLuong())
                         .sum();
                 Long soLuong = this.cartService.countCartItems(authentication.getName());
+
                 model.addAttribute("soLuong", soLuong);
                 model.addAttribute("totalCartPrice", totalCartPrice);
                 model.addAttribute("gioHang", gioHang);
@@ -132,8 +136,12 @@ public class CartController {
                     model.addAttribute("cartItems", cartItems);
                 }
             }
-
-            return "redirect:/cart/hien-thi";
+//            if(chiTietGiay.getSoLuong() <= 0){
+//                alertInfo.alert("thongBaofalse", "Số lượng sản phẩm không đủ!");
+//            }else{
+//                alertInfo.alert("thongBaook", "Thêm thành công!");
+//            }
+            return "redirect:/sophia-store/product";
         } catch (UsernameNotFoundException e) {
             model.addAttribute("message", e.getMessage());
             return "website/productwebsite/error";

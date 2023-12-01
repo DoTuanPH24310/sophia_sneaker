@@ -572,9 +572,7 @@
                                                         <div class="action-link">
                                                             <div class="action-link-left">
                                                                 <a class="add-to-cart"
-                                                                   th:attr="data-product-id=${product.getId()}"
-                                                                   data-bs-toggle="modal" data-bs-target="#modalAddcart"
-                                                                   href="#">Add to Cart</a>
+                                                                   th:attr="data-product-id=${product.getId()}">Thêm vào giỏ</a>
                                                             </div>
                                                             <div class="action-link-right">
                                                                 <a href="#" data-bs-toggle="modal"
@@ -670,10 +668,8 @@
                                                               th:text="${#numbers.formatCurrency(session['giaCu_' + product.id])}"></span>
                                                         <p th:text="${product.moTa}"></p>
                                                         <div class="product-action-icon-link-list">
-                                                            <a th:attr="data-product-id=${product.getId()}" data-bs-toggle="modal"
-                                                               data-bs-target="#modalAddcart"
-                                                               class="btn btn-lg btn-black-default-hover">Add to
-                                                                cart</a>
+                                                            <a th:attr="data-product-id=${product.getId()}"
+                                                               class="btn btn-lg btn-black-default-hover">Thêm vào giỏ</a>
                                                             <a href="#" data-bs-toggle="modal"
                                                                data-bs-target="#modalQuickview"
                                                                class="btn btn-lg btn-black-default-hover"><i

@@ -406,6 +406,16 @@
                                     </button>
                                 </div>
                             </div>
+                            <div class="col-12">
+                                <label class="checkbox-default" for="currencyCod" data-bs-toggle="collapse">
+                                    <input type="radio" name="giaoHang" checked>
+                                    <span>Giao hàng tiêu chuẩn</span>
+                                    <br>
+                                    <br>
+                                    <span>Giao tại Hà Nội: 20.000đ
+                                            Các địa chỉ khác: 30.000đ</span>
+                                </label>
+                            </div>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6">
@@ -461,11 +471,11 @@
                                     </tr>
                                     <tr>
                                         <td colspan="4" style="text-align: center;">Phí vận chuyển</td>
-                                        <td id="shipping-cost" th:value="20000">20000</td>
+                                        <td id="shipping-cost" name="shipping">Vui Lòng chọn địa chỉ</td>
                                     </tr>
                                     <tr class="order_total">
                                         <td colspan="4" style="text-align: center;">Tổng tiền đơn hàng</td>
-                                        <td><strong id="totalAmount"
+                                        <td><strong id="totalAmount" th:data-id="${total}"
                                                     th:text="${#numbers.formatCurrency(total)}"></strong>
                                         </td>
                                     </tr>
@@ -781,7 +791,7 @@
                                 <th width="19%">Thao tác</th>
                             </tr>
                             </thead>
-                            <tbody id="tbodyDDC"  style="vertical-align: middle; text-align: center;">
+                            <tbody id="tbodyDDC" style="vertical-align: middle; text-align: center;">
 
 
                             </tbody>
@@ -864,7 +874,6 @@
 </div>
 
 
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
         integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -876,6 +885,8 @@
     const tinh = '[[${#strings.isEmpty(session.tinh) ? -1 : session.tinh}]]';
     const quan = '[[${#strings.isEmpty(session.quan) ? -1 : session.quan}]]';
     let phuong = '[[${#strings.isEmpty(session.phuong) ? -1 : session.phuong}]]';
+    const tinhtinh = '[[${#strings.isEmpty(session.selectedProvince) ? "' + -1 + '" : session.selectedProvince}]]';
+    console.log(tinhtinh)
     const idKh = [[${session.idkhOL}]];
     const tbodyDDC = document.getElementById('tbodyDDC');
 
@@ -898,7 +909,7 @@
     }
 
 
-    if (document.getElementById('formThemDiaChi') != null){
+    if (document.getElementById('formThemDiaChi') != null) {
         document.getElementById('formThemDiaChi').addEventListener('submit', function (event) {
 
             let ten = document.getElementById('inputTenTDC').value;
@@ -913,7 +924,7 @@
                 alert("Vui lòng nhập đủ các trường đánh dấu (*)");
                 event.preventDefault();
 
-            } else if (bieuThucChu.test(sdt) || bieuThucDacBiet.test(sdt) ||  !sdt.startsWith('0') || (sdt.trim().length != 11 && sdt.trim().length != 10) ) {
+            } else if (bieuThucChu.test(sdt) || bieuThucDacBiet.test(sdt) || !sdt.startsWith('0') || (sdt.trim().length != 11 && sdt.trim().length != 10)) {
                 alert("Số điện thoại gồm 10 - 11 số và bắt đầu bằng 0");
                 event.preventDefault();
             } else {
@@ -1012,7 +1023,7 @@
     function loadTrDDC(x, index) {
         let buttonChon = document.createElement('a');
         let buttonSua = document.createElement('a');
-        buttonChon.href = '/check-out/updateDCMD/' + x.id ;
+        buttonChon.href = '/check-out/updateDCMD/' + x.id;
         buttonChon.text = 'Chọn'
         buttonChon.classList.add('btn');
         buttonChon.classList.add('btn-warning');
@@ -1020,7 +1031,7 @@
         buttonChon.style.display = 'inline';
 
 
-        buttonSua.href = '/check-out/deleteDC/' + x.id ;
+        buttonSua.href = '/check-out/deleteDC/' + x.id;
         buttonSua.text = 'Xóa'
         buttonSua.classList.add('btn');
         buttonSua.classList.add('btn-danger');
@@ -1080,16 +1091,63 @@
                 console.error(error);
             });
     };
+    // const tinhtinh = '[[${#strings.isEmpty(session.selectedProvince) ? "' + selectedProvinceCode + '" : session.selectedProvince}]]';
+    let initialTotalAmount;
 
+    // Lấy giá trị tổng tiền ban đầu khi trang web được tải lần đầu
+    initialTotalAmount = parseFloat($("#totalAmount").data("id"));
+
+    // Hàm cập nhật tổng tiền
+    function updateTotalAmount(newTotal, shippingFee) {
+        console.log("New Total:", newTotal);
+
+        // Calculate the total amount including the shipping fee
+        const totalAmountWithShipping = newTotal + shippingFee;
+
+        // Display and format the total amount with shipping
+        $("#totalAmount").text(`${totalAmountWithShipping.toLocaleString()} ₫`);
+
+        // Display and format the shipping cost
+        $("#shipping-cost").text(`${shippingFee.toLocaleString()} ₫`);
+    }
+
+    // Hàm cập nhật phí vận chuyển khi chọn tỉnh
+    function updateShippingFee(selectedProvinceCode) {
+        if (!selectedProvinceCode) {
+            // Chưa chọn địa chỉ
+            $("#shipping-cost").text("Vui lòng chọn địa chỉ");
+            return 0;
+        } else {
+            // Đã chọn địa chỉ, xác định phí vận chuyển dựa trên giá trị của tỉnh
+            const shippingFee = selectedProvinceCode === "1" ? 20000 : 30000;
+
+            // Hiển thị phí vận chuyển
+            $("#shipping-cost").text(shippingFee + "đ");
+
+            // Cập nhật giá trị phí vận chuyển trong form ẩn
+            $("#feeShipped").val(shippingFee);
+
+            return shippingFee;
+        }
+    }
+
+    // Sự kiện khi chọn tỉnh
     $("#province").change(() => {
         const selectedProvinceCode = $("#province").val();
 
-        // Call API to load districts based on the selected province
+        // Cập nhật phí vận chuyển khi chọn tỉnh và lấy giá trị phí vận chuyển
+        const shippingFee = updateShippingFee(selectedProvinceCode);
+
+        // Gọi hàm updateTotalAmount với tổng tiền ban đầu cộng với phí vận chuyển mới
+        updateTotalAmount(initialTotalAmount, shippingFee);
+
+        console.log("Initial Total:", $("#totalAmount").text());
+
+        // Gọi các hàm renderOptions và printResult
         callAPI(host + "p/" + selectedProvinceCode + "?depth=2", "district", (data, selectId) => {
             renderOptions(data.districts, selectId, "--Chọn Quận/Huyện--");
         });
 
-        // Call API to load wards based on the selected district
         callAPI(host + "d/" + $("#district").val() + "?depth=2", "ward", (data, selectId) => {
             renderOptions(data.wards, selectId, "--Chọn Phường/Xã--");
         });
@@ -1097,6 +1155,7 @@
         printResult();
     });
 
+    // Sự kiện khi chọn quận/huyện
     $("#district").change(() => {
         // Call API to load wards based on the selected district
         callAPI(host + "d/" + $("#district").val() + "?depth=2", "ward", (data, selectId) => {
@@ -1105,6 +1164,16 @@
 
         printResult();
     });
+
+    // Call updateTotalAmount with the initial total (you may adjust this based on your scenario)
+    updateTotalAmount(initialTotalAmount, calculateShippingFee());
+
+    function calculateShippingFee() {
+        const selectedProvince = '[[${session.selectedProvince}]]';
+        return selectedProvince === '1' ? 20000 : 30000;
+    }
+
+
 
     $("#ward").change(() => {
         printResult();
@@ -1159,8 +1228,6 @@
         }
 
     }
-
-
 
 
     document.getElementById("btnThanhToan").addEventListener("click", function (event) {

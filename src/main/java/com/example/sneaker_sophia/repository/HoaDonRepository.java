@@ -17,7 +17,8 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
     @Query(value = "select hd from HoaDon hd where hd.trangThai = 2 and hd.loaiHoaDon in (1,2) order by hd.maHoaDOn")
     List<HoaDon> getHoaDonByTrangThai();
 
-    @Query(value = "select count(maHoaDOn) from HoaDon where trangThai = 2", nativeQuery = true)
+
+    @Query(value = "select count(maHoaDOn) from HoaDon where trangThai = 2 and loaiHoaDon in (1,2)", nativeQuery = true)
     Integer countHoaDonByTrangThai();
 
     @Query(value = "select hd from HoaDon hd where hd.trangThai = 1 order by hd.createdDate desc ")

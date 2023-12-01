@@ -13,8 +13,7 @@ public class GlobalExceptionHandler {
         // Log lỗi
         logger.error("Error occurred:", ex);
 
-        // Xử lý logic khi có ngoại lệ
         return "error"; // Trả về tên view/template
     }
-    // Các phương thức khác xử lý các loại ngoại lệ khác (nếu cần)
+
 }

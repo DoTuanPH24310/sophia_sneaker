@@ -81,7 +81,6 @@ public class QLHDController {
         try {
             UUID uuid = UUID.fromString(idhd);
         } catch (IllegalArgumentException e) {
-
             return "redirect:/admin/hoa-don/hien-thi";
         }
         HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
@@ -137,6 +136,7 @@ public class QLHDController {
             }
 
         }
+        alertInfo.alert("successTaiQuay","Đơn hàng đã được xác nhận");
         return "redirect:/admin/hoa-don/hien-thi";
     }
 

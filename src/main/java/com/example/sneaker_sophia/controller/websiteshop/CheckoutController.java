@@ -9,6 +9,7 @@ import com.example.sneaker_sophia.repository.HinhThucThanhToanWebRepository;
 import com.example.sneaker_sophia.repository.HoaDonWebRepository;
 import com.example.sneaker_sophia.repository.LoginRepository;
 import com.example.sneaker_sophia.service.*;
+import com.example.sneaker_sophia.validate.AlertInfo;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -48,6 +49,8 @@ public class CheckoutController {
     private GioHangService gioHangService;
     @Resource(name = "diaChiService")
     DiaChiService diaChiServiceTQ;
+    @Autowired
+    private AlertInfo alertInfo;
     @Autowired
     private HoaDonWebRepository hoaDonWebRepository;
 
@@ -110,9 +113,11 @@ public class CheckoutController {
                         session.setAttribute("tinh", diaChi.getTinh());
                         session.setAttribute("quan", diaChi.getQuanHuyen());
                         session.setAttribute("phuong", diaChi.getPhuongXa());
+
                     } else {
                         diaChi = new DiaChi();
                     }
+                    session.setAttribute("selectedProvince", diaChi.getTinh()); // Thêm dòng này
                     model.addAttribute("diaChi", diaChi);
                     model.addAttribute("cartItems", cartItems);
                     model.addAttribute("tongSoLuongGiam", tongSoLuongGiam);
@@ -196,6 +201,7 @@ public class CheckoutController {
                             @RequestParam(value = "thanhPho", required = false) String tinh,
                             @RequestParam(value = "huyen", required = false) String huyen,
                             @RequestParam(value = "xa", required = false) String xa,
+                            Double phiVanChuyen,
                             HttpSession session) {
         double total = 0.0;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -237,9 +243,17 @@ public class CheckoutController {
                     }
                 }
             }
+            if(diaChiDTO.getTinh() == 1){
+                phiVanChuyen = 20000.0;
+            }else{
+                phiVanChuyen = 30000.0;
+            }
             if (cartItems != null && !cartItems.isEmpty()) {
+                if(hinhThucThanhToan == null){
+                    alertInfo.alert("errOnline", "Chua chon hinh thuc thanh toan!");
+                }
                 this.thanhToanService.capNhatDiaChi(diaChiDTO, taiKhoan);
-                thanhToanService.thucHienThanhToan(email, cartItems, hinhThucThanhToan, diaChiCuThe, tinh, huyen, xa);
+                thanhToanService.thucHienThanhToan(email, cartItems, hinhThucThanhToan, diaChiCuThe, tinh, huyen, xa, phiVanChuyen);
                 return "redirect:/check-out/success";
             }
         }
@@ -253,26 +267,28 @@ public class CheckoutController {
                             @RequestParam(value = "thanhPho", required = false) String tinh,
                             @RequestParam(value = "huyen", required = false) String huyen,
                             @RequestParam(value = "xa", required = false) String xa,
+                            Double phiVanChuyen,
                             Model model, HttpSession session) {
-
+        System.out.println("phivanchuyen" + phiVanChuyen);
         try {
+            Cart cart = (Cart) session.getAttribute("cart");
+            List<CartItem> cartItems = cart.getItems();
             session.removeAttribute("tinh");
             session.removeAttribute("quan");
             session.removeAttribute("phuong");
             if (result.hasErrors()) {
                 double total = 0.0;
-                Cart cart = (Cart) session.getAttribute("cart");
                 boolean tonTai = this.loginRepository.existsByEmail(diaChi.getEmail());
                 if (tonTai) {
                     session.setAttribute("tinh", "-1");
                     session.setAttribute("quan", "-1");
                     session.setAttribute("phuong", "-1");
                     result.rejectValue("email", "error.email", "Email đã tồn tại trong hệ thống");
-
+                    model.addAttribute("cartItems", cartItems);
+                    model.addAttribute("total", total);
                     return "website/productwebsite/checkoutSession";
                 }
                 if (cart != null) {
-                    List<CartItem> cartItems = cart.getItems();
                     if (cartItems != null && !cartItems.isEmpty()) {
                         for (CartItem item : cartItems) {
                             if (item != null && item.getId() != null) {
@@ -298,8 +314,11 @@ public class CheckoutController {
                     return "redirect:/cart/hien-thi";
                 }
             }
-            Cart cart = (Cart) session.getAttribute("cart");
-            List<CartItem> cartItems = cart.getItems();
+            if(diaChi.getTinh() == 1){
+                phiVanChuyen = 20000.0;
+            }else{
+                phiVanChuyen = 30000.0;
+            }
             String matKhauNgauNhien = emailService.taoMatKhauNgauNhien();
 
             TaiKhoan taiKhoanMoi = emailService.taoTaiKhoanMoi(diaChi);
@@ -309,7 +328,7 @@ public class CheckoutController {
 
             emailService.themDiaChiVaoTaiKhoan(diaChi, taiKhoanMoi);
 
-            HoaDon hoaDonMoi = emailService.taoHoaDonMoi(taiKhoanMoi, hinhThucThanhToan, diaChiCuThe, tinh, huyen, xa);
+            HoaDon hoaDonMoi = emailService.taoHoaDonMoi(taiKhoanMoi, hinhThucThanhToan, diaChiCuThe, tinh, huyen, xa, phiVanChuyen);
             emailService.themSanPhamVaoHoaDonChiTiet(cartItems, hoaDonMoi);
 
             emailService.guiEmailXacNhanThanhToan(taiKhoanMoi.getEmail(), hoaDonMoi);

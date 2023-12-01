@@ -240,7 +240,7 @@ public class EmailService {
     }
 
 
-    public HoaDon taoHoaDonMoi(TaiKhoan taiKhoan, Integer hinhThucThanhToan, String diaChi, String tinh, String huyen, String xa) {
+    public HoaDon taoHoaDonMoi(TaiKhoan taiKhoan, Integer hinhThucThanhToan, String diaChi, String tinh, String huyen, String xa, Double phiVanChuyen) {
         HoaDon hoaDonMoi = new HoaDon();
         int soHD = this.hoaDonRepository.soHD() + 1;
         hoaDonMoi.setMaHoaDOn("HD" + soHD);
@@ -249,12 +249,12 @@ public class EmailService {
         hoaDonMoi.setTenKhachHang(taiKhoan.getTen());
         hoaDonMoi.setSoDienThoai(taiKhoan.getSdt());
         hoaDonMoi.setDiaChi(diaChi + ", " + xa + ", " + huyen + ", " + tinh);
-        hoaDonMoi.setPhiShip(20000.0);
+        hoaDonMoi.setPhiShip(phiVanChuyen);
         hoaDonMoi.setTienThua(0.0);
         if(hinhThucThanhToan == 3) {
-            hoaDonMoi.setLoaiHoaDon(3);
+            hoaDonMoi.setTrangThai(3);
         }else if(hinhThucThanhToan == 2){
-            hoaDonMoi.setLoaiHoaDon(2);
+            hoaDonMoi.setTrangThai(2);
         }
 
         hoaDonMoi = this.hoaDonWebRepository.save(hoaDonMoi);
