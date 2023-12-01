@@ -125,7 +125,8 @@
                     </li>
 
                     <li role="presentation" class="nav-item">
-                        <a id="tabChoXacNhan" class="nav-link  text-dark" href="#choXacNhan" aria-controls="choXacNhan" role="tab"
+                        <a id="tabChoXacNhan" class="nav-link  text-dark" href="#choXacNhan" aria-controls="choXacNhan"
+                           role="tab"
                            data-toggle="tab">Chờ xác nhận
                             <!--                            Đây-->
                             <span class="countHD" th:text="${soHDCXN}"></span>
@@ -141,7 +142,8 @@
                         </a>
                     </li>
                     <li role="presentation" class="nav-item">
-                        <a id="tabDangGiao" class="nav-link  text-dark" href="#dangGiao" aria-controls="vanChuyen" role="tab"
+                        <a id="tabDangGiao" class="nav-link  text-dark" href="#dangGiao" aria-controls="vanChuyen"
+                           role="tab"
                            data-toggle="tab">Đang giao
                             <!--                            Đây-->
                             <span class="countHD" th:text="${soHDDG}"></span>
@@ -202,12 +204,17 @@
                                                         style="border-radius: 30px; font-size: 12px; height: 40px">
                                                     Giao hàng
                                                 </button>
+                                                <button th:if="${hdc.loaiHoaDon == 3}" class="btn btn-primary "
+                                                        style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                    Online
+                                                </button>
                                             </td>
                                             <td>
 
-                                                <a th:href="@{/admin/tai-quay/detail/{id}(id=${hdc.id})}"
+                                                <a th:unless="${hdc.loaiHoaDon == 3}"
+                                                   th:href="@{/admin/tai-quay/detail/{id}(id=${hdc.id})}"
                                                    class="btn btn-warning edit"
-                                                   style=" padding: 5px 10px; font-size: 12px">
+                                                   style="padding: 5px 10px; font-size: 12px">
                                                     <i class="material-icons text-white mt-1" title="Sửa">&#xE254;</i>
                                                 </a>
 
@@ -366,12 +373,11 @@
                                             </td>
                                             <td>
 
-                                                <a
-                                                        th:href="@{/admin/tai-quay/detail/{id}(id=${hd.id})}"
-                                                        class="btn btn-warning edit"
-                                                        style=" padding: 5px 10px; font-size: 12px">
-                                                    <i class="material-icons text-white mt-1"
-                                                       title="Sửa">&#xE254;</i>
+                                                <a th:unless="${hd.loaiHoaDon == 3}"
+                                                   th:href="@{/admin/tai-quay/detail/{id}(id=${hd.id})}"
+                                                   class="btn btn-warning edit"
+                                                   style="padding: 5px 10px; font-size: 12px">
+                                                    <i class="material-icons text-white mt-1" title="Sửa">&#xE254;</i>
                                                 </a>
 
                                                 <a th:href="@{/admin/hoa-don/detail/{id}(id=${hd.id})}"
@@ -451,13 +457,6 @@
                                                 </button>
                                             </td>
                                             <td>
-
-                                                <a th:href="@{/admin/tai-quay/detail/{id}(id=${hd.id})}"
-                                                   class="btn btn-warning edit"
-                                                   style=" padding: 5px 10px; font-size: 12px">
-                                                    <i class="material-icons text-white mt-1" title="Sửa">&#xE254;</i>
-                                                </a>
-
                                                 <a th:href="@{/admin/hoa-don/detail/{id}(id=${hd.id})}"
                                                    class="btn btn-success "
                                                    style=" padding: 5px 10px; font-size: 12px;">

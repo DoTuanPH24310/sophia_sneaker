@@ -6,9 +6,13 @@ import com.example.sneaker_sophia.repository.DiaChiRepository;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service("diaChiService")
 public class DiaChiService {
@@ -18,20 +22,20 @@ public class DiaChiService {
     @Resource(name = "taiKhoanService")
     TaiKhoanService taiKhoanService;
 
-    public  DiaChi getDiaChiByIdTaiKhoan(String id){
-        return  diaChiRepository.getDiaChiByIdTaiKhoan(id);
+    public DiaChi getDiaChiByIdTaiKhoan(String id) {
+        return diaChiRepository.getDiaChiByIdTaiKhoan(id);
     }
 
-    public DiaChi getNhanVienDTOById(String id){
+    public DiaChi getNhanVienDTOById(String id) {
         return diaChiRepository.getNhanVienDTOById(id);
     }
 
     // 15-11
-    public List<DiaChi> getAllDCByIdkh(String idkh){
+    public List<DiaChi> getAllDCByIdkh(String idkh) {
         return diaChiRepository.findListDCByIdKH(idkh);
     }
 
-    public void updateDCMD(String iddc, HttpSession session){
+    public void updateDCMD(String iddc, HttpSession session) {
         String idkh = (String) session.getAttribute("idkh");
         DiaChi diaChiThuong = diaChiRepository.findById(iddc).orElse(null);
         DiaChi diaChiMD = diaChiRepository.getDiaChiByIdTaiKhoan(idkh);
@@ -45,7 +49,7 @@ public class DiaChiService {
         }
     }
 
-    public void adddc(Integer xa, Integer quan, Integer tinh, String dcCuThe, String hoTen, String sdt, HttpSession session){
+    public void adddc(Integer xa, Integer quan, Integer tinh, String dcCuThe, String hoTen, String sdt, HttpSession session) {
         String idkh = (String) session.getAttribute("idkh");
         List<DiaChi> listDC = diaChiRepository.findListDCByIdKH(idkh);
         DiaChi diaChi = new DiaChi();
@@ -104,4 +108,34 @@ public class DiaChiService {
         return diaChiRepository.getCountDiaChi(UUID.fromString(idTaiKhoan));
     }
 
+    // 1/12
+    public boolean validateAddDc(String dcCuThe, String hoTen, String sdt, Model model) {
+        int i = 0;
+        String errTen = null, errSDT = null, errDCCuThe = null;
+
+        String regex = "^(0\\d{9}|(\\+|00)84\\d{9})$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(sdt);
+
+        if (!matcher.matches()) {
+            errSDT = "Số điện thoại không đùng định dạng (10 số)";
+            i++;
+        }
+        if (sdt.equals("")) {
+            errSDT = "Không để trống số điện thoại";
+            i++;
+        }
+        if (hoTen.equals("")) {
+            errTen = "Không để trống tên";
+            i++;
+        }
+        if(dcCuThe.equals("")){
+            errDCCuThe = "Không để trống địa chỉ cụ thể";
+            i++;
+        }
+        model.addAttribute("errTen", errTen);
+        model.addAttribute("errSDT", errSDT);
+        model.addAttribute("errDCCuThe", errDCCuThe);
+        return i == 0;
+    }
 }

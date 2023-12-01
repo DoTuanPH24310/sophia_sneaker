@@ -260,7 +260,7 @@ public class QLHDController {
         if (hoaDon != null) {
             List<HoaDonChiTiet> listhdct = hoaDonChiTietServive.getHDCTByIdHD(hoaDon.getId());
             if(listhdct.size() == 0){
-                return "redirect:/admin/hoa-don/hien-thi";
+                return "redirect:/admin/hoa-don/detail/" + tempIdHD;
             }
             hoaDon.setTrangThai(5);
             LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
