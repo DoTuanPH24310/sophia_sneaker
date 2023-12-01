@@ -324,7 +324,7 @@
 
 <!-- ...:::: Start Checkout Section:::... -->
 <div class="checkout-section">
-    <div class="container">
+    <div class="container w-80">
         <form th:object="${diaChi}" th:action="@{/check-out/thanh-toan}" method="post" id="formThanhToan">
 
             <!-- Start User Details Checkout Form -->
@@ -461,11 +461,11 @@
                                     </tr>
                                     <tr>
                                         <td colspan="4" style="text-align: center;">Phí vận chuyển</td>
-                                        <td id="shipping-cost" th:value="20000">20000</td>
+                                        <td id="shipping-cost">Vui Lòng chọn địa chỉ</td>
                                     </tr>
                                     <tr class="order_total">
                                         <td colspan="4" style="text-align: center;">Tổng tiền đơn hàng</td>
-                                        <td><strong id="totalAmount"
+                                        <td><strong id="totalAmount" th:data-id="${total}"
                                                     th:text="${#numbers.formatCurrency(total)}"></strong>
                                         </td>
                                     </tr>
@@ -781,7 +781,7 @@
                                 <th width="19%">Thao tác</th>
                             </tr>
                             </thead>
-                            <tbody id="tbodyDDC"  style="vertical-align: middle; text-align: center;">
+                            <tbody id="tbodyDDC" style="vertical-align: middle; text-align: center;">
 
 
                             </tbody>
@@ -864,7 +864,6 @@
 </div>
 
 
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
         integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -876,6 +875,7 @@
     const tinh = '[[${#strings.isEmpty(session.tinh) ? -1 : session.tinh}]]';
     const quan = '[[${#strings.isEmpty(session.quan) ? -1 : session.quan}]]';
     let phuong = '[[${#strings.isEmpty(session.phuong) ? -1 : session.phuong}]]';
+
     const idKh = [[${session.idkhOL}]];
     const tbodyDDC = document.getElementById('tbodyDDC');
 
@@ -898,7 +898,7 @@
     }
 
 
-    if (document.getElementById('formThemDiaChi') != null){
+    if (document.getElementById('formThemDiaChi') != null) {
         document.getElementById('formThemDiaChi').addEventListener('submit', function (event) {
 
             let ten = document.getElementById('inputTenTDC').value;
@@ -913,7 +913,7 @@
                 alert("Vui lòng nhập đủ các trường đánh dấu (*)");
                 event.preventDefault();
 
-            } else if (bieuThucChu.test(sdt) || bieuThucDacBiet.test(sdt) ||  !sdt.startsWith('0') || (sdt.trim().length != 11 && sdt.trim().length != 10) ) {
+            } else if (bieuThucChu.test(sdt) || bieuThucDacBiet.test(sdt) || !sdt.startsWith('0') || (sdt.trim().length != 11 && sdt.trim().length != 10)) {
                 alert("Số điện thoại gồm 10 - 11 số và bắt đầu bằng 0");
                 event.preventDefault();
             } else {
@@ -1012,7 +1012,7 @@
     function loadTrDDC(x, index) {
         let buttonChon = document.createElement('a');
         let buttonSua = document.createElement('a');
-        buttonChon.href = '/check-out/updateDCMD/' + x.id ;
+        buttonChon.href = '/check-out/updateDCMD/' + x.id;
         buttonChon.text = 'Chọn'
         buttonChon.classList.add('btn');
         buttonChon.classList.add('btn-warning');
@@ -1020,7 +1020,7 @@
         buttonChon.style.display = 'inline';
 
 
-        buttonSua.href = '/check-out/deleteDC/' + x.id ;
+        buttonSua.href = '/check-out/deleteDC/' + x.id;
         buttonSua.text = 'Xóa'
         buttonSua.classList.add('btn');
         buttonSua.classList.add('btn-danger');
@@ -1081,21 +1081,72 @@
             });
     };
 
+    let initialTotalAmount;
+    let tinhtinh = document.getElementById('province').value;
+    console.log(tinhtinh)
+    // Lấy giá trị tổng tiền ban đầu khi trang web được tải lần đầu
+    initialTotalAmount = parseFloat($("#totalAmount").data("id"));
     $("#province").change(() => {
         const selectedProvinceCode = $("#province").val();
+        console.log(selectedProvinceCode)
+        if (!selectedProvinceCode) {
+            // Chưa chọn địa chỉ
+            $("#shipping-cost").text("Vui lòng chọn địa chỉ");
+            // Sử dụng tổng tiền ban đầu
+            updateTotalAmount(initialTotalAmount);
+        } else {
+            // Đã chọn địa chỉ, xác định phí vận chuyển dựa trên giá trị của tỉnh
+            const shippingFee = tinhtinh === "1" ? 20000 : 30000;
 
-        // Call API to load districts based on the selected province
+            // Hiển thị phí vận chuyển
+            $("#shipping-cost").text(shippingFee + "đ");
+
+            // Cập nhật giá trị phí vận chuyển trong form ẩn
+            $("#feeShipped").val(shippingFee);
+
+            // Gọi hàm updateTotalAmount với tổng tiền ban đầu cộng với phí vận chuyển mới
+            updateTotalAmount(initialTotalAmount + shippingFee);
+        }
+        console.log("Initial Total:", $("#totalAmount").text());
+
+        // Gọi các hàm renderOptions và printResult
         callAPI(host + "p/" + selectedProvinceCode + "?depth=2", "district", (data, selectId) => {
             renderOptions(data.districts, selectId, "--Chọn Quận/Huyện--");
         });
 
-        // Call API to load wards based on the selected district
         callAPI(host + "d/" + $("#district").val() + "?depth=2", "ward", (data, selectId) => {
             renderOptions(data.wards, selectId, "--Chọn Phường/Xã--");
         });
 
         printResult();
     });
+
+    $(document).ready(() => {
+        // Lấy giá trị tỉnh từ session
+        const selectedProvinceCode = $("#province").val();
+
+        // Nếu tỉnh đã được chọn, cập nhật phí vận chuyển và tổng tiền
+        if (selectedProvinceCode) {
+            updateShippingAndTotal(selectedProvinceCode);
+        }
+
+        // Gắn sự kiện change để cập nhật khi người dùng thay đổi tỉnh
+        $("#province").change(() => {
+            const selectedProvinceCode = $("#province").val();
+            updateShippingAndTotal(selectedProvinceCode);
+        });
+
+        // Gọi sự kiện change khi trang web được tải lần đầu tiên
+        $("#province").change();
+    });
+
+    // Hàm cập nhật tổng tiền
+    function updateTotalAmount(newTotal) {
+        console.log("New Total:", newTotal);
+        // Hiển thị và định dạng tổng tiền mới
+        $("#totalAmount").text(`${newTotal.toLocaleString()} ₫`);
+
+    }
 
     $("#district").change(() => {
         // Call API to load wards based on the selected district
@@ -1159,8 +1210,6 @@
         }
 
     }
-
-
 
 
     document.getElementById("btnThanhToan").addEventListener("click", function (event) {

@@ -11,8 +11,17 @@
     <link rel="stylesheet" href="/assets/css/vendor/vendor.min.css">
     <link rel="stylesheet" href="/assets/css/plugins/plugins.min.css">
     <link rel="stylesheet" href="/assets/css/style.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
     <style>
+
+
+        .notifications {
+            position: fixed;
+            top: 30px;
+            right: -20px;
+            z-index: 2000;
+        }
         .thongBao {
             position: relative;
             margin-bottom: 10px;
@@ -138,7 +147,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="#offcanvas-add-cart" class="offcanvas-toggle">
+                                <a th:href="@{/cart/hien-thi}" >
                                     <i class="icon-bag"></i>
                                     <span class="item-count" th:text="${soLuong}"></span>
                                 </a>
@@ -248,10 +257,14 @@
 <!-- Main JS -->
 <script src="/assets/js/main.js"></script>
 
-<script>
+<script th:inline="javascript">
     const notifications = document.querySelector('.notifications');
-    const errhd = [[${session.errTaiQuay}]];
-    const successhd =[[${session.successTaiQuay}]]
+    const errhd = [[${session.errOnline}]];
+    const successhd =[[${session.successOnline}]];
+    const thongBaook =[[${session.thongBaook}]];
+    const thongBaofalse =[[${session.thongBaofalse}]];
+
+
     if (errhd != null) {
         window.addEventListener("DOMContentLoaded", function () {
             let type = 'error';
@@ -259,7 +272,7 @@
             let title = 'Thất bại!';
             let text = errhd;
             createToast(type, icon, title, text);
-            removeSeesion('errTaiQuay');
+            removeSeesion('errOnline');
         })
     }
     if (successhd != null){
@@ -269,8 +282,46 @@
             let title = 'Thành công!';
             let text = successhd;
             createToast(type, icon, title, text);
-            removeSeesion('successTaiQuay');
+            removeSeesion('successOnline');
         })
+    }
+
+    function createToast(type, icon, title, text) {
+        let newToast = document.createElement('div');
+        newToast.innerHTML = `
+            <div class="thongBao ${type}">
+                <i class="${icon}"></i>
+                <div class="content">
+                    <div class="title">${title}</div>
+                    <span>${text}</span>
+                </div>
+                <i class="fa-solid fa-xmark" onclick="(this.parentElement).remove()"></i>
+            </div>`;
+        notifications.appendChild(newToast);
+        newToast.timeOut = setTimeout(
+            ()=>newToast.remove(), 3000
+        )
+    }
+    function alertInfor(){
+        console.log(thongBaook);
+        console.log(thongBaofalse);
+        if(thongBaook != null){
+            let type = 'success';
+            let icon = 'fa-solid fa-circle-check';
+            let title = 'Thành công!';
+            let text = thongBaook;
+            createToast(type, icon, title, text);
+            removeSeesion('thongBaook');
+        }
+       else if(thongBaofalse != null){
+            let type = 'error';
+            let icon = 'fa-solid fa-circle-exclamation';
+            let title = 'Thất bại!';
+            let text = thongBaofalse;
+            createToast(type, icon, title, text);
+            removeSeesion('thongBaofalse');
+
+        }
     }
 
     function removeSeesion(name) {

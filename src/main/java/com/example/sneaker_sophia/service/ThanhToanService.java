@@ -47,7 +47,7 @@ public class ThanhToanService {
     @Resource(name = "hoaDonRepository")
     HoaDonRepository hoaDonRepository;
 
-    public void thucHienThanhToan(String email, List<GioHangChiTiet> cartItems, Integer hinhThucThanhToan,String diaChi, String tinh, String huyen, String xa) {
+    public void thucHienThanhToan(String email, List<GioHangChiTiet> cartItems, Integer hinhThucThanhToan,String diaChi, String tinh, String huyen, String xa, Double phiVanChuyen) {
         TaiKhoan taiKhoan = this.loginRepository.findByEmail(email);
         double total = 0.0;
         for (GioHangChiTiet cartItem : cartItems) {
@@ -63,16 +63,16 @@ public class ThanhToanService {
         HoaDon hoaDon = new HoaDon();
         hoaDon.setMaHoaDOn("HD" + soHD);
         hoaDon.setTaiKhoan(taiKhoan);
+        hoaDon.setLoaiHoaDon(3);
         if(hinhThucThanhToan == 3) {
-            hoaDon.setLoaiHoaDon(3);
+            hoaDon.setTrangThai(3);
         }else if(hinhThucThanhToan == 2){
-            hoaDon.setLoaiHoaDon(2);
+            hoaDon.setTrangThai(2);
         }
         hoaDon.setTenKhachHang(taiKhoan.getTen());
         hoaDon.setSoDienThoai(taiKhoan.getSdt());
         hoaDon.setDiaChi(diaChi + ", " + xa + ", " + huyen + ", " + tinh);
-        hoaDon.setPhiShip(20000.0);
-        hoaDon.setTrangThai(2);
+        hoaDon.setPhiShip(phiVanChuyen);
         hoaDon.setTongTien(0.0);
         hoaDon.setTienThua(0.0);
         hoaDon.setTongTien(tongTienDonHang);
