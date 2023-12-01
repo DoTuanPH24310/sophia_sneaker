@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layouts/layout}" th:lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Error Page</title>
+    <style>
+        body {
+            margin: 0; /* Loại bỏ margin mặc định của body */
+            overflow: hidden; /* Ngăn chặn scroll */
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Đảm bảo ảnh giữ nguyên tỷ lệ khung hình */
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content" class="container" style="background-color: white;">
+    <img src="https://cdn.tgdd.vn/hoi-dap/1370525/loi-http-error-500-la-gi-cach-khac-phuc-loi-http-error-500.1.2-800x427.jpg" alt="Error Image">
+</div>
+</body>
+</html>

@@ -6,9 +6,12 @@ import com.example.sneaker_sophia.repository.DiaChiRepository;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service("diaChiService")
 public class DiaChiService {
@@ -102,6 +105,36 @@ public class DiaChiService {
     //    14/11
     public Integer getCountDiaChi(String idTaiKhoan) {
         return diaChiRepository.getCountDiaChi(UUID.fromString(idTaiKhoan));
+    }
+
+    public boolean validateAddDc(String dcCuThe, String hoTen, String sdt, Model model) {
+        int i = 0;
+        String errTen = null, errSDT = null, errDCCuThe = null;
+
+        String regex = "^(0\\d{9}|(\\+|00)84\\d{9})$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(sdt);
+
+        if (!matcher.matches()) {
+            errSDT = "Số điện thoại không đùng định dạng (10 số)";
+            i++;
+        }
+        if (sdt.equals("")) {
+            errSDT = "Không để trống số điện thoại";
+            i++;
+        }
+        if (hoTen.equals("")) {
+            errTen = "Không để trống tên";
+            i++;
+        }
+        if(dcCuThe.equals("")){
+            errDCCuThe = "Không để trống địa chỉ cụ thể";
+            i++;
+        }
+        model.addAttribute("errTen", errTen);
+        model.addAttribute("errSDT", errSDT);
+        model.addAttribute("errDCCuThe", errDCCuThe);
+        return i == 0;
     }
 
 }

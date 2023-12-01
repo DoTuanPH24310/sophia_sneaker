@@ -782,11 +782,13 @@
                                     <label><span style="color: #c82333">*</span> Họ và Tên</label>
                                     <input type="text" name="hoTen" id="inputTenTDC"
                                            class="form-control">
+                                    <span class="text-danger" th:text="${errTen}"></span>
                                 </div>
                                 <div class="col-6">
                                     <label><span style="color: #c82333">*</span> Số điện thoại</label>
                                     <input type="text" name="sdt"
                                            class="form-control" id="inputSDTTDC">
+                                    <span class="text-danger" th:text="${errSDT}"></span>
                                 </div>
                             </div>
                             <div class="row">
@@ -813,6 +815,7 @@
                             <div class="row">
                                 <label><span style="color: #c82333">*</span> Đ/C chi tiết</label>
                                 <input name="dcCuThe" class="form-control" id="inputDCCTTDC" type="text">
+                                <span class="text-danger" th:text="${errDCCuThe}"></span>
                             </div>
                         </div>
                     </div>
@@ -1315,7 +1318,7 @@
         function apiDiaChiGender(idTinh, idQuan, idXa, tinh, quan, phuong) {
             const host = "https://provinces.open-api.vn/api/";
             let renderData = (array, select) => {
-                let row = `<option  value="">--Chọn Tỉnh/Thành phố--</option>`;
+                let row = `<option  value="0">--Chọn Tỉnh/Thành phố--</option>`;
                 array.forEach(element => {
                     if (tinh === element.code) {
                         renderDataDis(element.districts, idQuan);
@@ -1326,7 +1329,7 @@
             }
 
             let renderDataDis = (array, select) => {
-                let row = `<option disable value="">--Chọn--</option>`;
+                let row = `<option disable value="0">--Chọn--</option>`;
                 array.forEach(element => {
                     if (quan === element.code) {
                         renderDataWar(element.wards, idXa);
@@ -1338,7 +1341,7 @@
             }
 
             let renderDataWar = (array, select) => {
-                let row = `<option disable value="">--Chọn--</option>`;
+                let row = `<option disable value="0">--Chọn--</option>`;
                 array.forEach(element => {
                     if (phuong === element.code) {
                         row = `<option selected value="${element.name}">${element.name}</option>`;
@@ -1382,7 +1385,7 @@
             }
 
             let renderData = (array, select) => {
-                let row = ' <option disable value="">--Chọn--</option>';
+                let row = ' <option disable value="0">--Chọn--</option>';
                 array.forEach(element => {
                     row += `<option value="${element.code}">${element.name}</option>`
                 });

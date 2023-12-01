@@ -434,11 +434,9 @@ public class TaiQuayController {
         hoaDon.setSoDienThoai(nhanVienRequest.getSdt());
         hoaDonService.savehd(hoaDon);
         alertInfo.alert("successTaiQuay","Khách hàng đã được thêm");
-        return "forward:/admin/tai-quay/detail/" + tempIdHD;
+        return "redirect:/admin/tai-quay/detail/" + tempIdHD;
 
     }
-
-
     @GetMapping("updatelhd")
     public String updateLoaiHDGH() {
         HoaDon hoaDon = hoaDonService.getHoaDonById(tempIdHD);
@@ -468,17 +466,20 @@ public class TaiQuayController {
     ) {
         tempIdDC = iddc;
         DiaChi diaChiThuong = diaChiService.getDiaChiById(iddc);
-        DiaChi diaChiMD = diaChiService.getDiaChiByIdTaiKhoan(tempIdKH);
-        if (diaChiMD.getDiaChiMacDinh() == 1) {
-            diaChiMD.setDiaChiMacDinh(0);
-            diaChiService.saveDC(diaChiMD);
+        if(diaChiThuong != null){
+            DiaChi diaChiMD = diaChiService.getDiaChiByIdTaiKhoan(tempIdKH);
+            if (diaChiMD.getDiaChiMacDinh() == 1) {
+                diaChiMD.setDiaChiMacDinh(0);
+                diaChiService.saveDC(diaChiMD);
+            }
+            if (diaChiThuong.getDiaChiMacDinh() == 0) {
+                diaChiThuong.setDiaChiMacDinh(1);
+                diaChiService.saveDC(diaChiThuong);
+            }
+            alertInfo.alert("successTaiQuay","Địa chỉ đã được thay đổi");
         }
-        if (diaChiThuong.getDiaChiMacDinh() == 0) {
-            diaChiThuong.setDiaChiMacDinh(1);
-            diaChiService.saveDC(diaChiThuong);
-        }
-        alertInfo.alert("successTaiQuay","Địa chỉ đã được thay đổi");
-        return "forward:/admin/tai-quay/detail/" + tempIdHD;
+
+        return "redirect:/admin/tai-quay/detail/" + tempIdHD;
     }
 
 
@@ -488,38 +489,45 @@ public class TaiQuayController {
     ) {
         diaChiService.deleteById(iddc);
         alertInfo.alert("successTaiQuay","Xóa thành công");
-        return "forward:/admin/tai-quay/detail/" + tempIdHD;
+        return "redirect:/admin/tai-quay/detail/" + tempIdHD;
     }
 
 
     @PostMapping("adddc")
     public String adddc(
-            @RequestParam("xa") Integer xa,
-            @RequestParam("quan") Integer quan,
-            @RequestParam("tinh") Integer tinh,
-            @RequestParam("dcCuThe") String dcCuThe,
-            @RequestParam("hoTen") String hoTen,
-            @RequestParam("sdt") String sdt
+            @RequestParam(value = "xa", required = false) Integer xa,
+            @RequestParam(value = "quan", required = false) Integer quan,
+            @RequestParam(value = "tinh", required = false) Integer tinh,
+            @RequestParam(value = "dcCuThe", required = false) String dcCuThe,
+            @RequestParam(value = "hoTen", required = false) String hoTen,
+            @RequestParam(value = "sdt", required = false) String sdt,
+            Model model
     ) {
         List<DiaChi> listDC = diaChiService.findListTKById(tempIdKH);
         DiaChi diaChi = new DiaChi();
         TaiKhoan taiKhoan = taiKhoanService.getTaiKhoanByIdKH(tempIdKH);
         DiaChi diaChiMD = diaChiService.getDiaChiByIdTaiKhoan(tempIdKH);
-        if (diaChiMD.getDiaChiMacDinh() == 1) {
-            diaChiMD.setDiaChiMacDinh(0);
-            diaChiService.saveDC(diaChiMD);
+
+        if(!diaChiService.validateAddDc(dcCuThe, hoTen, sdt, model)){
+            return "redirect:/admin/tai-quay/detail/" + tempIdHD;
+        }else{
+            if (diaChiMD.getDiaChiMacDinh() == 1) {
+                diaChiMD.setDiaChiMacDinh(0);
+                diaChiService.saveDC(diaChiMD);
+            }
+            diaChi.setTaiKhoan(taiKhoan);
+            diaChi.setPhuongXa(xa);
+            diaChi.setQuanHuyen(quan);
+            diaChi.setTinh(tinh);
+            diaChi.setDiaChiCuThe(dcCuThe);
+            diaChi.setTen(hoTen);
+            diaChi.setSdt(sdt);
+            diaChi.setDiaChiMacDinh(1);
+            diaChiService.saveDC(diaChi);
+            alertInfo.alert("successTaiQuay","Địa chỉ đã được thêm");
+            return "redirect:/admin/tai-quay/detail/" + tempIdHD;
         }
-        diaChi.setTaiKhoan(taiKhoan);
-        diaChi.setPhuongXa(xa);
-        diaChi.setQuanHuyen(quan);
-        diaChi.setTinh(tinh);
-        diaChi.setDiaChiCuThe(dcCuThe);
-        diaChi.setTen(hoTen);
-        diaChi.setSdt(sdt);
-        diaChi.setDiaChiMacDinh(1);
-        diaChiService.saveDC(diaChi);
-        alertInfo.alert("successTaiQuay","Địa chỉ đã được thêm");
-        return "redirect:/admin/tai-quay/detail/" + tempIdHD;
+
     }
 
     // 11-11
@@ -628,9 +636,9 @@ public class TaiQuayController {
         HinhThucThanhToan hinhThucThanhToan = htttService.getHTTTByIdhd(tempIdHD);
         phiVanChuyen = phiVanChuyen.replaceAll("[^\\d]", "");
         tienKhachDua = tienKhachDua.replaceAll("[^\\d]", "");
-
-
-
+        if(phuongThuc != 1 && phuongThuc != 2 && phuongThuc != 3){
+            return "redirect:/admin/tai-quay/detail/" + tempIdHD;
+        }
         try {
             Double phiShip = Double.parseDouble(phiVanChuyen);
             if (phiShip < 0) {
@@ -705,6 +713,18 @@ public class TaiQuayController {
         hoaDonService.savehd(hoaDon);
         session.setAttribute("checkTTHT", true);
         alertInfo.alert("successTaiQuay","Thanh toán thành công");
+        session.removeAttribute("idhd");
+        session.removeAttribute("checkBill");
+        session.removeAttribute("listhdct");
+        session.removeAttribute("checkTTHT");
+        session.removeAttribute("idHoaDon");
+        session.removeAttribute("avtctsp");
+        session.removeAttribute("tongTienHD");
+        session.removeAttribute("countDC");
+        session.removeAttribute("tinh");
+        session.removeAttribute("quan");
+        session.removeAttribute("phuong");
+        session.removeAttribute("loaihdg");
         return "redirect:/admin/tai-quay/hien-thi";
     }
 
@@ -830,7 +850,6 @@ public class TaiQuayController {
         p.setAlignment(Paragraph.ALIGN_CENTER);
         document.add(p);
     }
-
     private void writeTableData(PdfPTable table, String idHD) {
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
         List<HoaDonChiTiet> list = hoaDonChiTietServive.getHDCTByIdHD(idHD);

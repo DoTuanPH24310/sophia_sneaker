@@ -303,7 +303,7 @@
 <!-- ...:::: Start Breadcrumb Section:::... -->
 <div class="breadcrumb-section breadcrumb-bg-color--golden">
     <div class="breadcrumb-wrapper">
-        <div class="container">
+        <div class="container w-85">
             <div class="row">
                 <div class="col-12">
                     <h3 class="breadcrumb-title">Thanh toán</h3>
@@ -1082,13 +1082,12 @@
     };
 
     let initialTotalAmount;
-    let tinhtinh = document.getElementById('province').value;
-    console.log(tinhtinh)
+
     // Lấy giá trị tổng tiền ban đầu khi trang web được tải lần đầu
     initialTotalAmount = parseFloat($("#totalAmount").data("id"));
     $("#province").change(() => {
         const selectedProvinceCode = $("#province").val();
-        console.log(selectedProvinceCode)
+
         if (!selectedProvinceCode) {
             // Chưa chọn địa chỉ
             $("#shipping-cost").text("Vui lòng chọn địa chỉ");
@@ -1096,7 +1095,7 @@
             updateTotalAmount(initialTotalAmount);
         } else {
             // Đã chọn địa chỉ, xác định phí vận chuyển dựa trên giá trị của tỉnh
-            const shippingFee = tinhtinh === "1" ? 20000 : 30000;
+            const shippingFee = selectedProvinceCode === "1" ? 20000 : 30000;
 
             // Hiển thị phí vận chuyển
             $("#shipping-cost").text(shippingFee + "đ");
@@ -1119,25 +1118,6 @@
         });
 
         printResult();
-    });
-
-    $(document).ready(() => {
-        // Lấy giá trị tỉnh từ session
-        const selectedProvinceCode = $("#province").val();
-
-        // Nếu tỉnh đã được chọn, cập nhật phí vận chuyển và tổng tiền
-        if (selectedProvinceCode) {
-            updateShippingAndTotal(selectedProvinceCode);
-        }
-
-        // Gắn sự kiện change để cập nhật khi người dùng thay đổi tỉnh
-        $("#province").change(() => {
-            const selectedProvinceCode = $("#province").val();
-            updateShippingAndTotal(selectedProvinceCode);
-        });
-
-        // Gọi sự kiện change khi trang web được tải lần đầu tiên
-        $("#province").change();
     });
 
     // Hàm cập nhật tổng tiền
