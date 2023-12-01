@@ -62,14 +62,14 @@
 
                     <div class="col-6">
                         <label style="font-weight: bold">Số lượng:&nbsp;&nbsp;&nbsp;</label>
-                        <span th:text="${data.soLuong}"></span>
+                        <span th:text="${data.soLuong+'/'+data.soLuongGiam}"></span>
                     </div>
 
                     <div class="col-5">
                         <label style="font-weight: bold">Trạng thái:&nbsp;&nbsp;&nbsp;</label>
                         <span th:if="${data.trangThai ==0}">Sắp diễn ra</span>
                         <span th:if="${data.trangThai ==1}">Đang diễn ra</span>
-                        <span th:if="${data.trangThai ==2}">Kết thúc</span>
+                        <span th:if="${data.trangThai ==2}">Hết hạn</span>
                     </div>
                 </div>
             </form>

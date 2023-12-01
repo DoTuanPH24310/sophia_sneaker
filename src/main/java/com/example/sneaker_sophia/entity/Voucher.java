@@ -58,7 +58,7 @@ public class Voucher {
     @Column(name = "nguoiTao")
     private String createdBy;
 
-    @CreatedDate
+
     @Column(name = "ngayTao")
     private LocalDateTime createdDate;
 

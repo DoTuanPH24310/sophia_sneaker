@@ -39,12 +39,12 @@ public class ChiTietGiayService {
 
     public static int checkCTG = 0;
 
-    List<ChiTietGiay> findAllByIdGiay(List<String> listId) {
-        return chiTietGiayRepository.findAllByIdGiay(convertStringListToUUIDList(listId));
+    List<ChiTietGiay> findAllByIdGiay(List<String> listId, UUID idVC) {
+        return chiTietGiayRepository.findAllByIdGiay(convertStringListToUUIDList(listId),idVC);
     }
 
-    public List<ChiTietGiay> getCTGByG(List<UUID> list) {
-        return chiTietGiayRepository.findAllByIdGiay(list);
+    public List<ChiTietGiay> getCTGByG(List<UUID> list, UUID idVC) {
+        return chiTietGiayRepository.findAllByIdGiay(list,idVC);
     }
 
 
