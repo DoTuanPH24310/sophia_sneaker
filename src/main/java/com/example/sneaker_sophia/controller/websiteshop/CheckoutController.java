@@ -4,10 +4,7 @@ import com.example.sneaker_sophia.dto.DiaChiDTO;
 import com.example.sneaker_sophia.dto.DiaChiLoGin;
 import com.example.sneaker_sophia.dto.TaiKhoanDTO;
 import com.example.sneaker_sophia.entity.*;
-import com.example.sneaker_sophia.repository.ChiTietGiayRepository;
-import com.example.sneaker_sophia.repository.HinhThucThanhToanWebRepository;
-import com.example.sneaker_sophia.repository.HoaDonWebRepository;
-import com.example.sneaker_sophia.repository.LoginRepository;
+import com.example.sneaker_sophia.repository.*;
 import com.example.sneaker_sophia.service.*;
 import com.example.sneaker_sophia.validate.AlertInfo;
 import jakarta.annotation.Resource;
@@ -50,6 +47,8 @@ public class CheckoutController {
     @Resource(name = "diaChiService")
     DiaChiService diaChiServiceTQ;
     @Autowired
+    private AccountService accountService;
+    @Autowired
     private AlertInfo alertInfo;
     @Autowired
     private HoaDonWebRepository hoaDonWebRepository;
@@ -62,7 +61,7 @@ public class CheckoutController {
         int soLuongGiam = 0;
         int tongSoLuongGiam = 0;
 
-        DiaChi diaChi = diaChiService.getDiaChiOfLoggedInUser();
+        DiaChi diaChi = accountService.getDiaChiMacDinhCuaTaiKhoanDangNhap();
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         GioHang gioHang = this.gioHangService.getCartByEmail(authentication.getName());
@@ -121,7 +120,7 @@ public class CheckoutController {
                     model.addAttribute("diaChi", diaChi);
                     model.addAttribute("cartItems", cartItems);
                     model.addAttribute("tongSoLuongGiam", tongSoLuongGiam);
-                    session.setAttribute("idkhOL",taiKhoan.getId());
+                    session.setAttribute("idkhOL", taiKhoan.getId());
                     return "website/productwebsite/checkout";
                 }
             }
@@ -243,13 +242,13 @@ public class CheckoutController {
                     }
                 }
             }
-            if(diaChiDTO.getTinh() == 1){
+            if (diaChiDTO.getTinh() == 1) {
                 phiVanChuyen = 20000.0;
-            }else{
+            } else {
                 phiVanChuyen = 30000.0;
             }
             if (cartItems != null && !cartItems.isEmpty()) {
-                if(hinhThucThanhToan == null){
+                if (hinhThucThanhToan == null) {
                     alertInfo.alert("errOnline", "Chua chon hinh thuc thanh toan!");
                 }
                 this.thanhToanService.capNhatDiaChi(diaChiDTO, taiKhoan);
@@ -314,9 +313,9 @@ public class CheckoutController {
                     return "redirect:/cart/hien-thi";
                 }
             }
-            if(diaChi.getTinh() == 1){
+            if (diaChi.getTinh() == 1) {
                 phiVanChuyen = 20000.0;
-            }else{
+            } else {
                 phiVanChuyen = 30000.0;
             }
             String matKhauNgauNhien = emailService.taoMatKhauNgauNhien();
@@ -399,12 +398,12 @@ public class CheckoutController {
 
     @PostMapping("adddc")
     public String adddc(
-            @RequestParam(value = "xa",required = false) Integer xa,
-            @RequestParam(value = "quan",required = false) Integer quan,
-            @RequestParam(value = "tinh",required = false) Integer tinh,
-            @RequestParam(value = "dcCuThe",required = false) String dcCuThe,
-            @RequestParam(value = "hoTen",required = false) String hoTen,
-            @RequestParam(value = "sdt",required = false) String sdt
+            @RequestParam(value = "xa", required = false) Integer xa,
+            @RequestParam(value = "quan", required = false) Integer quan,
+            @RequestParam(value = "tinh", required = false) Integer tinh,
+            @RequestParam(value = "dcCuThe", required = false) String dcCuThe,
+            @RequestParam(value = "hoTen", required = false) String hoTen,
+            @RequestParam(value = "sdt", required = false) String sdt
     ) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         TaiKhoan taiKhoan = this.loginRepository.findByEmail(authentication.getName());

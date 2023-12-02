@@ -108,7 +108,15 @@ public class CartService {
             boolean itemExists = false;
             for (CartItem itemTmp : listItem) {
                 if (itemTmp.getId().equals(id)) {
-                    itemTmp.setSoLuong(itemTmp.getSoLuong() + 1);
+                    int newQuantity = itemTmp.getSoLuong() + 1;
+                    int availableQuantity = chiTietSanPham.get().getSoLuong();
+
+                    if (newQuantity > availableQuantity) {
+                        itemTmp.setSoLuong(availableQuantity);
+                    } else {
+                        itemTmp.setSoLuong(newQuantity);
+                    }
+
                     itemExists = true;
                     break;
                 }

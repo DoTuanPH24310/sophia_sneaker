@@ -560,15 +560,29 @@
                                                      data-aos="fade-up" data-aos-delay="0">
                                                     <div class="image-box">
                                                         <a th:href="@{'/sophia-store/detail/' + ${product.getId()}}" class="image-link">
+                                                            <!-- Hiển thị ảnh sản phẩm -->
                                                             <img class="img-fluid"
                                                                  th:src="@{${product.anhs.get(0).getDuongDan()}}"
                                                                  style="width: 260px; height: 260px"
-                                                                 alt="">
+                                                                 alt=""
+                                                                 th:classappend="${product.soLuong == 0} ? 'gray-scale-image' : ''">
+
+                                                            <!-- Hiển thị ảnh phụ (nếu cần) -->
                                                             <img class="img-fluid"
                                                                  th:src="@{${product.anhs.get(1).getDuongDan()}}"
                                                                  style="width: 260px; height: 260px"
-                                                                 alt="">
+                                                                 alt=""
+                                                                 th:classappend="${product.soLuong == 0} ? 'gray-scale-image' : ''">
+
+                                                            <!-- Hiển thị overlay khi sản phẩm hết hàng -->
+                                                            <div th:if="${product.soLuong == 0}" class="out-of-stock-overlay">
+                                                                <!-- Chữ Hết hàng nằm trong một thẻ div hình tròn -->
+                                                                <div class="circle">
+                                                                    <p class="out-of-stock-text">Hết hàng</p>
+                                                                </div>
+                                                            </div>
                                                         </a>
+
                                                         <div class="action-link">
                                                             <div class="action-link-left">
                                                                 <a class="add-to-cart"
@@ -587,18 +601,6 @@
                                                                     th:href="@{'/sophia-store/detail/' + ${product.getId()}}"
                                                                     th:text="${product.hang.ten + ' ' + product.giay.ten + ' ' + product.loaiGiay.ten + ' ' + product.mauSac.ten}"></a>
                                                             </h6>
-                                                            <ul class="review-star">
-                                                                <li class="fill"><i class="ion-android-star"></i>
-                                                                </li>
-                                                                <li class="fill"><i class="ion-android-star"></i>
-                                                                </li>
-                                                                <li class="fill"><i class="ion-android-star"></i>
-                                                                </li>
-                                                                <li class="fill"><i class="ion-android-star"></i>
-                                                                </li>
-                                                                <li class="empty"><i class="ion-android-star"></i>
-                                                                </li>
-                                                            </ul>
                                                         </div>
                                                         <div class="content-right">
                                                             <div class="content-right">
@@ -633,29 +635,35 @@
                                             <div class="col-12" th:each="product : ${danhSachProduct}">
                                                 <!-- Start Product Defautlt Single -->
                                                 <div class="product-list-single product-color--golden">
-                                                    <a th:href="@{'/sophia-store/detail/' + ${product.getId()}}"
-                                                       class="product-list-img-link">
+                                                    <a th:href="@{'/sophia-store/detail/' + ${product.getId()}}" class="product-list-img-link">
+                                                        <!-- Hiển thị ảnh sản phẩm -->
                                                         <img class="img-fluid"
                                                              th:src="@{${product.anhs.get(0).getDuongDan()}}"
                                                              style="width: 260px; height: 260px"
-                                                             alt="">
+                                                             alt=""
+                                                             th:classappend="${product.soLuong == 0} ? 'gray-scale-image' : ''">
+
+                                                        <!-- Hiển thị ảnh phụ (nếu cần) -->
                                                         <img class="img-fluid"
                                                              th:src="@{${product.anhs.get(1).getDuongDan()}}"
                                                              style="width: 260px; height: 260px"
-                                                             alt="">
+                                                             alt=""
+                                                             th:classappend="${product.soLuong == 0} ? 'gray-scale-image' : ''">
+
+                                                        <!-- Hiển thị overlay khi sản phẩm hết hàng -->
+                                                        <div th:if="${product.soLuong == 0}" class="out-of-stock-overlay">
+                                                            <!-- Chữ Hết hàng nằm trong một thẻ div hình tròn -->
+                                                            <div class="circle">
+                                                                <p class="out-of-stock-text">Hết hàng</p>
+                                                            </div>
+                                                        </div>
                                                     </a>
+
                                                     <div class="product-list-content">
                                                         <h5 class="product-list-link"><a
                                                                 th:href="@{'/sophia-store/detail/' + ${product.getId()}}"
                                                                 th:text="${product.hang.ten + ' ' + product.giay.ten + ' ' + product.loaiGiay.ten + ' ' + product.mauSac.ten}"></a>
                                                         </h5>
-                                                        <ul class="review-star">
-                                                            <li class="fill"><i class="ion-android-star"></i></li>
-                                                            <li class="fill"><i class="ion-android-star"></i></li>
-                                                            <li class="fill"><i class="ion-android-star"></i></li>
-                                                            <li class="fill"><i class="ion-android-star"></i></li>
-                                                            <li class="empty"><i class="ion-android-star"></i></li>
-                                                        </ul>
                                                         <span th:if="${session['giaCu_' + product.id] != session['giaMoi_' + product.id]}"
                                                               class="original-price"
                                                               style="text-decoration: line-through; color: red; font-size: 13px"

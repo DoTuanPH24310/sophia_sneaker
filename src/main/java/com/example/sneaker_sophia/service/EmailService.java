@@ -268,7 +268,11 @@ public class EmailService {
 
         LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
         lichSuHoaDon.setHoaDon(hoaDonMoi);
-        lichSuHoaDon.setPhuongThuc("3");
+        if(hinhThucThanhToan == 3) {
+            lichSuHoaDon.setPhuongThuc("3");
+        }else if(hinhThucThanhToan == 2){
+            lichSuHoaDon.setPhuongThuc("2");
+        }
         this.lichSuHoaDonWebRepository.save(lichSuHoaDon);
 
         return hoaDonMoi;

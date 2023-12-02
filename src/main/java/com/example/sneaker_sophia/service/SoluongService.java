@@ -29,11 +29,10 @@ public class SoluongService {
 
 
     @Transactional
-    public void increaseQuantity(UUID gioHangId, UUID chiTietGiayId) {
+    public String increaseQuantity(UUID gioHangId, UUID chiTietGiayId) {
         GioHang gioHang = gioHangRepository.findById(gioHangId)
                 .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy Giỏ hàng với ID: " + gioHangId));
 
-        // Lấy thông tin ChiTietGiay và ChiTietGiayChiTiet từ cơ sở dữ liệu
         ChiTietGiay chiTietGiay = chiTietGiayRepository.findById(chiTietGiayId)
                 .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy ChiTietGiay với ID: " + chiTietGiayId));
 
@@ -46,11 +45,27 @@ public class SoluongService {
             int newQuantity = currentQuantity + 1;
 
             if (newQuantity > chiTietGiayQuantity) {
-                gioHangChiTiet.setSoLuong(chiTietGiayQuantity);
+                // Trả về thông báo lỗi nếu số lượng vượt quá giới hạn
+                return "Số lượng sản phẩm không đủ!";
             } else {
+                // Tiến hành tăng số lượng nếu hợp lệ
                 gioHangChiTiet.setSoLuong(newQuantity);
+                return "success";
             }
+        } else {
+            // Trả về thông báo lỗi nếu không tìm thấy chi tiết giày trong giỏ hàng
+            return "Không tìm thấy chi tiết giày trong giỏ hàng!";
         }
+    }
+
+    public boolean isValidQuantity(UUID chiTietGiayId, int newQuantity) {
+        ChiTietGiay chiTietGiay = chiTietGiayRepository.findById(chiTietGiayId)
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy ChiTietGiay với ID: " + chiTietGiayId));
+
+        int chiTietGiayQuantity = chiTietGiay.getSoLuong();
+
+        // Kiểm tra nếu newQuantity lớn hơn số lượng sản phẩm thì trả về false
+        return newQuantity >= 1 && newQuantity <= chiTietGiayQuantity;
     }
 
 

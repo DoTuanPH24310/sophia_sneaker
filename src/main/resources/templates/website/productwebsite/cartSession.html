@@ -678,9 +678,16 @@
         </div>
     </div>
 </div> <!-- End Modal Quickview cart -->
+
+<script src="/assets/js/vendor/vendor.min.js"></script>
+<script src="/assets/js/plugins/plugins.min.js"></script>
+<script src="https://unpkg.com/numbers"></script>
+<!-- Main JS -->
+<script src="/assets/js/main.js"></script>
 <script>
 
     function updateCart(productId, action, quantity) {
+        console.log("productId:", productId);
         var url = `/giohangchitiet/session/${productId}/${action}`;
         if (action === 'updatequantity') {
             url += `?newQuantity=${quantity}`;
@@ -698,19 +705,40 @@
                 return response.text();
             })
             .then(data => {
-                console.log(data);
-
-                // Cập nhật số lượng mới trong trường input
                 var currentQuantity = parseInt($(`#quantity[data-id='${productId}']`).val(), 10);
-                var newQuantity = action === 'increase' ? currentQuantity + 1 : currentQuantity - 1;
+                if (action === 'increase') {
+                    var newQuantity = currentQuantity + 1;
+                } else if (action === 'decrease') {
+                    var newQuantity = currentQuantity - 1;
+                } else if (action === 'updatequantity') {
+                    var newQuantity = quantity;
+                }
+                if (data.includes("Số lượng giỏ hàng vượt quá số lượng sản phẩm.")) {
+                    // Hiển thị thông báo lỗi trên giao diện
+                    let type = 'error';
+                    let icon = 'fa-solid fa-circle-exclamation';
+                    let title = 'Lỗi!';
+                    let text = "Số lượng giỏ hàng vượt quá số lượng sản phẩm.";
+                    createToast(type, icon, title, text);
+                }else if (newQuantity < 1) {
+                    let type = 'error';
+                    let icon = 'fa-solid fa-circle-exclamation';
+                    let title = 'Thất bại!';
+                    let text = "Số lượng không hợp lệ!";
+                    createToast(type, icon, title, text);
+                }
                 newQuantity = Math.max(newQuantity, 1);
                 $(`#quantity[data-id='${productId}']`).val(newQuantity);
-
-                // Gọi hàm cập nhật giá và tổng giá trị
                 updatePrice(productId, newQuantity);
             })
             .catch(error => {
                 console.error('There was a problem with the fetch operation:', error);
+                let type = 'error';
+                let icon = 'fa-solid fa-circle-exclamation';
+                let title = 'Thất bại!';
+                let text = "Số lượng sản phẩm không đủ!";
+                createToast(type, icon, title, text);
+                $(`#quantity[data-id='${productId}']`).val(1);
             });
     }
 
@@ -718,19 +746,13 @@
         var giaSanPhamString = $(`#quantity[data-id='${productId}']`).parents("tr").find(".product-price").data("gia");
         var giaSanPham = parseFloat(giaSanPhamString);
         var giaMoi = giaSanPham * quantity;
-
-        // Định dạng giá mới thành chuỗi tiền tệ
         const formatter = new Intl.NumberFormat('vi-VN', {
             style: 'currency',
             currency: 'VND'
         });
         const giaMoiFormatted = formatter.format(giaMoi);
-
-        // Thay thế giá trị trong thẻ
         var productTotal = $(`#quantity[data-id='${productId}']`).parents("tr").find(".productTotalAmount");
         productTotal.text(giaMoiFormatted);
-
-        // Gọi hàm cập nhật tổng giá sản phẩm và tổng giá trị tất cả sản phẩm
         updateTotalPrices();
     }
 
@@ -740,18 +762,12 @@
             var giaMoiFormatted = $(this).text().replace('₫', '').replace(/\./g, '').replace('₫', '').replace('₫', '').replace('₫', '').replace('₫', '');
             totalCartPrice += parseFloat(giaMoiFormatted);
         });
-
-        // Định dạng tổng tiền thành chuỗi tiền tệ
         const formatter = new Intl.NumberFormat('vi-VN', {
             style: 'currency',
             currency: 'VND'
         });
         const totalCartPriceFormatted = formatter.format(totalCartPrice);
-
-        // Cập nhật tổng tiền sản phẩm lên giao diện
         $(".offcanvas-cart-total-price-value").text(totalCartPriceFormatted);
-
-        // Cập nhật tổng tiền tất cả sản phẩm lên giao diện
         $(".cart_subtotal .offcanvas-cart-total-price-value").text(totalCartPriceFormatted);
     }
 
@@ -765,34 +781,38 @@
         updateCart(productId, 'decrease');
     });
 
-    function updateQuantity(element, event) {
-        if (event.key === 'Enter') {
-            var productId = $(element).data('id');
-            var newQuantity = parseInt($(element).val());
+    function updateQuantity(element) {
+        var productId = $(element).data('id');
+        var inputElement = $(element);
+        var newQuantity = parseInt(inputElement.val());
 
-            if (isNaN(newQuantity)) {
-                newQuantity = 1;
-            }
+        if (isNaN(newQuantity) || newQuantity <= 0) {
+            let type = 'error';
+            let icon = 'fa-solid fa-circle-exclamation';
+            let title = 'Thất bại!';
+            let text = "Số lượng không hợp lệ!";
+            createToast(type, icon, title, text);
 
-            updateCart(productId, 'updatequantity', newQuantity);
+            // Set the input value to 1 when non-numeric input is detected
+            newQuantity = 1;
+            $(`#quantity[data-id='${productId}']`).val(1);
         }
+
+        inputElement.val(newQuantity);
+
+        updateCart(productId, 'updatequantity', newQuantity);
     }
 
 
 
     $(document).ready(function () {
-        // Other existing code...
-
-        // Add a click event listener for the remove item button
         $(".remove-item-button").click(function () {
             var productId = $(this).data("id");
 
-            // Send a request to remove the item and update UI
             removeItem(productId, $(this));
         });
     });
 
-    // Function to remove an item using fetch API
     function removeItem(productId, button) {
         fetch(`/giohangchitiet/session/${productId}/remove`, {
             method: 'GET',
@@ -804,31 +824,32 @@
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
+                let icon = 'fa-solid fa-check-circle';
+                let title = 'Thành công!';
+                let text = "Đã xóa sản phẩm khỏi giỏ hàng.";
+                createToast(type, icon, title, text);
                 return response.text();
             })
             .then(data => {
                 console.log(data);
-
-                // Remove the corresponding table row from the UI
                 button.closest("tr").remove();
-
-                // Check if the cart is empty and redirect if needed
                 if ($(".cart-table-wrapper tbody tr").length === 0) {
                     window.location.href = '/cart/hien-thi';
                 }
-
-                // Handle any other UI updates or refresh the page as needed
             })
             .catch(error => {
-                console.error('There was a problem with the fetch operation:', error);
+                let type = 'error';
+                let icon = 'fa-solid fa-circle-exclamation';
+                let title = 'Hết hàng!';
+                let text = "Lỗi khi xóa sản phẩm.";
+                createToast(type, icon, title, text);
             });
     }
 
 
     $(document).ready(function () {
         $("#deleteAllButton").click(async function (event) {
-            event.preventDefault(); // Ngăn chặn chuyển hướng mặc định khi nhấn vào thẻ a
-
+            event.preventDefault();
             try {
                 const response = await fetch("/giohangchitiet/session/removeAll", {
                     method: "GET",
@@ -840,14 +861,23 @@
                 if (!response.ok) {
                     throw new Error("Network response was not ok");
                 }
-
+                let icon = 'fa-solid fa-check-circle';
+                let title = 'Thành công!';
+                let text = "Đã xóa tất cả sản phẩm khỏi giỏ hàng.";
+                createToast(type, icon, title, text);
                 $(".cart-table-wrapper tbody tr").remove();
 
                 if ($(".cart-table-wrapper tbody tr").length === 0) {
                     window.location.href = "/cart/hien-thi";
+                    let type = 'success';
+
                 }
             } catch (error) {
-                console.error("Lỗi khi xóa tất cả: ", error);
+                let type = 'error';
+                let icon = 'fa-solid fa-circle-exclamation';
+                let title = 'Hết hàng!';
+                let text = "Lỗi khi xóa sản phẩm.";
+                createToast(type, icon, title, text);
             }
         });
     });

@@ -156,6 +156,9 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
             @Param("textSearch") String textSearch
     );
 
+    @Query("SELECT c.soLuong FROM ChiTietGiay c WHERE c.id = :chiTietGiayId")
+    Integer getProductQuantityById(@Param("chiTietGiayId") UUID chiTietGiayId);
+
     //xóa mềm chi tiết giày
     @Transactional
     @Modifying

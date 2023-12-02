@@ -669,12 +669,28 @@
                                 <div class="product-default-single-item product-color--pink swiper-slide"
                                      th:each="product : ${products}">
                                     <div class="image-box">
-                                        <a th:href="@{'/sophia-store/detail/'+${product.getId()}}"
-                                           class="image-link">
-                                            <img th:src="@{${product.anhs.get(0).getDuongDan()}}"
-                                                 style="width: 320px; height: 370px" class="img-fluid" alt=""/>
-                                            <img th:src="@{${product.anhs.get(1).getDuongDan()}}"
-                                                 style="width: 320px; height: 370px" class="img-fluid" alt=""/>
+                                        <a th:href="@{'/sophia-store/detail/' + ${product.getId()}}" class="image-link">
+                                            <!-- Hiển thị ảnh sản phẩm -->
+                                            <img class="img-fluid"
+                                                 th:src="@{${product.anhs.get(0).getDuongDan()}}"
+                                                 style="width: 260px; height: 260px"
+                                                 alt=""
+                                                 th:classappend="${product.soLuong == 0} ? 'gray-scale-image' : ''">
+
+                                            <!-- Hiển thị ảnh phụ (nếu cần) -->
+                                            <img class="img-fluid"
+                                                 th:src="@{${product.anhs.get(1).getDuongDan()}}"
+                                                 style="width: 260px; height: 260px"
+                                                 alt=""
+                                                 th:classappend="${product.soLuong == 0} ? 'gray-scale-image' : ''">
+
+                                            <!-- Hiển thị overlay khi sản phẩm hết hàng -->
+                                            <div th:if="${product.soLuong == 0}" class="out-of-stock-overlay">
+                                                <!-- Chữ Hết hàng nằm trong một thẻ div hình tròn -->
+                                                <div class="circle">
+                                                    <p class="out-of-stock-text">Hết hàng</p>
+                                                </div>
+                                            </div>
                                         </a>
                                         <div class="tag">
                                             <span>sale</span>
@@ -682,7 +698,7 @@
                                         <div class="action-link">
                                             <div class="action-link-left">
                                                 <a class="add-to-cart" th:attr="data-product-id=${product.getId()}"
-                                                   data-bs-toggle="modal" data-bs-target="#modalAddcart" href="#">Thêm vào giỏ</a>
+                                                    href="#">Thêm vào giỏ</a>
                                             </div>
 <!--                                            <div class="action-link-right">-->
 <!--                                                <a href="#" data-bs-toggle="modal"-->
@@ -796,19 +812,31 @@
                                 <div class="product-default-single-item product-color--golden swiper-slide" th:each="products : ${chiTietGiays}">
                                     <div class="image-box">
                                         <a th:href="@{'/sophia-store/detail/' + ${products.getId()}}" class="image-link">
+                                            <!-- Hiển thị ảnh sản phẩm -->
                                             <img class="img-fluid"
                                                  th:src="@{${products.anhs.get(0).getDuongDan()}}"
                                                  style="width: 260px; height: 260px"
-                                                 alt="">
+                                                 alt=""
+                                                 th:classappend="${products.soLuong == 0} ? 'gray-scale-image' : ''">
+
+                                            <!-- Hiển thị ảnh phụ (nếu cần) -->
                                             <img class="img-fluid"
                                                  th:src="@{${products.anhs.get(1).getDuongDan()}}"
                                                  style="width: 260px; height: 260px"
-                                                 alt="">
+                                                 alt=""
+                                                 th:classappend="${products.soLuong == 0} ? 'gray-scale-image' : ''">
+
+                                            <!-- Hiển thị overlay khi sản phẩm hết hàng -->
+                                            <div th:if="${products.soLuong == 0}" class="out-of-stock-overlay">
+                                                <!-- Chữ Hết hàng nằm trong một thẻ div hình tròn -->
+                                                <div class="circle">
+                                                    <p class="out-of-stock-text">Hết hàng</p>
+                                                </div>
+                                            </div>
                                         </a>
                                         <div class="action-link">
-                                            <div class="action-link-left">
-                                                <a href="#" data-bs-toggle="modal"
-                                                   data-bs-target="#modalAddcart">Thêm vào giỏ</a>
+                                            <div class="action-link-left" >
+                                                <a href="#" th:attr="data-product-id=${product.getId()}">Thêm vào giỏ</a>
                                             </div>
 <!--                                            <div class="action-link-right">-->
 <!--                                                <a href="#" data-bs-toggle="modal"-->
@@ -825,13 +853,6 @@
                                                     th:href="@{'/sophia-store/detail/' + ${products.getId()}}"
                                                     th:text="${products.hang.ten + ' ' + products.giay.ten + ' ' + products.loaiGiay.ten + ' ' + products.mauSac.ten}"></a>
                                             </h6>
-                                            <ul class="review-star">
-                                                <li class="fill"><i class="ion-android-star"></i></li>
-                                                <li class="fill"><i class="ion-android-star"></i></li>
-                                                <li class="fill"><i class="ion-android-star"></i></li>
-                                                <li class="fill"><i class="ion-android-star"></i></li>
-                                                <li class="empty"><i class="ion-android-star"></i></li>
-                                            </ul>
                                         </div>
                                         <div class="content-right">
                                                                     <span th:if="${session['giaCu_' + products.id] != session['giaMoi_' + products.id]}"

@@ -52,6 +52,8 @@ public class CartController {
             for (GioHangChiTiet cartItem : cartItems) {
                 ChiTietGiay chiTietGiay = cartItem.getId().getChiTietGiay();
                 khuyenMaiWebService.tinhGiaSauKhuyenMai(chiTietGiay, httpSession);
+
+
             }
 
             double totalCartPrice = cartItems.stream()
@@ -80,6 +82,8 @@ public class CartController {
                     ChiTietGiay chiTietGiay = this.chiTietGiayRepository.findById(chiTietGiayId).orElse(null);
                     if (chiTietGiay != null) {
                         khuyenMaiWebService.tinhGiaSauKhuyenMai(chiTietGiay, httpSession);
+                        model.addAttribute("maxQuantity_" + chiTietGiay.getId(), chiTietGiay.getSoLuong());
+
                     }
                 }
 
@@ -101,52 +105,63 @@ public class CartController {
     public String addToCart(@PathVariable("id") UUID chiTietGiayId, Model model, HttpSession httpSession) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            ChiTietGiay chiTietGiay = this.chiTietGiayRepository.findById(chiTietGiayId).orElse(null);
-            if (authentication != null && authentication.isAuthenticated() && !authentication.getPrincipal().equals("anonymousUser")) {
-                // Người dùng đã đăng nhập
-                TaiKhoan taiKhoan = loginRepository.findByEmail(authentication.getName());
-                cartService.addToCart(taiKhoan.getEmail(), chiTietGiayId);
+            ChiTietGiay chiTietGiay = chiTietGiayRepository.findById(chiTietGiayId).orElse(null);
 
-                // Hiển thị giỏ hàng từ database
-                GioHang gioHang = gioHangRepository.findByTaiKhoan(taiKhoan);
-                List<GioHangChiTiet> cartItems = cartService.getCartItems(authentication.getName());
+            if (chiTietGiay != null) {
+                int maxQuantity = chiTietGiay.getSoLuong();
+                boolean maxQuantityReached = false;
 
-                double totalCartPrice = cartItems.stream()
-                        .mapToDouble(item -> item.getId().getChiTietGiay().getGia() * item.getSoLuong())
-                        .sum();
-                Long soLuong = this.cartService.countCartItems(authentication.getName());
+                if (authentication != null && authentication.isAuthenticated() && !authentication.getPrincipal().equals("anonymousUser")) {
+                    // Người dùng đã đăng nhập
+                    TaiKhoan taiKhoan = loginRepository.findByEmail(authentication.getName());
+                    cartService.addToCart(taiKhoan.getEmail(), chiTietGiayId);
 
-                model.addAttribute("soLuong", soLuong);
-                model.addAttribute("totalCartPrice", totalCartPrice);
-                model.addAttribute("gioHang", gioHang);
-            } else {
-                // Người dùng chưa đăng nhập
-                cartService.addToCartNoLogin(chiTietGiayId, httpSession);
+                    // Hiển thị giỏ hàng từ database
+                    GioHang gioHang = gioHangRepository.findByTaiKhoan(taiKhoan);
+                    List<GioHangChiTiet> cartItems = cartService.getCartItems(authentication.getName());
 
-                // Hiển thị giỏ hàng từ session
-                Cart cart = (Cart) httpSession.getAttribute("cart");
-                if (cart != null) {
-                    List<CartItem> cartItems = cart.getItems();
                     double totalCartPrice = cartItems.stream()
-                            .mapToDouble(item -> item.getGia() * item.getSoLuong())
+                            .mapToDouble(item -> item.getId().getChiTietGiay().getGia() * item.getSoLuong())
                             .sum();
-                    Long soLuong = cartItems.stream().mapToLong(CartItem::getSoLuong).sum();
+                    Long soLuong = this.cartService.countCartItems(authentication.getName());
+
                     model.addAttribute("soLuong", soLuong);
                     model.addAttribute("totalCartPrice", totalCartPrice);
-                    model.addAttribute("cartItems", cartItems);
+                    model.addAttribute("gioHang", gioHang);
+
+                    maxQuantityReached = cartItems.stream()
+                            .anyMatch(item -> item.getId().getChiTietGiay().getId().equals(chiTietGiayId) && item.getSoLuong() == maxQuantity);
+                } else {
+                    // Người dùng chưa đăng nhập
+                    cartService.addToCartNoLogin(chiTietGiayId, httpSession);
+
+                    // Hiển thị giỏ hàng từ session
+                    Cart cart = (Cart) httpSession.getAttribute("cart");
+                    if (cart != null) {
+                        List<CartItem> cartItems = cart.getItems();
+                        double totalCartPrice = cartItems.stream()
+                                .mapToDouble(item -> item.getGia() * item.getSoLuong())
+                                .sum();
+                        Long soLuong = cartItems.stream().mapToLong(CartItem::getSoLuong).sum();
+                        model.addAttribute("soLuong", soLuong);
+                        model.addAttribute("totalCartPrice", totalCartPrice);
+                        model.addAttribute("cartItems", cartItems);
+
+                        maxQuantityReached = cartItems.stream()
+                                .anyMatch(item -> item.getId().equals(chiTietGiayId) && item.getSoLuong() == maxQuantity);
+                    }
                 }
+
+                model.addAttribute("maxQuantityReached", maxQuantityReached);
             }
-//            if(chiTietGiay.getSoLuong() <= 0){
-//                alertInfo.alert("thongBaofalse", "Số lượng sản phẩm không đủ!");
-//            }else{
-//                alertInfo.alert("thongBaook", "Thêm thành công!");
-//            }
+
             return "redirect:/sophia-store/product";
         } catch (UsernameNotFoundException e) {
             model.addAttribute("message", e.getMessage());
             return "website/productwebsite/error";
         }
     }
+
 
     @GetMapping("/removeProductCart")
     public String removeFromCart(@RequestParam("gioHangId") UUID gioHangId,

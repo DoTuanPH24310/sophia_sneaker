@@ -478,14 +478,54 @@ document.querySelectorAll(".add-to-cart").forEach(function (addToCartButton) {
         // Lấy product id từ data-product-id
         var productId = this.getAttribute("data-product-id");
 
-        // Gửi yêu cầu AJAX với productId và thực hiện các hành động cần thiết
-        var addToCartUrl = "/cart/add-to-cart/" + productId;
-        $.get(addToCartUrl, function (data) {
-            // Khi yêu cầu hoàn thành, mở modal
-            openModal();
+        // Kiểm tra số lượng sản phẩm trước khi thêm vào giỏ hàng
+        var checkQuantityUrl = "/giohangchitiet/check-quantity/" + productId;
+        $.get(checkQuantityUrl, function (data) {
+            if (data.success) {
+                if (data.quantity === 0) {
+                    // Sản phẩm đã hết hàng
+                    let type = 'error';
+                    let icon = 'fa-solid fa-circle-exclamation';
+                    let title = 'Hết hàng!';
+                    let text = "Sản phẩm đã hết hàng.";
+                    createToast(type, icon, title, text);
+                } else if (data.maxQuantityReached) {
+                    // Nếu giỏ hàng có số lượng bằng số lượng sản phẩm
+                    let type = 'error';
+                    let icon = 'fa-solid fa-exclamation-triangle';
+                    let title = 'Số lượng giới hạn!';
+                    let text = "Số lượng sản phẩm trong giỏ hàng đã đạt đến giới hạn.";
+                    createToast(type, icon, title, text);
+                } else {
+                    // Tiếp tục thêm vào giỏ hàng nếu số lượng > 0
+                    var addToCartUrl = "/cart/add-to-cart/" + productId;
+                    $.get(addToCartUrl, function (data) {
+                        if (data.includes("redirect")) {
+                            // Nếu phản hồi chứa từ khóa "redirect", đồng nghĩa với việc chuyển hướng
+                            window.location.href = data.split(":")[1].trim();
+                        } else {
+                            // Nếu không có "redirect", xử lý phản hồi khác như thông thường
+                            let type = 'success';
+                            let icon = 'fa-solid fa-check-circle';
+                            let title = 'Thành công!';
+                            let text = "Đã thêm vào giỏ hàng.";
+                            createToast(type, icon, title, text);
+                        }
+                    });
+                }
+            } else {
+                let type = 'error';
+                let icon = 'fa-solid fa-circle-exclamation';
+                let title = 'Lỗi!';
+                let text = data.message || "Kiểm tra số lượng sản phẩm thất bại.";
+                createToast(type, icon, title, text);
+            }
         });
     });
 });
+
+
+
 
 //filter shop product
 document.addEventListener("DOMContentLoaded", function () {

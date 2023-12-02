@@ -281,12 +281,8 @@
                                           method="post">
                                         <div class="form-group mb-3">
                                             <label>Email</label>
-                                            <input type="text" class="form-control" th:field="*{email}"
-                                                   name="email-name" readonly>
-                                            <span th:errors="*{email}" style="color: red"></span>
-
+                                            <span class="form-control" th:text="${email}" style="background-color: #f0f0f0;"></span>
                                         </div>
-
                                         <div class="form-row">
                                             <div class="form-group col-md-6 mb-3">
                                                 <label>Tên</label>

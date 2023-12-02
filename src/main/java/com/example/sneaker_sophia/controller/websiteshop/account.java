@@ -76,6 +76,7 @@ public class account {
             } else {
                 diaChi = new DiaChi();
             }
+            model.addAttribute("email", authentication.getName());
             model.addAttribute("account", taiKhoan);
             model.addAttribute("listHD", listHD);
             model.addAttribute("tongTienMap", tongTienMap);
