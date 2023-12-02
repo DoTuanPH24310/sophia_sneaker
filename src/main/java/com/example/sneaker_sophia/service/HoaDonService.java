@@ -7,6 +7,7 @@ import com.example.sneaker_sophia.repository.HoaDonWebRepository;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -123,10 +124,6 @@ public class HoaDonService {
         return hoaDonRepository.soHDDG();
     }
     //thông kê
-    public List<Object[]> getDoanhThuTheoThang(LocalDateTime ngayBatDau, LocalDateTime ngayKetThuc, String unit, LocalDateTime endDateMinusOneYear,LocalDateTime startDateMinusOneYear) {
-        return hoaDonWebRepository.getDoanhThuTheoThang(ngayBatDau,ngayKetThuc, unit,endDateMinusOneYear,startDateMinusOneYear);
-    }
-
     public Double calculateTongTienByDate(LocalDateTime ngayBatDau,LocalDateTime ngayKetThuc){
         return hoaDonRepository.calculateTongTienByDate(ngayBatDau,ngayKetThuc);
     }

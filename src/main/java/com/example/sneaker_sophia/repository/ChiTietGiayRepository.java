@@ -159,5 +159,17 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
     void updateTrangThaiTo1ById(UUID id);
 
     ChiTietGiay findByMa(String ma);
+
+    @Query("SELECT c.ma, CONCAT(g.ten, ' ', c.ten, ' ', h.ten, ' ', m.ten, ' ', k.ten) AS concatenatedInfo, c.soLuong " +
+            "FROM ChiTietGiay c " +
+            "JOIN c.giay g " +
+            "JOIN c.hang h " +
+            "JOIN c.mauSac m " +
+            "JOIN c.kichCo k " +
+            "WHERE c.soLuong < :soLuongInput " +
+            "ORDER BY c.soLuong ASC")
+    List<Object[]> getConcatenatedInfoAndSoLuongBySoLuong(@Param("soLuongInput") int soLuongInput);
+
+
 }
 

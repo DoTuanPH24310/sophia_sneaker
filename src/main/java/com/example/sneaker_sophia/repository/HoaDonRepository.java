@@ -105,7 +105,6 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
             @Param("ngayKetThuc") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime ngayKetThuc
     );
 
-
     @Query("SELECT SUM(h.tongTien) FROM HoaDon h WHERE " +
             "(:ngayBatDau IS NULL OR h.createdDate >= :ngayBatDau) AND " +
             "(:ngayKetThuc IS NULL OR h.createdDate <= :ngayKetThuc)")

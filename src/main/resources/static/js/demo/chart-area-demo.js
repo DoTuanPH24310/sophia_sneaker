@@ -26,6 +26,7 @@ function number_format(number, decimals, dec_point, thousands_sep) {
     }
     return s.join(dec);
 }
+
 //check năm
 function mapMonthToLabel(item) {
     const value = item[0];
@@ -36,19 +37,22 @@ function mapMonthToLabel(item) {
     } else if (typeof value === 'number' && value >= 1 && value <= 12) {
         return 'Tháng ' + value;
     } else {
-        return 'Không xác định';
+        return value;
     }
 }
+
 // định dạngh tiền
 function formatCurrency(number) {
     return new Intl.NumberFormat('vi-VN').format(number);
 }
+
 // Area Chart Example
 var areaChart = document.getElementById("myAreaChart");
 // Lấy các phần tử DOM của ô ngày bắt đầu và kết thúc
 var ngayBatDauInput = document.getElementById("NBDHoaDon");
 var ngayKetThucInput = document.getElementById("NKTHoaDon");
 var unit = document.getElementById("unit");
+var thongKeDoanhThuInput = document.getElementById("thongKeDoanhThu");
 
 // Sự kiện khi giá trị của ô ngày bắt đầu thay đổi
 ngayBatDauInput.addEventListener("input", function () {
@@ -64,24 +68,41 @@ ngayKetThucInput.addEventListener("input", function () {
     callApiAndUpdateBarChart();
 });
 
-unit.addEventListener("select", function () {
+unit.addEventListener("change", function () {
     callApiAndUpdateChart();
-    callApiAndUpdatePieChart();
-    callApiAndUpdateBarChart();
+});
+thongKeDoanhThuInput.addEventListener("input", function () {
+    callApiAndUpdateChart();
 });
 
 // Hàm gọi API và cập nhật biểu đồ
 function callApiAndUpdateChart() {
     // Lấy giá trị từ ô ngày bắt đầu và ngày kết thúc
     var ngayBatDau = ngayBatDauInput.value;
+    var thongKeDoanhThu = thongKeDoanhThuInput.value;
     var ngayKetThuc = ngayKetThucInput.value;
-    var unit = ngayKetThucInput.value;
+    var unitTime = unit.value;
 
     // Tạo URL với thông tin ngày
-    var url = "http://localhost:8080/api/chart/revenue?ngayBatDau=" + encodeURIComponent(ngayBatDau) + "&ngayKetThuc=" + encodeURIComponent(ngayKetThuc);
-    console.log('sá'+url)
+    // Chọn URL dựa trên giá trị của unit
+    var apiUrl;
+    switch (unitTime) {
+        case "HOUR":
+            apiUrl = "http://localhost:8080/api/chart/hour?thongKeDoanhThu=" + encodeURIComponent(thongKeDoanhThu);
+            break;
+        case "DAY":
+            apiUrl = "http://localhost:8080/api/chart/day?thongKeDoanhThu=" + encodeURIComponent(thongKeDoanhThu);
+            break;
+        case "MONTH":
+            apiUrl = "http://localhost:8080/api/chart/month?thongKeDoanhThu=" + encodeURIComponent(thongKeDoanhThu);
+            break;
+        // Thêm các case khác nếu có nhiều loại unit khác
+        default:
+            apiUrl = "http://localhost:8080/api/chart/year";
+    }
+    console.log('sá' + apiUrl)
     // Gửi request đến URL tương ứng
-    fetch(url)
+    fetch(apiUrl)
         .then(response => response.json())
         .then(data => {
             // Cập nhật biểu đồ với dữ liệu mới
@@ -98,10 +119,47 @@ function callApiAndUpdateChart() {
             $("#doanhThu").text(formatCurrency(data.doanhThu));
             $("#sanPhamDaBan").text(data.soSanPham);
             $("#soHoaDon").text(data.soHoaDon);
+            $("#soDonOnline").text(data.soDonOnline);
+            $("#doanhThuWebsite").text(formatCurrency(data.doanhThuWebsite));
+            updateDisplay(data.phamTramTangGiamNgay);
+            $(document).ready(function () {
+                // Lắng nghe sự kiện change trên dropdown
+                $("#bienDong").on("change", function () {
+                    // Lấy giá trị được chọn
+                    var selectedValue = $(this).val();
+
+                    // Tùy thuộc vào giá trị chọn, cập nhật giá trị trong div tương ứng
+                    if (selectedValue === "DAY") {
+                        // Nếu chọn Ngày
+                        updateDisplay(data.phamTramTangGiamNgay);
+                    } else if (selectedValue === "MONTH") {
+                        // Nếu chọn Tháng
+                        updateDisplay(data.phamTramTangGiamThang);
+                    }
+                });
+            });
         })
         .catch(error => console.error('Error:', error));
 }
 
+function updateDisplay(value) {
+    // Lấy thẻ div
+    var bienDongTheoDiv = $("#bienDongTheo");
+
+    // Xóa nội dung hiện tại
+    bienDongTheoDiv.empty();
+
+    // Thêm mũi tên và đặt màu chữ tùy thuộc vào giá trị
+    if (value !== 0) {
+        var arrowColor = value > 0 ? "green" : "red";
+        var valueColor = value > 0 ? "blue" : "orange";
+        var arrowClass = value > 0 ? "fa-arrow-up" : "fa-arrow-down";
+
+        bienDongTheoDiv.append('<i class="fa-solid ' + arrowClass + '" style="color: ' + arrowColor + ';"></i> <span style="color: ' + valueColor + ';">' + value + '%'+'</span>');
+    } else {
+        bienDongTheoDiv.text(value);
+    }
+}
 // Hàm cập nhật biểu đồ với dữ liệu mới
 function updateChart(data) {
     // Tạo hoặc cập nhật biểu đồ
@@ -110,7 +168,7 @@ function updateChart(data) {
         myLineChart = new Chart(areaChart, {
             type: 'line',
             data: {
-                labels: data.map(item => mapMonthToLabel(item)),
+                labels: data.map(item => item[0]),
                 datasets: [
                     {
                         label: "Doanh thu ",
@@ -164,7 +222,7 @@ function updateChart(data) {
                             drawBorder: false
                         },
                         ticks: {
-                            maxTicksLimit: 12
+                            maxTicksLimit: 31
                         }
                     }],
                     yAxes: [{
@@ -213,8 +271,9 @@ function updateChart(data) {
         });
     } else {
         // Nếu biểu đồ đã tồn tại, cập nhật dữ liệu
-        myLineChart.data.labels = data.map(item => mapMonthToLabel(item));
-        myLineChart.data.datasets[0].data = data.map(item => item[1]);
+        myLineChart.data.labels = data.map(item => item[0]),
+            myLineChart.data.datasets[0].data = data.map(item => item[1]);
+            myLineChart.data.datasets[1].data = data.map(item => item[2]);
         myLineChart.update();
     }
 }
