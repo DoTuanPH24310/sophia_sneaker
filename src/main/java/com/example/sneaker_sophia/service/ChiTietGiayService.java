@@ -370,8 +370,9 @@ public class ChiTietGiayService {
 
         return check == 0;
     }
-
-
-
+    // thong ke
+    public List<Object[]> getConcatenatedInfoAndSoLuongBySoLuong(int soLuong){
+        return chiTietGiayRepository.getConcatenatedInfoAndSoLuongBySoLuong(soLuong);
+    }
 }
 

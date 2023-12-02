@@ -10,31 +10,99 @@
 
     <!-- Custom styles for this template-->
     <link href="/css/sb-admin-2.min.css" rel="stylesheet">
+    <style>
+        .col-2.container {
+            border-radius: 10px; /* Đặt bán kính bo viên radius mong muốn */
+            background-color: #ffffff; /* Đặt màu nền trắng, bạn có thể thay đổi mã màu tùy chọn */
+            padding: 10px; /* Đặt khoảng trắng bên trong nếu cần thiết */
+            margin-left: 15px;
+        }
+    </style>
+
 </head>
 <body>
 <section>
     <div layout:fragment="content" class="col-md-12" style="margin: auto" id="page-top">
-        <div class="col-3">
-            <label for="nam">Chọn năm</label>
-            <select style="border-radius: 10px;" class="form-select" name="nam" id="nam" onchange="this.form.submit()">
-                <div style="border: 10px">
-                    <option value="null" th:selected="${listHDCT == null}">Tất cả</option>
-                    <option th:each="nam : ${listHDCT}" th:value="${nam.}"
-                            th:text="${deGiayItem.ten}" th:selected="${deGiayItem.ten == deGiay}"></option>
+        <div class="row">
+            <form class="form-inline m-3" id="thongKeForm">
+                <!-- Các input fields khác nếu cần -->
+                <div class="col-2">
+                    <div class="form-floating">
+                        <input type="datetime-local" class="form-control" name="ngayBatDau" id="NBDHoaDon"/>
+                        <label for="NBDHoaDon" class="form-label">Từ ngày</label>
+                    </div>
                 </div>
-            </select>
+
+                <div class="col-2">
+                    <div class="form-floating">
+                        <input type="datetime-local" class="form-control" name="ngayKetThuc" id="NKTHoaDon"/>
+                        <label for="NKTHoaDon" class="form-label">Đến ngày</label>
+                    </div>
+                </div>
+            </form>
         </div>
+        <br>
+        <div class="row container-fluid">
+            <div class="col-2 container">
+                <div class="row">
+                    <h2 class="h5 mb-5 text-gray-800">DOANH THU</h2>
+                </div>
+                <div class="row">
+                    <h2 id="doanhThu"></h2>
+                </div>
+            </div>
+            <div class="col-2 container">
+                <div class="row">
+                    <h2 class="h5 mb-5 text-gray-800">SỐ SẢN PHẨM ĐÃ BÁN</h2>
+                </div>
+                <div class="row">
+                    <h2 id="sanPhamDaBan"></h2>
+                </div>
+            </div>
+            <div class="col-2 container">
+                <div class="row">
+                    <h1 class="h5 mb-5 text-gray-800">SỐ ĐƠN ONLINE</h1>
+                </div>
+                <div class="row">
+                    <h2 id="soDonOnline"></h2>
+                </div>
+            </div>
+            <div class="col-2 container">
+                <div class="row">
+                    <h2 class="h5 mb-5 text-gray-800">DOANH THU WEBSITE</h2>
+                </div>
+                <div class="row">
+                    <h2 id="doanhThuWebsite"></h2>
+                </div>
+            </div>
+            <div class="col-2 container">
+                <div class="row">
+                    <div class="row">
+                        <h2 class="h5 mb-5 text-gray-800 col-8">BIẾN ĐỘNG</h2>
+                        <select name="unit" id="bienDong" class="form-control col-4"
+                                style="margin-top: -5px">
+                            <option value="DAY">Ngày</option>
+                            <option value="MONTH">Tháng</option>
+                        </select>
+                    </div>
+                    <div class="row">
+                        <h2 id="bienDongTheo"></h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <h2 id=3""></h2>
+                </div>
+            </div>
+        </div>
+        <br>
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
             <!-- Begin Page Content -->
             <div class="container-fluid">
 
                 <!-- Page Heading -->
-                <h1 class="h3 mb-2 text-gray-800">Charts</h1>
-                <p class="mb-4">Chart.js is a third party plugin that is used to generate the charts in this theme.
-                    The charts below have been customized - for further customization options, please visit the <a
-                            target="_blank" href="https://www.chartjs.org/docs/latest/">official Chart.js
-                        documentation</a>.</p>
+                <h1 class="h3 mb-2 text-gray-800">Biểu đồ thống kê kinh doanh SOPHIA STORE</h1>
+                <p class="mb-4"></p>
 
                 <!-- Content Row -->
                 <div class="row">
@@ -44,28 +112,47 @@
                         <!-- Area Chart -->
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Area Chart</h6>
+                                <div class="row">
+                                    <h6 class="m-0 font-weight-bold text-primary col-5" >Doanh thu</h6>
+                                    <div class="col-3">
+                                        <div class="form-floating" style="height: 10px">
+                                            <input type="datetime-local" style="height: 10px;margin-top: -10px" class="form-control" name="thongKeDoanhThu"
+                                                   id="thongKeDoanhThu"  />
+                                        </div>
+                                    </div>
+                                    <div class="row col-4">
+                                        <h6 class="m-0 font-italic-bold text-primary col-6"> Thống kê theo</h6>
+                                        <select name="unit" id="unit" class="form-control col-6"
+                                                style="margin-top: -10px">
+                                            <option value="HOUR">Giờ</option>
+                                            <option value="DAY">Ngày</option>
+                                            <option value="MONTH">Tháng</option>
+                                            <option value="YEAR">Năm</option>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                             <div class="card-body">
                                 <div class="chart-area">
                                     <canvas id="myAreaChart"></canvas>
                                 </div>
                                 <hr>
-                                Styling for the area chart can be found in the myAreaChart
+                                Các chỉ số được so sánh với cùng kỳ theo ngày, tháng, năm.
                             </div>
                         </div>
 
                         <!-- Bar Chart -->
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Top 10 sản phẩm bán chạy nhất năm</h6>
+                                <h6 class="m-0 font-weight-bold text-primary">Top 10 sản phẩm bán chạy nhất theo số
+                                    lượng</h6>
                             </div>
                             <div class="card-body">
                                 <div class="chart-bar">
                                     <canvas id="myBarChart"></canvas>
                                 </div>
                                 <hr>
-                                Styling for the bar chart can be found in the
+                                Chọn khoảng thời gian để tìm ra đúng theo khoảng mong muốn.
                             </div>
                         </div>
 
@@ -76,15 +163,43 @@
                         <div class="card shadow mb-4">
                             <!-- Card Header - Dropdown -->
                             <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Donut Chart</h6>
+                                <h6 class="m-0 font-weight-bold text-primary">Tổng số hóa đơn: <span
+                                        class="m-0 font-weight-bold text-danger" id="soHoaDon">df </span></h6>
                             </div>
                             <!-- Card Body -->
                             <div class="card-body">
                                 <div class="chart-pie pt-4">
                                     <canvas id="myPieChart"></canvas>
                                 </div>
-                                <hr>
-                                Styling for the donut chart can be found in the
+                            </div>
+                        </div>
+                        <div class="card shadow mb-4">
+                            <!-- Card Header - Dropdown -->
+                            <div class="card-header py-3">
+                                <div class="row">
+                                    <h6 class="m-0 font-weight-bold text-primary col-7">Giày sắp hết </h6>
+                                    <select name="unit" id="soLuongDoi" class="form-control col-5"
+                                            onchange="callApiAndUpdateTable()">
+                                        <option value="10">Dưới 10 đôi</option>
+                                        <option value="20">Dưới 20 đôi</option>
+                                        <option value="30">Dưới 30 đôi</option>
+                                        <option value="50">Dưới 50 đôi</option>
+                                        <option value="100">Dưới 100 đôi</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- Card Body -->
+                            <div class="card-body" style="height: 500px;overflow-y: auto;">
+                                <table id="dataTable" class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>Mã</th>
+                                        <th>Tên giày</th>
+                                        <th>Số lượng</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="tableBody"></tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -109,7 +224,68 @@
         <a class="scroll-to-top rounded" href="#page-top">
             <i class="fas fa-angle-up"></i>
         </a>
+        <script>
+            var tableBody = document.getElementById('tableBody');
+            var soLuongDoi = document.getElementById('soLuongDoi');
 
+            // Initial API call and table population
+            callApiAndUpdateTable();
+
+            // Function to call API and update the table
+            function callApiAndUpdateTable() {
+                // Clear existing table content
+                tableBody.innerHTML = "";
+
+                // Get the selected value from the dropdown
+                var selectedSoLuong = soLuongDoi.value;
+
+                // Make AJAX request to fetch data
+                var apiUrl = 'http://localhost:8080/api/chart/san-pham-sap-het?soLuongDoi=' + selectedSoLuong;
+
+                fetch(apiUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Populate the table with the fetched data
+                        populateTable(data);
+                    })
+                    .catch(error => console.error('Error fetching data:', error));
+            }
+
+            // Function to populate the table
+            function populateTable(data) {
+                data.sanPhamSapHet.forEach(item => {
+                    var row = tableBody.insertRow();
+                    var cell1 = row.insertCell(0);
+                    var cell2 = row.insertCell(1);
+                    var cell3 = row.insertCell(2);
+
+                    cell1.innerHTML = item[0]; // Tên giày
+                    cell2.innerHTML = item[1]; // Số lượng
+                    cell3.innerHTML = item[2]; // Số lượng
+                });
+            }
+        </script>
+        <script>
+            var today = new Date();
+            // Cộng thêm 1 năm
+            var preYear = new Date(today);
+            preYear.setMonth(0)
+            preYear.setDate(1)
+
+            today.setHours(30, 59, 59, 999);
+
+            // Định dạng thành chuỗi YYYY-MM-DDThh:mm (định dạng của datetime-local)
+            var todayString = today.toISOString().slice(0, 16);
+
+            // Định dạng thành chuỗi YYYY-MM-DDThh:mm (định dạng của datetime-local)
+            var preYearString = preYear.toISOString().slice(0, 16);
+            var Year = new Date().toISOString().slice(0, 16);
+            // Đặt giá trị mặc định cho input ngày bắt đầu và ngày kết thúc
+            document.getElementById("NBDHoaDon").value = preYearString;
+            document.getElementById("NKTHoaDon").value = todayString;
+            document.getElementById("thongKeDoanhThu").value = todayString;
+
+        </script>
         <!-- Bootstrap core JavaScript-->
         <script src="/vendor/jquery/jquery.min.js"></script>
         <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

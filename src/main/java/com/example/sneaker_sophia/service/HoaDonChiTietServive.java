@@ -27,7 +27,7 @@ public class HoaDonChiTietServive {
     @Resource(name = "kmService")
     KMService kmService;
 
-    public List<HoaDonChiTiet> getHDCTByIdHD(String idhd) {
+    public List<HoaDonChiTiet> getHDCTByIdHD(String idhd){
         return hoaDonCTRepository.getHDCTByIdHD(idhd);
     }
 
@@ -165,5 +165,10 @@ public class HoaDonChiTietServive {
 
     public List<Object[]> findTop10IdChiTietGiay(){
         return hoaDonCTRepository.findTop10IdChiTietGiay();
+    }
+
+    //thong ke
+    public Integer sumSoLuongByHoaDonTrangThaiEquals1(){
+        return hoaDonCTRepository.sumSoLuongByHoaDonTrangThaiEquals1();
     }
 }

@@ -17,6 +17,8 @@ import java.util.UUID;
 
 @Repository
 public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> {
+    @Query(value = "SELECT obj FROM ChiTietGiay obj WHERE obj.giay.id IN :listId")
+    List<ChiTietGiay> findAllByIdGiay(List<UUID> listId);
 
     @Query(value = "SELECT ChiTietGiay.*\n" +
             "           FROM ChiTietGiay\n" +
@@ -34,10 +36,9 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
     @Query(value = "SELECT obj.id FROM ChiTietGiay obj WHERE obj.giay.id IN :listId")
     List<String> findIdByIdGiay(List<UUID> listId);
 
-
+    List<ChiTietGiay> findAllByTrangThaiEquals(Integer trangThai);
     @Query(value = "select * from ChiTietGiay  where trangThai = ?1 order by ngayTao desc",nativeQuery = true)
     List<ChiTietGiay> findAllAndOrder(Integer trangThai);
-
     @Query(value = "select ma from ChiTietGiay where id =?1", nativeQuery = true)
     String findMaByIdCTG(UUID id);
     // Hàm tìm kiếm theo cả keyword và tên sản phẩm
@@ -93,10 +94,9 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
 
 
     @Query("SELECT MAX(c.ma) FROM ChiTietGiay c")
-    Integer findMaxMa();
-
-    @Query(value = "SELECT ChiTietGiay.* FROM dbo.ChiTietGiay WHERE ChiTietGiay.IdGiay = (SELECT IdGiay FROM dbo.ChiTietGiay WHERE Id = ?)", nativeQuery = true)
-    List<ChiTietGiay> findChiTietGiaysById(UUID uuid);
+        Integer findMaxMa();
+        @Query(value = "SELECT ChiTietGiay.* FROM dbo.ChiTietGiay WHERE ChiTietGiay.IdGiay = (SELECT IdGiay FROM dbo.ChiTietGiay WHERE Id = ?)", nativeQuery = true)
+        List<ChiTietGiay> findChiTietGiaysById(UUID uuid);
 
 
     @Query("SELECT c FROM ChiTietGiay c WHERE " +
@@ -165,6 +165,17 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
     void updateTrangThaiTo1ById(UUID id);
 
     ChiTietGiay findByMa(String ma);
+
+    @Query("SELECT c.ma, CONCAT(g.ten, ' ', c.ten, ' ', h.ten, ' ', m.ten, ' ', k.ten) AS concatenatedInfo, c.soLuong " +
+            "FROM ChiTietGiay c " +
+            "JOIN c.giay g " +
+            "JOIN c.hang h " +
+            "JOIN c.mauSac m " +
+            "JOIN c.kichCo k " +
+            "WHERE c.soLuong < :soLuongInput " +
+            "ORDER BY c.soLuong ASC")
+    List<Object[]> getConcatenatedInfoAndSoLuongBySoLuong(@Param("soLuongInput") int soLuongInput);
+
 
 }
 
