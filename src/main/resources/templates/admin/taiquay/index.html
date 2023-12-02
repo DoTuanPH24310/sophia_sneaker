@@ -1047,13 +1047,25 @@
             var bieuThucChu = /[a-zA-Z]/;
             var bieuThucDacBiet = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/;
             if (ten.trim().length == 0 || sdt.trim().length == 0 || chiTiet.trim().length == 0 || tinh == -1 || quan == -1 || xa == -1) {
-                alert("Vui lòng nhập đủ các trường đánh dấu (*)");
+                let type = 'error';
+                let icon = 'fa-solid fa-circle-exclamation';
+                let title = 'Thất bại!';
+                let text = 'Nhập đầy đủ trường (*)';
+                createToast(type, icon, title, text);
                 event.preventDefault();
-            } else if (bieuThucChu.test(sdt) || bieuThucDacBiet.test(sdt) || (sdt.trim().length != 11 && sdt.trim().length != 10) || !sdt.startwidth('0')) {
-                alert("Số điện thoại gồm 10 - 11 số và bắt đầu bằng 0");
+            } else if (bieuThucChu.test(sdt) || bieuThucDacBiet.test(sdt) || (sdt.trim().length != 11 && sdt.trim().length != 10) || !sdt.startsWith('0')) {
+                let type = 'error';
+                let icon = 'fa-solid fa-circle-exclamation';
+                let title = 'Thất bại!';
+                let text = 'Số điện thoại từ 10 - 11 số,bắt đầu bằng 0';
+                createToast(type, icon, title, text);
                 event.preventDefault();
             } else {
-                alert("Thêm thành công")
+                let type = 'success';
+                let icon = 'fa-solid fa-circle-check';
+                let title = 'Thành công!';
+                let text = "Thêm thành công";
+                createToast(type, icon, title, text);
             }
         });
 
@@ -1690,7 +1702,6 @@
                         canvas.width = video.videoWidth;
                         canvas.height = video.videoHeight;
                         context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
                         const resizedCanvas = document.createElement('canvas');
                         const resizedContext = resizedCanvas.getContext('2d');
                         resizedCanvas.width = 400;
@@ -1707,9 +1718,17 @@
                                     url: 'http://localhost:8080/api/chi-tiet-giay/getSLTBYQR/' + code.data,
                                     success: function (data) {
                                         if (data - 1 < 0) {
-                                            alert("Không đủ số lượng tồn");
+                                            let type = 'error';
+                                            let icon = 'fa-solid fa-circle-exclamation';
+                                            let title = 'Thất bại!';
+                                            let text = 'Không đủ số lượng tồn';
+                                            createToast(type, icon, title, text);
                                         } else {
-                                            alert("Đã thêm sản phẩm vào giỏ hàng");
+                                            let type = 'success';
+                                            let icon = 'fa-solid fa-circle-check';
+                                            let title = 'Thành công!';
+                                            let text = "Đã thêm vào giỏ hàng";
+                                            createToast(type, icon, title, text);
                                         }
                                     }
                                 })
