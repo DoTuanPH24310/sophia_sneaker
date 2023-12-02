@@ -197,15 +197,15 @@
                                             <td th:text="${#numbers.formatCurrency(hdc.tongTien + hdc.phiShip)}"></td>
                                             <td>
                                                 <button th:if="${hdc.loaiHoaDon == 1}" class="btn btn-success "
-                                                        style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                        style="border-radius: 30px; font-size: 12px; height: 40px;width: 114px;">
                                                     Tại quầy
                                                 </button>
                                                 <button th:if="${hdc.loaiHoaDon == 2}" class="btn btn-primary "
-                                                        style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                        style="border-radius: 30px; font-size: 12px; height: 40px;width: 114px;">
                                                     Giao hàng
                                                 </button>
-                                                <button th:if="${hdc.loaiHoaDon == 3}" class="btn btn-primary "
-                                                        style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                <button th:if="${hdc.loaiHoaDon == 3}" class="btn btn-info "
+                                                        style="border-radius: 30px; font-size: 12px; height: 40px;width: 114px;">
                                                     Online
                                                 </button>
                                             </td>
@@ -283,8 +283,8 @@
                                             <td th:text="${#numbers.formatCurrency(hd.khuyenMai)}"></td>
                                             <td th:text="${#numbers.formatCurrency(hd.tongTien + hd.phiShip)}"></td>
                                             <td>
-                                                <button th:if="${hd.loaiHoaDon == 3}" class="btn btn-success "
-                                                        style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                <button th:if="${hd.loaiHoaDon == 3}" class="btn btn-info "
+                                                        style="border-radius: 30px; font-size: 12px; height: 40px;width: 114px;">
                                                     Online
                                                 </button>
                                             </td>
@@ -362,12 +362,12 @@
                                             <td th:text="${#numbers.formatCurrency(hd.khuyenMai)}"></td>
                                             <td th:text="${#numbers.formatCurrency(hd.tongTien + hd.phiShip)}"></td>
                                             <td>
-                                                <button th:if="${hd.loaiHoaDon == 3}" class="btn btn-success "
-                                                        style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                <button th:if="${hd.loaiHoaDon == 3}" class="btn btn-info "
+                                                        style="border-radius: 30px; font-size: 12px; height: 40px;width: 114px;">
                                                   Online
                                                 </button>
                                                 <button th:if="${hd.loaiHoaDon == 2}" class="btn btn-primary "
-                                                        style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                        style="border-radius: 30px; font-size: 12px; height: 40px;width: 114px;">
                                                     Giao hàng
                                                 </button>
                                             </td>
@@ -447,12 +447,12 @@
                                             <td th:text="${#numbers.formatCurrency(hd.khuyenMai)}"></td>
                                             <td th:text="${#numbers.formatCurrency(hd.tongTien + hd.phiShip)}"></td>
                                             <td>
-                                                <button th:if="${hd.loaiHoaDon == 3}" class="btn btn-success "
-                                                        style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                <button th:if="${hd.loaiHoaDon == 3}" class="btn btn-info "
+                                                        style="border-radius: 30px; font-size: 12px; height: 40px;width: 114px;">
                                                     Online
                                                 </button>
                                                 <button th:if="${hd.loaiHoaDon == 2}" class="btn btn-primary "
-                                                        style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                        style="border-radius: 30px; font-size: 12px; height: 40px;width: 114px;">
                                                     Giao hàng
                                                 </button>
                                             </td>
@@ -502,15 +502,15 @@
                                         <td th:text="${#numbers.formatCurrency(hdht.tongTien + hdht.phiShip)}"></td>
                                         <td>
                                             <button th:if="${hdht.loaiHoaDon == 1}" class="btn btn-success "
-                                                    style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                    style="border-radius: 30px; font-size: 12px; height: 40px;width: 114px;">
                                                 Tại quầy
                                             </button>
                                             <button th:if="${hdht.loaiHoaDon == 2}" class="btn btn-primary "
-                                                    style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                    style="border-radius: 30px; font-size: 12px; height: 40px;width: 114px;">
                                                 Giao hàng
                                             </button>
-                                            <button th:if="${hdht.loaiHoaDon == 3}" class="btn btn-primary "
-                                                    style="border-radius: 30px; font-size: 12px; height: 40px">
+                                            <button th:if="${hdht.loaiHoaDon == 3}" class="btn btn-info"
+                                                    style="border-radius: 30px; font-size: 12px; height: 40px; width: 114px;">
                                                 Online
                                             </button>
                                         </td>
@@ -780,11 +780,11 @@ type="checkbox">`;
             row.insertCell().innerHTML = formattetongTien;
             let id = x.id;
             if (x.loaiHoaDon == 1) {
-                loaiDonbtn = '<button class="btn btn-success " style="border-radius: 30px; font-size: 12px; height: 40px">Tại quầy </button>';
+                loaiDonbtn = '<button class="btn btn-success " style="border-radius: 30px; font-size: 12px; height: 40px;width: 114px;">Tại quầy </button>';
             } else if (x.loaiHoaDon == 2) {
-                loaiDonbtn = '<button class="btn btn-primary "style="border-radius: 30px; font-size: 12px; height: 40px">Giao hàng</button>'
+                loaiDonbtn = '<button class="btn btn-primary "style="border-radius: 30px; font-size: 12px; height: 40px;width: 114px;">Giao hàng</button>'
             } else {
-                loaiDonbtn = '<button class="btn btn-primary "style="border-radius: 30px; font-size: 12px; height: 40px">Online</button>'
+                loaiDonbtn = '<button class="btn btn-info "style="border-radius: 30px; font-size: 12px; height: 40px; width: 114px;">Online</button>'
             }
 
             row.insertCell().innerHTML = loaiDonbtn;

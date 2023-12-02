@@ -2,6 +2,7 @@ package com.example.sneaker_sophia.controller.manage;
 
 import com.example.sneaker_sophia.entity.*;
 import com.example.sneaker_sophia.repository.AnhRepository;
+import com.example.sneaker_sophia.repository.TaiKhoanRepository;
 import com.example.sneaker_sophia.request.TaiKhoanRequest;
 import com.example.sneaker_sophia.service.*;
 import com.example.sneaker_sophia.validate.AlertInfo;
@@ -716,7 +717,6 @@ public class TaiQuayController {
         session.removeAttribute("idhd");
         session.removeAttribute("checkBill");
         session.removeAttribute("listhdct");
-        session.removeAttribute("checkTTHT");
         session.removeAttribute("idHoaDon");
         session.removeAttribute("avtctsp");
         session.removeAttribute("tongTienHD");
@@ -733,17 +733,16 @@ public class TaiQuayController {
 
     @GetMapping("/pdf/{idHD}")
     public void pdf(HttpServletResponse response, @PathVariable("idHD") String idHD) throws IOException {
-
 //        Để thiết lập cho trình duyệt
+        HoaDon hd = hoaDonService.getHoaDonById(idHD);
         response.setContentType("application/pdf");
         String headerKey = "Content-Disposition";
-        String headerValue = "attachment; filename=users.pdf";
+        String headerValue = "attachment; filename="+hd.getMaHoaDOn()+".pdf";
         response.setHeader(headerKey, headerValue);
         export(response, idHD);
     }
 
     public void export(HttpServletResponse response, String idHD) throws IOException {
-
         Document document = new Document(PageSize.A4);
         PdfWriter.getInstance(document, response.getOutputStream());
         document.open();
@@ -798,8 +797,8 @@ public class TaiQuayController {
         p = new Paragraph(hd.getMaHoaDOn() + "\n\n");
         p.setAlignment(Paragraph.ALIGN_CENTER);
         document.add(p);
-        p = new Paragraph("Ngày mua:    " + formatter.format(hd.getCreatedDate()) + "\n\n" + "Khách hàng:    " + hd.getTenKhachHang() + "\n\n" + "Địa chỉ:    " +
-                hd.getTenKhachHang() + "," + hd.getSoDienThoai() + "/ " + hd.getDiaChi() + "\n\n" + "Điện thoại:    " + hd.getSoDienThoai() + "\n\n" + "Người bán:    " + "Nguyễn Huy Hoàng" + "\n\n", font4);
+        p = new Paragraph("Ngày mua:    " + formatter.format(hd.getCreatedDate()) + "\n\n" + "Khách hàng:    " + hd.getTaiKhoan().getTen() + "\n\n" + "Địa chỉ:    " +
+                hd.getTenKhachHang() + "," + hd.getSoDienThoai() + "/ " + hd.getDiaChi() + "\n\n" + "Điện thoại:    " +  hd.getTaiKhoan().getSdt() + "\n\n" + "Người bán:    " + "Nguyễn Huy Hoàng" + "\n\n", font4);
         document.add(p);
         p = new Paragraph(pdf.get(3) + "\n", font5);
         p.setAlignment(Paragraph.ALIGN_CENTER);
