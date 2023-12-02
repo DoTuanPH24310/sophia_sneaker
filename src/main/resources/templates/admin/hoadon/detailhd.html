@@ -422,7 +422,11 @@
                     let hrefValue = link.getAttribute('href');
                     let mess = prompt("Nhập lí do hủy: ");
                     if (mess.trim().length == 0) {
-                        alert("Vui lòng nhập lí do: ");
+                        let type = 'error';
+                        let icon = 'fa-solid fa-circle-exclamation';
+                        let title = 'Thất bại!';
+                        let text = "Bạn chưa nhập lí do";
+                        createToast(type, icon, title, text);
                     } else {
                         window.location.href = hrefValue + "?value=" + mess;
                     }

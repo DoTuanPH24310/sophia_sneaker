@@ -92,4 +92,7 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
             @Param("textSearch") String textSearch
 
     );
+
+    @Query(value = "select DATEDIFF(DAY, ngayTao, GETDATE()) from HoaDon where loaiHoaDon = 3 and Id = ?1 ", nativeQuery = true)
+    Integer getDateNumberHDO(String idhd);
 }

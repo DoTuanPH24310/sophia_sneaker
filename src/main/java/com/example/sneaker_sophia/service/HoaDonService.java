@@ -29,6 +29,8 @@ public class HoaDonService {
         return hoaDonRepository.soHD();
     }
 
+
+
     public List<HoaDon> getHoaDonByTrangThai() {
         return hoaDonRepository.getHoaDonByTrangThai();
     }
@@ -128,5 +130,9 @@ public class HoaDonService {
 
     public List<Object[]> getDoanhThuTheoThang(int nam) {
         return hoaDonWebRepository.getDoanhThuTheoThang(nam);
+    }
+
+    public Integer getDateNumberHDO(String idhd){
+        return hoaDonRepository.getDateNumberHDO(idhd);
     }
 }

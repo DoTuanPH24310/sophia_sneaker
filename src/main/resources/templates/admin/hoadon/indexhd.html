@@ -271,7 +271,7 @@
                                         <tbody id="trchoXacNhan">
                                         <tr th:each="hd, status : ${listhdhcxn}">
                                             <th>
-                                                <input th:name="idhd"
+                                                <input th:name="idhd" class="checkboxCXN"
                                                        th:value="${hd.id}" style="width: 20px; height: 18px;"
                                                        type="checkbox">
                                             </th>
@@ -350,7 +350,7 @@
                                         <!--                                    table chờ giao-->
                                         <tr th:each="hd, status : ${listhdcg}">
                                             <th>
-                                                <input th:name="idhd"
+                                                <input th:name="idhd" class="checkboxCG"
                                                        th:value="${hd.id}" style="width: 20px; height: 18px;"
                                                        type="checkbox">
                                             </th>
@@ -362,9 +362,9 @@
                                             <td th:text="${#numbers.formatCurrency(hd.khuyenMai)}"></td>
                                             <td th:text="${#numbers.formatCurrency(hd.tongTien + hd.phiShip)}"></td>
                                             <td>
-                                                <button th:if="${hd.loaiHoaDon == 1}" class="btn btn-success "
+                                                <button th:if="${hd.loaiHoaDon == 3}" class="btn btn-success "
                                                         style="border-radius: 30px; font-size: 12px; height: 40px">
-                                                    Tại quầy
+                                                  Online
                                                 </button>
                                                 <button th:if="${hd.loaiHoaDon == 2}" class="btn btn-primary "
                                                         style="border-radius: 30px; font-size: 12px; height: 40px">
@@ -435,7 +435,7 @@
                                         <tbody id="trdangGiao">
                                         <tr th:each="hd, status : ${listhddg}">
                                             <th>
-                                                <input th:name="idhd"
+                                                <input th:name="idhd" class="checkboxDG"
                                                        th:value="${hd.id}" style="width: 20px; height: 18px;"
                                                        type="checkbox">
                                             </th>
@@ -614,12 +614,14 @@
         let classSelectChild = '';
         let myLinksXNTC = document.getElementById('ghiChuXNTC');
         let actionFormXNTC = document.getElementById('formTrTC');
+        let checkevent = 0;
 
 
         let x = [[${session.tabActive}]];
         if (x != null) {
             document.addEventListener("DOMContentLoaded", function () {
                 document.getElementById(x).click();
+                eventCheckbox2(x);
                 removeSeesion('tabActive');
             });
         }
@@ -639,13 +641,14 @@
         $(document).ready(function () {
             $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
                 activeTab = $(e.target).attr("href");
-
                 findErrTable(activeTab);
                 resetSelectAndTab();
                 eventCheckbox();
 
             });
         });
+
+
 
         function eventCheckbox() {
             if (activeTab == '#choXacNhan') {
@@ -659,9 +662,43 @@
                 classSelectChild = '.checkboxDG'
             } else return;
 
-
+            checkevent = 1;
             let selectAllCheckbox = document.getElementById(idSelectAll);
             let checkboxes = document.querySelectorAll(classSelectChild);
+            selectAllCheckbox.addEventListener('click', function () {
+                checkboxes.forEach(function (checkbox) {
+                    checkbox.checked = selectAllCheckbox.checked;
+                });
+            });
+
+            checkboxes.forEach(function (checkbox) {
+                checkbox.addEventListener('click', function () {
+                    selectAllCheckbox.checked = Array.from(checkboxes).every(function (checkbox) {
+                        return checkbox.checked;
+                    });
+                });
+            });
+        }
+
+        function eventCheckbox2(prId) {
+            let prClass = '';
+            if (prId == 'tabChoXacNhan'){
+                prId = 'selectAllCXN';
+                prClass = '.checkboxCXN';
+            }else if(prId == 'tabChoGiao'){
+                prId = 'selectAllCG';
+                prClass = '.checkboxCG';
+            }else if (prId == 'tabDangGiao') {
+                prId = 'selectAllDG';
+                prClass = '.checkboxDG';
+            }else return;
+
+            checkevent = 1;
+            let selectAllCheckbox = document.getElementById(prId);
+            let checkboxes = document.querySelectorAll(prClass);
+            console.log('test');
+            console.log(selectAllCheckbox);
+            console.log(checkboxes);
             selectAllCheckbox.addEventListener('click', function () {
                 checkboxes.forEach(function (checkbox) {
                     checkbox.checked = selectAllCheckbox.checked;
@@ -855,6 +892,8 @@ type="checkbox">`;
                 url: 'http://localhost:8080/api/hoa-don/deleteSession/' + name,
             })
         }
+
+
 
 
     </script>
