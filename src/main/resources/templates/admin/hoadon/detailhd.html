@@ -180,6 +180,10 @@
                 thành công</a>
 
         </div>
+        <div th:if="${hoaDon.trangThai == 1}" class="float-right">
+            <a th:href="@{/admin/tai-quay/pdf/{id}(id=${hoaDon.id})}"  class="btn btn-primary">In HĐ</a>
+
+        </div>
         <div th:if="${hoaDon.trangThai == 3}" class="float-right">
             <a th:href="@{/admin/hoa-don/updatehdcxn/{id}(id=${hoaDon.id})}" class="btn btn-primary">Xác nhận đơn</a>
             <a th:href="@{/admin/hoa-don/huyhdcxn/{id}(id=${hoaDon.id})}" class="myLinkHuy btn btn-danger mr-3">Hủy</a>
