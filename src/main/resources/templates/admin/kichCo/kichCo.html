@@ -2,9 +2,6 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/layouts/layout}">
 <head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.0/css/bootstrap.min.css">
-    <!----css3---->
-    <link rel="stylesheet" href="/css/custom.css">
     <style>
 
 
@@ -109,7 +106,7 @@
                         <td th:text="${kichCo.count}"></td>
                         <td th:text="${g.ma}"></td>
                         <td th:text="${g.ten}"></td>
-                        <td th:if="${g.trangThai!=0}" style="width: 160px;">
+                        <td th:if="${g.trangThai==1}" style="width: 160px;">
                             <button class="btn btn-danger" style="border-radius: 30px; font-size: 9px; width: 120px">Ngưng hoạt
                                 động
                             </button>

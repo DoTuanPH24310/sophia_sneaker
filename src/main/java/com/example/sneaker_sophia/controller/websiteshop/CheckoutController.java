@@ -270,23 +270,14 @@ public class CheckoutController {
                             Model model, HttpSession session) {
         System.out.println("phivanchuyen" + phiVanChuyen);
         try {
+            double total = 0.0;
             Cart cart = (Cart) session.getAttribute("cart");
             List<CartItem> cartItems = cart.getItems();
             session.removeAttribute("tinh");
             session.removeAttribute("quan");
             session.removeAttribute("phuong");
             if (result.hasErrors()) {
-                double total = 0.0;
-                boolean tonTai = this.loginRepository.existsByEmail(diaChi.getEmail());
-                if (tonTai) {
-                    session.setAttribute("tinh", "-1");
-                    session.setAttribute("quan", "-1");
-                    session.setAttribute("phuong", "-1");
-                    result.rejectValue("email", "error.email", "Email đã tồn tại trong hệ thống");
-                    model.addAttribute("cartItems", cartItems);
-                    model.addAttribute("total", total);
-                    return "website/productwebsite/checkoutSession";
-                }
+
                 if (cart != null) {
                     if (cartItems != null && !cartItems.isEmpty()) {
                         for (CartItem item : cartItems) {
@@ -312,6 +303,16 @@ public class CheckoutController {
                 } else {
                     return "redirect:/cart/hien-thi";
                 }
+            }
+            boolean tonTai = this.loginRepository.existsByEmail(diaChi.getEmail());
+            if (tonTai) {
+                session.setAttribute("tinh", "-1");
+                session.setAttribute("quan", "-1");
+                session.setAttribute("phuong", "-1");
+                result.rejectValue("email", "error.email", "Email đã tồn tại trong hệ thống");
+                model.addAttribute("cartItems", cartItems);
+                model.addAttribute("total", total);
+                return "website/productwebsite/checkoutSession";
             }
             if (diaChi.getTinh() == 1) {
                 phiVanChuyen = 20000.0;

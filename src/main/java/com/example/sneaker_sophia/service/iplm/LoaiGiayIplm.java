@@ -76,7 +76,8 @@ public class LoaiGiayIplm implements LoaiGiayService2 {
     public LoaiGiay delete(UUID id){
         Optional<LoaiGiay> optional = this.loaiGiayRepository.findById(id);
         return optional.map(o ->{
-            this.loaiGiayRepository.delete(o);
+            o.setTrangThai(3);
+            this.loaiGiayRepository.save(o);
             return o;
         }).orElse(null);
     }

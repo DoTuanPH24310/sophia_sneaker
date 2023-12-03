@@ -4,6 +4,7 @@ import com.example.sneaker_sophia.dto.GiayRequest;
 import com.example.sneaker_sophia.entity.Giay;
 import com.example.sneaker_sophia.repository.GiayRepository;
 import com.example.sneaker_sophia.service.GiayService;
+import com.example.sneaker_sophia.validate.AlertInfo;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,6 +23,8 @@ public class GiayController {
     @Autowired
     private Giay giay;
 
+    @Autowired
+    private AlertInfo alertInfo;
     @Autowired
     private GiayRepository giayRepository;
     @Autowired
@@ -52,13 +55,26 @@ public class GiayController {
     @PostMapping("add")
     private String add(@Valid @ModelAttribute("data") GiayRequest giayRequest, BindingResult result) {
         if (result.hasErrors()) {
-            if (this.giayRepository.existsGiayByMa(giayRequest.getMa())) {
-                result.rejectValue("ma", "error.giayRequest", "Mã giày đã tồn tại. Vui lòng chọn mã khác.");
-            }
+            alertInfo.alert("errTaiQuay", "Dữ liệu sai hoặc thiếu");
+            return "/admin/giay/form_giay";
+        }
+
+        // Check for existing Giay with the same ma (code)
+        if (this.giayRepository.existsGiayByMa(giayRequest.getMa())) {
+            result.rejectValue("ma", "error.giayRequest", "Mã giày đã tồn tại. Vui lòng chọn mã khác.");
+            alertInfo.alert("errTaiQuay", "Dữ liệu sai hoặc thiếu");
+            return "/admin/giay/form_giay";
+        }
+
+        // Check for existing Giay with the same ten (name)
+        if (this.giayRepository.existsGiayByTen(giayRequest.getTen())) {
+            result.rejectValue("ten", "error.giayRequest", "Tên giày đã tồn tại. Vui lòng chọn tên khác.");
+            alertInfo.alert("errTaiQuay", "Dữ liệu sai hoặc thiếu");
             return "/admin/giay/form_giay";
         }
 
         this.giayService.add(giayRequest);
+        alertInfo.alert("successTaiQuay", "Đã thêm thành công");
         return "redirect:/admin/giay/hien-thi";
     }
 
@@ -72,17 +88,21 @@ public class GiayController {
 
     @PostMapping("update/{id}")
     private String update(@PathVariable("id") Giay giay, @Valid @ModelAttribute("data") GiayRequest giayRequest, BindingResult result, Model model){
-        if(result.hasErrors()){
+        if (result.hasErrors()) {
             model.addAttribute("action", "/admin/giay/update/" +giay.getId());
-            return "/admin/giay/form_giay_update";
+            alertInfo.alert("errTaiQuay", "Dữ liệu sai hoặc thiếu");
+            return "/admin/giay/form_giay";
         }
+
         this.giayService.update(giay.getId(), giayRequest);
+        alertInfo.alert("successTaiQuay", "Đã sửa thành công");
         return "redirect:/admin/giay/hien-thi";
     }
 
     @GetMapping("delete/{id}")
     private String delete(@PathVariable("id") Giay giay){
         this.giayService.delete(giay.getId());
+        alertInfo.alert("successTaiQuay", "Đã xóa thành công");
         return "redirect:/admin/giay/hien-thi";
     }
 

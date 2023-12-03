@@ -16,14 +16,17 @@ import java.util.UUID;
 @Repository
 public interface HangRepository extends JpaRepository<Hang, UUID> {
 
-    @Query(value = "select * from Hang", nativeQuery = true)
+    @Query("SELECT g FROM Hang g WHERE g.trangThai IN (0, 1)")
     Page<Hang> getAll(Pageable pageable);
 
-    @Query("SELECT g FROM Hang g WHERE g.ten LIKE %:txtSearch%")
+    @Query("SELECT g FROM Hang g WHERE g.ten LIKE %:txtSearch% AND g.trangThai IN (0, 1)")
     Page<Hang> searchWithoutTrangThai(@Param("txtSearch") String txtSearch, Pageable pageable);
 
-    @Query("SELECT g FROM Hang g WHERE g.ten LIKE %:txtSearch% AND (g.trangThai = :trangThai OR :trangThai IS NULL)")
+    @Query("SELECT g FROM Hang g WHERE g.ten LIKE %:txtSearch% AND g.trangThai = :trangThai")
     Page<Hang> searchAndFilter(@Param("txtSearch") String txtSearch, @Param("trangThai") String trangThai, Pageable pageable);
+
+    boolean existsHangByMa(String ma);
+    boolean existsHangByTen(String ten);
 
     Hang findHangByTen(String ten);
 

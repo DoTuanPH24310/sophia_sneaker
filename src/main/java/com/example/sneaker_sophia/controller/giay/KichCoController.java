@@ -3,7 +3,9 @@ package com.example.sneaker_sophia.controller.giay;
 import com.example.sneaker_sophia.dto.KichCoRequest;
 import com.example.sneaker_sophia.entity.KichCo;
 import com.example.sneaker_sophia.entity.KichCo;
+import com.example.sneaker_sophia.repository.KichCoRepository;
 import com.example.sneaker_sophia.service.KichCoService;
+import com.example.sneaker_sophia.validate.AlertInfo;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,7 +23,10 @@ import java.util.Optional;
 public class KichCoController {
     @Autowired
     private KichCo kichCo;
-
+    @Autowired
+    private AlertInfo alertInfo;
+    @Autowired
+    private KichCoRepository kichCoRepository;
     @Autowired
     private KichCoService kichCoService;
 
@@ -50,9 +55,23 @@ public class KichCoController {
     @PostMapping("add")
     private String add(@Valid @ModelAttribute("data") KichCoRequest kichCoRequest, BindingResult result) {
         if (result.hasErrors()) {
+            alertInfo.alert("errTaiQuay", "Dữ liệu sai hoặc thiếu");
+            return "admin/kichCo/form_kichCo";
+        }
+        if (this.kichCoRepository.existsKichCoByMa(kichCoRequest.getMa())) {
+            result.rejectValue("ma", "error.kichCoRequest", "Mã kích cỡ đã tồn tại. Vui lòng chọn mã khác.");
+            alertInfo.alert("errTaiQuay", "Dữ liệu sai hoặc thiếu");
+            return "admin/kichCo/form_kichCo";
+        }
+
+        // Check for existing Giay with the same ten (name)
+        if(this.kichCoRepository.existsKichCoByTen(kichCoRequest.getTen())){
+            result.rejectValue("ten", "error.kichCoRequest", "Tên kích cỡ đã tồn tại. Vui lòng chọn tên khác.");
+            alertInfo.alert("errTaiQuay", "Dữ liệu sai hoặc thiếu");
             return "admin/kichCo/form_kichCo";
         }
         this.kichCoService.add(kichCoRequest);
+        alertInfo.alert("successTaiQuay", "Đã thêm thành công");
         return "redirect:/admin/kichCo/hien-thi";
     }
 
@@ -68,15 +87,19 @@ public class KichCoController {
     private String update(@PathVariable("id") KichCo kichCo, @Valid @ModelAttribute("data") KichCoRequest kichCoRequest, BindingResult result, Model model){
         if(result.hasErrors()){
             model.addAttribute("action", "/admin/kichCo/update/" +kichCo.getId());
+            alertInfo.alert("errTaiQuay", "Dữ liệu sai hoặc thiếu");
             return "admin/kichCo/form_kichCo_update";
         }
         this.kichCoService.update(kichCo.getId(), kichCoRequest);
+        alertInfo.alert("successTaiQuay", "Đã sửa thành công");
         return "redirect:/admin/kichCo/hien-thi";
     }
 
     @GetMapping("delete/{id}")
     private String delete(@PathVariable("id") KichCo kichCo){
         this.kichCoService.delete(kichCo.getId());
+        alertInfo.alert("successTaiQuay", "Đã xóa thành công");
+
         return "redirect:/admin/kichCo/hien-thi";
     }
 

@@ -16,14 +16,17 @@ import java.util.UUID;
 @Repository
 public interface DeGiayRepository extends JpaRepository<DeGiay, UUID> {
 
-    @Query(value = "select * from DeGiay", nativeQuery = true)
+    @Query("SELECT g FROM DeGiay g WHERE g.trangThai IN (0, 1)")
     Page<DeGiay> getAll(Pageable pageable);
 
-    @Query("SELECT g FROM DeGiay g WHERE g.ten LIKE %:txtSearch%")
+    @Query("SELECT g FROM DeGiay g WHERE g.ten LIKE %:txtSearch% AND g.trangThai IN (0, 1)")
     Page<DeGiay> searchWithoutTrangThai(@Param("txtSearch") String txtSearch, Pageable pageable);
 
-    @Query("SELECT g FROM DeGiay g WHERE g.ten LIKE %:txtSearch% AND (g.trangThai = :trangThai OR :trangThai IS NULL)")
+    @Query("SELECT g FROM DeGiay g WHERE g.ten LIKE %:txtSearch% AND g.trangThai = :trangThai")
     Page<DeGiay> searchAndFilter(@Param("txtSearch") String txtSearch, @Param("trangThai") String trangThai, Pageable pageable);
+
+    boolean existsDeGiayByMa(String ma);
+    boolean existsDeGiayByTen(String ten);
 
     DeGiay findDeGiayByTen(String ten);
     @Query(value = "SELECT DeGiay.*\n" +

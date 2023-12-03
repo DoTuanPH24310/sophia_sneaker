@@ -16,16 +16,19 @@ import java.util.UUID;
 @Repository
 public interface MauSacRepository extends JpaRepository<MauSac, UUID> {
 
-    @Query(value = "select * from MauSac", nativeQuery = true)
+    @Query("SELECT g FROM MauSac g WHERE g.trangThai IN (0, 1)")
     Page<MauSac> getAll(Pageable pageable);
 
-    @Query("SELECT g FROM MauSac g WHERE g.ten LIKE %:txtSearch%")
+    @Query("SELECT g FROM MauSac g WHERE g.ten LIKE %:txtSearch% AND g.trangThai IN (0, 1)")
     Page<MauSac> searchWithoutTrangThai(@Param("txtSearch") String txtSearch, Pageable pageable);
 
-    @Query("SELECT g FROM MauSac g WHERE g.ten LIKE %:txtSearch% AND (g.trangThai = :trangThai OR :trangThai IS NULL)")
+    @Query("SELECT g FROM MauSac g WHERE g.ten LIKE %:txtSearch% AND g.trangThai = :trangThai")
     Page<MauSac> searchAndFilter(@Param("txtSearch") String txtSearch, @Param("trangThai") String trangThai, Pageable pageable);
 
     MauSac findMauSacByTen(String ten);
+
+    boolean existsMauSacByMa(String ma);
+    boolean existsMauSacByTen(String ten);
 
     @Query(value = "SELECT MauSac.*\n" +
             "FROM ChiTietGiay\n" +

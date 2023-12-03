@@ -97,7 +97,8 @@ public class GiayService {
     public Giay delete(UUID id) {
         Optional<Giay> optional = this.giayRepository.findById(id);
         return optional.map(o -> {
-            this.giayRepository.delete(o);
+            o.setTrangThai(3);
+            this.giayRepository.save(o);
             return o;
         }).orElse(null);
     }

@@ -76,7 +76,8 @@ public class HangIplm implements HangService {
     public Hang delete(UUID id){
         Optional<Hang> optional = this.hangRepository.findById(id);
         return optional.map(o ->{
-            this.hangRepository.delete(o);
+            o.setTrangThai(3);
+            this.hangRepository.save(o);
             return o;
         }).orElse(null);
     }
