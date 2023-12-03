@@ -112,7 +112,7 @@ public class GiayService {
         return giayRepository.finAllId(trangThai);
     }
 
-    public List<String> checkedGiay(List<String> listId, Model model) {
+    public List<String> checkedGiay(List<String> listId, Model model,UUID checkAdd) {
         List<String> temp = listId;
         Map<UUID, String> avtctgMap = new HashMap<>();
         model.addAttribute("avtctgMap",avtctgMap);
@@ -121,7 +121,7 @@ public class GiayService {
             check = 1;
             listId.remove("AllG");
             model.addAttribute("checkAll", true);
-            listCTG = chiTietGiayService.findAllByIdGiay(this.findAllID(0));
+            listCTG = chiTietGiayService.findAllByIdGiay(this.findAllID(0),checkAdd);
             for (ChiTietGiay ctg: listCTG) {
                 String avtct = anhRepository.getAnhChinhByIdctg(ctg.getId());
                 avtctgMap.put(ctg.getId(),avtct);
@@ -142,7 +142,7 @@ public class GiayService {
             check = 0;
             model.addAttribute("checkAll", false);
             listId.remove("AllG");
-            listCTG = chiTietGiayService.findAllByIdGiay(listId);
+            listCTG = chiTietGiayService.findAllByIdGiay(listId,checkAdd);
             for (ChiTietGiay ctg: listCTG) {
                 String avtct = anhRepository.getAnhChinhByIdctg(ctg.getId());
                 avtctgMap.put(ctg.getId(),avtct);
@@ -162,7 +162,7 @@ public class GiayService {
                 avtctgMap.put(ctg.getId(),avtct);
             }
             model.addAttribute("avtctgMap",avtctgMap);
-            listCTG = chiTietGiayService.findAllByIdGiay(listId);
+            listCTG = chiTietGiayService.findAllByIdGiay(listId,checkAdd);
             model.addAttribute("listCTG", listCTG);
             return listId;
         }
@@ -170,7 +170,7 @@ public class GiayService {
 //      Khi số lượng sản phẩm được chọn bằng với số lượng sản phẩm trong kho
         if (listId.size() == findAllByTrangThaiEquals(0).size() && check == 0) {
             check = 1;
-            listCTG = chiTietGiayService.findAllByIdGiay(this.findAllID(0));
+            listCTG = chiTietGiayService.findAllByIdGiay(this.findAllID(0),checkAdd);
             for (ChiTietGiay ctg: listCTG) {
                 String avtct = anhRepository.getAnhChinhByIdctg(ctg.getId());
                 avtctgMap.put(ctg.getId(),avtct);
@@ -180,9 +180,14 @@ public class GiayService {
             model.addAttribute("listCTG", listCTG);
             return listId;
         }
+        System.out.println("check ne: ");
+        System.out.println(checkAdd);
+        for (int i = 0; i < temp.size(); i++) {
+            System.out.println(temp.get(i));
+        }
 
-        model.addAttribute("listCTG", chiTietGiayService.findAllByIdGiay(temp));
-        for (ChiTietGiay ctg: chiTietGiayService.findAllByIdGiay(temp)) {
+        model.addAttribute("listCTG", chiTietGiayService.findAllByIdGiay(temp,checkAdd));
+        for (ChiTietGiay ctg: chiTietGiayService.findAllByIdGiay(temp,checkAdd)) {
             String avtct = anhRepository.getAnhChinhByIdctg(ctg.getId());
             avtctgMap.put(ctg.getId(),avtct);
         }

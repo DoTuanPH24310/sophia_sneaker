@@ -4,6 +4,7 @@ import com.example.sneaker_sophia.entity.HoaDon;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -92,4 +93,35 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
             @Param("textSearch") String textSearch
 
     );
+
+    // thống kê
+
+    @Query("SELECT h.trangThai, COUNT(h) FROM HoaDon h " +
+            "WHERE " +
+            "(:ngayBatDau IS NULL OR h.createdDate >= :ngayBatDau) " +
+            "AND (:ngayKetThuc IS NULL OR h.createdDate <= :ngayKetThuc) " +
+            "GROUP BY h.trangThai")
+    List<Object[]> countHoaDonByDateAndStatus(
+            @Param("ngayBatDau") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime ngayBatDau,
+            @Param("ngayKetThuc") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime ngayKetThuc
+    );
+
+    @Query("SELECT SUM(h.tongTien) FROM HoaDon h WHERE " +
+            "(:ngayBatDau IS NULL OR h.createdDate >= :ngayBatDau) AND " +
+            "(:ngayKetThuc IS NULL OR h.createdDate <= :ngayKetThuc)")
+    Double calculateTongTienByDate(
+            @Param("ngayBatDau") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime ngayBatDau,
+            @Param("ngayKetThuc") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime ngayKetThuc
+    );
+
+    @Query("SELECT COUNT(h) FROM HoaDon h WHERE " +
+            "(:ngayBatDau IS NULL OR h.createdDate >= :ngayBatDau) AND " +
+            "(:ngayKetThuc IS NULL OR h.createdDate <= :ngayKetThuc)")
+    int countHoaDonByDateRange(
+            @Param("ngayBatDau") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime ngayBatDau,
+            @Param("ngayKetThuc") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime ngayKetThuc
+    );
+
+    @Query(value = "select DATEDIFF(DAY, ngayTao, GETDATE()) from HoaDon where loaiHoaDon = 3 and Id = ?1 ", nativeQuery = true)
+    Integer getDateNumberHDO(String idhd);
 }

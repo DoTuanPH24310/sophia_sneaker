@@ -212,12 +212,16 @@ public class VoucherService {
 
     public void saveVoucher(VoucherDTO voucherDTO, List<String> listIDCTG) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-        Voucher voucher = new Voucher();
+        Voucher voucher = voucherRepository.findById(voucherDTO.getId()).get();
         BeanUtils.copyProperties(voucherDTO, voucher);
         voucher.setPhanTramGiam(Integer.parseInt(voucherDTO.getPhanTramGiam()));
         voucher.setNgayBatDau(LocalDateTime.parse(String.valueOf(voucherDTO.getNgayBatDau()), formatter));
         voucher.setNgayKetThuc(LocalDateTime.parse(String.valueOf(voucherDTO.getNgayKetThuc()), formatter));
         voucher.setSoLuong(Integer.parseInt(voucherDTO.getSoLuong()));
+        voucher.setSoLuongGiam(voucher.getSoLuong());
+        if (voucherDTO.getId() == null){
+            voucher.setCreatedDate(LocalDateTime.now());
+        }
         List<Voucher> list = voucherRepository.findAll();
         String maTemp = "VC0" + list.size();
         int count = 1;

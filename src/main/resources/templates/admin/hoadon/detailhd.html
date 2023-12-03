@@ -172,12 +172,16 @@
         </div>
 
         <div th:if="${hoaDon.trangThai == 2 && hoaDon.loaiHoaDon == 3}" class="float-right mr-3">
-            <a th:href="@{/admin/hoa-don/huyhdcg/{id}(id=${hoaDon.id})}" class=" myLinkHuy btn btn-danger mr-3">Hủy</a>
+            <a th:href="@{/admin/hoa-don/huyhdctt/{id}(id=${hoaDon.id})}" class=" myLinkHuy btn btn-danger mr-3">Hủy</a>
         </div>
         <div th:if="${hoaDon.trangThai == 5}" class="float-right">
             <a th:href="@{/admin/hoa-don/updatehddg/{id}(id=${hoaDon.id})}" id="myLinhXacNhan" class="btn btn-primary">Xác
                 nhận
                 thành công</a>
+
+        </div>
+        <div th:if="${hoaDon.trangThai == 1}" class="float-right">
+            <a th:href="@{/admin/tai-quay/pdf/{id}(id=${hoaDon.id})}"  class="btn btn-primary">In HĐ</a>
 
         </div>
         <div th:if="${hoaDon.trangThai == 3}" class="float-right">
@@ -422,7 +426,11 @@
                     let hrefValue = link.getAttribute('href');
                     let mess = prompt("Nhập lí do hủy: ");
                     if (mess.trim().length == 0) {
-                        alert("Vui lòng nhập lí do: ");
+                        let type = 'error';
+                        let icon = 'fa-solid fa-circle-exclamation';
+                        let title = 'Thất bại!';
+                        let text = "Bạn chưa nhập lí do";
+                        createToast(type, icon, title, text);
                     } else {
                         window.location.href = hrefValue + "?value=" + mess;
                     }

@@ -7,7 +7,7 @@ import com.example.sneaker_sophia.repository.HoaDonWebRepository;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -28,6 +28,8 @@ public class HoaDonService {
     public Integer soHD() {
         return hoaDonRepository.soHD();
     }
+
+
 
     public List<HoaDon> getHoaDonByTrangThai() {
         return hoaDonRepository.getHoaDonByTrangThai();
@@ -125,8 +127,21 @@ public class HoaDonService {
     public Integer soHDDG(){
         return hoaDonRepository.soHDDG();
     }
-
-    public List<Object[]> getDoanhThuTheoThang(int nam) {
-        return hoaDonWebRepository.getDoanhThuTheoThang(nam);
+    //thông kê
+    public Double calculateTongTienByDate(LocalDateTime ngayBatDau,LocalDateTime ngayKetThuc){
+        return hoaDonRepository.calculateTongTienByDate(ngayBatDau,ngayKetThuc);
     }
+
+    public List<Object[]> countHoaDonByDateAndStatus(LocalDateTime ngayBatDau,LocalDateTime ngayKetThuc){
+        return hoaDonRepository.countHoaDonByDateAndStatus(ngayBatDau,ngayKetThuc);
+    }
+
+    public Integer getDateNumberHDO(String idhd){
+        return hoaDonRepository.getDateNumberHDO(idhd);
+    }
+
+    public int countHoaDonByDateRange(LocalDateTime ngayBatDau,LocalDateTime ngayKetThuc){
+        return hoaDonRepository.countHoaDonByDateRange(ngayBatDau,ngayKetThuc);
+    }
+    // END thông kê
 }
