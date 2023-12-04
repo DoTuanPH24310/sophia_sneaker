@@ -21,61 +21,61 @@ import java.util.Optional;
 public interface HoaDonWebRepository extends JpaRepository<HoaDon, String> {
 
     @Query(value = "SELECT " +
-            "   CONCAT(DATEPART(MONTH, h.ngayTao), '/', DATEPART(YEAR, h.ngayTao)) AS ThangNam, " +
+            "   CONCAT(DATEPART(MONTH, h.ngaySua), '/', DATEPART(YEAR, h.ngaySua)) AS ThangNam, " +
             "   SUM(h.tongTien) AS TongDoanhThu, " +
             "   (SELECT SUM(h1.tongTien) " +
             "    FROM HoaDon h1 " +
-            "    WHERE DATEPART(YEAR, h1.ngayTao) = DATEPART(YEAR, :startDate) - 1 " +
-            "      AND DATEPART(MONTH, h1.ngayTao) = DATEPART(MONTH, h.ngayTao) " +
+            "    WHERE DATEPART(YEAR, h1.ngaySua) = DATEPART(YEAR, :startDate) - 1 " +
+            "      AND DATEPART(MONTH, h1.ngaySua) = DATEPART(MONTH, h.ngaySua) " +
             "      AND h1.trangThai = 1) AS TongDoanhThuNamTruoc " +
             "FROM " +
             "   HoaDon h " +
             "WHERE " +
-            "   DATEPART(YEAR, h.ngayTao) = DATEPART(YEAR, :startDate) " +
+            "   DATEPART(YEAR, h.ngaySua) = DATEPART(YEAR, :startDate) " +
             "   AND h.trangThai = 1 " +
             "GROUP BY " +
-            "   DATEPART(YEAR, h.ngayTao), DATEPART(MONTH, h.ngayTao)", nativeQuery = true)
+            "   DATEPART(YEAR, h.ngaySua), DATEPART(MONTH, h.ngaySua)", nativeQuery = true)
     List<Object[]> getStatisticsByMonth(
             @Param("startDate") LocalDateTime startDate);
 
 
     @Query(value = "SELECT " +
-            "   CONVERT(VARCHAR, h.ngayTao, 23) AS date, " +
+            "   CONVERT(VARCHAR, h.ngaySua, 23) AS date, " +
             "   SUM(h.tongTien) AS totalAmountCurrentMonth, " +
-            "   COALESCE(LAG(SUM(h.tongTien)) OVER (ORDER BY CONVERT(VARCHAR, h.ngayTao, 23)), 0) AS totalAmountPreviousMonth " +
+            "   COALESCE(LAG(SUM(h.tongTien)) OVER (ORDER BY CONVERT(VARCHAR, h.ngaySua, 23)), 0) AS totalAmountPreviousMonth " +
             "FROM " +
             "   HoaDon h " +
             "WHERE " +
-            "   DATEPART(YEAR, h.ngayTao) = DATEPART(YEAR, :startDate) " +
-            "   AND DATEPART(MONTH, h.ngayTao) = DATEPART(MONTH, :startDate) " +
+            "   DATEPART(YEAR, h.ngaySua) = DATEPART(YEAR, :startDate) " +
+            "   AND DATEPART(MONTH, h.ngaySua) = DATEPART(MONTH, :startDate) " +
             "   AND h.trangThai = 1 " +
             "GROUP BY " +
-            "   CONVERT(VARCHAR, h.ngayTao, 23)", nativeQuery = true)
+            "   CONVERT(VARCHAR, h.ngaySua, 23)", nativeQuery = true)
     List<Object[]> getStatisticsByDay(@Param("startDate") LocalDateTime startDate);
 
     @Query(value = "WITH DataForCurrentDay AS (" +
             "   SELECT " +
-            "      DATEPART(HOUR, h.ngayTao) AS hour, " +
+            "      DATEPART(HOUR, h.ngaySua) AS hour, " +
             "      SUM(h.tongTien) AS tongTien " +
             "   FROM " +
             "      HoaDon h " +
             "   WHERE " +
             "      h.trangThai = 1 " +
-            "      AND CONVERT(DATE, h.ngayTao) = CONVERT(DATE, :startDate) " +
+            "      AND CONVERT(DATE, h.ngaySua) = CONVERT(DATE, :startDate) " +
             "   GROUP BY " +
-            "      DATEPART(HOUR, h.ngayTao)" +
+            "      DATEPART(HOUR, h.ngaySua)" +
             "), " +
             "DataForPreviousDay AS (" +
             "   SELECT " +
-            "      DATEPART(HOUR, h.ngayTao) AS hour, " +
+            "      DATEPART(HOUR, h.ngaySua) AS hour, " +
             "      SUM(h.tongTien) AS tongTien " +
             "   FROM " +
             "      HoaDon h " +
             "   WHERE " +
             "      h.trangThai = 1 " +
-            "      AND CONVERT(DATE, h.ngayTao) = DATEADD(DAY, -1, CONVERT(DATE, :startDate))" +
+            "      AND CONVERT(DATE, h.ngaySua) = DATEADD(DAY, -1, CONVERT(DATE, :startDate))" +
             "   GROUP BY " +
-            "      DATEPART(HOUR, h.ngayTao)" +
+            "      DATEPART(HOUR, h.ngaySua)" +
             "), " +
             "AllHours AS (" +
             "   SELECT " +
@@ -115,14 +115,14 @@ public interface HoaDonWebRepository extends JpaRepository<HoaDon, String> {
     }
 
     @Query(value = "SELECT " +
-            "   DATEPART(YEAR, h.ngayTao) AS Nam, " +
+            "   DATEPART(YEAR, h.ngaySua) AS Nam, " +
             "   SUM(h.tongTien) AS TongDoanhThu " +
             "FROM " +
             "   HoaDon h " +
             "WHERE " +
             "   h.trangThai = 1 " +
             "GROUP BY " +
-            "   DATEPART(YEAR, h.ngayTao)", nativeQuery = true)
+            "   DATEPART(YEAR, h.ngaySua)", nativeQuery = true)
     List<Object[]> getSumTongTienByYear();
 
     HoaDon findByMaHoaDOn(String hoadon);
