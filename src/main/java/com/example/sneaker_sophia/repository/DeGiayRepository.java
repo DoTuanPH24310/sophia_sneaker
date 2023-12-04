@@ -27,6 +27,8 @@ public interface DeGiayRepository extends JpaRepository<DeGiay, UUID> {
 
     boolean existsDeGiayByMa(String ma);
     boolean existsDeGiayByTen(String ten);
+    DeGiay findByTen(String ten);
+
 
     DeGiay findDeGiayByTen(String ten);
     @Query(value = "SELECT DeGiay.*\n" +

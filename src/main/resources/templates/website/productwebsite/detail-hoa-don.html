@@ -178,7 +178,6 @@
                         <span th:text="${hoaDon.soDienThoai}"></span>
                     </div>
                 </div>
-
                 <div class="row mt-4">
                     <div class="col-1"></div>
                     <div class="col-6"><span
@@ -198,7 +197,13 @@
 
                 <div class="row mt-4">
                     <div class="col-1"></div>
-                    <div class="col-11" th:if="${hoaDon.trangThai == 6}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Lí do hủy:&nbsp;&nbsp;&nbsp;
+                    <div class="col-6">
+                        <div th:switch="${httt.trangThai}">
+                            <span th:case="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Loại giao dịch: &nbsp;&nbsp;&nbsp;Chuyển khoản</span>
+                            <span th:case="3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Loại giao dịch: &nbsp;&nbsp;&nbsp;Trả sau</span>
+                        </div>
+                    </div>
+                    <div class="col-5" th:if="${hoaDon.trangThai == 6}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Lí do hủy:&nbsp;&nbsp;&nbsp;
                         <span th:text="${hoaDon.ghiChu}"></span>
                     </div>
 
@@ -300,6 +305,10 @@
                                     <a th:href="@{/my-account/cancel/{idhd}(idhd=${hoaDon.id})}"
                                        class="btn btn-md btn-golden" id="CancelBill">Hủy đơn</a>
                                 </div>
+                                <div th:if="${hoaDon.trangThai == 2}" class="checkout_btn">
+                                    <a th:href="@{/my-account/cancel/{idhd}(idhd=${hoaDon.id})}"
+                                       class="btn btn-md btn-golden" id="CancelBill">Thanh toán Ngay</a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -329,6 +338,10 @@
 
 
     window.addEventListener('DOMContentLoaded', function () {
+        value = check('2');
+        if (value != null) {
+            fillTimeLine('icon1', 'text1', value, 'Chờ thanh toán', 'uil-comment-alt-question');
+        }
         value = check('3');
         if (value != null) {
             fillTimeLine('icon1', 'text1', value, 'Chờ Xác nhận', 'uil-comment-alt-question');

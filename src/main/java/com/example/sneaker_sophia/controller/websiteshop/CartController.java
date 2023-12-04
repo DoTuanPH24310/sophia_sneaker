@@ -168,9 +168,11 @@ public class CartController {
                                  @RequestParam("chiTietGiayId") UUID chiTietGiayId) {
         try {
             this.cartService.removeFromCart(gioHangId, chiTietGiayId);
+            alertInfo.alert("successOnline", "Đã xóa sản phẩm khỏi giỏ hàng.");
             return "redirect:/cart/hien-thi"; // Chuyển hướng về trang giỏ hàng hoặc trang khác
         } catch (Exception e) {
-            return "website/productwebsite/cart"; // Xử lý lỗi và chuyển hướng với thông báo lỗi
+            alertInfo.alert("errOnline", "Đã xóa sản phẩm khỏi giỏ hàng.");
+            return "website/productwebsite/cart";
         }
     }
 

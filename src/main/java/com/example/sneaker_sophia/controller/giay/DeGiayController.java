@@ -91,6 +91,19 @@ public class DeGiayController {
             alertInfo.alert("errTaiQuay", "Dữ liệu sai hoặc thiếu");
             return "admin/deGiay/form_deGiay_update";
         }
+//        if (this.deGiayRepository.existsDeGiayByMa(deGiayRequest.getMa())) {
+//            result.rejectValue("ma", "error.deGiayRequest", "Mã đế giày đã tồn tại. Vui lòng chọn mã khác.");
+//            alertInfo.alert("errTaiQuay", "Dữ liệu sai hoặc thiếu");
+//            return "admin/deGiay/form_deGiay";
+//        }
+
+        DeGiay existingDeGiayWithSameTen = this.deGiayRepository.findByTen(deGiayRequest.getTen());
+        if (existingDeGiayWithSameTen != null && !existingDeGiayWithSameTen.getId().equals(deGiay.getId())) {
+            // Ensure that the existing DeGiay found has a different ID than the one being updated
+            result.rejectValue("ten", "error.deGiayRequest", "Tên đế giày đã tồn tại. Vui lòng chọn tên khác.");
+            alertInfo.alert("errTaiQuay", "Dữ liệu sai hoặc thiếu");
+            return "admin/deGiay/form_deGiay";
+        }
         this.deGiayService.update(deGiay.getId(), deGiayRequest);
         alertInfo.alert("successTaiQuay", "Đã sửa thành công");
         return "redirect:/admin/deGiay/hien-thi";

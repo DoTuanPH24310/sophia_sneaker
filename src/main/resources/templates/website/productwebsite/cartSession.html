@@ -824,10 +824,7 @@
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                let icon = 'fa-solid fa-check-circle';
-                let title = 'Thành công!';
-                let text = "Đã xóa sản phẩm khỏi giỏ hàng.";
-                createToast(type, icon, title, text);
+
                 return response.text();
             })
             .then(data => {
@@ -836,11 +833,16 @@
                 if ($(".cart-table-wrapper tbody tr").length === 0) {
                     window.location.href = '/cart/hien-thi';
                 }
+                let type = 'success';
+                let icon = 'fa-solid fa-check-circle';
+                let title = 'Thành công!';
+                let text = "Đã xóa sản phẩm khỏi giỏ hàng.";
+                createToast(type, icon, title, text);
             })
             .catch(error => {
                 let type = 'error';
                 let icon = 'fa-solid fa-circle-exclamation';
-                let title = 'Hết hàng!';
+                let title = 'Có lỗi!';
                 let text = "Lỗi khi xóa sản phẩm.";
                 createToast(type, icon, title, text);
             });
@@ -861,21 +863,20 @@
                 if (!response.ok) {
                     throw new Error("Network response was not ok");
                 }
-                let icon = 'fa-solid fa-check-circle';
-                let title = 'Thành công!';
-                let text = "Đã xóa tất cả sản phẩm khỏi giỏ hàng.";
-                createToast(type, icon, title, text);
                 $(".cart-table-wrapper tbody tr").remove();
 
                 if ($(".cart-table-wrapper tbody tr").length === 0) {
                     window.location.href = "/cart/hien-thi";
-                    let type = 'success';
-
                 }
+                let type = 'success';
+                let icon = 'fa-solid fa-check-circle';
+                let title = 'Thành công!';
+                let text = "Đã xóa tất cả sản phẩm khỏi giỏ hàng.";
+                createToast(type, icon, title, text);
             } catch (error) {
                 let type = 'error';
                 let icon = 'fa-solid fa-circle-exclamation';
-                let title = 'Hết hàng!';
+                let title = 'Có lỗi!';
                 let text = "Lỗi khi xóa sản phẩm.";
                 createToast(type, icon, title, text);
             }

@@ -144,4 +144,8 @@ public class HoaDonService {
         return hoaDonRepository.countHoaDonByDateRange(ngayBatDau,ngayKetThuc);
     }
     // END thông kê
+
+    public List<HoaDon> findByTrangThaiAndKhachHang(Integer trangThai,String email){
+        return hoaDonRepository.findByTrangThaiAndKhachHang(trangThai,email);
+    }
 }

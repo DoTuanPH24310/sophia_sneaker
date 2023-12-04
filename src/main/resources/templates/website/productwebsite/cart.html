@@ -827,9 +827,18 @@
                     if ($(".cart-table-wrapper tbody tr").length === 0) {
                         window.location.href = "/cart/hien-thi";
                     }
+                    let type = 'success';
+                    let icon = 'fa-solid fa-check-circle';
+                    let title = 'Thành công!';
+                    let text = "Đã xóa tất cả sản phẩm khỏi giỏ hàng.";
+                    createToast(type, icon, title, text);
                 },
                 error: function (error) {
-                    console.error("Lỗi khi xóa tất cả: ", error);
+                    let type = 'error';
+                    let icon = 'fa-solid fa-circle-exclamation';
+                    let title = 'Có lỗi!';
+                    let text = "Lỗi khi xóa sản phẩm.";
+                    createToast(type, icon, title, text);
                 }
             });
         });

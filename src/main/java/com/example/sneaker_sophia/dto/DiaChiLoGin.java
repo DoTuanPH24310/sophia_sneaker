@@ -5,6 +5,7 @@ import com.example.sneaker_sophia.entity.TaiKhoan;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 @Getter
@@ -17,7 +18,7 @@ public class DiaChiLoGin {
     @NotBlank(message = "Vui lòng nhập tên người nhận")
     private String ten;
     @NotBlank(message = "Vui lòng nhập số điện thoại người nhận")
-
+    @Pattern(regexp = "0\\d{9}", message = "Số điện thoại không hợp lệ")
     private String sdt;
     @NotBlank(message = "Vui lòng nhập Địa chỉ cụ thể")
     private String diaChiCuThe;
