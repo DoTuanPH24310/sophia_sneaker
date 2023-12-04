@@ -6,25 +6,88 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>HONO - Multi Purpose HTML Template</title>
-
-
 </head>
+
+<body  layout:fragment="content2">
 <style>
-    img.img-fluid {
-        max-width: 260px;
-        max-height: 299px;
+    /* Thiết lập kích thước cố định cho hình ảnh */
+    .image-box {
+        width: 320px; /* Đặt kích thước chiều rộng của container */
+        height: 300px; /* Đặt kích thước chiều cao của container */
+        overflow: hidden;
     }
 
-    img {
-        max-width: 100%;
-        height: auto;
+    .img-fluid {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Giữ nguyên tỷ lệ khung hình */
+    }
+
+    .gray-scale-image {
+        /* Bạn có thể thêm hiệu ứng xám bằng cách sử dụng filter: grayscale(100%); */
+        filter: grayscale(100%);
+    }
+
+    .out-of-stock-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.7); /* Màu nền overlay, có thể điều chỉnh độ trong suốt tùy ý */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .circle {
+        width: 100px; /* Đặt kích thước hình tròn */
+        height: 100px; /* Đặt kích thước hình tròn */
+        background-color: red; /* Đặt màu nền hình tròn */
+        border-radius: 50%; /* Làm hình tròn */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .out-of-stock-text {
+        color: white; /* Màu chữ trong hình tròn */
+        margin: 0; /* Loại bỏ margin để chữ không bị dính vào mép hình tròn */
+    }
+
+    /* Optional: Thiết lập margin hoặc padding cho mỗi product container nếu cần thiết */
+    #product-container {
+        margin-bottom: 20px; /* Ví dụ: Đặt margin dưới cho mỗi product container */
+    }
+    .page-pagination ul li.active a {
+        /* Màu cho trang đã chọn */
+        background-color: #B19361!important;
+        color: #fff!important;
+        /* Các thuộc tính khác tùy thuộc vào thiết kế của bạn */
+    }
+
+    .page-pagination ul li a {
+        /* Màu cho các trang không được chọn */
+        background-color: #fff!important;
+        color: #000!important;
+        /* Các thuộc tính khác tùy thuộc vào thiết kế của bạn */
+    }
+
+    .sidebar-content::-webkit-scrollbar {
+        width: 6px; /* Đặt chiều rộng của thanh cuộn */
+    }
+
+    .sidebar-content::-webkit-scrollbar-thumb {
+        background-color: #B19361; /* Màu nền của thanh cuộn */
+        border-radius: 4px; /* Độ cong của góc thanh cuộn */
+    }
+
+    .sidebar-content::-webkit-scrollbar-track {
+        background-color: #f1f1f1; /* Màu nền của phần dưới thanh cuộn */
+        border-radius: 4px; /* Độ cong của góc phần dưới thanh cuộn */
     }
 
 </style>
-<body  layout:fragment="content2">
-<!-- Start Header Area -->
-<!-- Start Header Area -->
-
 <!-- Start Mobile Header -->
 <div class="mobile-header mobile-header-bg-color--golden section-fluid d-lg-block d-xl-none">
     <div class="container">
@@ -357,7 +420,7 @@
                         <!-- Start Single Sidebar Widget -->
                         <div class="sidebar-single-widget">
                             <h6 class="sidebar-title">HÃNG</h6>
-                            <div class="sidebar-content">
+                            <div class="sidebar-content" style="max-height: 150px;overflow-y: auto;">
                                 <ul class="sidebar-menu">
                                     <li th:each="hang : ${danhSachHang}">
                                         <label class="checkbox-default" th:id="'checkbox-' + ${hang.ten}">
@@ -369,12 +432,12 @@
                                     </li>
                                 </ul>
                             </div>
-                        </div> <!-- End Single Sidebar Widget -->
-
+                        </div>
+                        <!-- End Single Sidebar Widget -->
                         <!-- Start Single Sidebar Widget -->
                         <div class="sidebar-single-widget">
                             <h6 class="sidebar-title">GIÁ</h6>
-                            <div class="sidebar-content">
+                            <div class="sidebar-content" style="max-height: 150px;overflow-y: auto;">
                                 <label class="checkbox-default">
                                     <input type="checkbox" data-name="price" name="minPrice" value="0-1"
                                            th:checked="${minPrice != null and #lists.contains(minPrice, '0-1')}" style="padding-right: 200px">
@@ -411,7 +474,7 @@
 
                         <div class="sidebar-single-widget">
                             <h6 class="sidebar-title">Giày</h6>
-                            <div class="sidebar-content">
+                            <div class="sidebar-content" style="max-height: 150px;overflow-y: auto;">
                                 <div class="filter-type-select">
                                     <ul>
                                         <li th:each="giay : ${danhSachGiay}">
@@ -430,7 +493,7 @@
 
                         <div class="sidebar-single-widget">
                             <h6 class="sidebar-title">THỂ LOẠI</h6>
-                            <div class="sidebar-content">
+                            <div class="sidebar-content" style="max-height: 150px;overflow-y: auto;">
                                 <div class="filter-type-select">
                                     <ul>
                                         <li th:each="loai : ${danhSachLoaiGiay}">
@@ -450,7 +513,7 @@
                         <!-- Start Single Sidebar Widget -->
                         <div class="sidebar-single-widget">
                             <h6 class="sidebar-title">ĐẾ GIÀY</h6>
-                            <div class="sidebar-content">
+                            <div class="sidebar-content" style="max-height: 150px;overflow-y: auto;">
                                 <div class="filter-type-select">
                                     <ul>
                                         <li th:each="de : ${danhSachDeGiay}">
@@ -469,7 +532,7 @@
 
                         <div class="sidebar-single-widget">
                             <h6 class="sidebar-title">SIZE</h6>
-                            <div class="sidebar-content">
+                            <div class="sidebar-content" style="max-height: 150px;overflow-y: auto;">
                                 <div class="filter-type-select">
                                     <ul>
                                         <li th:each="size : ${danhSachKichCo}">
@@ -489,7 +552,7 @@
                         <!-- Start Single Sidebar Widget -->
                         <div class="sidebar-single-widget">
                             <h6 class="sidebar-title">MÀU SẮC</h6>
-                            <div class="sidebar-content">
+                            <div class="sidebar-content" style="max-height: 150px;overflow-y: auto;">
                                 <div class="filter-type-select">
                                     <ul>
                                         <li th:each="mau : ${danhSachMauSac}">
@@ -536,7 +599,7 @@
 
                                     <!-- Start Page  -->
                                     <div class="page-amount ml-2">
-                                        <span>Showing 1–9 of <span th:text="${danhSachProduct.size()}"></span> results</span>
+                                        <span>Đang xem từ 1 - <span th:text="${danhSachProduct.size()}"></span> kết quả</span>
                                     </div>
                                 </div> <!-- End Sort tab Button -->
                             </div> <!-- Start Sort Wrapper Box -->
@@ -560,15 +623,27 @@
                                                      data-aos="fade-up" data-aos-delay="0">
                                                     <div class="image-box">
                                                         <a th:href="@{'/sophia-store/detail/' + ${product.getId()}}" class="image-link">
+                                                            <!-- Hiển thị ảnh sản phẩm -->
                                                             <img class="img-fluid"
                                                                  th:src="@{${product.anhs.get(0).getDuongDan()}}"
-                                                                 style="width: 260px; height: 260px"
-                                                                 alt="">
+                                                                 alt=""
+                                                                 th:classappend="${product.soLuong == 0} ? 'gray-scale-image' : ''">
+
+                                                            <!-- Hiển thị ảnh phụ (nếu cần) -->
                                                             <img class="img-fluid"
                                                                  th:src="@{${product.anhs.get(1).getDuongDan()}}"
-                                                                 style="width: 260px; height: 260px"
-                                                                 alt="">
+                                                                 alt=""
+                                                                 th:classappend="${product.soLuong == 0} ? 'gray-scale-image' : ''">
+
+                                                            <!-- Hiển thị overlay khi sản phẩm hết hàng -->
+                                                            <div th:if="${product.soLuong == 0}" class="out-of-stock-overlay">
+                                                                <!-- Chữ Hết hàng nằm trong một thẻ div hình tròn -->
+                                                                <div class="circle">
+                                                                    <p class="out-of-stock-text">Hết hàng</p>
+                                                                </div>
+                                                            </div>
                                                         </a>
+
                                                         <div class="action-link">
                                                             <div class="action-link-left">
                                                                 <a class="add-to-cart"
@@ -587,18 +662,6 @@
                                                                     th:href="@{'/sophia-store/detail/' + ${product.getId()}}"
                                                                     th:text="${product.hang.ten + ' ' + product.giay.ten + ' ' + product.loaiGiay.ten + ' ' + product.mauSac.ten}"></a>
                                                             </h6>
-                                                            <ul class="review-star">
-                                                                <li class="fill"><i class="ion-android-star"></i>
-                                                                </li>
-                                                                <li class="fill"><i class="ion-android-star"></i>
-                                                                </li>
-                                                                <li class="fill"><i class="ion-android-star"></i>
-                                                                </li>
-                                                                <li class="fill"><i class="ion-android-star"></i>
-                                                                </li>
-                                                                <li class="empty"><i class="ion-android-star"></i>
-                                                                </li>
-                                                            </ul>
                                                         </div>
                                                         <div class="content-right">
                                                             <div class="content-right">
@@ -633,29 +696,33 @@
                                             <div class="col-12" th:each="product : ${danhSachProduct}">
                                                 <!-- Start Product Defautlt Single -->
                                                 <div class="product-list-single product-color--golden">
-                                                    <a th:href="@{'/sophia-store/detail/' + ${product.getId()}}"
-                                                       class="product-list-img-link">
+                                                    <a th:href="@{'/sophia-store/detail/' + ${product.getId()}}" class="product-list-img-link">
+                                                        <!-- Hiển thị ảnh sản phẩm -->
                                                         <img class="img-fluid"
                                                              th:src="@{${product.anhs.get(0).getDuongDan()}}"
-                                                             style="width: 260px; height: 260px"
-                                                             alt="">
+                                                             alt=""
+                                                             th:classappend="${product.soLuong == 0} ? 'gray-scale-image' : ''">
+
+                                                        <!-- Hiển thị ảnh phụ (nếu cần) -->
                                                         <img class="img-fluid"
                                                              th:src="@{${product.anhs.get(1).getDuongDan()}}"
-                                                             style="width: 260px; height: 260px"
-                                                             alt="">
+                                                             alt=""
+                                                             th:classappend="${product.soLuong == 0} ? 'gray-scale-image' : ''">
+
+                                                        <!-- Hiển thị overlay khi sản phẩm hết hàng -->
+                                                        <div th:if="${product.soLuong == 0}" class="out-of-stock-overlay">
+                                                            <!-- Chữ Hết hàng nằm trong một thẻ div hình tròn -->
+                                                            <div class="circle">
+                                                                <p class="out-of-stock-text">Hết hàng</p>
+                                                            </div>
+                                                        </div>
                                                     </a>
+
                                                     <div class="product-list-content">
                                                         <h5 class="product-list-link"><a
                                                                 th:href="@{'/sophia-store/detail/' + ${product.getId()}}"
                                                                 th:text="${product.hang.ten + ' ' + product.giay.ten + ' ' + product.loaiGiay.ten + ' ' + product.mauSac.ten}"></a>
                                                         </h5>
-                                                        <ul class="review-star">
-                                                            <li class="fill"><i class="ion-android-star"></i></li>
-                                                            <li class="fill"><i class="ion-android-star"></i></li>
-                                                            <li class="fill"><i class="ion-android-star"></i></li>
-                                                            <li class="fill"><i class="ion-android-star"></i></li>
-                                                            <li class="empty"><i class="ion-android-star"></i></li>
-                                                        </ul>
                                                         <span th:if="${session['giaCu_' + product.id] != session['giaMoi_' + product.id]}"
                                                               class="original-price"
                                                               style="text-decoration: line-through; color: red; font-size: 13px"
@@ -666,7 +733,7 @@
 
                                                         <span th:unless="${session['giaCu_' + product.id] != session['giaMoi_' + product.id]}"
                                                               th:text="${#numbers.formatCurrency(session['giaCu_' + product.id])}"></span>
-                                                        <p th:text="${product.moTa}"></p>
+                                                        <p th:text="${product.moTa}" style="width: 700px"></p>
                                                         <div class="product-action-icon-link-list">
                                                             <a th:attr="data-product-id=${product.getId()}"
                                                                class="btn btn-lg btn-black-default-hover">Thêm vào giỏ</a>
@@ -688,18 +755,61 @@
 
                     <!-- Start Pagination -->
                     <div class="page-pagination text-center" data-aos="fade-up" data-aos-delay="0">
-                        <ul>
-                            <li th:with="previousPage=${currentPage - 1}" th:if="${previousPage > 0}">
-                                <a th:href="@{'/sophia-store/product?page=' + previousPage}">Previous</a>
-                            </li>
-                            <li th:each="pageNumber : ${#numbers.sequence(1, totalPages)}" th:class="${pageNumber} == ${currentPage} ? 'active'">
-                                <a th:href="@{'/sophia-store/product?page=' + ${pageNumber}}" th:text="${pageNumber}"></a>
-                            </li>
-                            <li th:with="nextPage=${currentPage + 1}" th:if="${nextPage <= totalPages}">
-                                <a th:href="@{'/sophia-store/product?page=' + ${nextPage}}">Next</a>
-                            </li>
-                        </ul>
+                        <form id="paginationForm" method="get" action="/sophia-store/product">
+                            <ul>
+                                <li th:with="previousPage=${currentPage - 1}" th:if="${previousPage > 0}">
+                                    <a href="#" th:attr="onclick='changePage(${previousPage})'">Previous</a>
+                                </li>
+                                <li th:each="pageNumber : ${#numbers.sequence(1, totalPages)}" th:class="${pageNumber} == ${currentPage} ? 'active' : ''">
+                                    <a href="#" th:attr="onclick='changePage(${pageNumber})'" th:text="${pageNumber}"></a>
+                                </li>
+                                <li th:if="${currentPage < totalPages}">
+                                    <a href="#" th:attr="onclick='changePage(${nextPage})'">Next</a>
+                                </li>
+                            </ul>
+                            <input type="hidden" name="page" id="currentPage" th:value="${currentPage}">
+                            <input type="hidden" name="giayIds" id="giayIds" th:value="${giayTen}">
+                            <input type="hidden" name="hangIds" id="hangIds" th:value="${hangTen}">
+                            <input type="hidden" name="kichCoIds" id="kichCoIds" th:value="${kichCoTen}">
+                            <input type="hidden" name="deGiayIds" id="deGiayIds" th:value="${deGiayTen}">
+                            <input type="hidden" name="loaiGiayIds" id="loaiGiayIds" th:value="${loaiGiayTen}">
+                            <input type="hidden" name="mauSacIds" id="mauSacIds" th:value="${mauSacTen}">
+                            <input type="hidden" name="minPrice" id="minPrice" th:value="${minPrice}">
+                        </form>
                     </div>
+
+                    <script>
+                            function changePage(newPage) {
+                                // Lấy giá trị của các tham số từ URL
+                                var params = new URLSearchParams(window.location.search);
+                                var sortField = params.get('sortField');
+                                var giayIds = params.get('giayIds');
+                                var kichCoIds = params.get('kichCoIds');
+                                var hangIds = params.get('hangIds');
+                                var deGiayIds = params.get('deGiayIds');
+                                var loaiGiayIds = params.get('loaiGiayIds');
+                                var mauSacIds = params.get('mauSacIds');
+                                var minPrice = params.get('minPrice');
+
+                                // Cập nhật giá trị của page
+                                document.getElementById("currentPage").value = newPage;
+
+                                // Cập nhật giá trị của các tham số ẩn
+                                document.getElementById("sortField").value = sortField;
+                                document.getElementById("hangIds").value = hangIds;
+                                document.getElementById("kichCoIds").value = kichCoIds;
+                                document.getElementById("deGiayIds").value = deGiayIds;
+                                document.getElementById("loaiGiayIds").value = loaiGiayIds;
+                                document.getElementById("mauSacIds").value = mauSacIds;
+                                document.getElementById("minPrice").value = minPrice;
+                                document.getElementById("giayIds").value = giayIds;
+
+                                // Submit form
+                                console.log('Change page:', newPage);
+                                document.getElementById("paginationForm").submit();
+
+                        }
+                    </script>
                     <!-- End Pagination -->
                 </div>
             </div>
@@ -934,10 +1044,7 @@
             </div>
         </div>
     </div> <!-- End Modal Quickview cart -->
+    <script src="/assets/js/main.js"></script>
 </div>
-
-
 </body>
-
-
 </html>

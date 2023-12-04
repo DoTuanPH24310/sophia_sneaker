@@ -15,13 +15,13 @@ import java.util.UUID;
 
 @Repository
 public interface GiayRepository extends JpaRepository<Giay, UUID> {
-    @Query(value = "select * from Giay", nativeQuery = true)
+    @Query("SELECT g FROM Giay g WHERE g.trangThai IN (0, 1)")
     Page<Giay> getAll(Pageable pageable);
 
-    @Query("SELECT g FROM Giay g WHERE g.ten LIKE %:txtSearch%")
+    @Query("SELECT g FROM Giay g WHERE g.ten LIKE %:txtSearch% AND g.trangThai IN (0, 1)")
     Page<Giay> searchWithoutTrangThai(@Param("txtSearch") String txtSearch, Pageable pageable);
 
-    @Query("SELECT g FROM Giay g WHERE g.ten LIKE %:txtSearch% AND (g.trangThai = :trangThai OR :trangThai IS NULL)")
+    @Query("SELECT g FROM Giay g WHERE g.ten LIKE %:txtSearch% AND g.trangThai = :trangThai")
     Page<Giay> searchAndFilter(@Param("txtSearch") String txtSearch, @Param("trangThai") String trangThai, Pageable pageable);
 
     @Query(value = "select LOWER(id) from Giay where trangThai= ?1",nativeQuery = true)
@@ -34,6 +34,7 @@ public interface GiayRepository extends JpaRepository<Giay, UUID> {
     List<Giay> findAllByTrangThaiEquals(int trangThai);
 
     boolean existsGiayByMa(String ma);
+    boolean existsGiayByTen(String ten);
 
     Giay findGiayByTen(String ten);
 

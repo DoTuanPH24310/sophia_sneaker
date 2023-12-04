@@ -2,7 +2,9 @@ package com.example.sneaker_sophia.controller.giay;
 
 import com.example.sneaker_sophia.dto.LoaiGiayRequest;
 import com.example.sneaker_sophia.entity.LoaiGiay;
+import com.example.sneaker_sophia.repository.LoaiGiayRepository;
 import com.example.sneaker_sophia.service.LoaiGiayService2;
+import com.example.sneaker_sophia.validate.AlertInfo;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,7 +22,10 @@ import java.util.Optional;
 public class LoaiGiayController {
     @Autowired
     private LoaiGiay loaiGiay;
-
+    @Autowired
+    private AlertInfo alertInfo;
+    @Autowired
+    private LoaiGiayRepository loaiGiayRepository;
     @Autowired
     private LoaiGiayService2 loaiGiayService2;
 
@@ -49,9 +54,23 @@ public class LoaiGiayController {
     @PostMapping("add")
     private String add(@Valid @ModelAttribute("data") LoaiGiayRequest loaiGiayRequest, BindingResult result) {
         if (result.hasErrors()) {
+            alertInfo.alert("errTaiQuay", "Dữ liệu sai hoặc thiếu");
+            return "admin/loaiGiay/form_loaiGiay";
+        }
+        if (this.loaiGiayRepository.existsLoaiGiayByMa(loaiGiayRequest.getMa())) {
+            result.rejectValue("ma", "error.loaiGiayRequest", "Mã loại giày đã tồn tại. Vui lòng chọn mã khác.");
+            alertInfo.alert("errTaiQuay", "Dữ liệu sai hoặc thiếu");
+            return "admin/loaiGiay/form_loaiGiay";
+        }
+
+        // Check for existing Giay with the same ten (name)
+        if(this.loaiGiayRepository.existsLoaiGiayByTen(loaiGiayRequest.getTen())){
+            result.rejectValue("ten", "error.loaiGiayRequest", "Tên loại giày đã tồn tại. Vui lòng chọn tên khác.");
+            alertInfo.alert("errTaiQuay", "Dữ liệu sai hoặc thiếu");
             return "admin/loaiGiay/form_loaiGiay";
         }
         this.loaiGiayService2.add(loaiGiayRequest);
+        alertInfo.alert("successTaiQuay", "Đã thêm thành công");
         return "redirect:/admin/loaiGiay/hien-thi";
     }
 
@@ -67,15 +86,18 @@ public class LoaiGiayController {
     private String update(@PathVariable("id") LoaiGiay loaiGiay, @Valid @ModelAttribute("data") LoaiGiayRequest loaiGiayRequest, BindingResult result, Model model){
         if(result.hasErrors()){
             model.addAttribute("action", "/admin/loaiGiay/update/" +loaiGiay.getId());
+            alertInfo.alert("errTaiQuay", "Dữ liệu sai hoặc thiếu");
             return "admin/loaiGiay/form_loaiGiay_update";
         }
         this.loaiGiayService2.update(loaiGiay.getId(), loaiGiayRequest);
+        alertInfo.alert("successTaiQuay", "Đã sửa thành công");
         return "redirect:/admin/loaiGiay/hien-thi";
     }
 
     @GetMapping("delete/{id}")
     private String delete(@PathVariable("id") LoaiGiay loaiGiay){
         this.loaiGiayService2.delete(loaiGiay.getId());
+        alertInfo.alert("successTaiQuay", "Đã xóa thành công");
         return "redirect:/admin/loaiGiay/hien-thi";
     }
 }

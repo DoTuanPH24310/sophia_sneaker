@@ -1,6 +1,4 @@
-@charset "UTF-8";
-@import url(https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&amp;display=swap);
-/*!
+@charset "UTF-8";@import url(https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&amp;display=swap);/*!
  * Bootstrap v5.0.0-alpha2 (https://getbootstrap.com/)
  * Copyright 2011-2020 The Bootstrap Authors
  * Copyright 2011-2020 Twitter, Inc.
@@ -15772,6 +15770,57 @@ input {
     opacity: 0
 }
 
+.product-default-single-item .image-link img.gray-scale-image {
+    filter: grayscale(100%);
+}
+
+/* Thêm hiệu ứng khi hết hàng */
+.product-default-single-item .image-link img.gray-scale-image:nth-child(2) {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+}
+.product-default-single-item .image-link .out-of-stock-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+
+.product-default-single-item .image-link .out-of-stock-overlay .circle {
+    width: 80px; /* Đường kính của hình tròn */
+    height: 80px;
+    background-color: #fff; /* Màu nền của hình tròn */
+    border-radius: 50%; /* Để tạo hình tròn */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.product-default-single-item .image-link .out-of-stock-overlay .out-of-stock-text {
+    color: red; /* Màu chữ khi sản phẩm hết hàng */
+    font-weight: bold;
+    font-size: 14px;
+    margin: 0; /* Loại bỏ margin để chữ không bị lệch */
+}
+
+/* Ảnh mờ khi sản phẩm hết hàng */
+.product-default-single-item .image-link .out-of-stock-overlay img.gray-scale-image {
+    filter: blur(5px); /* Hiệu ứng mờ */
+}
+
+.product-default-single-item .image-link:hover .out-of-stock-overlay {
+    display: flex;
+}
+
+
 .product-default-single-item .tag span {
     position: absolute;
     display: inline-block;
@@ -15968,6 +16017,53 @@ input {
     height: 100%;
     opacity: 0
 }
+
+.product-list-single .product-list-img-link .out-of-stock-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+
+.product-list-single .product-list-img-link .out-of-stock-overlay .circle {
+    width: 80px; /* Đường kính của hình tròn */
+    height: 80px;
+    background-color: #fff; /* Màu nền của hình tròn */
+    border-radius: 50%; /* Để tạo hình tròn */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.product-list-single .product-list-img-link .out-of-stock-overlay .out-of-stock-text {
+    color: red; /* Màu chữ khi sản phẩm hết hàng */
+    font-weight: bold;
+    font-size: 14px;
+    margin: 0; /* Loại bỏ margin để chữ không bị lệch */
+}
+
+.product-list-single .product-list-img-link img.gray-scale-image {
+    filter: grayscale(100%);
+}
+
+.product-list-single .product-list-img-link img.gray-scale-image:nth-child(2) {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+}
+
+
+.product-list-single .product-list-img-link:hover .out-of-stock-overlay {
+    display: flex;
+}
+
 
 .product-list-content {
     margin-left: 0;

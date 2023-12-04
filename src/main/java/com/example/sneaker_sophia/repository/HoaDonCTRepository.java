@@ -15,6 +15,7 @@ public interface HoaDonCTRepository extends JpaRepository<HoaDonChiTiet, String>
 
     @Query(value = "select hdct from HoaDonChiTiet hdct where hdct.chiTietGiay.id = ?1 and hdct.hoaDon.id = ?2")
     HoaDonChiTiet getHDCTByIdCTSP(UUID idctsp, String idhd);
+
     //29-10
     @Query(value = "select sum(((hdct.donGia * (1- ((hdct.phanTramGiam) / 100.0)) * hdct.soLuongGiam)\n" +
             "                                              + (hdct.donGia * (hdct.soLuong - hdct.soLuongGiam)))) " +
@@ -33,5 +34,9 @@ public interface HoaDonCTRepository extends JpaRepository<HoaDonChiTiet, String>
             "ORDER BY soLanXuatHien DESC")
     List<Object[]> findTop10IdChiTietGiay();
 
+
+    //thống kê
+    @Query("SELECT SUM(ctg.soLuong) FROM HoaDonChiTiet ctg WHERE ctg.hoaDon.trangThai = 1")
+    Integer sumSoLuongByHoaDonTrangThaiEquals1();
 
 }

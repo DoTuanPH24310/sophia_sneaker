@@ -1,5 +1,6 @@
 package com.example.sneaker_sophia.repository;
 
+import com.example.sneaker_sophia.entity.Giay;
 import com.example.sneaker_sophia.entity.LoaiGiay;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -13,14 +14,17 @@ import java.util.UUID;
 
 @Repository
 public interface LoaiGiayRepository extends JpaRepository<LoaiGiay, UUID> {
-    @Query(value = "select * from LoaiGiay", nativeQuery = true)
+    @Query("SELECT g FROM LoaiGiay g WHERE g.trangThai IN (0, 1)")
     Page<LoaiGiay> getAll(Pageable pageable);
 
-    @Query("SELECT g FROM LoaiGiay g WHERE g.ten LIKE %:txtSearch%")
+    @Query("SELECT g FROM LoaiGiay g WHERE g.ten LIKE %:txtSearch% AND g.trangThai IN (0, 1)")
     Page<LoaiGiay> searchWithoutTrangThai(@Param("txtSearch") String txtSearch, Pageable pageable);
 
-    @Query("SELECT g FROM LoaiGiay g WHERE g.ten LIKE %:txtSearch% AND (g.trangThai = :trangThai OR :trangThai IS NULL)")
+    @Query("SELECT g FROM LoaiGiay g WHERE g.ten LIKE %:txtSearch% AND g.trangThai = :trangThai")
     Page<LoaiGiay> searchAndFilter(@Param("txtSearch") String txtSearch, @Param("trangThai") String trangThai, Pageable pageable);
+
+    boolean existsLoaiGiayByMa(String ma);
+    boolean existsLoaiGiayByTen(String ten);
 
     LoaiGiay findLoaiGiayByTen(String ten);
 

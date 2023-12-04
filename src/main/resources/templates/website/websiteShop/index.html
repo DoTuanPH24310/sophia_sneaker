@@ -13,6 +13,85 @@
 </head>
 
 <body layout:fragment="content2">
+<style>
+    /* Thiết lập kích thước cố định cho hình ảnh */
+    .image-box {
+        width: 320px; /* Đặt kích thước chiều rộng của container */
+        height: 300px; /* Đặt kích thước chiều cao của container */
+        overflow: hidden;
+    }
+
+    .img-fluid {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Giữ nguyên tỷ lệ khung hình */
+    }
+
+    .gray-scale-image {
+        /* Bạn có thể thêm hiệu ứng xám bằng cách sử dụng filter: grayscale(100%); */
+        filter: grayscale(100%);
+    }
+
+    .out-of-stock-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.7); /* Màu nền overlay, có thể điều chỉnh độ trong suốt tùy ý */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .circle {
+        width: 100px; /* Đặt kích thước hình tròn */
+        height: 100px; /* Đặt kích thước hình tròn */
+        background-color: red; /* Đặt màu nền hình tròn */
+        border-radius: 50%; /* Làm hình tròn */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .out-of-stock-text {
+        color: white; /* Màu chữ trong hình tròn */
+        margin: 0; /* Loại bỏ margin để chữ không bị dính vào mép hình tròn */
+    }
+
+    /* Optional: Thiết lập margin hoặc padding cho mỗi product container nếu cần thiết */
+    #product-container {
+        margin-bottom: 20px; /* Ví dụ: Đặt margin dưới cho mỗi product container */
+    }
+    .page-pagination ul li.active a {
+        /* Màu cho trang đã chọn */
+        background-color: #B19361!important;
+        color: #fff!important;
+        /* Các thuộc tính khác tùy thuộc vào thiết kế của bạn */
+    }
+
+    .page-pagination ul li a {
+        /* Màu cho các trang không được chọn */
+        background-color: #fff!important;
+        color: #000!important;
+        /* Các thuộc tính khác tùy thuộc vào thiết kế của bạn */
+    }
+
+    .sidebar-content::-webkit-scrollbar {
+        width: 6px; /* Đặt chiều rộng của thanh cuộn */
+    }
+
+    .sidebar-content::-webkit-scrollbar-thumb {
+        background-color: #B19361; /* Màu nền của thanh cuộn */
+        border-radius: 4px; /* Độ cong của góc thanh cuộn */
+    }
+
+    .sidebar-content::-webkit-scrollbar-track {
+        background-color: #f1f1f1; /* Màu nền của phần dưới thanh cuộn */
+        border-radius: 4px; /* Độ cong của góc phần dưới thanh cuộn */
+    }
+
+</style>
 <!-- Start Header Area -->
 <div class="mobile-header mobile-header-bg-color--golden section-fluid d-lg-block d-xl-none">
     <div class="container">
@@ -426,9 +505,9 @@
                         <div class="row">
                             <div class="col-auto">
                                 <div class="hero-slider-content">
-                                    <h4 class="subtitle">New collection</h4>
+                                    <h4 class="subtitle">Bộ sưu tập mới</h4>
                                     <h1 class="title" style="margin-top: -500px">Hàng loạt các mẫu <br> NYC mới</h1>
-                                    <a href="../product-details-default.html" class="btn btn-lg btn-pink">shop now </a>
+                                    <a href="../product-details-default.html" class="btn btn-lg btn-pink">Mua ngay </a>
                                 </div>
                             </div>
                         </div>
@@ -439,7 +518,8 @@
             <div class="hero-single-slider-item swiper-slide">
                 <!-- Hero Slider Image -->
                 <div class="hero-slider-bg">
-                    <img src="https://tship.vn/UserUpload/Editor/2-19.jpg" alt="">
+                    <img src="https://www.elle.vn/wp-content/uploads/2020/10/28/421134/converse-renew-chuck-70-10.jpg"
+                         alt="">
                 </div>
                 <!-- Hero Slider Content -->
                 <div class="hero-slider-wrapper">
@@ -447,9 +527,9 @@
                         <div class="row">
                             <div class="col-auto">
                                 <div class="hero-slider-content">
-                                    <h4 class="subtitle">New collection</h4>
-                                    <h1 class="title">Best Of HiFi <br> Loud Speaker</h1>
-                                    <a href="../product-details-default.html" class="btn btn-lg btn-pink">shop now </a>
+                                    <h4 class="subtitle">Bộ sưu tập mới</h4>
+                                    <h1 class="title" style="margin-top: -500px">Renew<br>Chuck 70</h1>
+                                    <a href="../product-details-default.html" class="btn btn-lg btn-pink">Mua ngay </a>
                                 </div>
                             </div>
                         </div>
@@ -485,7 +565,6 @@
                                 nhà bán lẻ hàng đầu!</p>
                         </div>
                     </div>
-                </div>
                 </div>
                 <!-- End Service Promo Single Item -->
                 <!-- Start Service Promo Single Item -->
@@ -669,12 +748,26 @@
                                 <div class="product-default-single-item product-color--pink swiper-slide"
                                      th:each="product : ${products}">
                                     <div class="image-box">
-                                        <a th:href="@{'/sophia-store/detail/'+${product.getId()}}"
-                                           class="image-link">
-                                            <img th:src="@{${product.anhs.get(0).getDuongDan()}}"
-                                                 style="width: 320px; height: 370px" class="img-fluid" alt=""/>
-                                            <img th:src="@{${product.anhs.get(1).getDuongDan()}}"
-                                                 style="width: 320px; height: 370px" class="img-fluid" alt=""/>
+                                        <a th:href="@{'/sophia-store/detail/' + ${product.getId()}}" class="image-link">
+                                            <!-- Hiển thị ảnh sản phẩm -->
+                                            <img class="img-fluid"
+                                                 th:src="@{${product.anhs.get(0).getDuongDan()}}"
+                                                 alt=""
+                                                 th:classappend="${product.soLuong == 0} ? 'gray-scale-image' : ''">
+
+                                            <!-- Hiển thị ảnh phụ (nếu cần) -->
+                                            <img class="img-fluid"
+                                                 th:src="@{${product.anhs.get(1).getDuongDan()}}"
+                                                 alt=""
+                                                 th:classappend="${product.soLuong == 0} ? 'gray-scale-image' : ''">
+
+                                            <!-- Hiển thị overlay khi sản phẩm hết hàng -->
+                                            <div th:if="${product.soLuong == 0}" class="out-of-stock-overlay">
+                                                <!-- Chữ Hết hàng nằm trong một thẻ div hình tròn -->
+                                                <div class="circle">
+                                                    <p class="out-of-stock-text">Hết hàng</p>
+                                                </div>
+                                            </div>
                                         </a>
                                         <div class="tag">
                                             <span>sale</span>
@@ -682,15 +775,8 @@
                                         <div class="action-link">
                                             <div class="action-link-left">
                                                 <a class="add-to-cart" th:attr="data-product-id=${product.getId()}"
-                                                   data-bs-toggle="modal" data-bs-target="#modalAddcart" href="#">Thêm vào giỏ</a>
+                                                   href="#">Thêm vào giỏ</a>
                                             </div>
-<!--                                            <div class="action-link-right">-->
-<!--                                                <a href="#" data-bs-toggle="modal"-->
-<!--                                                   data-bs-target="#modalQuickview"><i-->
-<!--                                                        class="icon-magnifier"></i></a>-->
-<!--                                                <a href="../wishlist.html"><i class="icon-heart"></i></a>-->
-<!--                                                <a href="../compare.html"><i class="icon-shuffle"></i></a>-->
-<!--                                            </div>-->
                                         </div>
                                     </div>
                                     <div class="content">
@@ -730,13 +816,10 @@
                 </div>
             </div>
             <!-- If we need navigation buttons -->
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev" style="margin-left: -50px"></div>
+            <div class="swiper-button-next" style="margin-right: -50px"></div>
         </div>
     </div>
-</div>
-</div>
-</div>
 </div>
 <!-- End Product Default Slider Section -->
 
@@ -749,7 +832,9 @@
                 <div class="banner-single-item banner-style-3 banner-animation img-responsive" data-aos="fade-up"
                      data-aos-delay="0">
                     <div class="image" style="width: 930px; height: 620px">
-                        <img class="img-fluid" src="https://file.hstatic.net/200000174405/collection/19238246_1997064527179566_5473797071884482645_o_ff15685be80c4d21973dcb914398e04f.jpg" alt="">
+                        <img class="img-fluid"
+                             src="https://file.hstatic.net/200000174405/collection/19238246_1997064527179566_5473797071884482645_o_ff15685be80c4d21973dcb914398e04f.jpg"
+                             alt="">
                     </div>
                     <div class="content">
                         <h3 class="title" style="color: white">Bộ sưu tập giày hiện đại</h3>
@@ -792,31 +877,42 @@
                         <!-- Slider main container -->
                         <div class="swiper-container product-default-slider-4grid-1row">
                             <!-- Additional required wrapper -->
-                            <div class="swiper-wrapper" >
-                                <div class="product-default-single-item product-color--golden swiper-slide" th:each="products : ${chiTietGiays}">
+                            <div class="swiper-wrapper">
+                                <div class="product-default-single-item product-color--golden swiper-slide"
+                                     th:each="products : ${chiTietGiays}">
                                     <div class="image-box">
-                                        <a th:href="@{'/sophia-store/detail/' + ${products.getId()}}" class="image-link">
+                                        <a th:href="@{'/sophia-store/detail/' + ${products.getId()}}"
+                                           class="image-link">
                                             <img class="img-fluid"
                                                  th:src="@{${products.anhs.get(0).getDuongDan()}}"
-                                                 style="width: 260px; height: 260px"
-                                                 alt="">
+                                                 alt=""
+                                                 th:classappend="${products.soLuong == 0} ? 'gray-scale-image' : ''">
+
+                                            <!-- Hiển thị ảnh phụ (nếu cần) -->
                                             <img class="img-fluid"
                                                  th:src="@{${products.anhs.get(1).getDuongDan()}}"
-                                                 style="width: 260px; height: 260px"
-                                                 alt="">
+                                                 alt=""
+                                                 th:classappend="${products.soLuong == 0} ? 'gray-scale-image' : ''">
+
+                                            <!-- Hiển thị overlay khi sản phẩm hết hàng -->
+                                            <div th:if="${products.soLuong == 0}" class="out-of-stock-overlay">
+                                                <!-- Chữ Hết hàng nằm trong một thẻ div hình tròn -->
+                                                <div class="circle">
+                                                    <p class="out-of-stock-text">Hết hàng</p>
+                                                </div>
+                                            </div>
                                         </a>
                                         <div class="action-link">
-                                            <div class="action-link-left">
-                                                <a href="#" data-bs-toggle="modal"
-                                                   data-bs-target="#modalAddcart">Thêm vào giỏ</a>
-                                            </div>
-<!--                                            <div class="action-link-right">-->
-<!--                                                <a href="#" data-bs-toggle="modal"-->
-<!--                                                   data-bs-target="#modalQuickview"><i-->
-<!--                                                        class="icon-magnifier"></i></a>-->
-<!--                                                <a href="../wishlist.html"><i class="icon-heart"></i></a>-->
-<!--                                                <a href="../compare.html"><i class="icon-shuffle"></i></a>-->
-<!--                                            </div>-->
+                                            <!--                                            <div class="action-link-left" >-->
+                                            <!--                                                <a href="#" th:attr="data-product-id=${product.getId()}">Thêm vào giỏ</a>-->
+                                            <!--                                            </div>-->
+                                            <!--                                            <div class="action-link-right">-->
+                                            <!--                                                <a href="#" data-bs-toggle="modal"-->
+                                            <!--                                                   data-bs-target="#modalQuickview"><i-->
+                                            <!--                                                        class="icon-magnifier"></i></a>-->
+                                            <!--                                                <a href="../wishlist.html"><i class="icon-heart"></i></a>-->
+                                            <!--                                                <a href="../compare.html"><i class="icon-shuffle"></i></a>-->
+                                            <!--                                            </div>-->
                                         </div>
                                     </div>
                                     <div class="content">
@@ -825,13 +921,6 @@
                                                     th:href="@{'/sophia-store/detail/' + ${products.getId()}}"
                                                     th:text="${products.hang.ten + ' ' + products.giay.ten + ' ' + products.loaiGiay.ten + ' ' + products.mauSac.ten}"></a>
                                             </h6>
-                                            <ul class="review-star">
-                                                <li class="fill"><i class="ion-android-star"></i></li>
-                                                <li class="fill"><i class="ion-android-star"></i></li>
-                                                <li class="fill"><i class="ion-android-star"></i></li>
-                                                <li class="fill"><i class="ion-android-star"></i></li>
-                                                <li class="empty"><i class="ion-android-star"></i></li>
-                                            </ul>
                                         </div>
                                         <div class="content-right">
                                                                     <span th:if="${session['giaCu_' + products.id] != session['giaMoi_' + products.id]}"
@@ -839,7 +928,8 @@
                                                                           style="text-decoration: line-through; color: red; font-size: 13px"
                                                                           th:text="${#numbers.formatCurrency(session['giaCu_' + products.id])}"></span>
 
-                                            <span class="discounted-price" th:if="${session['giaCu_' + products.id] != session['giaMoi_' + products.id]}"
+                                            <span class="discounted-price"
+                                                  th:if="${session['giaCu_' + products.id] != session['giaMoi_' + products.id]}"
                                                   th:text="${#numbers.formatCurrency(session['giaMoi_' + products.id])}"></span>
 
                                             <span th:unless="${session['giaCu_' + products.id] != session['giaMoi_' + products.id]}"
@@ -869,13 +959,15 @@
         <div class="banner-single-item banner-style-4 banner-animation banner-color--golden float-left img-responsive"
              data-aos="fade-up" data-aos-delay="0">
             <div class="image">
-                <img class="img-fluid" src="https://vapa.vn/wp-content/uploads/2022/12/hinh-nen-nike-001.jpg" alt=""
+                <img class="img-fluid"
+                     src="https://i.etsystatic.com/28383532/r/il/1cba80/2987370589/il_fullxfull.2987370589_clnm.jpg"
+                     alt=""
                      style="weight:421px; height:588px">
             </div>
             <a href="../product-details-default.html" class="content">
                 <div class="inner">
                     <h4 class="title">NIKE</h4>
-                    <h6 class="sub-title">20 products</h6>
+                    <!--                    <h6 class="sub-title">20 sản phẩm</h6>-->
                 </div>
                 <span class="round-btn"><i class="ion-ios-arrow-thin-right"></i></span>
             </a>
@@ -885,13 +977,14 @@
         <div class="banner-single-item banner-style-4 banner-animation banner-color--golden float-left img-responsive"
              data-aos="fade-up" data-aos-delay="200">
             <div class="image">
-                <img class="img-fluid" src="https://i.pinimg.com/236x/1c/d1/bb/1cd1bb912c470e7d0ce0c0958277b32a.jpg"
+                <img class="img-fluid"
+                     src="https://yt3.googleusercontent.com/fDjR_GYpME2Xo71WEH6rtTHMUGKgysR2v6ESntsUgAAiw7mhiRIsaHoUy_ecWicrFTAGDGEK0lY=s900-c-k-c0x00ffffff-no-rj"
                      alt="" style="weight:421px; height:588px">
             </div>
             <a href="../product-details-default.html" class="content">
                 <div class="inner">
                     <h4 class="title">ADIDAS</h4>
-                    <h6 class="sub-title">20 products</h6>
+                    <!--                    <h6 class="sub-title">20 sản phẩm</h6>-->
                 </div>
                 <span class="round-btn"><i class="ion-ios-arrow-thin-right"></i></span>
             </a>
@@ -901,13 +994,15 @@
         <div class="banner-single-item banner-style-4 banner-animation banner-color--golden float-left img-responsive"
              data-aos="fade-up" data-aos-delay="400">
             <div class="image">
-                <img class="img-fluid" src="https://img.salehere.co.th/p/1200x0/2020/04/07/9yxxc2ucoxtk.jpg" alt=""
+                <img class="img-fluid"
+                     src="https://file.hstatic.net/200000690765/file/rqonnmvsmw_63ec51496337408083753a3b7ae4b1ca_grande.jpg"
+                     alt=""
                      style="weight:421px; height:588px">
             </div>
             <a href="../product-details-default.html" class="content">
                 <div class="inner">
                     <h4 class="title">MLB</h4>
-                    <h6 class="sub-title">20 products</h6>
+                    <!--                    <h6 class="sub-title">20 products</h6>-->
                 </div>
                 <span class="round-btn"><i class="ion-ios-arrow-thin-right"></i></span>
             </a>
@@ -918,13 +1013,13 @@
              data-aos="fade-up" data-aos-delay="600">
             <div class="image">
                 <img class="img-fluid"
-                     src="https://i.pinimg.com/originals/f3/3f/7f/f33f7fc07e5b5f7c519c1e444d88a18b.jpg" alt=""
+                     src="https://rgb.vn/wp-content/uploads/2017/08/rgb_creative_logo_converse_thumbnail.jpg" alt=""
                      style="weight:421px; height:588px">
             </div>
             <a href="../product-details-default.html" class="content">
                 <div class="inner">
                     <h4 class="title">CONVERSE</h4>
-                    <h6 class="sub-title">20 products</h6>
+                    <!--                    <h6 class="sub-title">20 products</h6>-->
                 </div>
                 <span class="round-btn"><i class="ion-ios-arrow-thin-right"></i></span>
             </a>

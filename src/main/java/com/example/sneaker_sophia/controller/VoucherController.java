@@ -91,7 +91,7 @@ public class VoucherController {
                            @RequestParam(value = "button", defaultValue = "false") String button,
                            @ModelAttribute(value = "data") VoucherDTO vc, HttpSession session) {
 
-        listId = giayService.checkedGiay(listId, model);
+        listId = giayService.checkedGiay(listId, model,null);
         if (!listId.contains("false") && listId.size() > 0) {
 
             listIDCTG = chiTietGiayService.checkedCTG(listIDCTG, model, listId);
@@ -120,7 +120,6 @@ public class VoucherController {
         }
         VoucherReq voucherReq = new VoucherReq();
         BeanUtils.copyProperties(vc, voucherReq);
-//        voucherReq.setNgayBatDau(LocalDateTime.parse(String.valueOf(vc.getNgayBatDau()), formatter));
         List<String> listIDCTG = ctg_khuyenMaiService.findIdCTG(vc);
         List<ChiTietGiay> listCTG = ctg_khuyenMaiService.findCTG(vc);
         List<String> listId = new ArrayList<>();
@@ -129,7 +128,7 @@ public class VoucherController {
         }
 
         List<UUID> listG = giayService.finGiayByCTG(chiTietGiayService.convertStringListToUUIDList(listId));
-        List<ChiTietGiay> listCTG2 = chiTietGiayService.getCTGByG(listG);
+        List<ChiTietGiay> listCTG2 = chiTietGiayService.getCTGByG(listG,vc.getId());
         Map<UUID, String> avtctgMap = new HashMap<>();
         for (ChiTietGiay ctg : listCTG) {
             String avtct = anhRepository.getAnhChinhByIdctg(ctg.getId());
@@ -187,9 +186,9 @@ public class VoucherController {
     public String update(@RequestParam(value = "requestId", defaultValue = "false") List<String> listId,
                          @RequestParam(value = "requestIdCTG", defaultValue = "false") List<String> listIDCTG,
                          @RequestParam(value = "button", defaultValue = "false") String button,
-                         @ModelAttribute(value = "data") VoucherDTO vc, HttpSession session, Model model) {
+                         @ModelAttribute(value = "data") VoucherDTO vc, Model model) {
 
-        listId = giayService.checkedGiay(listId, model);
+        listId = giayService.checkedGiay(listId, model,vc.getId());
         if (!listId.contains("false") && listId.size() > 0) {
             listIDCTG = chiTietGiayService.checkedCTG(listIDCTG, model, listId);
         }

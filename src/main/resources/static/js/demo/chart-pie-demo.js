@@ -1,72 +1,80 @@
 // Set new default font family and font color to mimic Bootstrap's default styling
 Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
 Chart.defaults.global.defaultFontColor = '#858796';
+// TRẠNG THAI
+function mapStatusToLabel(status) {
+    switch (status) {
+        case 1:
+            return 'Thành công';
+        case 2:
+            return 'Đang xử lý';
+        case 3:
+            return 'Chờ xử lý';
+        case 4:
+            return 'Thất bại';
+        case 5:
+            return 'Đã gửi';
+        case 6:
+            return 'Hủy';
+        default:
+            return 'Unknown';
+    }
+}
+// Hàm để gọi API và cập nhật biểu đồ
+var myPieChart;  // Declare myPieChart outside the function
 
-// Pie Chart Example
-var pieChart = document.getElementById("myPieChart");
-fetch("/api/chart/product?nam=2023")
-    .then(response => response.json())
-    .then(data => {
-        // Dãy màu cho backgroundColor
-        const backgroundColorArray = ['#4e73df', '#1cc88a', '#36b9cc'];
+function callApiAndUpdatePieChart() {
+    var ngayBatDauValue = ngayBatDauInput.value;
+    var ngayKetThucValue = ngayKetThucInput.value;
+    var url3 = "/api/chart/status?ngayBatDau=" + encodeURIComponent(ngayBatDauValue) + "&ngayKetThuc=" + encodeURIComponent(ngayKetThucValue);
+    console.log('ngày' + url3);
 
-// Dãy màu cho hoverBackgroundColor
-        const hoverBackgroundColorArray = ['#2e59d9', '#17a673', '#2c9faf'];
+    var pieChart = document.getElementById("myPieChart");
 
-// Tạo thêm màu sắc nếu cần
-        for (let i = 0; i < 7; i++) {
-            backgroundColorArray.push(getRandomColor());
-            hoverBackgroundColorArray.push(getRandomColor());
-        }
+    // Fetch dữ liệu mới từ API
+    fetch(url3)
+        .then(response => response.json())
+        .then(data => {
+            const backgroundColorArray = ['#4e73df', '#1cc88a', '#f6ff00', '#ff6384', '#ff9f40', '#4bc0c0'];
+            const hoverBackgroundColorArray = ['#2e59d9', '#17a673', '#987f07', '#e03350', '#e67f34', '#46a3a3'];
 
-// Hàm để sinh màu sắc ngẫu nhiên
-        function getRandomColor() {
-            const letters = '0123456789ABCDEF';
-            let color = '#';
-            for (let i = 0; i < 6; i++) {
-                color += letters[Math.floor(Math.random() * 16)];
+            // Destroy existing chart if it exists
+            if (myPieChart) {
+                myPieChart.destroy();
             }
-            return color;
-        }
 
-// Sử dụng mảng màu sắc trong mã của bạn
-        const chartData = {
-            datasets: [{
-                backgroundColor: backgroundColorArray,
-                hoverBackgroundColor: hoverBackgroundColorArray,
-                // Các thuộc tính khác của dataset
-            }],
-            // Các thuộc tính khác của biểu đồ
-        };
-
-        var myPieChart = new Chart(pieChart, {
-            type: 'doughnut',
-            data: {
-                labels: data.map(item => item[0]),
-                datasets: [{
-                    data: data.map(item => item[1]),
-                    backgroundColor: backgroundColorArray,
-                    hoverBackgroundColor: hoverBackgroundColorArray,
-                    hoverBorderColor: "rgba(234, 236, 244, 1)",
-                }],
-            },
-
-            options: {
-                maintainAspectRatio: false,
-                tooltips: {
-                    backgroundColor: "rgb(255,255,255)",
-                    bodyFontColor: "#858796",
-                    borderColor: '#dddfeb',
-                    borderWidth: 1,
-                    xPadding: 15,
-                    yPadding: 15,
-                    displayColors: false,
-                    caretPadding: 10,
+            // Create a new Chart instance
+            myPieChart = new Chart(pieChart, {
+                type: 'doughnut',
+                data: {
+                    labels: data.map(item => mapStatusToLabel(item[0])),
+                    datasets: [{
+                        data: data.map(item => item[1]),
+                        backgroundColor: backgroundColorArray,
+                        hoverBackgroundColor: hoverBackgroundColorArray,
+                        hoverBorderColor: hoverBackgroundColorArray,
+                    }],
                 },
-                legend: {
-                    display: false
+                options: {
+                    maintainAspectRatio: false,
+                    tooltips: {
+                        backgroundColor: "rgb(255,255,255)",
+                        bodyFontColor: "#858796",
+                        borderColor: '#dddfeb',
+                        borderWidth: 1,
+                        xPadding: 15,
+                        yPadding: 15,
+                        displayColors: false,
+                        caretPadding: 10,
+                    },
+                    legend: {
+                        display: true
+                    },
+                    cutoutPercentage: 80,
                 },
-                cutoutPercentage: 80,
-            },
+            });
         });
-    });
+}
+
+// Hàm để cập nhật thông tin số lượng hóa đơn trên trang HTML
+callApiAndUpdatePieChart();

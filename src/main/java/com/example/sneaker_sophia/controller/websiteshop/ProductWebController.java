@@ -76,6 +76,12 @@ public class ProductWebController {
             this.khuyenMaiWebService.tinhGiaSauKhuyenMai(chiTietGiay, session);
             model.addAttribute("giaCu_" + chiTietGiay.getId(), session.getAttribute("giaCu"));
             model.addAttribute("giaMoi_" + chiTietGiay.getId(), session.getAttribute("giaMoi"));
+
+            if (chiTietGiay.getSoLuong() == 0) {
+                model.addAttribute("hetHang_" + chiTietGiay.getId(), true);
+            } else {
+                model.addAttribute("hetHang_" + chiTietGiay.getId(), false);
+            }
         }
 
 

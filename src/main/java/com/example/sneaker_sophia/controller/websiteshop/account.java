@@ -54,19 +54,15 @@ public class account {
     @Resource(name = "anhRepository")
     AnhRepository anhRepository;
 
+    @Resource(name = "htttService")
+    HTTTService htttService;
+
     @GetMapping("home")
     public String home(Model model, HttpSession session) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated() && !authentication.getPrincipal().equals("anonymousUser")) {
-
-            DiaChi diaChi = diaChiService.getDiaChiOfLoggedInUser();
-            Map<String, Double> tongTienMap = new HashMap<>();
             TaiKhoan taiKhoan = loginRepository.findByEmail(authentication.getName());
-//        Double tongTien =
-            List<HoaDon> listHD = hoaDonWebRepository.findByTaiKhoanAndLoaiHoaDonEqualsOrderByCreatedDateDesc(taiKhoan, 3);
-            for (HoaDon hd : listHD) {
-                tongTienMap.put(hd.getId(), hoaDonChiTietServive.tongTienSauGiam(hd.getId()));
-            }
+            DiaChi diaChi = diaChiService.getDiaChiOfLoggedInUser();
             List<DiaChi> diaChiList = accountRepository.findByTaiKhoan_Email(authentication.getName());
             if (diaChi != null) {
 
@@ -76,9 +72,15 @@ public class account {
             } else {
                 diaChi = new DiaChi();
             }
+            model.addAttribute("email", authentication.getName());
             model.addAttribute("account", taiKhoan);
-            model.addAttribute("listHD", listHD);
-            model.addAttribute("tongTienMap", tongTienMap);
+            model.addAttribute("listHDCTT", hoaDonService.findByTrangThaiAndKhachHang(2, authentication.getName()));
+            model.addAttribute("listHDCXN", hoaDonService.findByTrangThaiAndKhachHang(3, authentication.getName()));
+            model.addAttribute("listHDCG", hoaDonService.findByTrangThaiAndKhachHang(4, authentication.getName()));
+            model.addAttribute("listHDDG", hoaDonService.findByTrangThaiAndKhachHang(5, authentication.getName()));
+            model.addAttribute("listHDHT", hoaDonService.findByTrangThaiAndKhachHang(1, authentication.getName()));
+            model.addAttribute("listHDH", hoaDonService.findByTrangThaiAndKhachHang(6, authentication.getName()));
+
             model.addAttribute("diaChii", diaChi);
             model.addAttribute("diaChiList", diaChiList);
             return "website/productwebsite/my-account";
@@ -99,6 +101,10 @@ public class account {
         model.addAttribute("avtctgMap", avtctgMap);
         model.addAttribute("hoaDon",hd);
         model.addAttribute("listhdct", listhdct);
+        HinhThucThanhToan hinhThucThanhToan = htttService.getHTTTByIdhd(hd.getId());
+        if (hinhThucThanhToan != null) {
+            model.addAttribute("httt", hinhThucThanhToan);
+        }
         return "website/productwebsite/detail-hoa-don";
     }
 

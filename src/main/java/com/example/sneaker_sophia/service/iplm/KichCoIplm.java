@@ -75,7 +75,8 @@ public class KichCoIplm implements KichCoService {
     public KichCo delete(UUID id){
         Optional<KichCo> optional = this.kichCoRepository.findById(id);
         return optional.map(o ->{
-            this.kichCoRepository.delete(o);
+            o.setTrangThai(3);
+            this.kichCoRepository.save(o);
             return o;
         }).orElse(null);
     }

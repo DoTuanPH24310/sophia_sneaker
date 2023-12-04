@@ -4,10 +4,7 @@ import com.example.sneaker_sophia.dto.DiaChiDTO;
 import com.example.sneaker_sophia.dto.DiaChiLoGin;
 import com.example.sneaker_sophia.dto.TaiKhoanDTO;
 import com.example.sneaker_sophia.entity.*;
-import com.example.sneaker_sophia.repository.ChiTietGiayRepository;
-import com.example.sneaker_sophia.repository.HinhThucThanhToanWebRepository;
-import com.example.sneaker_sophia.repository.HoaDonWebRepository;
-import com.example.sneaker_sophia.repository.LoginRepository;
+import com.example.sneaker_sophia.repository.*;
 import com.example.sneaker_sophia.service.*;
 import com.example.sneaker_sophia.validate.AlertInfo;
 import jakarta.annotation.Resource;
@@ -50,6 +47,8 @@ public class CheckoutController {
     @Resource(name = "diaChiService")
     DiaChiService diaChiServiceTQ;
     @Autowired
+    private AccountService accountService;
+    @Autowired
     private AlertInfo alertInfo;
     @Autowired
     private HoaDonWebRepository hoaDonWebRepository;
@@ -62,7 +61,7 @@ public class CheckoutController {
         int soLuongGiam = 0;
         int tongSoLuongGiam = 0;
 
-        DiaChi diaChi = diaChiService.getDiaChiOfLoggedInUser();
+        DiaChi diaChi = accountService.getDiaChiMacDinhCuaTaiKhoanDangNhap();
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         GioHang gioHang = this.gioHangService.getCartByEmail(authentication.getName());
@@ -121,7 +120,7 @@ public class CheckoutController {
                     model.addAttribute("diaChi", diaChi);
                     model.addAttribute("cartItems", cartItems);
                     model.addAttribute("tongSoLuongGiam", tongSoLuongGiam);
-                    session.setAttribute("idkhOL",taiKhoan.getId());
+                    session.setAttribute("idkhOL", taiKhoan.getId());
                     return "website/productwebsite/checkout";
                 }
             }
@@ -243,13 +242,17 @@ public class CheckoutController {
                     }
                 }
             }
-            if(diaChiDTO.getTinh() == 1){
-                phiVanChuyen = 20000.0;
+            if(total < 2000000) {
+                if (diaChiDTO.getTinh() == 1) {
+                    phiVanChuyen = 20000.0;
+                } else {
+                    phiVanChuyen = 30000.0;
+                }
             }else{
-                phiVanChuyen = 30000.0;
+                phiVanChuyen = 0.0;
             }
             if (cartItems != null && !cartItems.isEmpty()) {
-                if(hinhThucThanhToan == null){
+                if (hinhThucThanhToan == null) {
                     alertInfo.alert("errOnline", "Chua chon hinh thuc thanh toan!");
                 }
                 this.thanhToanService.capNhatDiaChi(diaChiDTO, taiKhoan);
@@ -271,23 +274,14 @@ public class CheckoutController {
                             Model model, HttpSession session) {
         System.out.println("phivanchuyen" + phiVanChuyen);
         try {
+            double total = 0.0;
             Cart cart = (Cart) session.getAttribute("cart");
             List<CartItem> cartItems = cart.getItems();
             session.removeAttribute("tinh");
             session.removeAttribute("quan");
             session.removeAttribute("phuong");
             if (result.hasErrors()) {
-                double total = 0.0;
-                boolean tonTai = this.loginRepository.existsByEmail(diaChi.getEmail());
-                if (tonTai) {
-                    session.setAttribute("tinh", "-1");
-                    session.setAttribute("quan", "-1");
-                    session.setAttribute("phuong", "-1");
-                    result.rejectValue("email", "error.email", "Email đã tồn tại trong hệ thống");
-                    model.addAttribute("cartItems", cartItems);
-                    model.addAttribute("total", total);
-                    return "website/productwebsite/checkoutSession";
-                }
+
                 if (cart != null) {
                     if (cartItems != null && !cartItems.isEmpty()) {
                         for (CartItem item : cartItems) {
@@ -314,10 +308,44 @@ public class CheckoutController {
                     return "redirect:/cart/hien-thi";
                 }
             }
-            if(diaChi.getTinh() == 1){
-                phiVanChuyen = 20000.0;
+            boolean tonTai = this.loginRepository.existsByEmail(diaChi.getEmail());
+            if (tonTai) {
+
+                if (cart != null) {
+                    if (cartItems != null && !cartItems.isEmpty()) {
+                        for (CartItem item : cartItems) {
+                            if (item != null && item.getId() != null) {
+                                double subtotal = item.getGia() * item.getSoLuong();
+                                total += subtotal;
+                            } else {
+                                return "redirect:/cart/hien-thi";
+                            }
+                        }
+
+                        session.setAttribute("tinh", diaChi.getTinh());
+                        session.setAttribute("quan", diaChi.getQuanHuyen());
+                        session.setAttribute("phuong", diaChi.getPhuongXa());
+                        result.rejectValue("email", "error.email", "Email đã tồn tại trong hệ thống");
+                        model.addAttribute("cartItems", cartItems);
+                        model.addAttribute("total", total);
+
+                        return "website/productwebsite/checkoutSession";
+                    } else {
+                        return "redirect:/cart/hien-thi";
+                    }
+
+                } else {
+                    return "redirect:/cart/hien-thi";
+                }
+            }
+            if(total < 2000000) {
+                if (diaChi.getTinh() == 1) {
+                    phiVanChuyen = 20000.0;
+                } else {
+                    phiVanChuyen = 30000.0;
+                }
             }else{
-                phiVanChuyen = 30000.0;
+                phiVanChuyen = 0.0;
             }
             String matKhauNgauNhien = emailService.taoMatKhauNgauNhien();
 
@@ -399,12 +427,12 @@ public class CheckoutController {
 
     @PostMapping("adddc")
     public String adddc(
-            @RequestParam(value = "xa",required = false) Integer xa,
-            @RequestParam(value = "quan",required = false) Integer quan,
-            @RequestParam(value = "tinh",required = false) Integer tinh,
-            @RequestParam(value = "dcCuThe",required = false) String dcCuThe,
-            @RequestParam(value = "hoTen",required = false) String hoTen,
-            @RequestParam(value = "sdt",required = false) String sdt
+            @RequestParam(value = "xa", required = false) Integer xa,
+            @RequestParam(value = "quan", required = false) Integer quan,
+            @RequestParam(value = "tinh", required = false) Integer tinh,
+            @RequestParam(value = "dcCuThe", required = false) String dcCuThe,
+            @RequestParam(value = "hoTen", required = false) String hoTen,
+            @RequestParam(value = "sdt", required = false) String sdt
     ) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         TaiKhoan taiKhoan = this.loginRepository.findByEmail(authentication.getName());

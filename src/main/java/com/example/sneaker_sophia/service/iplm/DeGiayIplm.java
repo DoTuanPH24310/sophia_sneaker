@@ -77,8 +77,9 @@ public class DeGiayIplm implements DeGiayService {
     @Override
     public DeGiay delete(UUID id){
         Optional<DeGiay> optional = this.deGiayRepository.findById(id);
-        return optional.map(o ->{
-            this.deGiayRepository.delete(o);
+        return optional.map(o -> {
+            o.setTrangThai(3);
+            this.deGiayRepository.save(o);
             return o;
         }).orElse(null);
     }

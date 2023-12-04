@@ -664,24 +664,24 @@
             if (id) {
                 var quantityInput = button.siblings("input[type='text']");
                 var currentQuantity = parseInt(quantityInput.val());
-
-                // Lấy giá sản phẩm gốc từ giá trị th:value
                 var giaSanPhamString = button.parents("tr").find(".product-price").data("gia");
                 var giaSanPham = parseFloat(giaSanPhamString);
-                console.log(giaSanPhamString);
-                console.log(giaSanPham);
-                // Tính giá mới dựa trên số lượng
                 var giaMoi = giaSanPham * (currentQuantity + 1);
-
                 $.get("/giohangchitiet/" + id + "/increase", function (data) {
-                    // Tăng số lượng
-                    quantityInput.val(currentQuantity + 1);
-
-                    // Cập nhật giá mới vào giao diện
-                    updatePrice(button, giaMoi);
+                    if (data === "success") {
+                        quantityInput.val(currentQuantity + 1);
+                        updatePrice(button, giaMoi);
+                    } else {
+                        let type = 'error';
+                        let icon = 'fa-solid fa-circle-exclamation';
+                        let title = 'Thất bại!';
+                        let text = data;
+                        createToast(type, icon, title, text);
+                    }
                 });
             }
         });
+
 
         $(".decreaseQuantity").click(function () {
             var id = $(this).data("id");
@@ -691,21 +691,33 @@
                 var quantityInput = button.siblings("input[type='text']");
                 var currentQuantity = parseInt(quantityInput.val());
 
+                console.log("Current Quantity:", currentQuantity);
+                var serverMessage;
+
                 if (currentQuantity > 1) {
-                    // Lấy giá sản phẩm gốc từ giá trị th:value
                     var giaSanPhamString = button.parents("tr").find(".product-price").data("gia");
                     var giaSanPham = parseFloat(giaSanPhamString);
 
-                    // Tính giá mới dựa trên số lượng
                     var giaMoi = giaSanPham * (currentQuantity - 1);
-                    console.log('giaSanPham:', giaSanPham);
                     $.get("/giohangchitiet/" + id + "/decrease", function (data) {
-                        // Giảm số lượng
-                        quantityInput.val(currentQuantity - 1);
-
-                        // Cập nhật giá mới vào giao diện
-                        updatePrice(button, giaMoi);
+                        serverMessage = data;
+                        if (serverMessage === "Số lượng giảm thành công") {
+                            quantityInput.val(currentQuantity - 1);
+                            updatePrice(button, giaMoi);
+                        } else {
+                            let type = 'error';
+                            let icon = 'fa-solid fa-circle-exclamation';
+                            let title = 'Thất bại!';
+                            let text = serverMessage;
+                            createToast(type, icon, title, text);
+                        }
                     });
+                } else {
+                    let type = 'error';
+                    let icon = 'fa-solid fa-circle-exclamation';
+                    let title = 'Thất bại!';
+                    let text = "Số lượng không hợp lệ!";
+                    createToast(type, icon, title, text);
                 }
             }
         });
@@ -716,19 +728,54 @@
         var newQuantity = parseInt(input.value);
         var productId = input.getAttribute('data-id');
 
-        if (!isNaN(newQuantity) && newQuantity >= 1 && newQuantity <= 100) {
-            $.get("/giohangchitiet/" + productId + "/updatequantity", {newQuantity: newQuantity}, function (data) {
-                // Xử lý dữ liệu trả về ở đây (nếu cần)
-                console.log(data);
-                // Cập nhật giá sản phẩm sau khi cập nhật số lượng (nếu cần)
-                var giaSanPhamString = $(input).parents("tr").find(".product-price").data("gia");
-                console.log(giaSanPhamString);
-                var giaSanPham = parseFloat(giaSanPhamString);
-                var giaMoi = giaSanPham * newQuantity;
-                updatePrice($(input), giaMoi);
-            });
+        if (!isNaN(newQuantity) && newQuantity >= 1) {
+            $.get("/giohangchitiet/" + productId + "/updatequantity", { newQuantity: newQuantity })
+                .done(function (data) {
+                    console.log(data);
+
+                    if (data === "Cập nhật số lượng thành công") {
+                        var giaSanPhamString = $(input).parents("tr").find(".product-price").data("gia");
+                        var giaSanPham = parseFloat(giaSanPhamString);
+                        var giaMoi = giaSanPham * newQuantity;
+                        updatePrice($(input), giaMoi);
+                    } else {
+                        let type = 'error';
+                        let icon = 'fa-solid fa-circle-exclamation';
+                        let title = 'Thất bại!';
+                        let text = data;
+                        createToast(type, icon, title, text);
+                        console.log(data);
+                        input.value = 1;
+                    }
+                })
+                .fail(function (jqXHR) {
+                    if (jqXHR.status === 400) {
+                        let type = 'error';
+                        let icon = 'fa-solid fa-circle-exclamation';
+                        let title = 'Lỗi!';
+                        let text = jqXHR.responseText;
+                        if (text.includes("Số lượng không hợp lệ")) {
+                            input.value = 1;
+                            type = 'error';
+                            title = 'Lỗi!';
+                            createToast(type, icon, title, "Số lượng không hợp lệ. Đã đặt lại số lượng là 1.");
+                        } else {
+                            createToast(type, icon, title, text);
+                        }
+                    } else {
+                    }
+                });
+        } else {
+            let type = 'error';
+            let icon = 'fa-solid fa-circle-exclamation';
+            let title = 'Thất bại!';
+            let text = "Số lượng không hợp lệ!";
+            createToast(type, icon, title, text);
+            input.value = 1;
         }
     }
+
+
 
 
     function updatePrice(input, giaMoi) {
@@ -780,9 +827,18 @@
                     if ($(".cart-table-wrapper tbody tr").length === 0) {
                         window.location.href = "/cart/hien-thi";
                     }
+                    let type = 'success';
+                    let icon = 'fa-solid fa-check-circle';
+                    let title = 'Thành công!';
+                    let text = "Đã xóa tất cả sản phẩm khỏi giỏ hàng.";
+                    createToast(type, icon, title, text);
                 },
                 error: function (error) {
-                    console.error("Lỗi khi xóa tất cả: ", error);
+                    let type = 'error';
+                    let icon = 'fa-solid fa-circle-exclamation';
+                    let title = 'Có lỗi!';
+                    let text = "Lỗi khi xóa sản phẩm.";
+                    createToast(type, icon, title, text);
                 }
             });
         });

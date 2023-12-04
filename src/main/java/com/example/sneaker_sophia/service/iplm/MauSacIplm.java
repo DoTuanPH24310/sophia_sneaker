@@ -75,7 +75,8 @@ public class MauSacIplm implements MauSacService {
     public MauSac delete(UUID id){
         Optional<MauSac> optional = this.mauSacRepository.findById(id);
         return optional.map(o ->{
-            this.mauSacRepository.delete(o);
+            o.setTrangThai(3);
+            this.mauSacRepository.save(o);
             return o;
         }).orElse(null);
     }

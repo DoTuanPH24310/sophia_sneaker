@@ -8,7 +8,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <title>HONO - Multi Purpose HTML Template</title>
+    <style>
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
 
+        .loading-spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 
 <body layout:fragment="content2">
@@ -478,7 +505,8 @@
                                     <span>Giao hàng tiêu chuẩn</span>
                                     <br>
                                     <br>
-                                    <span>Giao tại Hà Nội: 20.000đ
+                                    <span>Miễn phí vận chuyển đối với đơn hàng từ 2.000.000đ.<br>
+                                            Giao tại Hà Nội 20.000đ.<br>
                                             Các địa chỉ khác: 30.000đ</span>
                                 </label>
                             </div>
@@ -853,31 +881,57 @@
     };
     // const tinhtinh = '[[${#strings.isEmpty(session.selectedProvince) ? "' + selectedProvinceCode + '" : session.selectedProvince}]]';
 
-    // Biến để lưu trữ tổng tiền ban đầu
     let initialTotalAmount;
 
-     initialTotalAmount = parseFloat($("#totalAmount").data("id"));
-    $("#province").change(() => {
-        const selectedProvinceCode = $("#province").val();
+    // Lấy giá trị tổng tiền ban đầu khi trang web được tải lần đầu
+    initialTotalAmount = parseFloat($("#totalAmount").data("id"));
 
+    // Hàm cập nhật tổng tiền
+    function updateTotalAmount(newTotal, shippingFee) {
+        // Calculate the total amount including the shipping fee
+        const totalAmountWithShipping = newTotal + shippingFee;
+        var formattedAmount = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalAmountWithShipping);
+
+        // Display and format the total amount with shipping
+        $("#totalAmount").text(`${formattedAmount}`);
+        // Display and format the shipping cost
+        var shippingFee3 = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(shippingFee);
+        $("#shipping-cost").text(`${shippingFee3}`);
+    }
+
+    // Hàm cập nhật phí vận chuyển khi chọn tỉnh
+    function updateShippingFee(selectedProvinceCode) {
         if (!selectedProvinceCode) {
             // Chưa chọn địa chỉ
             $("#shipping-cost").text("Vui lòng chọn địa chỉ");
-            // Sử dụng tổng tiền ban đầu
-            updateTotalAmount(initialTotalAmount);
+            return 0;
         } else {
-            // Đã chọn địa chỉ, xác định phí vận chuyển dựa trên giá trị của tỉnh
-            const shippingFee = selectedProvinceCode === "1" ? 20000 : 30000;
-
+            var shippingFee = 0;
+            if(initialTotalAmount < 2000000){
+                shippingFee = selectedProvinceCode === "1" ? 20000 : 30000;
+            }
             // Hiển thị phí vận chuyển
-            $("#shipping-cost").text(shippingFee + "đ");
+            var formattedAmount = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(shippingFee);
+
+            $("#shipping-cost").text(formattedAmount);
 
             // Cập nhật giá trị phí vận chuyển trong form ẩn
             $("#feeShipped").val(shippingFee);
 
-            // Gọi hàm updateTotalAmount với tổng tiền ban đầu cộng với phí vận chuyển mới
-            updateTotalAmount(initialTotalAmount + shippingFee);
+            return shippingFee;
         }
+    }
+
+    // Sự kiện khi chọn tỉnh
+    $("#province").change(() => {
+        const selectedProvinceCode = $("#province").val();
+
+        // Cập nhật phí vận chuyển khi chọn tỉnh và lấy giá trị phí vận chuyển
+        const shippingFee = updateShippingFee(selectedProvinceCode);
+
+        // Gọi hàm updateTotalAmount với tổng tiền ban đầu cộng với phí vận chuyển mới
+        updateTotalAmount(initialTotalAmount, shippingFee);
+
         console.log("Initial Total:", $("#totalAmount").text());
 
         // Gọi các hàm renderOptions và printResult
@@ -892,15 +946,7 @@
         printResult();
     });
 
-    // Hàm cập nhật tổng tiền
-    function updateTotalAmount(newTotal) {
-        console.log("New Total:", newTotal);
-        // Hiển thị và định dạng tổng tiền mới
-        $("#totalAmount").text(`${newTotal.toLocaleString()} ₫`);
-
-    }
-
-
+    // Sự kiện khi chọn quận/huyện
     $("#district").change(() => {
         // Call API to load wards based on the selected district
         callAPI(host + "d/" + $("#district").val() + "?depth=2", "ward", (data, selectId) => {
@@ -909,6 +955,18 @@
 
         printResult();
     });
+
+    // Call updateTotalAmount with the initial total (you may adjust this based on your scenario)
+    updateTotalAmount(initialTotalAmount, calculateShippingFee());
+
+    function calculateShippingFee() {
+        var selectedProvince = '[[${session.selectedProvince}]]';
+        var shippingFee = 0;
+        if(initialTotalAmount < 2000000){
+            shippingFee = selectedProvince === "1" ? 20000 : 30000;
+        }
+        return shippingFee;
+    }
 
     $("#ward").change(() => {
         printResult();
@@ -956,7 +1014,10 @@
 
     document.getElementById("btnThanhToan").addEventListener("click", function (event) {
         event.preventDefault();
-
+        var loadingOverlay = document.createElement("div");
+        loadingOverlay.className = "loading-overlay";
+        loadingOverlay.innerHTML = '<div class="loading-spinner"></div>';
+        document.body.appendChild(loadingOverlay);
         var paymentMethod = document.querySelector('input[name="hinhThucThanhToan"]:checked').id;
         if (paymentMethod === "currencyCod") {
             let selectTinh = document.getElementById('province');
@@ -1012,6 +1073,8 @@
                     }).catch(error => {
                     console.error("Error fetching payment URL:", error);
                 });
+                document.body.removeChild(loadingOverlay);
+
             }
 
         }

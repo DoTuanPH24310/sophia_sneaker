@@ -21,20 +21,20 @@ public class DiaChiService {
     @Resource(name = "taiKhoanService")
     TaiKhoanService taiKhoanService;
 
-    public DiaChi getDiaChiByIdTaiKhoan(String id) {
-        return diaChiRepository.getDiaChiByIdTaiKhoan(id);
+    public  DiaChi getDiaChiByIdTaiKhoan(String id){
+        return  diaChiRepository.getDiaChiByIdTaiKhoan(id);
     }
 
-    public DiaChi getNhanVienDTOById(String id) {
+    public DiaChi getNhanVienDTOById(String id){
         return diaChiRepository.getNhanVienDTOById(id);
     }
 
     // 15-11
-    public List<DiaChi> getAllDCByIdkh(String idkh) {
+    public List<DiaChi> getAllDCByIdkh(String idkh){
         return diaChiRepository.findListDCByIdKH(idkh);
     }
 
-    public void updateDCMD(String iddc, HttpSession session) {
+    public void updateDCMD(String iddc, HttpSession session){
         String idkh = (String) session.getAttribute("idkh");
         DiaChi diaChiThuong = diaChiRepository.findById(iddc).orElse(null);
         DiaChi diaChiMD = diaChiRepository.getDiaChiByIdTaiKhoan(idkh);
@@ -48,7 +48,7 @@ public class DiaChiService {
         }
     }
 
-    public void adddc(Integer xa, Integer quan, Integer tinh, String dcCuThe, String hoTen, String sdt, HttpSession session) {
+    public void adddc(Integer xa, Integer quan, Integer tinh, String dcCuThe, String hoTen, String sdt, HttpSession session){
         String idkh = (String) session.getAttribute("idkh");
         List<DiaChi> listDC = diaChiRepository.findListDCByIdKH(idkh);
         DiaChi diaChi = new DiaChi();
@@ -127,7 +127,7 @@ public class DiaChiService {
             errTen = "Không để trống tên";
             i++;
         }
-        if (dcCuThe.equals("")) {
+        if(dcCuThe.equals("")){
             errDCCuThe = "Không để trống địa chỉ cụ thể";
             i++;
         }
@@ -136,5 +136,5 @@ public class DiaChiService {
         model.addAttribute("errDCCuThe", errDCCuThe);
         return i == 0;
     }
-}
 
+}

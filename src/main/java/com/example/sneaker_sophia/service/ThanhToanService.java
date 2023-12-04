@@ -147,7 +147,11 @@ public class ThanhToanService {
 
         LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
         lichSuHoaDon.setHoaDon(hoaDon);
-        lichSuHoaDon.setPhuongThuc("3");
+        if(hinhThucThanhToan == 3) {
+            lichSuHoaDon.setPhuongThuc("3");
+        }else if(hinhThucThanhToan == 2){
+            lichSuHoaDon.setPhuongThuc("2");
+        }
         this.lichSuHoaDonWebRepository.save(lichSuHoaDon);
 
         for (GioHangChiTiet cartItem : cartItems) {

@@ -716,7 +716,6 @@ public class TaiQuayController {
         session.removeAttribute("idhd");
         session.removeAttribute("checkBill");
         session.removeAttribute("listhdct");
-        session.removeAttribute("checkTTHT");
         session.removeAttribute("idHoaDon");
         session.removeAttribute("avtctsp");
         session.removeAttribute("tongTienHD");

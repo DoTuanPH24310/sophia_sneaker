@@ -15,5 +15,5 @@ public class GlobalExceptionHandler {
 
         return "error"; // Trả về tên view/template
     }
-
+    // Các phương thức khác xử lý các loại ngoại lệ khác (nếu cần)
 }

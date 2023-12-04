@@ -10,6 +10,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -57,7 +58,7 @@ public class TaiKhoan {
 
     @Column(name = "sdt")
     private String sdt;
-
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "ngaySinh")
     private LocalDate ngaySinh;
 

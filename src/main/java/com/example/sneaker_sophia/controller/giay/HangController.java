@@ -2,7 +2,9 @@ package com.example.sneaker_sophia.controller.giay;
 
 import com.example.sneaker_sophia.dto.HangRequest;
 import com.example.sneaker_sophia.entity.Hang;
+import com.example.sneaker_sophia.repository.HangRepository;
 import com.example.sneaker_sophia.service.HangService;
+import com.example.sneaker_sophia.validate.AlertInfo;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,7 +22,10 @@ import java.util.Optional;
 public class HangController {
     @Autowired
     private Hang hang;
-
+    @Autowired
+    private AlertInfo alertInfo;
+    @Autowired
+    private HangRepository hangRepository;
     @Autowired
     private HangService hangService;
 
@@ -48,10 +53,24 @@ public class HangController {
 
     @PostMapping("add")
     private String add(@Valid @ModelAttribute("data") HangRequest hangRequest, BindingResult result) {
-        if (result.hasErrors()) {
-            return "admin/hang/form_hang";
+        if(result.hasErrors()){
+            alertInfo.alert("errTaiQuay", "Dữ liệu sai hoặc thiếu");
+            return "admin/hang/form_hang_update";
+        }
+        if (this.hangRepository.existsHangByMa(hangRequest.getMa())) {
+            result.rejectValue("ma", "error.deGiayRequest", "Mã hãng đã tồn tại. Vui lòng chọn mã khác.");
+            alertInfo.alert("errTaiQuay", "Dữ liệu sai hoặc thiếu");
+            return "admin/hang/form_hang_update";
+        }
+
+        // Check for existing Giay with the same ten (name)
+        if(this.hangRepository.existsHangByTen(hangRequest.getTen())){
+            result.rejectValue("ten", "error.deGiayRequest", "Tên hãng đã tồn tại. Vui lòng chọn tên khác.");
+            alertInfo.alert("errTaiQuay", "Dữ liệu sai hoặc thiếu");
+            return "admin/hang/form_hang_update";
         }
         this.hangService.add(hangRequest);
+        alertInfo.alert("successTaiQuay", "Đã thêm thành công");
         return "redirect:/admin/hang/hien-thi";
     }
 
@@ -67,15 +86,18 @@ public class HangController {
     private String update(@PathVariable("id") Hang hang, @Valid @ModelAttribute("data") HangRequest hangRequest, BindingResult result, Model model){
         if(result.hasErrors()){
             model.addAttribute("action", "/admin/hang/update/" +hang.getId());
+            alertInfo.alert("errTaiQuay", "Dữ liệu sai hoặc thiếu");
             return "admin/hang/form_hang_update";
         }
         this.hangService.update(hang.getId(), hangRequest);
+        alertInfo.alert("successTaiQuay", "Đã sửa thành công");
         return "redirect:/admin/hang/hien-thi";
     }
 
     @GetMapping("delete/{id}")
     private String delete(@PathVariable("id") Hang hang){
         this.hangService.delete(hang.getId());
+        alertInfo.alert("successTaiQuay", "Đã xóa thành công");
         return "redirect:/admin/hang/hien-thi";
     }
 }
