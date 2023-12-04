@@ -242,10 +242,14 @@ public class CheckoutController {
                     }
                 }
             }
-            if (diaChiDTO.getTinh() == 1) {
-                phiVanChuyen = 20000.0;
-            } else {
-                phiVanChuyen = 30000.0;
+            if(total < 2000000) {
+                if (diaChiDTO.getTinh() == 1) {
+                    phiVanChuyen = 20000.0;
+                } else {
+                    phiVanChuyen = 30000.0;
+                }
+            }else{
+                phiVanChuyen = 0.0;
             }
             if (cartItems != null && !cartItems.isEmpty()) {
                 if (hinhThucThanhToan == null) {
@@ -306,18 +310,42 @@ public class CheckoutController {
             }
             boolean tonTai = this.loginRepository.existsByEmail(diaChi.getEmail());
             if (tonTai) {
-                session.setAttribute("tinh", "-1");
-                session.setAttribute("quan", "-1");
-                session.setAttribute("phuong", "-1");
-                result.rejectValue("email", "error.email", "Email đã tồn tại trong hệ thống");
-                model.addAttribute("cartItems", cartItems);
-                model.addAttribute("total", total);
-                return "website/productwebsite/checkoutSession";
+
+                if (cart != null) {
+                    if (cartItems != null && !cartItems.isEmpty()) {
+                        for (CartItem item : cartItems) {
+                            if (item != null && item.getId() != null) {
+                                double subtotal = item.getGia() * item.getSoLuong();
+                                total += subtotal;
+                            } else {
+                                return "redirect:/cart/hien-thi";
+                            }
+                        }
+
+                        session.setAttribute("tinh", diaChi.getTinh());
+                        session.setAttribute("quan", diaChi.getQuanHuyen());
+                        session.setAttribute("phuong", diaChi.getPhuongXa());
+                        result.rejectValue("email", "error.email", "Email đã tồn tại trong hệ thống");
+                        model.addAttribute("cartItems", cartItems);
+                        model.addAttribute("total", total);
+
+                        return "website/productwebsite/checkoutSession";
+                    } else {
+                        return "redirect:/cart/hien-thi";
+                    }
+
+                } else {
+                    return "redirect:/cart/hien-thi";
+                }
             }
-            if (diaChi.getTinh() == 1) {
-                phiVanChuyen = 20000.0;
-            } else {
-                phiVanChuyen = 30000.0;
+            if(total < 2000000) {
+                if (diaChi.getTinh() == 1) {
+                    phiVanChuyen = 20000.0;
+                } else {
+                    phiVanChuyen = 30000.0;
+                }
+            }else{
+                phiVanChuyen = 0.0;
             }
             String matKhauNgauNhien = emailService.taoMatKhauNgauNhien();
 

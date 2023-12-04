@@ -277,5 +277,19 @@ public class EmailService {
 
         return hoaDonMoi;
     }
+
+    public void guiEmailHuy(String email, String ngayHuy) {
+        if (email == null) {
+            System.err.println("Email address is null");
+            return;
+        }
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(email);
+        message.setSubject("Cảm ơn bạn đã sử mua hàng tại sophia-store");
+        message.setText("Đơn hàng của bạn đã được hủy vào lúc: " + ngayHuy);
+
+        guiEmail(message);
+    }
 }
 

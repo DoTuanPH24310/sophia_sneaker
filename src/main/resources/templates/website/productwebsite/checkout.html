@@ -412,7 +412,8 @@
                                     <span>Giao hàng tiêu chuẩn</span>
                                     <br>
                                     <br>
-                                    <span>Giao tại Hà Nội: 20.000đ
+                                    <span>Miễn phí vận chuyển đối với đơn hàng từ 2.000.000đ.<br>
+                                            Giao tại Hà Nội 20.000đ.<br>
                                             Các địa chỉ khác: 30.000đ</span>
                                 </label>
                             </div>
@@ -1099,16 +1100,15 @@
 
     // Hàm cập nhật tổng tiền
     function updateTotalAmount(newTotal, shippingFee) {
-        console.log("New Total:", newTotal);
-
         // Calculate the total amount including the shipping fee
         const totalAmountWithShipping = newTotal + shippingFee;
+        var formattedAmount = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalAmountWithShipping);
 
         // Display and format the total amount with shipping
-        $("#totalAmount").text(`${totalAmountWithShipping.toLocaleString()} ₫`);
-
+        $("#totalAmount").text(`${formattedAmount}`);
         // Display and format the shipping cost
-        $("#shipping-cost").text(`${shippingFee.toLocaleString()} ₫`);
+        var shippingFee3 = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(shippingFee);
+        $("#shipping-cost").text(`${shippingFee3}`);
     }
 
     // Hàm cập nhật phí vận chuyển khi chọn tỉnh
@@ -1118,11 +1118,14 @@
             $("#shipping-cost").text("Vui lòng chọn địa chỉ");
             return 0;
         } else {
-            // Đã chọn địa chỉ, xác định phí vận chuyển dựa trên giá trị của tỉnh
-            const shippingFee = selectedProvinceCode === "1" ? 20000 : 30000;
-
+            var shippingFee = 0;
+            if(initialTotalAmount < 2000000){
+                shippingFee = selectedProvinceCode === "1" ? 20000 : 30000;
+            }
             // Hiển thị phí vận chuyển
-            $("#shipping-cost").text(shippingFee + "đ");
+            var formattedAmount = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(shippingFee);
+
+            $("#shipping-cost").text(formattedAmount);
 
             // Cập nhật giá trị phí vận chuyển trong form ẩn
             $("#feeShipped").val(shippingFee);
@@ -1169,8 +1172,12 @@
     updateTotalAmount(initialTotalAmount, calculateShippingFee());
 
     function calculateShippingFee() {
-        const selectedProvince = '[[${session.selectedProvince}]]';
-        return selectedProvince === '1' ? 20000 : 30000;
+        var selectedProvince = '[[${session.selectedProvince}]]';
+        var shippingFee = 0;
+        if(initialTotalAmount < 2000000){
+            shippingFee = selectedProvince === "1" ? 20000 : 30000;
+        }
+        return shippingFee;
     }
 
 

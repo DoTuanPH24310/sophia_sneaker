@@ -124,4 +124,7 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
 
     @Query(value = "select DATEDIFF(DAY, ngayTao, GETDATE()) from HoaDon where loaiHoaDon = 3 and Id = ?1 ", nativeQuery = true)
     Integer getDateNumberHDO(String idhd);
+
+    @Query(value = "select hd from HoaDon hd where hd.trangThai = ?1 and hd.taiKhoan.email like ?2  order by hd.createdDate desc ")
+    List<HoaDon> findByTrangThaiAndKhachHang(Integer trangThai,String email);
 }

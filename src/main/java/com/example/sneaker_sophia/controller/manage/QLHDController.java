@@ -1,14 +1,8 @@
 package com.example.sneaker_sophia.controller.manage;
 
-import com.example.sneaker_sophia.entity.HinhThucThanhToan;
-import com.example.sneaker_sophia.entity.HoaDon;
-import com.example.sneaker_sophia.entity.HoaDonChiTiet;
-import com.example.sneaker_sophia.entity.LichSuHoaDon;
+import com.example.sneaker_sophia.entity.*;
 import com.example.sneaker_sophia.repository.AnhRepository;
-import com.example.sneaker_sophia.service.HTTTService;
-import com.example.sneaker_sophia.service.HoaDonChiTietServive;
-import com.example.sneaker_sophia.service.HoaDonService;
-import com.example.sneaker_sophia.service.LSHDService;
+import com.example.sneaker_sophia.service.*;
 import com.example.sneaker_sophia.validate.AlertInfo;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpSession;
@@ -17,6 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Controller
@@ -41,10 +38,17 @@ public class QLHDController {
     @Autowired
     HttpSession session;
 
+    @Autowired
+    EmailService emailService;
 
     @Autowired
     private AlertInfo alertInfo;
 
+    @Resource(name = "taiKhoanService")
+    TaiKhoanService taiKhoanService;
+
+    @Resource(name = "chiTietGiayService")
+    ChiTietGiayService chiTietGiayService;
 
     @GetMapping("/hien-thi")
     public String hienthi(
@@ -373,8 +377,15 @@ public class QLHDController {
             return "redirect:/admin/hoa-don/detail/" + tempIdHD;
         }
         HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
+
         if (hoaDon != null) {
-            if(hoaDon.getTrangThai() != 5 && hoaDon.getTrangThai() != 1 && hoaDon.getTrangThai() != 6){
+            if (hoaDon.getTrangThai() != 5 && hoaDon.getTrangThai() != 1 && hoaDon.getTrangThai() != 6) {
+                List<HoaDonChiTiet> listhdct = hoaDonChiTietServive.getHDCTByIdHD(hoaDon.getId());
+                for (HoaDonChiTiet hdct : listhdct) {
+                    ChiTietGiay chiTietGiay = hdct.getChiTietGiay();
+                    chiTietGiay.setSoLuong(chiTietGiay.getSoLuong() + hdct.getSoLuong());
+                    chiTietGiayService.save(chiTietGiay);
+                }
                 hoaDon.setTrangThai(6);
                 LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
                 lichSuHoaDon.setHoaDon(hoaDon);
@@ -382,7 +393,17 @@ public class QLHDController {
                 hoaDon.setGhiChu(liDoHuy);
                 lshdService.savelshd(lichSuHoaDon);
                 hoaDonService.savehd(hoaDon);
-            }else{
+                if (hoaDon.getTaiKhoan() != null) {
+                    TaiKhoan taiKhoan = taiKhoanService.getTaiKhoanByIdKH(hoaDon.getTaiKhoan().getId());
+                    LocalDateTime now = LocalDateTime.now();
+
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss yyyy-MM-dd");
+                    String formattedDateTime = now.format(formatter);
+
+                    emailService.guiEmailHuy(taiKhoan.getEmail(), formattedDateTime);
+                }
+
+            } else {
                 alertInfo.alert("errTaiQuay", null);
                 return "redirect:/admin/hoa-don/detail/" + tempIdHD;
             }
@@ -429,8 +450,14 @@ public class QLHDController {
         }
         HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
         if (hoaDon != null) {
-            if(hoaDon.getTrangThai() != 5 && hoaDon.getTrangThai() != 1 && hoaDon.getTrangThai() != 6
-                    && hoaDonService.getDateNumberHDO(hoaDon.getId()) > 3){
+            if (hoaDon.getTrangThai() != 5 && hoaDon.getTrangThai() != 1 && hoaDon.getTrangThai() != 6
+                    && hoaDonService.getDateNumberHDO(hoaDon.getId()) > 3) {
+                List<HoaDonChiTiet> listhdct = hoaDonChiTietServive.getHDCTByIdHD(hoaDon.getId());
+                for (HoaDonChiTiet hdct : listhdct) {
+                    ChiTietGiay chiTietGiay = hdct.getChiTietGiay();
+                    chiTietGiay.setSoLuong(chiTietGiay.getSoLuong() + hdct.getSoLuong());
+                    chiTietGiayService.save(chiTietGiay);
+                }
                 hoaDon.setTrangThai(6);
                 LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
                 lichSuHoaDon.setHoaDon(hoaDon);
@@ -438,7 +465,17 @@ public class QLHDController {
                 hoaDon.setGhiChu(liDoHuy);
                 lshdService.savelshd(lichSuHoaDon);
                 hoaDonService.savehd(hoaDon);
-            }else{
+                if (hoaDon.getTaiKhoan() != null) {
+                    TaiKhoan taiKhoan = taiKhoanService.getTaiKhoanByIdKH(hoaDon.getTaiKhoan().getId());
+                    LocalDateTime now = LocalDateTime.now();
+
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss yyyy-MM-dd");
+                    String formattedDateTime = now.format(formatter);
+
+                    emailService.guiEmailHuy(taiKhoan.getEmail(), formattedDateTime);
+                }
+
+            } else {
                 alertInfo.alert("errTaiQuay", "Hóa đơn chưa quá 3 ngày");
                 return "redirect:/admin/hoa-don/detail/" + tempIdHD;
             }
@@ -450,4 +487,51 @@ public class QLHDController {
         alertInfo.alert("successTaiQuay", "Đơn hàng đã được hủy");
         return "redirect:/admin/hoa-don/detail/" + tempIdHD;
     }
+
+    // 4/12
+    @GetMapping("huyhdddg/{id}")
+    public String huyhdddg(@PathVariable(value = "id", required = false) String idhd,
+                           @RequestParam(value = "value", required = false) String liDoHuy
+
+    ) {
+        try {
+            UUID uuid = UUID.fromString(idhd);
+        } catch (IllegalArgumentException e) {
+            alertInfo.alert("errTaiQuay", null);
+            return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+        }
+        if (liDoHuy.length() > 50) {
+            alertInfo.alert("errTaiQuay", "Tối đa 50 kí tự");
+            return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+        }
+        HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
+        if (hoaDon != null) {
+            if (hoaDon.getTrangThai() != 1 && hoaDon.getTrangThai() != 6) {
+                List<HoaDonChiTiet> listhdct = hoaDonChiTietServive.getHDCTByIdHD(hoaDon.getId());
+                for (HoaDonChiTiet hdct : listhdct) {
+                    ChiTietGiay chiTietGiay = hdct.getChiTietGiay();
+                    chiTietGiay.setSoLuong(chiTietGiay.getSoLuong() + hdct.getSoLuong());
+                    chiTietGiayService.save(chiTietGiay);
+                }
+                hoaDon.setTrangThai(6);
+                LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+                lichSuHoaDon.setHoaDon(hoaDon);
+                lichSuHoaDon.setPhuongThuc("6");
+                hoaDon.setGhiChu(liDoHuy);
+                lshdService.savelshd(lichSuHoaDon);
+                hoaDonService.savehd(hoaDon);
+            } else {
+                alertInfo.alert("errTaiQuay", "Không thể hủy hóa đơn");
+                return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+            }
+
+        } else {
+            alertInfo.alert("errTaiQuay", null);
+            return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+        }
+        alertInfo.alert("successTaiQuay", "Đơn hàng đã được hủy");
+        return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+    }
+
+
 }
