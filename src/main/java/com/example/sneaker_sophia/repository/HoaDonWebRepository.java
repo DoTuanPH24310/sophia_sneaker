@@ -134,21 +134,21 @@ public interface HoaDonWebRepository extends JpaRepository<HoaDon, String> {
 
 
     //tinh % tang giam theo ngay
-    @Query("SELECT COALESCE(SUM(hd.tongTien), 0) FROM HoaDon hd WHERE CAST(hd.createdDate AS DATE) = CURRENT_DATE")
+    @Query("SELECT COALESCE(SUM(hd.tongTien), 0) FROM HoaDon hd WHERE CAST(hd.updatedDate AS DATE) = CURRENT_DATE")
     Double sumTongTienByNgayHienTai();
 
-    @Query("SELECT COALESCE(SUM(hd.tongTien), 0) FROM HoaDon hd WHERE hd.createdDate >= :ngayBatDau AND hd.createdDate <= :ngayKetThuc")
+    @Query("SELECT COALESCE(SUM(hd.tongTien), 0) FROM HoaDon hd WHERE hd.updatedDate >= :ngayBatDau AND hd.updatedDate <= :ngayKetThuc")
     Double sumTongTienByNgayHomQua(@Param("ngayBatDau") LocalDateTime ngayBatDau, @Param("ngayKetThuc") LocalDateTime ngayKetThuc);
 
     // end tinh % tang giam theo ngay
     //tinh % tang giam theo Thang
     @Query("SELECT COALESCE(SUM(hd.tongTien), 0) " +
             "FROM HoaDon hd " +
-            "WHERE FUNCTION('MONTH', hd.createdDate) = FUNCTION('MONTH', CURRENT_DATE) " +
-            "AND FUNCTION('YEAR', hd.createdDate) = FUNCTION('YEAR', CURRENT_DATE)")
+            "WHERE FUNCTION('MONTH', hd.updatedDate) = FUNCTION('MONTH', CURRENT_DATE) " +
+            "AND FUNCTION('YEAR', hd.updatedDate) = FUNCTION('YEAR', CURRENT_DATE)")
     Double sumTongTienByThangHienTai();
 
-    @Query("SELECT COALESCE(SUM(hd.tongTien), 0) FROM HoaDon hd WHERE hd.createdDate >= :ngayBatDau AND hd.createdDate <= :ngayKetThuc")
+    @Query("SELECT COALESCE(SUM(hd.tongTien), 0) FROM HoaDon hd WHERE hd.updatedDate >= :ngayBatDau AND hd.updatedDate <= :ngayKetThuc")
     Double sumTongTienTuDauThangDenNgayHienTaiThangTruoc(
             @Param("ngayBatDau") LocalDateTime ngayBatDau,
             @Param("ngayKetThuc") LocalDateTime ngayKetThuc
