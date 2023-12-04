@@ -19847,7 +19847,7 @@ table {
 
 @media (min-width: 1200px) {
     .modal-dialog {
-        min-width: 825px !important
+        min-width: 200px !important
     }
 }
 
