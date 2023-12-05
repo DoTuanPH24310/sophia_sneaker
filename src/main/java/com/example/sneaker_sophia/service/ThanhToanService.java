@@ -47,7 +47,7 @@ public class ThanhToanService {
     @Resource(name = "hoaDonRepository")
     HoaDonRepository hoaDonRepository;
 
-    public void thucHienThanhToan(String email, List<GioHangChiTiet> cartItems, Integer hinhThucThanhToan,String diaChi, String tinh, String huyen, String xa, Double phiVanChuyen) {
+    public void thucHienThanhToan(String email, List<GioHangChiTiet> cartItems, Integer hinhThucThanhToan,String diaChi, String tinh, String huyen, String xa, Double phiVanChuyen,String ghiChu) {
         TaiKhoan taiKhoan = this.loginRepository.findByEmail(email);
         double total = 0.0;
         for (GioHangChiTiet cartItem : cartItems) {
@@ -77,6 +77,7 @@ public class ThanhToanService {
         hoaDon.setTienThua(0.0);
         hoaDon.setTongTien(tongTienDonHang);
         hoaDon.setKhuyenMai(tongTienGiam);
+        hoaDon.setGhiChu(ghiChu);
         HoaDon savedHoaDon = hoaDonWebRepository.save(hoaDon);
         for (GioHangChiTiet cartItem : cartItems) {
             HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();

@@ -3,10 +3,7 @@ package com.example.sneaker_sophia.dto;
 
 import com.example.sneaker_sophia.entity.DiaChi;
 import com.example.sneaker_sophia.entity.TaiKhoan;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 @Getter
@@ -30,9 +27,11 @@ public class DiaChiDTO {
     @NotNull(message = "Vui lòng chọn tỉnh")
     private Integer tinh;
 
-    @NotBlank(message = "Vui lòng nhập địa chỉ email")
     @Email(message = "Địa chỉ email không hợp lệ")
     private String email;
+
+    @Size(max = 500, message = "Độ dài ghi chú không được vượt quá 500 kí tự")
+    private String ghiChu;
 
     private Integer diaChiMacDinh;
 

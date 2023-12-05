@@ -63,17 +63,18 @@
     #product-container {
         margin-bottom: 20px; /* Ví dụ: Đặt margin dưới cho mỗi product container */
     }
+
     .page-pagination ul li.active a {
         /* Màu cho trang đã chọn */
-        background-color: #B19361!important;
-        color: #fff!important;
+        background-color: #B19361 !important;
+        color: #fff !important;
         /* Các thuộc tính khác tùy thuộc vào thiết kế của bạn */
     }
 
     .page-pagination ul li a {
         /* Màu cho các trang không được chọn */
-        background-color: #fff!important;
-        color: #000!important;
+        background-color: #fff !important;
+        color: #000 !important;
         /* Các thuộc tính khác tùy thuộc vào thiết kế của bạn */
     }
 
@@ -769,9 +770,9 @@
                                                 </div>
                                             </div>
                                         </a>
-                                        <div class="tag">
-                                            <span>sale</span>
-                                        </div>
+<!--                                        <div class="tag">-->
+<!--                                            <span>sale</span>-->
+<!--                                        </div>-->
                                         <div class="action-link">
                                             <div class="action-link-left">
                                                 <a class="add-to-cart" th:attr="data-product-id=${product.getId()}"
@@ -783,16 +784,9 @@
                                         <div class="content-left">
                                             <h6 class="title">
                                                 <a th:href="@{'/sophia-store/detail/' + ${product.getId()}}"
-                                                   th:text="${product.getHang().getTen() + ' ' + product.getTen()}">
+                                                   th:text="${product.hang.ten + ' ' + product.giay.ten + ' ' + product.loaiGiay.ten + ' ' + product.mauSac.ten+ ' ' + product.kichCo.ten}">
                                                 </a>
                                             </h6>
-                                            <ul class="review-star">
-                                                <li class="fill"><i class="ion-android-star"></i></li>
-                                                <li class="fill"><i class="ion-android-star"></i></li>
-                                                <li class="fill"><i class="ion-android-star"></i></li>
-                                                <li class="fill"><i class="ion-android-star"></i></li>
-                                                <li class="empty"><i class="ion-android-star"></i></li>
-                                            </ul>
                                         </div>
                                         <div class="content-right">
                                                 <span th:if="${session['giaCu_' + product.id] != session['giaMoi_' + product.id]}"
@@ -861,7 +855,7 @@
                 <div class="col-12">
                     <div class="section-content-gap">
                         <div class="secton-content">
-                            <h3 class="section-title">Sản phẩm bản chạy</h3>
+                            <h3 class="section-title">Sản phẩm bán chạy</h3>
                         </div>
                     </div>
                 </div>
@@ -903,23 +897,22 @@
                                             </div>
                                         </a>
                                         <div class="action-link">
-                                            <!--                                            <div class="action-link-left" >-->
-                                            <!--                                                <a href="#" th:attr="data-product-id=${product.getId()}">Thêm vào giỏ</a>-->
-                                            <!--                                            </div>-->
-                                            <!--                                            <div class="action-link-right">-->
-                                            <!--                                                <a href="#" data-bs-toggle="modal"-->
-                                            <!--                                                   data-bs-target="#modalQuickview"><i-->
-                                            <!--                                                        class="icon-magnifier"></i></a>-->
-                                            <!--                                                <a href="../wishlist.html"><i class="icon-heart"></i></a>-->
-                                            <!--                                                <a href="../compare.html"><i class="icon-shuffle"></i></a>-->
-                                            <!--                                            </div>-->
+                                            <div class="action-link-left">
+                                                <a class="add-to-cart btn"
+                                                   th:attr="data-product-id=${products.getId()}">Thêm vào giỏ</a>
+                                            </div>
+                                            <div class="action-link-right">
+                                                <a href="#" data-bs-toggle="modal"
+                                                   data-bs-target="#modalQuickview"><i
+                                                        class="icon-magnifier"></i></a>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="content">
                                         <div class="content-left">
                                             <h6 class="title"><a
                                                     th:href="@{'/sophia-store/detail/' + ${products.getId()}}"
-                                                    th:text="${products.hang.ten + ' ' + products.giay.ten + ' ' + products.loaiGiay.ten + ' ' + products.mauSac.ten}"></a>
+                                                    th:text="${products.hang.ten + ' ' + products.giay.ten + ' ' + products.loaiGiay.ten + ' ' + products.mauSac.ten+ ' ' + products.kichCo.ten}"></a>
                                             </h6>
                                         </div>
                                         <div class="content-right">

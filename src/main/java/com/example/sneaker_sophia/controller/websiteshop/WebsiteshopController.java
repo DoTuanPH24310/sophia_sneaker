@@ -105,9 +105,4 @@ WebsiteshopController {
         return "website/websiteShop/product-details-default";
     }
 
-    @GetMapping("/shop1")
-    public String blog(Model model){
-
-        return "website/blog-single-sidebar-left";
-    }
 }

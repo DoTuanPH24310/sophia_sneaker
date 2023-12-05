@@ -408,8 +408,6 @@
                             <label class="mr-2">Sắp xếp theo:</label>
                                 <fieldset>
                                     <select name="sortField" id="sortField">
-                                        <option th:value="ten" th:selected="${selectedSortField == 'ten'}">Lượt đánh giá</option>
-                                        <option th:value="ten" th:selected="${selectedSortField == 'ten'}">Độ phổ biến</option>
                                         <option th:value="newest" th:selected="${selectedSortField == 'newest'}">Sản phẩm mới nhất</option>
                                         <option th:value="lowPrice" th:selected="${selectedSortField == 'lowPrice'}">Giá: thấp đến cao</option>
                                         <option th:value="hightPrice" th:selected="${selectedSortField == 'hightPrice'}">Giá: cao đến thấp</option>
@@ -646,7 +644,7 @@
 
                                                         <div class="action-link">
                                                             <div class="action-link-left">
-                                                                <a class="add-to-cart"
+                                                                <a class="add-to-cart btn"
                                                                    th:attr="data-product-id=${product.getId()}">Thêm vào giỏ</a>
                                                             </div>
                                                             <div class="action-link-right">
@@ -660,7 +658,7 @@
                                                         <div class="content-left">
                                                             <h6 class="title"><a
                                                                     th:href="@{'/sophia-store/detail/' + ${product.getId()}}"
-                                                                    th:text="${product.hang.ten + ' ' + product.giay.ten + ' ' + product.loaiGiay.ten + ' ' + product.mauSac.ten}"></a>
+                                                                    th:text="${product.hang.ten + ' ' + product.giay.ten + ' ' + product.loaiGiay.ten + ' ' + product.mauSac.ten+ ' ' + product.kichCo.ten}"></a>
                                                             </h6>
                                                         </div>
                                                         <div class="content-right">
@@ -758,13 +756,14 @@
                         <form id="paginationForm" method="get" action="/sophia-store/product">
                             <ul>
                                 <li th:with="previousPage=${currentPage - 1}" th:if="${previousPage > 0}">
-                                    <a href="#" th:attr="onclick='changePage(${previousPage})'">Previous</a>
+                                    <a href="#" th:attr="onclick='changePage(' + ${previousPage} + ')'">Previous</a>
                                 </li>
-                                <li th:each="pageNumber : ${#numbers.sequence(1, totalPages)}" th:class="${pageNumber} == ${currentPage} ? 'active' : ''">
-                                    <a href="#" th:attr="onclick='changePage(${pageNumber})'" th:text="${pageNumber}"></a>
+                                <li th:each="pageNumber : ${#numbers.sequence(1, totalPages)}"
+                                    th:class="${pageNumber} == ${currentPage} ? 'active' : ''">
+                                    <a href="#" th:attr="onclick='changePage(' + ${pageNumber} + ')'"  th:text="${pageNumber}"></a>
                                 </li>
                                 <li th:if="${currentPage < totalPages}">
-                                    <a href="#" th:attr="onclick='changePage(${nextPage})'">Next</a>
+                                    <a href="#" th:attr="onclick='changePage(' + ${nextPage} + ')'" >Next</a>
                                 </li>
                             </ul>
                             <input type="hidden" name="page" id="currentPage" th:value="${currentPage}">
@@ -783,13 +782,13 @@
                                 // Lấy giá trị của các tham số từ URL
                                 var params = new URLSearchParams(window.location.search);
                                 var sortField = params.get('sortField');
-                                var giayIds = params.get('giayIds');
-                                var kichCoIds = params.get('kichCoIds');
-                                var hangIds = params.get('hangIds');
-                                var deGiayIds = params.get('deGiayIds');
-                                var loaiGiayIds = params.get('loaiGiayIds');
-                                var mauSacIds = params.get('mauSacIds');
-                                var minPrice = params.get('minPrice');
+                                var giayIds = params.getAll('giayIds');
+                                var kichCoIds = params.getAll('kichCoIds');
+                                var hangIds = params.getAll('hangIds');
+                                var deGiayIds = params.getAll('deGiayIds');
+                                var loaiGiayIds = params.getAll('loaiGiayIds');
+                                var mauSacIds = params.getAll('mauSacIds');
+                                var minPrice = params.getAll('minPrice');
 
                                 // Cập nhật giá trị của page
                                 document.getElementById("currentPage").value = newPage;
