@@ -83,7 +83,6 @@ public class KhachHangController {
         session.setAttribute("tinh", diaChiList.getTinh());
         session.setAttribute("quan", diaChiList.getQuanHuyen());
         session.setAttribute("phuong", diaChiList.getPhuongXa());
-        session.setAttribute("anhDaiDien", taiKhoanDiaChi.getAnhDaiDien());
         session.setAttribute("idkh", id);
         return "admin/khachhang/editkh";
     }

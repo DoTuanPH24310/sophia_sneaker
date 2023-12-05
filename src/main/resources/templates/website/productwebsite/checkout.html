@@ -479,11 +479,11 @@
                                     </tr>
                                     <tr>
                                         <td colspan="4" style="text-align: center;">Phí vận chuyển</td>
-                                        <td id="shipping-cost" name="shipping">Vui Lòng chọn địa chỉ</td>
+                                        <td id="shipping-cost" th:value="20000">20000</td>
                                     </tr>
                                     <tr class="order_total">
                                         <td colspan="4" style="text-align: center;">Tổng tiền đơn hàng</td>
-                                        <td><strong id="totalAmount" th:data-id="${total}"
+                                        <td><strong id="totalAmount"
                                                     th:text="${#numbers.formatCurrency(total)}"></strong>
                                         </td>
                                     </tr>
@@ -518,7 +518,7 @@
                                     </div>
                                 </div>
                                 <div class="order_button pt-3">
-                                    <button id="btnThanhToan" onclick="handlePaymentButtonClick()" class="btn btn-md btn-black-default-hover" type="submit">
+                                    <button id="btnThanhToan" class="btn btn-md btn-black-default-hover" type="submit">
                                         Thanh
                                         toán
                                     </button>

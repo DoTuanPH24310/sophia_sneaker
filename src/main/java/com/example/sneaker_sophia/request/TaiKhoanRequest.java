@@ -50,6 +50,7 @@ public class TaiKhoanRequest {
     private String otp;
     public TaiKhoanRequest(TaiKhoanDiaChi taiKhoanDiaChi) {
         this.setIdTaiKhoan(taiKhoanDiaChi.getTaiKhoan().getId());
+        this.setIdVaiTro(taiKhoanDiaChi.getTaiKhoan().getVaiTro().getId());
         this.setTen(taiKhoanDiaChi.getTaiKhoan().getTen());
         this.setAnhDaiDien(taiKhoanDiaChi.getTaiKhoan().getAnhDaiDien());
         this.setEmail(taiKhoanDiaChi.getTaiKhoan().getEmail());

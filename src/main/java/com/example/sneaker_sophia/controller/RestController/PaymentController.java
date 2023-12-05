@@ -31,7 +31,7 @@ public class PaymentController {
         cleanedTotalAmount = cleanedTotalAmount.replaceFirst("\\.(?=.*\\.)", "");
 
         double totalAmountDouble = Double.parseDouble(cleanedTotalAmount);
-        long amount = (long) (totalAmountDouble * 100000);
+        long amount = (long) (totalAmountDouble * 100);
 
         String bankCode = "NCB";
 

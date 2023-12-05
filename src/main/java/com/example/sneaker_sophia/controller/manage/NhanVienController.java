@@ -81,9 +81,23 @@ public class NhanVienController {
         session.setAttribute("tinh", diaChiList.getTinh());
         session.setAttribute("quan", diaChiList.getQuanHuyen());
         session.setAttribute("phuong", diaChiList.getPhuongXa());
-        session.setAttribute("anhDaiDien", taiKhoanDiaChi.getAnhDaiDien());
 
         return "admin/nhanvien/editnv";
+    }
+
+    @GetMapping("/infor/{id}")
+    public String infor(
+            Model model,
+            @PathVariable("id") String id, HttpSession session
+    ) {
+//        DiaChi taiKhoan = diaChiService.getNhanVienDTOById(id);
+        TaiKhoanRequest taiKhoanDiaChi = taiKhoanService.getTaiKhoanById(id);
+        DiaChi diaChiList = diaChiService.getDiaChiByIdTaiKhoan(id);
+        model.addAttribute("nhanVien", taiKhoanDiaChi);
+        session.setAttribute("tinh", diaChiList.getTinh());
+        session.setAttribute("quan", diaChiList.getQuanHuyen());
+        session.setAttribute("phuong", diaChiList.getPhuongXa());
+        return "admin/nhanvien/infor";
     }
 
     private final FileUpload fileUpload;
@@ -131,8 +145,7 @@ public class NhanVienController {
         nv_rq.setIdTaiKhoan(idTaiKhoan);
         String imageURL = null;
 
-
-        nv_rq.setIdVaiTro(vaiTroRepository.getIdByTenNV());
+        nv_rq.setIdVaiTro(taiKhoan.getIdVaiTro());
         if (!taiKhoanService.validateUppdate(nv_rq, model)) {
             session.setAttribute("tinh", nv_rq.getTinh());
             session.setAttribute("quan", nv_rq.getQuanHuyen());
@@ -146,7 +159,14 @@ public class NhanVienController {
         }
         nv_rq.setAnhDaiDien(imageURL);
         taiKhoanService.update(idTaiKhoan, nv_rq, model);
-        return "redirect:/admin/nhanvien/hienthi";
+        if(taiKhoan.getIdTaiKhoan().equals(vaiTroRepository.getIdByTenNV())){
+            return "redirect:/admin/nhanvien/hienthi";
+        }else {
+            return "redirect:/admin/tai-quay/hien-thi";
+        }
+
     }
+
+
 
 }
