@@ -2,11 +2,13 @@ package com.example.sneaker_sophia.controller.manage;
 
 
 import com.example.sneaker_sophia.dto.DTO_API_CTG;
-import com.example.sneaker_sophia.entity.ChiTietGiay;
+import com.example.sneaker_sophia.dto.DTO_API_Giay;
+import com.example.sneaker_sophia.entity.*;
 import com.example.sneaker_sophia.repository.AnhRepository;
 import com.example.sneaker_sophia.service.*;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -39,6 +41,8 @@ public class RestControllerCTGiay {
 
     @Autowired
     private LoaiGiayService loaiGiayService;
+
+
 
     @Resource(name = "anhRepository")
     AnhRepository anhRepository;
@@ -102,8 +106,80 @@ public class RestControllerCTGiay {
     }
 
     @GetMapping("getSumKhuyenMai/{idCTG}")
-    public ResponseEntity<?> getSumKhuyenMai(@PathVariable("idCTG") String id){
-        return ResponseEntity.ok(chiTietGiayService.tongKMByIdctg(UUID.fromString(id))) ;
+    public ResponseEntity<?> getSumKhuyenMai(@PathVariable("idCTG") String id) {
+        return ResponseEntity.ok(chiTietGiayService.tongKMByIdctg(UUID.fromString(id)));
+    }
+//Mới
+
+    @GetMapping("/findhang")
+    public ResponseEntity<?> getAllHang() {
+        return ResponseEntity.ok(hangService.finAllTrangThai());
+    }
+
+    @GetMapping("/findgiay")
+    public ResponseEntity<?> getAllGiay() {
+        return ResponseEntity.ok(giayService.finAllTrangThai());
+    }
+
+    @GetMapping("/findde")
+    public ResponseEntity<?> getAllDe() {
+        return ResponseEntity.ok(deGiayService.finAllTrangThai());
+    }
+
+    @GetMapping("/findloaiGiay")
+    public ResponseEntity<?> getAllLoaiGiay() {
+        return ResponseEntity.ok(loaiGiayService.finAllTrangThai());
+    }
+
+    @GetMapping("/findsize")
+    public ResponseEntity<?> getAllSize() {
+        return ResponseEntity.ok(kichCoService.finAllTrangThai());
+    }
+
+    @GetMapping("/findmau")
+    public ResponseEntity<?> getAllMau() {
+        return ResponseEntity.ok(mauSacService.finAllTrangThai());
+    }
+
+
+
+//    Mới
+
+    @PostMapping("/addgiay")
+    public void addGiay(@RequestBody Giay giay) {
+        giayService.save(giay);
+    }
+
+
+
+    @PostMapping("/addsize")
+    public void addKichCo(@RequestBody KichCo kichCo) {
+        kichCoService.save(kichCo);
+    }
+
+
+    @PostMapping("/addde")
+    public void addDeGiay(@RequestBody DeGiay deGiay) {
+        deGiayService.save(deGiay);
+    }
+
+
+    @PostMapping("/addhang")
+    public void addHang(@RequestBody Hang giay) {
+        hangService.save(giay);
+    }
+
+
+
+    @PostMapping("/addloaiGiay")
+    public void addbtnloaiGiay(@RequestBody LoaiGiay loaiGiay) {
+        loaiGiayService.save(loaiGiay);
+    }
+
+
+    @PostMapping("/addmau")
+    public void addbtnMauSac(@RequestBody MauSac mau) {
+        mauSacService.save(mau);
     }
 
 }

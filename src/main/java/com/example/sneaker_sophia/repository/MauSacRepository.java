@@ -44,4 +44,7 @@ public interface MauSacRepository extends JpaRepository<MauSac, UUID> {
 
     //cuongdv
     List<MauSac> findByTrangThaiEquals(Integer trangThai);
+
+    @Query(value = "select * from MauSac where trangThai= 0 or trangThai =1",nativeQuery = true)
+    List<MauSac> finAllTrangThai();
 }

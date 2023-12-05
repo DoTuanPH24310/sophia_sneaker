@@ -36,4 +36,7 @@ public interface HangRepository extends JpaRepository<Hang, UUID> {
             "join ChiTietGiay on Hang.Id = ChiTietGiay.IdHang\n" +
             "where ChiTietGiay.id =? ", nativeQuery = true)
     Hang findHangsByIdChiTietGiay(UUID uuid);
+
+    @Query(value = "select * from Hang where trangThai= 0 or trangThai =1",nativeQuery = true)
+    List<Hang> finAllTrangThai();
 }
