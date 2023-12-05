@@ -38,7 +38,7 @@
                 <!--                     alt="Avatar"/>-->
 
                 <img th:src="@{(${khachHang.anhDaiDien} eq 'thumbnail.png') ? '/getimage/thumbnail.png' : ${khachHang.anhDaiDien}}"
-                     alt="" width="160" height="150" class="rounded-circle mb-3 ml-3">
+                     alt="Avatar" width="160" height="150" class="rounded-circle mb-3 ml-3">
                 <!--                <input type="file" id="fileImage" th:field="*{anhDaiDien}" name="fileImage"-->
                 <!--                       accept="image/png,image/jpg" th:value="${session.anhDaiDien}" onchange="previewImage(event)"/>-->
                 <input type="file" name="image" placeholder="upload file" multiple onchange="previewImage(event)">
@@ -426,7 +426,12 @@
 
                 reader.onload = function (e) {
                     const imageElement = document.querySelector('img[alt="Avatar"]'); // Chọn thẻ img của bạn
-                    imageElement.src = e.target.result;
+
+                    if (imageElement) {
+                        imageElement.src = e.target.result;
+                    } else {
+                        console.error('Không tìm thấy thẻ img');
+                    }
                 };
 
                 reader.readAsDataURL(file);
