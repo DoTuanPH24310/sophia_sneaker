@@ -179,6 +179,18 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
             "ORDER BY c.soLuong ASC")
     List<Object[]> getConcatenatedInfoAndSoLuongBySoLuong(@Param("soLuongInput") int soLuongInput);
 
-
+    @Query("SELECT c FROM ChiTietGiay c " +
+            "WHERE c.giay = :giay " +
+            "   AND c.deGiay = :deGiay " +
+            "   AND c.hang = :hang " +
+            "   AND c.loaiGiay = :loaiGiay " +
+            "   AND c.mauSac = :mauSac")
+    List<ChiTietGiay> findSimilarChiTietGiay(
+            @Param("giay") Giay giay,
+            @Param("deGiay") DeGiay deGiay,
+            @Param("hang") Hang hang,
+            @Param("loaiGiay") LoaiGiay loaiGiay,
+            @Param("mauSac") MauSac mauSac
+    );
 }
 
