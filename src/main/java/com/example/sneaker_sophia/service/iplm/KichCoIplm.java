@@ -96,4 +96,14 @@ public class KichCoIplm implements KichCoService {
         return kichCoRepository.findByTrangThaiEquals(trangThai);
     }
 
+    @Override
+    public List<KichCo> finAllTrangThai() {
+        return kichCoRepository.finAllTrangThai();
+    }
+
+    @Override
+    public void save(KichCo kc) {
+        kichCoRepository.save(kc);
+    }
+
 }

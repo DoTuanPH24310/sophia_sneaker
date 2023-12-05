@@ -2,6 +2,7 @@ package com.example.sneaker_sophia.repository;
 
 import com.example.sneaker_sophia.entity.DeGiay;
 import com.example.sneaker_sophia.entity.Giay;
+import com.example.sneaker_sophia.entity.Hang;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -45,4 +46,8 @@ public interface DeGiayRepository extends JpaRepository<DeGiay, UUID> {
 
     // cuogndv
     List<DeGiay> findByTrangThaiEquals(Integer trangThai);
+
+    @Query(value = "select * from DeGiay where trangThai= 0 or trangThai =1",nativeQuery = true)
+    List<DeGiay> finAllTrangThai();
+
 }

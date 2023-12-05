@@ -1,12 +1,14 @@
 package com.example.sneaker_sophia.service;
 
 import com.example.sneaker_sophia.dto.HangRequest;
+import com.example.sneaker_sophia.entity.Giay;
 import com.example.sneaker_sophia.entity.Hang;
 import com.example.sneaker_sophia.repository.HangRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,4 +34,9 @@ public interface HangService {
     Hang findByTen(String ten);
 
     List<Hang> findByTrangThaiEquals(Integer i);
+
+   void save(Hang hang);
+
+
+    List<Hang> finAllTrangThai();
 }

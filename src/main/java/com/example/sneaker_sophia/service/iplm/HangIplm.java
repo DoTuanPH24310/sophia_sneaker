@@ -1,6 +1,7 @@
 package com.example.sneaker_sophia.service.iplm;
 
 import com.example.sneaker_sophia.dto.HangRequest;
+import com.example.sneaker_sophia.entity.Giay;
 import com.example.sneaker_sophia.entity.Hang;
 import com.example.sneaker_sophia.repository.HangRepository;
 import com.example.sneaker_sophia.service.HangService;
@@ -95,6 +96,16 @@ public class HangIplm implements HangService {
     @Override
     public List<Hang> findByTrangThaiEquals(Integer trangThai) {
         return hangRepository.findByTrangThaiEquals(trangThai);
+    }
+
+    @Override
+    public void save(Hang hang) {
+        hangRepository.save(hang);
+    }
+
+    @Override
+    public List<Hang> finAllTrangThai() {
+        return hangRepository.finAllTrangThai();
     }
 
 }

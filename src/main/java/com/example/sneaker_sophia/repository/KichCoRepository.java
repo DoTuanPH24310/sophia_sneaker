@@ -33,4 +33,7 @@ public interface KichCoRepository extends JpaRepository<KichCo, UUID> {
 
 
     List<KichCo> findByTrangThaiEquals(Integer trangThai);
+
+    @Query(value = "select * from KichCo where trangThai= 0 or trangThai =1",nativeQuery = true)
+    List<KichCo> finAllTrangThai();
 }

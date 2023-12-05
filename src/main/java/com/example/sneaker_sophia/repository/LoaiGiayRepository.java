@@ -34,4 +34,7 @@ public interface LoaiGiayRepository extends JpaRepository<LoaiGiay, UUID> {
     LoaiGiay findLoaiGiaysByIdChiTietGiay(UUID uuid);
 
     List<LoaiGiay> findByTrangThaiEquals(Integer trangThai);
+
+    @Query(value = "select * from LoaiGiay where trangThai= 0 or trangThai =1",nativeQuery = true)
+    List<LoaiGiay> finAllTrangThai();
 }

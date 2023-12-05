@@ -149,7 +149,7 @@
                             <li>
                                 <a th:href="@{/cart/hien-thi}" >
                                     <i class="icon-bag"></i>
-                                    <span class="item-count" th:text="${soLuong}"></span>
+                                    <span id="soLuongSessionGioHang" class="item-count" th:utext="${soLuongSessionGioHang}"></span>
                                 </a>
                             </li>
                             <li>
@@ -169,7 +169,15 @@
         </div>
     </div>
 </header>
+<script>
+    // Đoạn mã để cập nhật số lượng sản phẩm trong giỏ hàng ngay khi thêm vào giỏ
+    function updateCartItemCount() {
+        $.get("/cart/get-cart-item-count", function (cartItemCount) {
+            $(".item-count").text(cartItemCount);
+        });
+    }
 
+</script>
 <div class="notifications"></div>
 <section layout:fragment="content2">
 </section>

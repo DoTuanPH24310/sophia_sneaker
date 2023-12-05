@@ -34,6 +34,10 @@ public class GiayService {
         return giayRepository.findAll();
     }
 
+    public  List<Giay> finAllTrangThai(){
+        return giayRepository.finAllTrangThai();
+    }
+
     public boolean checkMa(String ma) {
         for (Giay giay : this.giayRepository.findAll()) {
             if (giay.getMa().equals(ma)) {
@@ -49,6 +53,10 @@ public class GiayService {
             return this.giayRepository.save(giay);
         }
         return null;
+    }
+
+    public void save(Giay giay) {
+       giayRepository.save(giay);
     }
 
     public List<UUID> finGiayByCTG(List<UUID> ctg){

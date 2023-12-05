@@ -99,5 +99,15 @@ public class DeGiayIplm implements DeGiayService {
         return deGiayRepository.findByTrangThaiEquals(trangThai);
     }
 
+    @Override
+    public List<DeGiay> finAllTrangThai() {
+        return deGiayRepository.finAllTrangThai();
+    }
+
+    @Override
+    public void save(DeGiay kc) {
+        deGiayRepository.save(kc);
+    }
+
 
 }

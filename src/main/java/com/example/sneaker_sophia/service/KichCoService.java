@@ -38,4 +38,8 @@ public interface KichCoService {
     KichCo findByTen(String ten);
 
     List<KichCo> findByTrangThaiEquals(Integer trangThai);
+
+    List<KichCo> finAllTrangThai();
+
+    void save(KichCo kc);
 }

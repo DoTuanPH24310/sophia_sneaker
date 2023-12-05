@@ -3,6 +3,7 @@ package com.example.sneaker_sophia.controller.manage;
 import com.example.sneaker_sophia.entity.*;
 import com.example.sneaker_sophia.repository.AnhRepository;
 import com.example.sneaker_sophia.repository.TaiKhoanRepository;
+import com.example.sneaker_sophia.repository.LoginRepository;
 import com.example.sneaker_sophia.request.TaiKhoanRequest;
 import com.example.sneaker_sophia.service.*;
 import com.example.sneaker_sophia.validate.AlertInfo;
@@ -16,6 +17,8 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -73,6 +76,8 @@ public class TaiQuayController {
     @Autowired
     private AlertInfo alertInfo;
 
+    @Autowired
+    LoginRepository loginRepository;
     //    alo ôla
     @GetMapping("/hien-thi")
     public String index(Model model) {
@@ -84,6 +89,10 @@ public class TaiQuayController {
         if (session.getAttribute("checkTTHT") != null) {
             session.setAttribute("checkTTHT", "1");
         }
+        Authentication authen = SecurityContextHolder.getContext().getAuthentication();
+        TaiKhoan taiKhoan = loginRepository.findByEmail(authen.getName());
+        session.setAttribute("avt", taiKhoan.getAnhDaiDien());
+        session.setAttribute("idnv", taiKhoan.getId());
         return "/admin/taiquay/index";
     }
 

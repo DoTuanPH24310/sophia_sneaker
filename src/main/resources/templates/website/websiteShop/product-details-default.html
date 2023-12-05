@@ -188,7 +188,7 @@
                     <!-- Start  Product Details Text Area-->
                     <div class="product-details-text">
                         <h4 class="title"
-                            th:text="${giay.getHang().getTen()+' '+giay.getGiay().getTen()}"></h4>
+                            th:text="${giay.hang.ten + ' ' + giay.giay.ten + ' ' + giay.loaiGiay.ten + ' ' + giay.mauSac.ten+ ' ' + giay.kichCo.ten}"></h4>
                         <div class="price">
                             <span th:if="${session['giaCu_' + id] != session['giaMoi_' + id]}"
                                   class="original-price"
@@ -285,7 +285,7 @@
                                         <div class="action-link">
                                             <div class="action-link-left">
                                                 <a href="#" data-bs-toggle="modal"
-                                                   data-bs-target="#modalAddcart">Thêm Giỏ Hàng</a>
+                                                   data-bs-target="#modalAddcart">Thêm Vào Giỏ</a>
                                             </div>
                                         </div>
                                     </div>
