@@ -240,7 +240,7 @@ public class EmailService {
     }
 
 
-    public HoaDon taoHoaDonMoi(TaiKhoan taiKhoan, Integer hinhThucThanhToan, String diaChi, String tinh, String huyen, String xa, Double phiVanChuyen) {
+    public HoaDon taoHoaDonMoi(TaiKhoan taiKhoan, Integer hinhThucThanhToan, String diaChi, String tinh, String huyen, String xa, Double phiVanChuyen, String ghiChu) {
         HoaDon hoaDonMoi = new HoaDon();
         int soHD = this.hoaDonRepository.soHD() + 1;
         hoaDonMoi.setMaHoaDOn("HD" + soHD);
@@ -251,6 +251,7 @@ public class EmailService {
         hoaDonMoi.setDiaChi(diaChi + ", " + xa + ", " + huyen + ", " + tinh);
         hoaDonMoi.setPhiShip(phiVanChuyen);
         hoaDonMoi.setTienThua(0.0);
+        hoaDonMoi.setGhiChu(ghiChu);
         if(hinhThucThanhToan == 3) {
             hoaDonMoi.setTrangThai(3);
         }else if(hinhThucThanhToan == 2){
