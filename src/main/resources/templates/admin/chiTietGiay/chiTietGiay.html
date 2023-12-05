@@ -10,6 +10,11 @@
             align-items: center;
         }
 
+        td img{
+            width: 80px;
+            height: 80px;
+        }
+
         .form-group-container {
             display: flex;
             justify-content: center;
@@ -42,11 +47,7 @@
             background-color: #EAEAEA;
         }
 
-        .form-control:focus {
-            border: none;
-            box-shadow: none;
 
-        }
 
         .formTable {
             background-color: #FFFFFF;
@@ -77,6 +78,7 @@
             opacity: 0;
             cursor: pointer;
         }
+
         .qr-code {
             display: flex;
             flex-direction: column; /* Chỉnh hướng hiển thị thành dọc */
@@ -85,177 +87,149 @@
             height: 100%;
         }
 
-        .qr-code > * {
-            margin: 5px; /* Để tạo khoảng cách giữa các phần tử con */
-        }
     </style>
     <!-- Include xlsx library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
     <script src="/js/chiTietGiay.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-<!--    // xuất file qrcode-->
+    <!--    // xuất file qrcode-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
 
 </head>
 <body>
 <section>
     <div layout:fragment="content" class="container mt-1 px-2 ">
-        <div>
-            <div class="row">
-                <h3 style="font-weight: bold; text-align: center;" class="mt-2">QUẢN LÝ CHI TIẾT GIÀY</h3>
 
-                <div class="col-1"></div>
-                <div class="col-10 mt-3 formTable">
-                    <h5 style="font-weight: bold;" class="mt-3">Bộ lọc</h5>
-                    <hr>
-                    <form th:action="@{/admin/chi-tiet-giay/page/1}" class="mt-3 mb-3" id="searchForm">
-                        <div class="row">
-                            <div class="col-3">
-                                <label for="trangThaiSelect">Trạng thái</label>
-                                <select style="border-radius: 15px;" class="form-select" name="trangThai"
-                                        id="trangThaiSelect" onchange="this.form.submit()">
-                                    <div style="border: 10px">
-                                        <option th:selected="${trangThai}  == -1 ? true:false" value="-1" th:value="-1">
-                                            Tất cả
-                                        </option>
-                                        <option th:selected="${trangThai} == 1 ? true:false" value="0" th:value="1">
-                                            Ngưng hoạt động
-                                        </option>
-                                        <option th:selected="${trangThai} == 0 ? true:false" value="1" th:value="0">
-                                            Đang hoạt động
-                                        </option>
-                                    </div>
-                                </select>
-                            </div>
-                            <div class="col-9">
-                                <label> Tìm kiếm </label>
-                                <div class="d-flex">
-                                    <input type="hidden" name="sortField" th:value="${sortField}"/>
-                                    <input type="hidden" name="sortDir" th:value="${sortDir}"/>
-
-                                    <input type="search" name="keyword"
-                                           th:value="${keyword}" placeholder="Nhập từ khóa tìm kiếm"
-                                           class="form-control search"/>
-                                    <input type="search" name="productName" th:value="${productName}"
-                                           placeholder="Nhập tên sản phẩm" class="form-control search"/>
-                                    <input style="margin-right: 10px" type="submit" value="Tìm kiếm"
-                                           class="btn btn-primary ml-2"/>
-                                    <a class="btn btn-danger" style="margin-right: 10px; width:150px"
-                                       href="/admin/chi-tiet-giay">Làm mới</a>
-                                </div>
-                                <p class="text-danger"></p>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
+        <div class="row">
+            <h3 style="font-weight: bold; text-align: center;" class="mt-2">QUẢN LÝ CHI TIẾT GIÀY</h3>
         </div>
 
-        <div class="filter" >
-            <div class="row">
-                <div class="col-10 mt-4 container formTable">
-                    <form th:action="@{/admin/chi-tiet-giay/page/1}" class="form-inline m-3" id="">
-                        <input type="hidden" name="sortField" th:value="${sortField}"/>
-                        <input type="hidden" name="sortDir" th:value="${sortDir}"/>
-                        <div class="form-group">
-                            <label>Loại giày</label>
-                            <select id="loaiGiayCombobox" name="loaiGiay" class="form-select">
-                                <option value="null" th:selected="${loaiGiay == null}">Tất cả</option>
+        <div class="row mt-2 ml-1 mr-2">
+            <div class="container " style="background-color: #FFFFFF">
+                <h5 style="font-weight: bold;" class="mt-3">Bộ lọc</h5>
+                <hr>
+                <div class="m-4">
+                    <div class="row mb-7 mx-5 mt-3">
+
+                        <div class="col-3">
+                            <input id="giaMin" name="giaMin" class="form-control" th:value="${giaMin}"
+                                   placeholder="Giá thấp nhất">
+                        </div>
+                        <div class="col-3 ">
+                            <input id="giaMax" name="giaMax" class="form-control" th:value="${giaMax}"
+                                   placeholder="Giá cao nhất">
+                        </div>
+
+                        <div class="col-3">
+                            <input type="text" class="form-control" id="textSearch"
+                                   placeholder="Nhập mã, tên sản phẩm....">
+                        </div>
+
+                        <div class="col-3">
+                            <button type="submit" class="btn btn-primary" onclick="test();">Tìm kiếm</button>
+                            <button class="btn btn-danger" onclick="getAllList();">Làm mới</button>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-3">
+                            <label>Hãng:&nbsp;&nbsp;</label>
+                            <select  style="border-radius: 7px; min-width:120px; min-height: 30px;text-align: center" id="cbbHang">
+                                <option value="null" th:selected="${hang == null}">---Tất cả---</option>
+                                <option th:each="hangItem : ${hangList}" th:value="${hangItem.ten}"
+                                        th:text="${hangItem.ten}" th:selected="${hangItem.ten == hang}"></option>
+                            </select>
+                        </div>
+
+                        <div class="col-3">
+                            <label>Kiểu dáng: &nbsp;&nbsp;</label>
+                            <select style="border-radius: 7px; min-width: 120px; min-height: 30px; text-align: center" id="cbbGiay" >
+                                <option value="null" th:selected="${giay == null}">---Tất cả---</option>
+                                <option th:each="giayItem : ${giayList}" th:value="${giayItem.ten}"
+                                        th:text="${giayItem.ten}" th:selected="${giayItem.ten == giay}"></option>
+                            </select>
+                        </div>
+
+                        <div class="col-3">
+
+                            <label>Loại đế: &nbsp;&nbsp;</label>
+                            <select style="border-radius: 7px; min-width: 120px; min-height: 30px; text-align: center" id="cbbDe">
+                                <option value="null" th:selected="${deGiay == null}">---Tất cả---</option>
+                                <option th:each="deGiayItem : ${deGiayList}" th:value="${deGiayItem.ten}"
+                                        th:text="${deGiayItem.ten}" th:selected="${deGiayItem.ten == deGiay}"></option>
+                            </select>
+                        </div>
+
+                        <div class="col-3">
+
+                            <label>Loại giày: &nbsp;&nbsp;</label>
+                            <select style="border-radius: 7px; min-width: 120px; min-height: 30px; text-align: center"
+                                    id="cbbLoaiGiay">
+                                <option value="null" th:selected="${loaiGiay == null}">---Tất cả---</option>
                                 <option th:each="loaiGiayItem : ${loaiGiayList}" th:value="${loaiGiayItem.ten}"
                                         th:text="${loaiGiayItem.ten}"
                                         th:selected="${loaiGiayItem.ten == loaiGiay}"></option>
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label>Đế giày</label>
-                            <select id="deGiayCombobox" name="deGiay" class="form-select">
-                                <option value="null" th:selected="${deGiay == null}">Tất cả</option>
-                                <option th:each="deGiayItem : ${deGiayList}" th:value="${deGiayItem.ten}"
-                                        th:text="${deGiayItem.ten}" th:selected="${deGiayItem.ten == deGiay}"></option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Kích cỡ</label>
-                            <select id="kichCoCombobox" name="kichCo" class="form-select">
-                                <option value="null" th:selected="${kichCo == null}">Tất cả</option>
+                    </div>
+
+                    <div class="row mb-5 mt-4  justify-content-center">
+                        <div class="col-3">
+                            <label>Size:&nbsp;&nbsp;</label>
+                            <select style="border-radius: 7px; min-width:140px; min-height: 30px;text-align: center" id="cbbSize" >
+                                <option value="null" th:selected="${kichCo == null}">---Tất cả---</option>
                                 <option th:each="kichCoItem : ${kichCoList}" th:value="${kichCoItem.ten}"
                                         th:text="${kichCoItem.ten}" th:selected="${kichCoItem.ten == kichCo}"></option>
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label>Màu sắc</label>
-                            <select id="mauSacCombobox" name="mauSac" class="form-select">
-                                <option value="null" th:selected="${mauSac == null}">Tất cả</option>
+
+                        <div class="col-3">
+                            <label>Màu:&nbsp;&nbsp;</label>
+                            <select  style="border-radius: 7px; min-width:140px; min-height: 30px; text-align: center"
+                                    id="cbbMau">
+                                <option value="null" th:selected="${mauSac == null}">---Tất cả---</option>
                                 <option th:each="mauSacItem : ${mauSacList}" th:value="${mauSacItem.ten}"
                                         th:text="${mauSacItem.ten}" th:selected="${mauSacItem.ten == mauSac}"></option>
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label>Hãng</label>
-                            <select id="hangCombobox" name="hang" class="form-select">
-                                <option value="null" th:selected="${hang == null}">Tất cả</option>
-                                <option th:each="hangItem : ${hangList}" th:value="${hangItem.ten}"
-                                        th:text="${hangItem.ten}" th:selected="${hangItem.ten == hang}"></option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Kiểu dáng</label>
-                            <select id="giayCombobox" name="giay" class="form-select">
-                                <option value="null" th:selected="${giay == null}">Tất cả</option>
-                                <option th:each="giayItem : ${giayList}" th:value="${giayItem.ten}"
-                                        th:text="${giayItem.ten}" th:selected="${giayItem.ten == giay}"></option>
-                            </select>
-                        </div>
-                        <div class="form-group-container">
-                            <div class="form-group">
-                                <label for="giaMin">Giá thấp nhất</label>
-                                <input id="giaMin" name="giaMin" class="form-control custom-width" th:value="${giaMin}"
-                                       placeholder="0">
-                            </div>
-                            <div class="form-group">
-                                <label for="giaMax">Giá cao nhất</label>
-                                <input id="giaMax" name="giaMax" class="form-control" th:value="${giaMax}"
-                                       placeholder="10.000.000">
-                            </div>
-                            <div class="form-group">
-                                <label for="trangThai">Trạng thái</label>
-                                <select style="border-radius: 15px;" class="form-select" name="trangThai"
-                                        id="trangThai" onchange="this.form.submit()">
-                                    <div style="border: 10px">
-                                        <option th:selected="${trangThai}  == -1 ? true:false" value="-1" th:value="-1">
-                                            Tất cả
-                                        </option>
-                                        <option th:selected="${trangThai} == 1 ? true:false" value="0" th:value="1">
-                                            Ngưng hoạt động
-                                        </option>
-                                        <option th:selected="${trangThai} == 0 ? true:false" value="1" th:value="0">
-                                            Đang hoạt động
-                                        </option>
-                                    </div>
-                                </select>
-                            </div>
 
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-primary" style="margin-top: 28px">Lọc</button>
-                            </div>
+                        <div class="col-4">
+                            <label for="trangThai">Trạng thái: </label>
+                            <select style="border-radius: 7px; min-width:160px; min-height: 30px;text-align: center" name="trangThai"
+                                    id="trangThai" onchange="this.form.submit()">
+                                <option th:selected="${trangThai}  == -1 ? true:false" value="-1" th:value="-1">
+                                    Tất cả
+                                </option>
+                                <option th:selected="${trangThai} == 1 ? true:false" value="0" th:value="1">
+                                    Ngưng hoạt động
+                                </option>
+                                <option th:selected="${trangThai} == 0 ? true:false" value="1" th:value="0">
+                                    Đang hoạt động
+                                </option>
+                            </select>
                         </div>
-                    </form>
+                    </div>
+
+
                 </div>
             </div>
         </div>
+
+
         <div class="row mt-3">
-            <h5 style="font-weight: bold; text-align: center;" class="mt-3">Danh sách Chi Tiết Giày </h5>
+            <h5 style="font-weight: bold; text-align: center;" class="mt-4 mb-2">Danh sách Chi Tiết Giày </h5>
             <hr>
             <div style="padding-left:10px">
-                <a class="btn btn-primary mt-1 mb-1 float-right" th:href="@{/admin/chi-tiet-giay/add}">
+                <a class="btn btn-primary mt-2 mb-3 mx-2 float-right" th:href="@{/admin/chi-tiet-giay/add}">
                     <i style="font-size: 18px; width: 10px" class="fab fa-plus"></i> Thêm
                 </a>
-                <a class="btn btn-success" id="exportButton" th:href="@{/admin/exportToExcel}">
+                <a class="btn btn-success mt-2 mb-3" id="exportButton" th:href="@{/admin/exportToExcel}">
                     <i class="fa-solid fa-file-export"></i>
                     Xuất danh sách
                 </a>
-                <div class="mt-1 mb-1 float-right" style="padding-right: 20px">
+                <div class="mt-2 mb-3 float-right">
                     <form id="excelForm" th:action="@{/admin/importFromExcel}" method="post"
                           enctype="multipart/form-data">
                         <input type="file" name="file" id="fileInput" accept=".xlsx, .xls">
@@ -270,15 +244,15 @@
                 <table id="table" class="table  table-borderless  formTable">
                     <thead>
                     <tr>
-                        <th>STT</th>
-                        <th>Ảnh</th>
-                        <th>Mã chi tiết giày</th>
-                        <th>Tên giày</th>
-                        <th>Giá</th>
-                        <th>Số lượng</th>
-                        <th>QR code</th>
-                        <th>Trạng thái</th>
-                        <th>Actions</th>
+                        <th width="5%">STT</th>
+                        <th width="13%">Ảnh</th>
+                        <th width="10%">Mã</th>
+                        <th width="20%">Tên giày</th>
+                        <th width="10%">Giá</th>
+                        <th width="8%">Số lượng</th>
+<!--                        <th width="12%">QR code</th>-->
+                        <th width="16%">Trạng thái</th>
+                        <th width="18%">Actions</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -294,28 +268,25 @@
                                ${ctg.ten}+' '+
                                ${ctg.mauSac != null ? ctg.mauSac.ten : ''}+' '+
                                ${ctg.kichCo != null ? ctg.kichCo.ten : ''}"></td>
-                        <td>[[${#numbers.formatDecimal(ctg.gia, 0, 'COMMA', 0, 'POINT')}]]</td>
+                        <td th:text="${#numbers.formatCurrency(ctg.gia)}"></td>
                         <td>[[${#numbers.formatDecimal(ctg.soLuong, 0, 'COMMA', 0, 'POINT')}]]</td>
                         <!-- Thay đổi cột hiển thị mã QR -->
-                        <td class="qr-code">
-                            <div th:text="${ctg.qrCode}"></div>
-                        </td>
+<!--                        <td class="qr-code">-->
+<!--                            <div th:text="${ctg.qrCode}"></div>-->
+<!--                        </td>-->
                         <td style="width: 160px;">
                             <button class="btn" th:classappend="${ctg.trangThai == 0} ? 'btn-success' : 'btn-danger'"
-                                    style="border-radius: 30px; font-size: 9px;">
+                                    style="border-radius: 30px; font-size: 12px;">
                                 [[${ctg.trangThai} == 0 ? 'Đang hoạt động' : 'Ngưng hoạt động']]
                             </button>
                         </td>
 
                         <td>
-                            <a class="edit" style="text-decoration: none"
-                               th:href="@{'/admin/chi-tiet-giay/edit/' + ${ctg.id}}" title="Thay đổi thông tin">
-                                <i style="color: #FFC107" class="fas fa-edit"></i>
+                            <a class="btn btn-warning edit" style=" padding: 5px 10px; font-size: 12px"  th:href="@{'/admin/chi-tiet-giay/edit/' + ${ctg.id}}">
+                                <i class="material-icons text-white mt-1" data-toggle="tooltip" title="Edit">&#xE254;</i>
                             </a>
-                            <a class="delete" style="text-decoration: none"
-                               th:href="@{'/admin/chi-tiet-giay/delete/' + ${ctg.id}}" title="Xóa"
-                               onclick="return confirm('Bạn có muốn xóa không')">
-                                <i class="fa fa-trash"></i>
+                            <a onclick="return confirm('Bạn có muốn xóa không')" class="btn btn-danger delete" style=" padding: 5px 10px; font-size: 12px"  th:href="@{'/admin/chi-tiet-giay/delete/' + ${ctg.id}}">
+                                <i class="material-icons text-white mt-1" data-toggle="tooltip" title="Delete">&#xE872;</i>
                             </a>
                         </td>
                     </tr>

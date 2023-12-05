@@ -27,6 +27,9 @@ public interface GiayRepository extends JpaRepository<Giay, UUID> {
     @Query(value = "select LOWER(id) from Giay where trangThai= ?1",nativeQuery = true)
     List<String> finAllId(Integer trangThai);
 
+    @Query(value = "select * from Giay where trangThai= 0 or trangThai =1",nativeQuery = true)
+    List<Giay> finAllTrangThai();
+
 //    23/11
     @Query(value = "select obj.id from Giay obj where obj.id in :list")
     List<UUID> finGiayByCTG(List<UUID> list);

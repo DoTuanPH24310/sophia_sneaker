@@ -36,4 +36,13 @@ public class LoaiGiayService {
         return loaiGiayRepository.findByTrangThaiEquals(tt);
     }
 
+    public List<LoaiGiay> finAllTrangThai(){
+        return loaiGiayRepository.finAllTrangThai();
+    }
+
+    public void save(LoaiGiay lg){
+        loaiGiayRepository.save(lg);
+    }
+
+
 }

@@ -96,4 +96,14 @@ public class MauSacIplm implements MauSacService {
     public List<MauSac> findByTrangThaiEquals(Integer trangThai){
         return mauSacRepository.findByTrangThaiEquals(trangThai);
     }
+
+    @Override
+    public List<MauSac> finAllTrangThai() {
+        return mauSacRepository.finAllTrangThai();
+    }
+
+    @Override
+    public void save(MauSac ms) {
+        mauSacRepository.save(ms);
+    }
 }

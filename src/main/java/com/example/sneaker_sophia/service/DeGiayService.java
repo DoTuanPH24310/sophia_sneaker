@@ -2,6 +2,7 @@ package com.example.sneaker_sophia.service;
 
 import com.example.sneaker_sophia.dto.DeGiayRequest;
 import com.example.sneaker_sophia.entity.DeGiay;
+import com.example.sneaker_sophia.entity.Hang;
 import com.example.sneaker_sophia.repository.DeGiayRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -41,4 +42,8 @@ public interface DeGiayService {
     DeGiay findByTen(String ten);
 
     Object findByTrangThaiEquals(Integer i);
+
+    List<DeGiay> finAllTrangThai();
+
+    void save(DeGiay kc);
 }

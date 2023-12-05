@@ -47,6 +47,8 @@ function showSelectedImages(input) {
 
                     var img = document.createElement("img");
                     img.src = e.target.result;
+                    img.style.width ="100px";
+                    img.style.height ="100px";
 
                     var listItem = document.createElement("li");
                     listItem.appendChild(img);
@@ -177,12 +179,11 @@ document.addEventListener("DOMContentLoaded", function () {
     qrcodeContainers.forEach(function (qrcodeContainer) {
         // Lấy dữ liệu từ thuộc tính th:text
         var qrCodeData = qrcodeContainer.querySelector('div').textContent;
-
         // Tạo mã QR
         var qrcode = new QRCode(qrcodeContainer, {
             text: qrCodeData,
             width: 128,
-            height: 128
+            height: 128,
         });
     });
 });
