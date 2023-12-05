@@ -20,8 +20,6 @@ import java.util.*;
 @RestController
 @RequestMapping("/api/payment")
 public class PaymentController {
-
-
     @GetMapping("/create_payment")
     public String createPayment(@RequestParam("totalAmount") String totalAmount) throws UnsupportedEncodingException {
         String vnp_Version = "2.1.0";

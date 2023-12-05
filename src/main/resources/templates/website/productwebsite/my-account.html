@@ -197,13 +197,11 @@
                 <!-- Nav tabs -->
                 <div class="dashboard_tab_button" data-aos="fade-up" data-aos-delay="0">
                     <ul role="tablist" class="nav flex-column dashboard-list">
-                        <li><a href="#account-details" data-bs-toggle="tab"
+                        <li id="orders-tab"><a href="#account-details" data-bs-toggle="tab"
                                class="nav-link btn btn-block btn-md btn-black-default-hover active">Tài khoản</a>
                         </li>
                         <li><a href="#orders" data-bs-toggle="tab"
                                class="nav-link btn btn-block btn-md btn-black-default-hover">Lịch sử mua</a></li>
-                        <!--                        <li><a href="#address" data-bs-toggle="tab"-->
-                        <!--                               class="nav-link btn btn-block btn-md btn-black-default-hover">Địa chỉ</a></li>-->
                         <li><a th:href="@{/logout}" id="logoutBtn"
                                class="nav-link btn btn-block btn-md btn-black-default-hover">Đăng xuất</a></li>
                     </ul>
@@ -645,6 +643,16 @@
     }
 
     checked();
+    document.addEventListener("DOMContentLoaded", function () {
+        var url = window.location.href;
+        if (url.includes("#orders")) {
+            var ordersTab = document.getElementById("orders-tab");
+            if (ordersTab) {
+                var tab = new bootstrap.Tab(ordersTab);
+                tab.show();
+            }
+        }
+    });
 
 </script>
 </body>

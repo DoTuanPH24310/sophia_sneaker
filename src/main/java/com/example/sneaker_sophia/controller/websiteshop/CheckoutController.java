@@ -272,7 +272,6 @@ public class CheckoutController {
                             @RequestParam(value = "xa", required = false) String xa,
                             Double phiVanChuyen,
                             Model model, HttpSession session) {
-        System.out.println("phivanchuyen" + phiVanChuyen);
         try {
             double total = 0.0;
             Cart cart = (Cart) session.getAttribute("cart");
