@@ -123,11 +123,13 @@ public class account {
                             @RequestParam(value = "ghiChu", required = false) String ghiChu,
                             Model model, HttpSession session
     ) {
-        if (hinhThucThanhToan != null) {
-            alertInfo.alert("errOnline", "Bạn chưa chọn hình thức thanh toán!");
-        }
         String mahd = (String) session.getAttribute("maHD");
         HoaDon don = this.hoaDonWebRepository.findByMaHoaDOn(mahd);
+        if (hinhThucThanhToan == null) {
+            alertInfo.alert("errOnline", "Bạn chưa chọn hình thức thanh toán!");
+            return "redirect:/my-account/detail/"+don.getId();
+        }
+
         if (!(hinhThucThanhToan == 1) && !(hinhThucThanhToan == 2)) {
             if (hinhThucThanhToan == 3) {
                 don.setTrangThai(3);
@@ -149,7 +151,6 @@ public class account {
                 lichSuHoaDon.setPhuongThuc("2");
             }
             this.lichSuHoaDonWebRepository.save(lichSuHoaDon);
-            alertInfo.alert("errOnline", "Bạn chưa chọn hình thức thanh toán!");
             return "redirect:/my-account/home";
         }
 

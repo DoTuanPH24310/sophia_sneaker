@@ -30,7 +30,7 @@ public class DiaChiDTO {
     @Email(message = "Địa chỉ email không hợp lệ")
     private String email;
 
-    @Size(max = 500, message = "Độ dài ghi chú không được vượt quá 500 kí tự")
+    @Size(max = 20, message = "Ghi chú không được vượt quá 20 kí tự")
     private String ghiChu;
 
     private Integer diaChiMacDinh;

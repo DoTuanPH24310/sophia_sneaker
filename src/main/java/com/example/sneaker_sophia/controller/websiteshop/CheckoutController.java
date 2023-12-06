@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -244,13 +245,13 @@ public class CheckoutController {
                     }
                 }
             }
-            if(total < 2000000) {
+            if (total < 2000000) {
                 if (diaChiDTO.getTinh() == 1) {
                     phiVanChuyen = 20000.0;
                 } else {
                     phiVanChuyen = 30000.0;
                 }
-            }else{
+            } else {
                 phiVanChuyen = 0.0;
             }
             if (cartItems != null && !cartItems.isEmpty()) {
@@ -258,7 +259,7 @@ public class CheckoutController {
                     alertInfo.alert("errOnline", "Chua chon hinh thuc thanh toan!");
                 }
                 this.thanhToanService.capNhatDiaChi(diaChiDTO, taiKhoan);
-                thanhToanService.thucHienThanhToan(email, cartItems, hinhThucThanhToan, diaChiCuThe, tinh, huyen, xa, phiVanChuyen,ghiChu);
+                thanhToanService.thucHienThanhToan(email, cartItems, hinhThucThanhToan, diaChiCuThe, tinh, huyen, xa, phiVanChuyen, ghiChu);
                 return "redirect:/check-out/success";
             }
         }
@@ -273,6 +274,8 @@ public class CheckoutController {
                             @RequestParam(value = "huyen", required = false) String huyen,
                             @RequestParam(value = "xa", required = false) String xa,
                             @RequestParam(value = "ghiChu", required = false) String ghiChu,
+                            @RequestParam(value = "ten", required = false) String ten,
+                            @RequestParam(value = "sdt", required = false) String sdt,
                             Double phiVanChuyen,
                             Model model, HttpSession session) {
         try {
@@ -340,36 +343,42 @@ public class CheckoutController {
                     return "redirect:/cart/hien-thi";
                 }
             }
-            if(total < 2000000) {
-                if (diaChi.getTinh() == 1) {
-                    phiVanChuyen = 20000.0;
-                } else {
-                    phiVanChuyen = 30000.0;
-                }
-            }else{
-                phiVanChuyen = 0.0;
-            }
+
+            phiVanChuyen = (total < 2000000) ? ((diaChi.getTinh() == 1) ? 20000.0 : 30000.0) : 0.0;
+
+            // Create a random password
             String matKhauNgauNhien = emailService.taoMatKhauNgauNhien();
 
-            TaiKhoan taiKhoanMoi = emailService.taoTaiKhoanMoi(diaChi);
-            emailService.guiEmailDangKyTaiKhoan(taiKhoanMoi.getEmail(), matKhauNgauNhien);
+            // Create an order
+            // Create an order
+            if (diaChi == null || StringUtils.isEmpty(diaChi.getEmail())) {
+                // If email is provided, create an order without creating an account
+                HoaDon hoaDonMoi = emailService.taoHoaDonMoi(null, hinhThucThanhToan, diaChiCuThe, tinh, huyen, xa, phiVanChuyen, ghiChu, ten, sdt);
+                emailService.themSanPhamVaoHoaDonChiTiet(cartItems, hoaDonMoi);
+                emailService.guiEmailXacNhanThanhToan(null, hoaDonMoi);
+            }
+            // If email is not provided, create an account and an order
+            if (diaChi != null && !StringUtils.isEmpty(diaChi.getEmail())) {
 
-            diaChi.setTaiKhoan(taiKhoanMoi);
-
-            emailService.themDiaChiVaoTaiKhoan(diaChi, taiKhoanMoi);
-
-            HoaDon hoaDonMoi = emailService.taoHoaDonMoi(taiKhoanMoi, hinhThucThanhToan, diaChiCuThe, tinh, huyen, xa, phiVanChuyen,ghiChu);
-            emailService.themSanPhamVaoHoaDonChiTiet(cartItems, hoaDonMoi);
-
-            emailService.guiEmailXacNhanThanhToan(taiKhoanMoi.getEmail(), hoaDonMoi);
-            model.addAttribute("hoaDon", hoaDonMoi);
+                TaiKhoan taiKhoanMoi = emailService.taoTaiKhoanMoi(diaChi);
+                if (taiKhoanMoi != null) {  // Check if taiKhoanMoi is not null
+                    emailService.guiEmailDangKyTaiKhoan(taiKhoanMoi.getEmail(), matKhauNgauNhien);
+                    HoaDon hoaDonMoi = emailService.taoHoaDonMoi(taiKhoanMoi, hinhThucThanhToan, diaChiCuThe, tinh, huyen, xa, phiVanChuyen, ghiChu, diaChi.getTen(), diaChi.getSdt());
+                    emailService.themSanPhamVaoHoaDonChiTiet(cartItems, hoaDonMoi);
+                    diaChi.setTaiKhoan(taiKhoanMoi);
+                    emailService.themDiaChiVaoTaiKhoan(diaChi, taiKhoanMoi);
+                    emailService.guiEmailXacNhanThanhToan(taiKhoanMoi.getEmail(), hoaDonMoi);
+                } else {
+                    // Handle the case where creating the account fails
+                    model.addAttribute("error", "Failed to create a new account.");
+                    return "redirect:/shophia-store/home";
+                }
+            }
             session.removeAttribute("cart");
-
             return "redirect:/check-out/success";
 
         } catch (Exception e) {
             e.printStackTrace();
-
             model.addAttribute("error", "Đã xảy ra lỗi trong quá trình thanh toán.");
             return "redirect:/shophia-store/home";
         }
@@ -397,10 +406,10 @@ public class CheckoutController {
                 }
                 return "redirect:/check-out/success";
             } else {
-                return "redirect:/ádfadsf";
+                return "redirect:/shophia-store/home";
             }
         } else {
-            return "redirect:/ádfadsf";
+            return "redirect:/shophia-store/home";
         }
     }
 

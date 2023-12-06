@@ -8,7 +8,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <title>HONO - Multi Purpose HTML Template</title>
+<style>
+    .out-of-stock-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.7); /* Màu nền overlay, có thể điều chỉnh độ trong suốt tùy ý */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
+    .circle {
+        width: 100px; /* Đặt kích thước hình tròn */
+        height: 100px; /* Đặt kích thước hình tròn */
+        background-color: red; /* Đặt màu nền hình tròn */
+        border-radius: 50%; /* Làm hình tròn */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .out-of-stock-text {
+        color: white; /* Màu chữ trong hình tròn */
+        margin: 0; /* Loại bỏ margin để chữ không bị dính vào mép hình tròn */
+    }
+
+    /* Optional: Thiết lập margin hoặc padding cho mỗi product container nếu cần thiết */
+    #product-container {
+        margin-bottom: 20px; /* Ví dụ: Đặt margin dưới cho mỗi product container */
+    }
+    .page-pagination ul li.active a {
+        /* Màu cho trang đã chọn */
+        background-color: #B19361!important;
+        color: #fff!important;
+        /* Các thuộc tính khác tùy thuộc vào thiết kế của bạn */
+    }
+
+    .page-pagination ul li a {
+        /* Màu cho các trang không được chọn */
+        background-color: #fff!important;
+        color: #000!important;
+        /* Các thuộc tính khác tùy thuộc vào thiết kế của bạn */
+    }
+
+    .sidebar-content::-webkit-scrollbar {
+        width: 6px; /* Đặt chiều rộng của thanh cuộn */
+    }
+
+    .sidebar-content::-webkit-scrollbar-thumb {
+        background-color: #B19361; /* Màu nền của thanh cuộn */
+        border-radius: 4px; /* Độ cong của góc thanh cuộn */
+    }
+
+    .sidebar-content::-webkit-scrollbar-track {
+        background-color: #f1f1f1; /* Màu nền của phần dưới thanh cuộn */
+        border-radius: 4px; /* Độ cong của góc phần dưới thanh cuộn */
+    }
+</style>
 
 </head>
 
@@ -441,7 +500,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:each="item : ${cartItems}">
+                                    <tr th:each="item : ${cartItems}" style="max-height: 150px;overflow-y: auto;">
                                         <td class="product_thumb">
                                             <img class="offcanvas-cart-image"
                                                  th:src="@{${item.id.chiTietGiay.anhs.get(0).getDuongDan()}}"
@@ -483,7 +542,7 @@
                                     </tr>
                                     <tr class="order_total">
                                         <td colspan="4" style="text-align: center;">Tổng tiền đơn hàng</td>
-                                        <td><strong id="totalAmount"
+                                        <td><strong id="totalAmount" th:data-id="${total}"
                                                     th:text="${#numbers.formatCurrency(total)}"></strong>
                                         </td>
                                     </tr>
@@ -1105,18 +1164,26 @@
     // Lấy giá trị tổng tiền ban đầu khi trang web được tải lần đầu
     initialTotalAmount = parseFloat($("#totalAmount").data("id"));
 
-    // Hàm cập nhật tổng tiền
     function updateTotalAmount(newTotal, shippingFee) {
-        // Calculate the total amount including the shipping fee
+        // Check if a province is selected
+        const selectedProvinceCode = $("#province").val();
+        if (!selectedProvinceCode) {
+            // Chưa chọn tỉnh
+            $("#shipping-cost").text("Vui lòng chọn địa chỉ");
+            var totalAmount = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(initialTotalAmount);
+
+            $("#totalAmount").text(totalAmount);
+            return;
+        }
+
         const totalAmountWithShipping = newTotal + shippingFee;
         var formattedAmount = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalAmountWithShipping);
 
-        // Display and format the total amount with shipping
         $("#totalAmount").text(`${formattedAmount}`);
-        // Display and format the shipping cost
         var shippingFee3 = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(shippingFee);
         $("#shipping-cost").text(`${shippingFee3}`);
     }
+
 
     // Hàm cập nhật phí vận chuyển khi chọn tỉnh
     function updateShippingFee(selectedProvinceCode) {
@@ -1125,6 +1192,7 @@
             $("#shipping-cost").text("Vui lòng chọn địa chỉ");
             return 0;
         } else {
+            $("#shipping-cost").text("");
             var shippingFee = 0;
             if(initialTotalAmount < 2000000){
                 shippingFee = selectedProvinceCode === "1" ? 20000 : 30000;

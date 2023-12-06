@@ -534,11 +534,11 @@
                                 <div class="default-form-box">
                                     <label for="ghiChu">Ghi chú</label>
                                     <textarea id="ghiChu" name="ghiChu" style="height: 100px;"></textarea>
-                                    <span id="errorGhiChu" style="color: red"></span>
+                                    <span th:if="${#fields.hasErrors('ghiChu')}" th:errors="*{ghiChu}" style="color: red"></span>
                                 </div>
                             </div>
                             <div class="col-12">
-                                <label class="checkbox-default" for="currencyCod" data-bs-toggle="collapse">
+                                <label class="checkbox-default">
                                     <input type="radio" name="giaoHang" checked>
                                     <span>Giao hàng tiêu chuẩn</span>
                                     <br>
@@ -924,15 +924,22 @@
     // Lấy giá trị tổng tiền ban đầu khi trang web được tải lần đầu
     initialTotalAmount = parseFloat($("#totalAmount").data("id"));
 
-    // Hàm cập nhật tổng tiền
     function updateTotalAmount(newTotal, shippingFee) {
-        // Calculate the total amount including the shipping fee
+        // Check if a province is selected
+        const selectedProvinceCode = $("#province").val();
+        if (!selectedProvinceCode) {
+            // Chưa chọn tỉnh
+            $("#shipping-cost").text("Vui lòng chọn địa chỉ");
+            var totalAmount = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(initialTotalAmount);
+
+            $("#totalAmount").text(totalAmount);
+            return;
+        }
+
         const totalAmountWithShipping = newTotal + shippingFee;
         var formattedAmount = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalAmountWithShipping);
 
-        // Display and format the total amount with shipping
         $("#totalAmount").text(`${formattedAmount}`);
-        // Display and format the shipping cost
         var shippingFee3 = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(shippingFee);
         $("#shipping-cost").text(`${shippingFee3}`);
     }

@@ -12,6 +12,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 
@@ -53,9 +54,10 @@ public class EmailService {
 
 
     public TaiKhoan taoTaiKhoanMoi(DiaChiDTO diaChiDTO) {
-        TaiKhoan taiKhoanMoi = new TaiKhoan();
+        TaiKhoan taiKhoanMoi = null;
 
-        if (diaChiDTO != null) {
+        if (diaChiDTO != null && !StringUtils.isEmpty(diaChiDTO.getEmail())) {
+            taiKhoanMoi = new TaiKhoan();
             taiKhoanMoi.setTen(diaChiDTO.getTen());
             taiKhoanMoi.setEmail(diaChiDTO.getEmail());
             taiKhoanMoi.setTrangThai(1);
@@ -68,12 +70,11 @@ public class EmailService {
             taiKhoanMoi.setVaiTro(vaiTro);
             taiKhoanMoi.setSdt(diaChiDTO.getSdt());
             taiKhoanMoi = this.taiKhoanRepository.save(taiKhoanMoi);
-//            guiEmailDangKyTaiKhoan(taiKhoanMoi.getEmail(), matKhauNgauNhien);
         } else {
-            System.err.println("DiaChiDTO or TaiKhoan is null.");
+            System.err.println("DiaChiDTO or TaiKhoan is null, or email is empty.");
         }
-
         return taiKhoanMoi;
+
     }
 
 
@@ -240,21 +241,26 @@ public class EmailService {
     }
 
 
-    public HoaDon taoHoaDonMoi(TaiKhoan taiKhoan, Integer hinhThucThanhToan, String diaChi, String tinh, String huyen, String xa, Double phiVanChuyen, String ghiChu) {
+    public HoaDon taoHoaDonMoi(TaiKhoan taiKhoan, Integer hinhThucThanhToan, String diaChi, String tinh, String huyen, String xa, Double phiVanChuyen, String ghiChu, String ten, String soDienThoai) {
         HoaDon hoaDonMoi = new HoaDon();
         int soHD = this.hoaDonRepository.soHD() + 1;
         hoaDonMoi.setMaHoaDOn("HD" + soHD);
-        hoaDonMoi.setTaiKhoan(taiKhoan);
         hoaDonMoi.setLoaiHoaDon(3);
-        hoaDonMoi.setTenKhachHang(taiKhoan.getTen());
-        hoaDonMoi.setSoDienThoai(taiKhoan.getSdt());
+        if (taiKhoan != null) {
+            hoaDonMoi.setTaiKhoan(taiKhoan);
+            hoaDonMoi.setTenKhachHang(taiKhoan.getTen());
+            hoaDonMoi.setSoDienThoai(taiKhoan.getSdt());
+        } else {
+            hoaDonMoi.setTenKhachHang(ten);
+            hoaDonMoi.setSoDienThoai(soDienThoai);
+        }
         hoaDonMoi.setDiaChi(diaChi + ", " + xa + ", " + huyen + ", " + tinh);
         hoaDonMoi.setPhiShip(phiVanChuyen);
         hoaDonMoi.setTienThua(0.0);
         hoaDonMoi.setGhiChu(ghiChu);
-        if(hinhThucThanhToan == 3) {
+        if (hinhThucThanhToan == 3) {
             hoaDonMoi.setTrangThai(3);
-        }else if(hinhThucThanhToan == 2){
+        } else if (hinhThucThanhToan == 2) {
             hoaDonMoi.setTrangThai(2);
         }
 
@@ -269,9 +275,9 @@ public class EmailService {
 
         LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
         lichSuHoaDon.setHoaDon(hoaDonMoi);
-        if(hinhThucThanhToan == 3) {
+        if (hinhThucThanhToan == 3) {
             lichSuHoaDon.setPhuongThuc("3");
-        }else if(hinhThucThanhToan == 2){
+        } else if (hinhThucThanhToan == 2) {
             lichSuHoaDon.setPhuongThuc("2");
         }
         this.lichSuHoaDonWebRepository.save(lichSuHoaDon);

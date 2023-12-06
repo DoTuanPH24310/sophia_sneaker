@@ -120,7 +120,9 @@ public class CartController {
 
 
     @GetMapping("/add-to-cart/{id}")
-    public String addToCart(@PathVariable("id") UUID chiTietGiayId, Model model, HttpSession httpSession) {
+    public String addToCart(@PathVariable("id") UUID chiTietGiayId, Model model,
+                            @RequestParam(value = "quantity", defaultValue = "1") int quantity,
+                            HttpSession httpSession) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             ChiTietGiay chiTietGiay = chiTietGiayRepository.findById(chiTietGiayId).orElse(null);
@@ -132,7 +134,7 @@ public class CartController {
                 if (authentication != null && authentication.isAuthenticated() && !authentication.getPrincipal().equals("anonymousUser")) {
                     // Người dùng đã đăng nhập
                     TaiKhoan taiKhoan = loginRepository.findByEmail(authentication.getName());
-                    cartService.addToCart(taiKhoan.getEmail(), chiTietGiayId);
+                    cartService.addToCart(taiKhoan.getEmail(), chiTietGiayId, quantity);
 
                     // Hiển thị giỏ hàng từ database
                     GioHang gioHang = gioHangRepository.findByTaiKhoan(taiKhoan);
@@ -151,7 +153,7 @@ public class CartController {
                             .anyMatch(item -> item.getId().getChiTietGiay().getId().equals(chiTietGiayId) && item.getSoLuong() == maxQuantity);
                 } else {
                     // Người dùng chưa đăng nhập
-                    cartService.addToCartNoLogin(chiTietGiayId, httpSession);
+                    cartService.addToCartNoLogin(chiTietGiayId, httpSession, quantity);
 
                     // Hiển thị giỏ hàng từ session
                     Cart cart = (Cart) httpSession.getAttribute("cart");
