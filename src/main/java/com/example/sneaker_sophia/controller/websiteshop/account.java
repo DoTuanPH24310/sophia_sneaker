@@ -4,6 +4,7 @@ import com.example.sneaker_sophia.dto.TaiKhoanDTO;
 import com.example.sneaker_sophia.entity.*;
 import com.example.sneaker_sophia.repository.*;
 import com.example.sneaker_sophia.service.*;
+import com.example.sneaker_sophia.validate.AlertInfo;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -56,6 +57,13 @@ public class account {
 
     @Resource(name = "htttService")
     HTTTService htttService;
+
+
+    @Resource(name = "chiTietGiayService")
+    ChiTietGiayService chiTietGiayService;
+
+    @Autowired
+    private AlertInfo alertInfo;
 
     @GetMapping("home")
     public String home(Model model, HttpSession session) {
@@ -112,17 +120,24 @@ public class account {
     private String cancel(@PathVariable("idhd") HoaDon hd,
                           @RequestParam(value = "value",required = false) String value){
         if (value == null || value.length() > 150 || hd.getTrangThai() != 3){
+            alertInfo.alert("errTaiQuay", null);
             return "/my-account/detail/"+hd.getId();
         }
 
         LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
-
-        lshdService.savelshd(lichSuHoaDon);
+        List<HoaDonChiTiet> listhdct = hoaDonChiTietServive.getHDCTByIdHD(hd.getId());
+        for (HoaDonChiTiet hdct : listhdct) {
+            ChiTietGiay chiTietGiay = hdct.getChiTietGiay();
+            chiTietGiay.setSoLuong(chiTietGiay.getSoLuong() + hdct.getSoLuong());
+            chiTietGiayService.save(chiTietGiay);
+        }
         hd.setGhiChu(value);
         hd.setTrangThai(6);
         lichSuHoaDon.setHoaDon(hd);
         lichSuHoaDon.setPhuongThuc("6");
+        lshdService.savelshd(lichSuHoaDon);
         hoaDonService.savehd(hd);
+        alertInfo.alert("successTaiQuay", "Đơn hàng đã được hủy");
         return "redirect:/my-account/home";
     }
 

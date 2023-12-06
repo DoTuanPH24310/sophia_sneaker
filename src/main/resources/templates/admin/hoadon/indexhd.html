@@ -218,6 +218,12 @@
                                                     <i class="material-icons text-white mt-1" title="Sửa">&#xE254;</i>
                                                 </a>
 
+                                                <button th:if="${hdc.loaiHoaDon == 3}"
+                                                   class="btn btn-warning edit" disabled
+                                                   style="padding: 5px 10px; font-size: 12px">
+                                                    <i class="material-icons text-white mt-1" title="Sửa">&#xE254;</i>
+                                                </button>
+
                                                 <a th:href="@{/admin/hoa-don/detail/{id}(id=${hdc.id})}"
                                                    class="btn btn-success "
                                                    style=" padding: 5px 10px; font-size: 12px;">
@@ -372,6 +378,12 @@
                                                 </button>
                                             </td>
                                             <td>
+
+                                                <button th:if="${hd.loaiHoaDon == 3}"
+                                                        class="btn btn-warning edit" disabled
+                                                        style="padding: 5px 10px; font-size: 12px">
+                                                    <i class="material-icons text-white mt-1" title="Sửa">&#xE254;</i>
+                                                </button>
 
                                                 <a th:unless="${hd.loaiHoaDon == 3}"
                                                    th:href="@{/admin/tai-quay/detail/{id}(id=${hd.id})}"
@@ -631,9 +643,12 @@
             myLinksXNTC.addEventListener('click', function (event) {
                 event.preventDefault();
                 let mess = prompt("Nhập ghi chú : ");
-                let action = actionFormXNTC.getAttribute('action') + '?value=' + mess;
-                actionFormXNTC.setAttribute('action', action);
-                actionFormXNTC.submit();
+                if (mess!=null){
+                    let action = actionFormXNTC.getAttribute('action') + '?value=' + mess;
+                    actionFormXNTC.setAttribute('action', action);
+                    actionFormXNTC.submit();
+                }
+
             });
         }
 
@@ -794,8 +809,10 @@ type="checkbox">`;
                     let button2 = `<a href="/admin/hoa-don/detail/${id}" class="btn btn-success ms-1" style=" padding: 5px 10px; font-size: 12px;"><i class="material-icons text-white mt-1" title="Chi tiết">visibility</i></a>`;
                     row.insertCell().innerHTML = button1 + button2;
                 }else{
+                    let button1 =`<button class="btn btn-warning edit" disabled style="padding: 5px 10px; font-size: 12px"><i class="material-icons text-white mt-1" title="Sửa">&#xE254;</i></button>`
+
                     let button2 = `<a href="/admin/hoa-don/detail/${id}" class="btn btn-success ms-1" style=" padding: 5px 10px; font-size: 12px;"><i class="material-icons text-white mt-1" title="Chi tiết">visibility</i></a>`;
-                    row.insertCell().innerHTML = button2;
+                    row.insertCell().innerHTML = button1+button2;
                 }
 
             }else if (activeTab == '' || activeTab == '#choGiao'){
@@ -804,8 +821,9 @@ type="checkbox">`;
                     let button2 = `<a href="/admin/hoa-don/detail/${id}" class="btn btn-success ms-1" style=" padding: 5px 10px; font-size: 12px;"><i class="material-icons text-white mt-1" title="Chi tiết">visibility</i></a>`;
                     row.insertCell().innerHTML = button1 + button2;
                 }else{
+                    let button1 =`<button class="btn btn-warning edit" disabled style="padding: 5px 10px; font-size: 12px"><i class="material-icons text-white mt-1" title="Sửa">&#xE254;</i></button>`
                     let button2 = `<a href="/admin/hoa-don/detail/${id}" class="btn btn-success ms-1" style=" padding: 5px 10px; font-size: 12px;"><i class="material-icons text-white mt-1" title="Chi tiết">visibility</i></a>`;
-                    row.insertCell().innerHTML = button2;
+                    row.insertCell().innerHTML = button1+button2;
                 }
 
 

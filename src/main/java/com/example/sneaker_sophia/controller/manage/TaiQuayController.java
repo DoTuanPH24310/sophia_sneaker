@@ -2,7 +2,6 @@ package com.example.sneaker_sophia.controller.manage;
 
 import com.example.sneaker_sophia.entity.*;
 import com.example.sneaker_sophia.repository.AnhRepository;
-import com.example.sneaker_sophia.repository.TaiKhoanRepository;
 import com.example.sneaker_sophia.request.TaiKhoanRequest;
 import com.example.sneaker_sophia.service.*;
 import com.example.sneaker_sophia.validate.AlertInfo;
