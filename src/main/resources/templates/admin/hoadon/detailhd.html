@@ -165,33 +165,33 @@
         </div>
 
         <div th:if="${hoaDon.trangThai == 4}" class="float-right mr-3">
-            <a th:href="@{/admin/hoa-don/updatehdcg/{id}(id=${hoaDon.id})}" onclick="return confirm('Xác nhận giao?')"
+            <a th:href="@{/staff/hoa-don/updatehdcg/{id}(id=${hoaDon.id})}" onclick="return confirm('Xác nhận giao?')"
                class="btn btn-primary">Xác nhận
                 giao</a>
-            <a th:href="@{/admin/hoa-don/huyhdcg/{id}(id=${hoaDon.id})}" class=" myLinkHuy btn btn-danger mr-3">Hủy</a>
+            <a th:href="@{/staff/hoa-don/huyhdcg/{id}(id=${hoaDon.id})}" class=" myLinkHuy btn btn-danger mr-3">Hủy</a>
         </div>
 
         <div th:if="${hoaDon.trangThai == 2 && hoaDon.loaiHoaDon == 3}" class="float-right mr-3">
-            <a th:href="@{/admin/hoa-don/huyhdctt/{id}(id=${hoaDon.id})}"
+            <a th:href="@{/staff/hoa-don/huyhdctt/{id}(id=${hoaDon.id})}"
                class=" myLinkHuy btn btn-danger mr-3">Hủy</a>
         </div>
         <div th:if="${hoaDon.trangThai == 5}" class="float-right mr-3">
-            <a th:href="@{/admin/hoa-don/huyhdddg/{id}(id=${hoaDon.id})}"
+            <a th:href="@{/staff/hoa-don/huyhdddg/{id}(id=${hoaDon.id})}"
                class=" myLinkHuy btn btn-danger mr-3">Hủy</a>
         </div>
         <div th:if="${hoaDon.trangThai == 5}" class="float-right">
-            <a th:href="@{/admin/hoa-don/updatehddg/{id}(id=${hoaDon.id})}" id="myLinhXacNhan"
+            <a th:href="@{/staff/hoa-don/updatehddg/{id}(id=${hoaDon.id})}" id="myLinhXacNhan"
                class="btn btn-primary mr-1">Xác
                 nhận
                 thành công</a>
         </div>
         <div th:if="${hoaDon.trangThai == 1}" class="float-right">
-            <a th:href="@{/admin/tai-quay/pdf/{id}(id=${hoaDon.id})}" class="btn btn-primary mr-3">In HĐ</a>
+            <a th:href="@{/staff/tai-quay/pdf/{id}(id=${hoaDon.id})}" class="btn btn-primary mr-3">In HĐ</a>
 
         </div>
         <div th:if="${hoaDon.trangThai == 3}" class="float-right">
-            <a th:href="@{/admin/hoa-don/updatehdcxn/{id}(id=${hoaDon.id})}" class="btn btn-primary">Xác nhận đơn</a>
-            <a th:href="@{/admin/hoa-don/huyhdcxn/{id}(id=${hoaDon.id})}" class="myLinkHuy btn btn-danger mr-3">Hủy</a>
+            <a th:href="@{/staff/hoa-don/updatehdcxn/{id}(id=${hoaDon.id})}" class="btn btn-primary">Xác nhận đơn</a>
+            <a th:href="@{/staff/hoa-don/huyhdcxn/{id}(id=${hoaDon.id})}" class="myLinkHuy btn btn-danger mr-3">Hủy</a>
         </div>
 
     </div>

@@ -48,10 +48,9 @@
 <body>
 
 <div layout:fragment="content" class="container" style="background-color: white;">
-    <!--        <form action="/admin/tai-quay/addHD" method="post">-->
 
     <div class="row float-right mr-1">
-        <form action="/admin/tai-quay/addHD" method="get">
+        <form action="/staff/tai-quay/addHD" method="get">
             <button class="btn btn-primary mt-2 ">Tạo hóa đơn</button>
         </form>
     </div>
@@ -65,36 +64,18 @@
             <li class="nav-item" th:each="hdc : ${listHDC}">
 
                 <a th:if="${hdc.id == maHD}" class="nav-link active" style=" display: inline-block;"
-                   th:href="@{/admin/tai-quay/detail/{id}(id=${hdc.id})}">
+                   th:href="@{/staff/tai-quay/detail/{id}(id=${hdc.id})}">
 
                     <span th:text="${hdc.maHoaDOn}"></span>
                 </a>
                 <a th:unless="${hdc.id == maHD}" class="nav-link " style=" display: inline-block;"
-                   th:href="@{/admin/tai-quay/detail/{id}(id=${hdc.id})}">
+                   th:href="@{/staff/tai-quay/detail/{id}(id=${hdc.id})}">
 
                     <span th:text="${hdc.maHoaDOn}"></span>
                 </a>
                 <a style="background-color: white; border: none; color: red;  font-weight: bold; font-size: 14px; margin-left: 10px; margin-right: 10px"
-                   class="myLinkHuy" th:href="@{/admin/tai-quay/deletehd/{id}(id=${hdc.id})}">X
+                   class="myLinkHuy" th:href="@{/staff/tai-quay/deletehd/{id}(id=${hdc.id})}">X
                 </a>
-
-                <!--
-
-                <a th:if="${hdc.maHoaDOn == modelma}" class="nav-link active" href="/admin/banhang/hienthi/${hdc.maHoaDOn}">
-                                        <span th:text="${hdc.maHoaDOn}"></span>
-                                        <button
-                                                style="background-color: white; border: none; color: red; font-weight: bold;">x
-                                        </button>
-                                    </a>
-<a th:unless="${hdc.maHoaDOn == modelma}" class="nav-link" href="#">
-                                        <span th:text="${hdc.maHoaDOn}"></span>
-                                        <button
-                                                style="background-color: white; border: none; color: red; font-weight: bold;">x
-                                        </button>
-                                    </a>
-                -->
-
-
             </li>
         </ul>
     </div>
@@ -113,7 +94,7 @@
                     QR code sản phẩm
                 </a>
 
-                <a th:href="@{/admin/tai-quay/open-sanpham}" onclick="getAllList();"
+                <a th:href="@{/staff/tai-quay/open-sanpham}" onclick="getAllList();"
                    class="btn btn-primary  float-right mx-2" data-toggle="modal"
                    data-target="#modalChiTietGiay">
                     Thêm sản phẩm
@@ -150,13 +131,13 @@
 
                                 <span class="input-group-btn">
 
-                                                   <a th:href="@{/admin/tai-quay/update-down/{id}(id=${hdct.chiTietGiay.id})}"
+                                                   <a th:href="@{/staff/tai-quay/update-down/{id}(id=${hdct.chiTietGiay.id})}"
                                                       class="" style="width: 10px"> <span
                                                            class="fa fa-minus"></span></a>
                                 </span>
                             <span th:text="${hdct.soLuong}" style="margin-left: 10px; margin-right: 10px"></span>
                             <span class="input-group-btn">
-                                                    <a th:href="@{/admin/tai-quay/update-up/{id}(id=${hdct.chiTietGiay.id})}"
+                                                    <a th:href="@{/staff/tai-quay/update-up/{id}(id=${hdct.chiTietGiay.id})}"
                                                        class="" style="width: 10px; text-align: center"><span
                                                             class="fa fa-plus"></span></a>
                                 </span>
@@ -186,7 +167,7 @@
                         </td>
                         <td>
                             <a class="delete" style="text-decoration: none"
-                               th:href="@{/admin/tai-quay/deletehdct/{id}(id=${hdct.chiTietGiay.id})}"
+                               th:href="@{/staff/tai-quay/deletehdct/{id}(id=${hdct.chiTietGiay.id})}"
                                title="Xóa">
                                 <i class="fa fa-trash"></i>
                             </a>
@@ -262,7 +243,7 @@
             </div>
             <hr>
         </form>
-        <form id="formXacNhanDonHang" action="/admin/tai-quay/addhttt" method="post" th:object="${nhanVienRequest}">
+        <form id="formXacNhanDonHang" action="/staff/tai-quay/addhttt" method="post" th:object="${nhanVienRequest}">
             <div class="row mb-5">
                 <th:block th:if="${nhanVienRequest != null}">
                     <div class="col-6">
@@ -598,7 +579,7 @@
     <div class="modal fade" id="modalSoLuong" tabindex="-1" data-backdrop="static"
          aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" style="max-width: 500px;">
-            <form action="/admin/tai-quay/addhdct" method="get" id="formSoluong">
+            <form action="/staff/tai-quay/addhdct" method="get" id="formSoluong">
                 <div class="modal-content">
 
                     <div class="modal-header">
@@ -663,7 +644,7 @@
 
                         <div class="row mt-2 mb-2">
                             <div class="col-3">
-                                <a th:href="@{/admin/tai-quay/deletekhhd#labeltaiKhoan}" class="btn btn-primary">Khách
+                                <a th:href="@{/staff/tai-quay/deletekhhd#labeltaiKhoan}" class="btn btn-primary">Khách
                                     lẻ</a>
                             </div>
                         </div>
@@ -765,7 +746,7 @@
     <div class="modal fade" id="modalThemDiaChi" tabindex="-1" data-backdrop="static"
          aria-labelledby="exampleModalLabel"
          aria-hidden="true">
-        <form action="/admin/tai-quay/adddc#labeltaiKhoan" method="post" id="formThemDiaChi">
+        <form action="/staff/tai-quay/adddc#labeltaiKhoan" method="post" id="formThemDiaChi">
             <div class="modal-dialog" style="max-width: 500px;">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -946,7 +927,7 @@
             removeSeesion('checkTTHT');
             window.onload = function () {
                 $('#modalInHoaDon').modal('show');
-                document.getElementById('inHoaDon').href = 'http://localhost:8080/admin/tai-quay/pdf/' + idHoaDon;
+                document.getElementById('inHoaDon').href = 'http://localhost:8080/staff/tai-quay/pdf/' + idHoaDon;
                 document.getElementById('inHoaDon').addEventListener('click', function () {
                     $('#modalInHoaDon').modal('hide');
                 });
@@ -1300,7 +1281,7 @@
         function insertTrCKH(x) {
             let id = x.id
             let button = document.createElement("a");
-            button.href = "/admin/tai-quay/chonTK/" + id + "#labeltaiKhoan";
+            button.href = "/staff/tai-quay/chonTK/" + id + "#labeltaiKhoan";
             button.text = 'Chọn';
             button.classList.add("btn")
             button.classList.add("btn-warning")
@@ -1430,14 +1411,14 @@
         function loadTrDDC(x, index) {
             let buttonChon = document.createElement('a');
             let buttonSua = document.createElement('a');
-            buttonChon.href = '/admin/tai-quay/updateDCMD/' + x.id + '#labelKhachhang';
+            buttonChon.href = '/staff/tai-quay/updateDCMD/' + x.id + '#labelKhachhang';
             buttonChon.text = 'Chọn'
             buttonChon.classList.add('btn');
             buttonChon.classList.add('btn-warning');
             buttonChon.style.display = 'inline';
 
 
-            buttonSua.href = '/admin/tai-quay/deleteDC/' + x.id + '#labelKhachhang';
+            buttonSua.href = '/staff/tai-quay/deleteDC/' + x.id + '#labelKhachhang';
             buttonSua.text = 'Xóa'
             buttonSua.classList.add('btn');
             buttonSua.classList.add('btn-danger');
@@ -1682,7 +1663,7 @@
                     scanning = false;
                     startScanningButton.disabled = true;
                     stopScanningButton.disabled = true;
-                    window.location.href = "/admin/tai-quay/detail/" + idHoaDon;
+                    window.location.href = "/staff/tai-quay/detail/" + idHoaDon;
                 }
             }
 
@@ -1754,7 +1735,7 @@
             }
 
             function sendQRCodeToServer(qrCodeData) {
-                const url = '/admin/tai-quay/scan';
+                const url = '/staff/tai-quay/scan';
                 const data = {qrCodeData: qrCodeData};
 
                 fetch(url, {

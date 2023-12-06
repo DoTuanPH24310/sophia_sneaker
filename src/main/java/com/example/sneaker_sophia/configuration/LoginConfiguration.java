@@ -42,7 +42,7 @@ public class LoginConfiguration {
         http
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
-                        .requestMatchers("/staff/**").hasAnyAuthority("ADMIN", "Nhan Vien")
+                        .requestMatchers("/staff/**").hasAnyAuthority("ADMIN", "NhanVien")
                         .anyRequest().permitAll()
                 )
                 .formLogin(login -> login
@@ -56,7 +56,7 @@ public class LoginConfiguration {
                         .logoutSuccessUrl("/login/home")
                 )
                 .exceptionHandling(exceptions -> exceptions
-                        .accessDeniedPage("/login/home")
+                        .accessDeniedPage("/login/403")
                         .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login/home"))
                 );
 

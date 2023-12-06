@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.util.List;
 
 @Controller
-@RequestMapping("/admin/khachhang")
+@RequestMapping("/staff/khachhang")
 public class KhachHangController {
     @Resource(name = "taiKhoanService")
     TaiKhoanService taiKhoanService;

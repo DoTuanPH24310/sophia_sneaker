@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/admin/nhanvien")
 @RequiredArgsConstructor
 public class NhanVienController {
 
@@ -36,7 +35,7 @@ public class NhanVienController {
     @Resource(name = "diaChiService")
     DiaChiService diaChiService;
 
-    @GetMapping("/hienthi")
+    @GetMapping("/staff/nhanvien/hienthi")
     public String index(
             Model model,
             @Parameter(hidden = true) Pageable pageable,
@@ -58,7 +57,7 @@ public class NhanVienController {
         return "admin/nhanvien/indexnv";
     }
 
-    @GetMapping("/create")
+    @GetMapping("/admin/nhanvien/create")
     public String create(Model model, HttpSession session) {
         session.setAttribute("tinh", "-1");
         session.setAttribute("quan", "-1");
@@ -69,7 +68,7 @@ public class NhanVienController {
         return "admin/nhanvien/createnv";
     }
 
-    @GetMapping("/edit/{id}")
+    @GetMapping("/admin/nhanvien/edit/{id}")
     public String editView(
             Model model,
             @PathVariable("id") String id, HttpSession session
@@ -85,7 +84,7 @@ public class NhanVienController {
         return "admin/nhanvien/editnv";
     }
 
-    @GetMapping("/infor/{id}")
+    @GetMapping("/staff/nhanvien/infor/{id}")
     public String infor(
             Model model,
             @PathVariable("id") String id, HttpSession session
@@ -102,7 +101,7 @@ public class NhanVienController {
 
     private final FileUpload fileUpload;
 
-    @PostMapping("/store")
+    @PostMapping("/admin/nhanvien/store")
     public String create(
             Model model,
             @RequestParam("image") MultipartFile multipartFile,
@@ -134,7 +133,7 @@ public class NhanVienController {
 
     }
 
-    @PostMapping("/update/{id}")
+    @PostMapping("/admin/nhanvien/update/{id}")
     public String update(
             Model model,
             @PathVariable("id") String idTaiKhoan,

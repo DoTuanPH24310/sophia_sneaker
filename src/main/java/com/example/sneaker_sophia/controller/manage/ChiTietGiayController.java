@@ -22,7 +22,6 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/admin/")
 public class ChiTietGiayController {
 
     @Autowired
@@ -48,7 +47,7 @@ public class ChiTietGiayController {
 
 
 
-    @GetMapping("chi-tiet-giay")
+    @GetMapping("/staff/chi-tiet-giay")
     public String listFirstPage(Model model) {
         return listByPage(1, model, "ngayTao", "asc", null, null, null, null, null, null, null, null, "0", null, null, null);
     }
@@ -140,7 +139,7 @@ public class ChiTietGiayController {
         return "admin/chiTietGiay/chiTietGiay";
     }
 
-    @GetMapping("chi-tiet-giay/add")
+    @GetMapping("/admin/chi-tiet-giay/add")
     public String formAdd(Model model) {
         ChiTietGiay chiTietGiay = new ChiTietGiay();
         model.addAttribute("chiTietGiay", chiTietGiay);
@@ -155,7 +154,7 @@ public class ChiTietGiayController {
     }
 
 
-    @GetMapping("chi-tiet-giay/edit/{id}")
+    @GetMapping("/admin/chi-tiet-giay/edit/{id}")
     public String edit(Model model, @PathVariable("id") UUID id) {
         ChiTietGiay chiTietGiay = chiTietGiayService.getOne(id);
         model.addAttribute("chiTietGiay", chiTietGiay);
@@ -170,7 +169,7 @@ public class ChiTietGiayController {
         return "admin/chiTietGiay/formEditChiTietGiay";
     }
 
-    @PostMapping("/chi-tiet-giay/add")
+    @PostMapping("/admin/chi-tiet-giay/add")
     public String add(
             @ModelAttribute ChiTietGiay chiTietGiay,
             @RequestParam("imageFile") MultipartFile[] imageFiles,
@@ -222,7 +221,7 @@ public class ChiTietGiayController {
 
         return "redirect:/admin/chi-tiet-giay";
     }
-    @PostMapping("chi-tiet-giay/update")
+    @PostMapping("/admin/chi-tiet-giay/update")
     public String update(ChiTietGiay chiTietGiay,
                          @RequestParam("imageFile") MultipartFile[] imageFiles,
                          Model model) {
@@ -273,19 +272,19 @@ public class ChiTietGiayController {
         return "redirect:/admin/chi-tiet-giay";
     }
 
-    @GetMapping("chi-tiet-giay/delete/{id}")
+    @GetMapping("/admin/chi-tiet-giay/delete/{id}")
     public String delete(@PathVariable("id") UUID id) {
         chiTietGiayService.delete(id);
         return "redirect:/admin/chi-tiet-giay";
     }
 
-    @GetMapping("chi-tiet-giay/delete-anh/{id}")
+    @GetMapping("/admin/chi-tiet-giay/delete-anh/{id}")
     public String deleteAnhByChiTietGiay(@PathVariable("id") UUID id) {
         anhService.deleteAnhByChiTietGiay(chiTietGiayService.getOne(id));
         return "redirect:/admin/chi-tiet-giay/edit/{id}";
     }
 
-    @GetMapping("anh/delete-anh/{id}")
+    @GetMapping("/admin/anh/delete-anh/{id}")
     public String deleteAnhById(@PathVariable("id") String id) {
         UUID uuid = chiTietGiayService.findChiTietGiayIdByAnhId(id);
         anhService.delete(id);
