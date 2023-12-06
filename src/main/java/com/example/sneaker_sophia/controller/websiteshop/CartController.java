@@ -11,6 +11,7 @@ import com.example.sneaker_sophia.validate.AlertInfo;
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -52,8 +53,6 @@ public class CartController {
             for (GioHangChiTiet cartItem : cartItems) {
                 ChiTietGiay chiTietGiay = cartItem.getId().getChiTietGiay();
                 khuyenMaiWebService.tinhGiaSauKhuyenMai(chiTietGiay, httpSession);
-
-
             }
 
             double totalCartPrice = cartItems.stream()
@@ -64,9 +63,7 @@ public class CartController {
                     })
                     .sum();
 
-            Long soLuong = this.cartService.countCartItems(authentication.getName());
-
-            model.addAttribute("soLuong", soLuong);
+            model.addAttribute("soLuongSessionGioHang", cartItems.size());
             model.addAttribute("totalCartPrice", totalCartPrice);
             model.addAttribute("cartItems", cartItems);
             model.addAttribute("isLoggedIn", true);
@@ -76,14 +73,18 @@ public class CartController {
 
             if (cart == null || (cart != null && cart.getItems().isEmpty())) {
                 return "website/productwebsite/empty-cart";
-            } else if (cart != null) {
+            } else {
+                long numberOfItems = cart.getItems().stream()
+                        .mapToLong(CartItem::getSoLuong)
+                        .count();
+
                 for (CartItem cartItem : cart.getItems()) {
                     UUID chiTietGiayId = cartItem.getId();
                     ChiTietGiay chiTietGiay = this.chiTietGiayRepository.findById(chiTietGiayId).orElse(null);
+
                     if (chiTietGiay != null) {
                         khuyenMaiWebService.tinhGiaSauKhuyenMai(chiTietGiay, httpSession);
                         model.addAttribute("maxQuantity_" + chiTietGiay.getId(), chiTietGiay.getSoLuong());
-
                     }
                 }
 
@@ -91,13 +92,30 @@ public class CartController {
                 double totalCartPrice = cartItems.stream()
                         .mapToDouble(item -> item.getGia() * item.getSoLuong())
                         .sum();
-                Long soLuong = cartItems.stream().mapToLong(CartItem::getSoLuong).sum();
-                model.addAttribute("soLuong", soLuong);
+
+                model.addAttribute("soLuongSessionGioHang", numberOfItems);
                 model.addAttribute("totalCartPrice", totalCartPrice);
                 model.addAttribute("cartItem", cartItems);
             }
             return "website/productwebsite/cartSession";
         }
+    }
+
+    @GetMapping("/get-cart-item-count")
+    public ResponseEntity<Long> getCartItemCount(HttpSession session, Authentication authentication) {
+        long cartItemCount = 0;
+
+        // Kiểm tra giỏ hàng trong session
+        Cart cartSession = (Cart) session.getAttribute("cart");
+        cartItemCount += cartSession != null ? cartSession.getItems().stream().mapToLong(CartItem::getSoLuong).count() : 0;
+
+        // Kiểm tra giỏ hàng trong database nếu người dùng đã đăng nhập
+        if (authentication != null && authentication.isAuthenticated() && !authentication.getPrincipal().equals("anonymousUser")) {
+            List<GioHangChiTiet> cartItemsDatabase = cartService.getCartItems(authentication.getName());
+            cartItemCount += cartItemsDatabase != null ? cartItemsDatabase.stream().mapToLong(GioHangChiTiet::getSoLuong).count() : 0;
+        }
+
+        return ResponseEntity.ok(cartItemCount);
     }
 
 

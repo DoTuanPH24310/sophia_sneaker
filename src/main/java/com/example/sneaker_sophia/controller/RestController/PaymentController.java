@@ -20,8 +20,6 @@ import java.util.*;
 @RestController
 @RequestMapping("/api/payment")
 public class PaymentController {
-
-
     @GetMapping("/create_payment")
     public String createPayment(@RequestParam("totalAmount") String totalAmount) throws UnsupportedEncodingException {
         String vnp_Version = "2.1.0";
@@ -31,7 +29,7 @@ public class PaymentController {
         cleanedTotalAmount = cleanedTotalAmount.replaceFirst("\\.(?=.*\\.)", "");
 
         double totalAmountDouble = Double.parseDouble(cleanedTotalAmount);
-        long amount = (long) (totalAmountDouble * 100000);
+        long amount = (long) (totalAmountDouble * 100);
 
         String bankCode = "NCB";
 

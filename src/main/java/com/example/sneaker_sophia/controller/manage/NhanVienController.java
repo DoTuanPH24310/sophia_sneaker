@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/admin/nhanvien")
 @RequiredArgsConstructor
 public class NhanVienController {
 
@@ -36,7 +35,7 @@ public class NhanVienController {
     @Resource(name = "diaChiService")
     DiaChiService diaChiService;
 
-    @GetMapping("/hienthi")
+    @GetMapping("/staff/nhanvien/hienthi")
     public String index(
             Model model,
             @Parameter(hidden = true) Pageable pageable,
@@ -58,7 +57,7 @@ public class NhanVienController {
         return "admin/nhanvien/indexnv";
     }
 
-    @GetMapping("/create")
+    @GetMapping("/admin/nhanvien/create")
     public String create(Model model, HttpSession session) {
         session.setAttribute("tinh", "-1");
         session.setAttribute("quan", "-1");
@@ -69,7 +68,7 @@ public class NhanVienController {
         return "admin/nhanvien/createnv";
     }
 
-    @GetMapping("/edit/{id}")
+    @GetMapping("/admin/nhanvien/edit/{id}")
     public String editView(
             Model model,
             @PathVariable("id") String id, HttpSession session
@@ -81,14 +80,28 @@ public class NhanVienController {
         session.setAttribute("tinh", diaChiList.getTinh());
         session.setAttribute("quan", diaChiList.getQuanHuyen());
         session.setAttribute("phuong", diaChiList.getPhuongXa());
-        session.setAttribute("anhDaiDien", taiKhoanDiaChi.getAnhDaiDien());
 
         return "admin/nhanvien/editnv";
     }
 
+    @GetMapping("/staff/nhanvien/infor/{id}")
+    public String infor(
+            Model model,
+            @PathVariable("id") String id, HttpSession session
+    ) {
+//        DiaChi taiKhoan = diaChiService.getNhanVienDTOById(id);
+        TaiKhoanRequest taiKhoanDiaChi = taiKhoanService.getTaiKhoanById(id);
+        DiaChi diaChiList = diaChiService.getDiaChiByIdTaiKhoan(id);
+        model.addAttribute("nhanVien", taiKhoanDiaChi);
+        session.setAttribute("tinh", diaChiList.getTinh());
+        session.setAttribute("quan", diaChiList.getQuanHuyen());
+        session.setAttribute("phuong", diaChiList.getPhuongXa());
+        return "admin/nhanvien/infor";
+    }
+
     private final FileUpload fileUpload;
 
-    @PostMapping("/store")
+    @PostMapping("/admin/nhanvien/store")
     public String create(
             Model model,
             @RequestParam("image") MultipartFile multipartFile,
@@ -120,7 +133,7 @@ public class NhanVienController {
 
     }
 
-    @PostMapping("/update/{id}")
+    @PostMapping("/admin/nhanvien/update/{id}")
     public String update(
             Model model,
             @PathVariable("id") String idTaiKhoan,
@@ -131,8 +144,7 @@ public class NhanVienController {
         nv_rq.setIdTaiKhoan(idTaiKhoan);
         String imageURL = null;
 
-
-        nv_rq.setIdVaiTro(vaiTroRepository.getIdByTenNV());
+        nv_rq.setIdVaiTro(taiKhoan.getIdVaiTro());
         if (!taiKhoanService.validateUppdate(nv_rq, model)) {
             session.setAttribute("tinh", nv_rq.getTinh());
             session.setAttribute("quan", nv_rq.getQuanHuyen());
@@ -146,7 +158,14 @@ public class NhanVienController {
         }
         nv_rq.setAnhDaiDien(imageURL);
         taiKhoanService.update(idTaiKhoan, nv_rq, model);
-        return "redirect:/admin/nhanvien/hienthi";
+        if(taiKhoan.getIdTaiKhoan().equals(vaiTroRepository.getIdByTenNV())){
+            return "redirect:/admin/nhanvien/hienthi";
+        }else {
+            return "redirect:/admin/tai-quay/hien-thi";
+        }
+
     }
+
+
 
 }

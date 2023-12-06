@@ -297,7 +297,7 @@
                                 </div>
                                 <div class="cart_subtotal">
                                     <p>Thành tiền</p>
-                                    <p class="cart_amount"
+                                    <p class="cart_amount" id="totalAmount"
                                        th:text="${#numbers.formatCurrency(hoaDon.tongTien + hoaDon.phiShip)}"></p>
                                 </div>
                                 <div th:if="${hoaDon.trangThai == 3 || hoaDon.trangThai == 2}" class="checkout_btn">
@@ -345,47 +345,51 @@
                     </button>
                 </div>
             </div>
-            <div class="modal-body">
-                <div class="container">
-                    <div class="row">
-                        <label class="checkbox-default" for="currencyPaypal" data-bs-toggle="collapse"
-                               data-bs-target="#methodPaypal">
-                            <input checked type="radio" id="currencyPaypal" name="hinhThucThanhToan" value="1">
-                            <span>Thanh toán VNPay</span>
-
-                        </label>
-
-                    </div>
-
-                    <div class="row mt-3">
-                        <label class="checkbox-default" for="currencyPaypal" data-bs-toggle="collapse"
-                               data-bs-target="#currencyPaypal">
-                            <input type="radio" id="currencyPaypal" name="hinhThucThanhToan" value="2">
-                            <span> Thanh Toán Khi Nhận Hàng</span>
-                        </label>
-
-                    </div>
-
-                    <div class="row mt-7">
-                        <div class="col-12">
-                            <h6 >Ghi chú (nếu cần):</h6>
-                            <textarea style="width: 450px" rows="5" placeholder="Nhập ghi chú cho đơn hàng..."></textarea>
+            <form th:action="@{/my-account/thanh-toan}" method="get" id="formHinhThuc">
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <label class="checkbox-default" for="currencyPaypal">
+                                <input checked type="radio" id="currencyPaypal" name="hinhThucThanhToan" value="2">
+                                <span>Thanh toán VNPay</span>
+                            </label>
                         </div>
-                    </div>
 
-                    <div class="row mt-2">
-                        <div class="col-12">
-                            <a
-                               class="btn btn-md btn-golden" style="float: right" >Xác nhận</a>
+                        <div class="row mt-3">
+                            <label class="checkbox-default" for="currencyCod">
+                                <input type="radio" id="currencyCod" name="hinhThucThanhToan" value="3">
+                                <span>Thanh toán khi nhận hàng</span>
+                            </label>
+                        </div>
+
+                        <div class="row mt-7">
+                            <div class="col-12">
+                                <h6>Ghi chú (nếu cần):</h6>
+                                <textarea style="width: 450px" rows="5" name="ghiChu"
+                                          placeholder="Nhập ghi chú cho đơn hàng..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <button class="btn btn-md btn-golden" style="float: right" type="submit"
+                                        id="btnXacNhan" onclick="return submitForm()" >Xác nhận
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 </div>
 
 
+<script src="/assets/js/vendor/vendor.min.js"></script>
+<script src="/assets/js/plugins/plugins.min.js"></script>
+
+<!-- Main JS -->
+<script src="/assets/js/main.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script th:inline="javascript">
     const one = document.querySelector(".one");
@@ -520,6 +524,40 @@
         return null;
     }
 
+    function submitForm() {
+        var selectedPaymentMethod = document.querySelector('input[name="hinhThucThanhToan"]:checked').value;
+        const formThanhToan = document.getElementById("formHinhThuc");
+
+        if (selectedPaymentMethod === "2") {
+            formThanhToan.submit();
+            fetch("/api/payment/create_payment?totalAmount=" + encodeURIComponent(document.getElementById("totalAmount").innerText))
+                .then(response => response.text())
+                .then(paymentUrl => {
+                    console.log("Received Payment URL:", paymentUrl);
+                    window.location.href = paymentUrl;
+                }).catch(error => {
+                console.error("Error fetching payment URL:", error);
+            });
+
+            return false;
+        }
+        return true;
+    }
+
+    function handlePaymentButtonClick() {
+
+        console.log("Button clicked");
+        var selectedRadioButton = document.querySelector('input[name="hinhThucThanhToan"]:checked');
+
+        if (selectedRadioButton === null) {
+            console.log("No radio button selected");
+            let type = 'error';
+            let icon = 'fa-solid fa-circle-exclamation';
+            let title = 'Chưa chọn hình thức!';
+            let text = "Bạn chưa chọn hình thức thanh toán!";
+            createToast(type, icon, title, text);
+        }
+    }
 </script>
 </body>
 

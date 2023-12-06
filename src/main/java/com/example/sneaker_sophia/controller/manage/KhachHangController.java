@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.util.List;
 
 @Controller
-@RequestMapping("/admin/khachhang")
+@RequestMapping("/staff/khachhang")
 public class KhachHangController {
     @Resource(name = "taiKhoanService")
     TaiKhoanService taiKhoanService;
@@ -83,7 +83,6 @@ public class KhachHangController {
         session.setAttribute("tinh", diaChiList.getTinh());
         session.setAttribute("quan", diaChiList.getQuanHuyen());
         session.setAttribute("phuong", diaChiList.getPhuongXa());
-        session.setAttribute("anhDaiDien", taiKhoanDiaChi.getAnhDaiDien());
         session.setAttribute("idkh", id);
         return "admin/khachhang/editkh";
     }

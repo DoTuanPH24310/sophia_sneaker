@@ -67,6 +67,7 @@ public class CheckoutController {
         GioHang gioHang = this.gioHangService.getCartByEmail(authentication.getName());
         TaiKhoan taiKhoan = this.loginRepository.findByEmail(authentication.getName());
         model.addAttribute("email", taiKhoan.getEmail());
+
         session.setAttribute("tinh", "-1");
         session.setAttribute("quan", "-1");
         session.setAttribute("phuong", "-1");
@@ -200,6 +201,7 @@ public class CheckoutController {
                             @RequestParam(value = "thanhPho", required = false) String tinh,
                             @RequestParam(value = "huyen", required = false) String huyen,
                             @RequestParam(value = "xa", required = false) String xa,
+                            @RequestParam(value = "ghiChu", required = false) String ghiChu,
                             Double phiVanChuyen,
                             HttpSession session) {
         double total = 0.0;
@@ -256,7 +258,7 @@ public class CheckoutController {
                     alertInfo.alert("errOnline", "Chua chon hinh thuc thanh toan!");
                 }
                 this.thanhToanService.capNhatDiaChi(diaChiDTO, taiKhoan);
-                thanhToanService.thucHienThanhToan(email, cartItems, hinhThucThanhToan, diaChiCuThe, tinh, huyen, xa, phiVanChuyen);
+                thanhToanService.thucHienThanhToan(email, cartItems, hinhThucThanhToan, diaChiCuThe, tinh, huyen, xa, phiVanChuyen,ghiChu);
                 return "redirect:/check-out/success";
             }
         }
@@ -270,9 +272,9 @@ public class CheckoutController {
                             @RequestParam(value = "thanhPho", required = false) String tinh,
                             @RequestParam(value = "huyen", required = false) String huyen,
                             @RequestParam(value = "xa", required = false) String xa,
+                            @RequestParam(value = "ghiChu", required = false) String ghiChu,
                             Double phiVanChuyen,
                             Model model, HttpSession session) {
-        System.out.println("phivanchuyen" + phiVanChuyen);
         try {
             double total = 0.0;
             Cart cart = (Cart) session.getAttribute("cart");
@@ -325,7 +327,7 @@ public class CheckoutController {
                         session.setAttribute("tinh", diaChi.getTinh());
                         session.setAttribute("quan", diaChi.getQuanHuyen());
                         session.setAttribute("phuong", diaChi.getPhuongXa());
-                        result.rejectValue("email", "error.email", "Email đã tồn tại trong hệ thống");
+                        result.rejectValue("email", "error.email", "Email đã tồn tại trong hệ thống. Bạn có muốn đăng nhập?");
                         model.addAttribute("cartItems", cartItems);
                         model.addAttribute("total", total);
 
@@ -356,7 +358,7 @@ public class CheckoutController {
 
             emailService.themDiaChiVaoTaiKhoan(diaChi, taiKhoanMoi);
 
-            HoaDon hoaDonMoi = emailService.taoHoaDonMoi(taiKhoanMoi, hinhThucThanhToan, diaChiCuThe, tinh, huyen, xa, phiVanChuyen);
+            HoaDon hoaDonMoi = emailService.taoHoaDonMoi(taiKhoanMoi, hinhThucThanhToan, diaChiCuThe, tinh, huyen, xa, phiVanChuyen,ghiChu);
             emailService.themSanPhamVaoHoaDonChiTiet(cartItems, hoaDonMoi);
 
             emailService.guiEmailXacNhanThanhToan(taiKhoanMoi.getEmail(), hoaDonMoi);

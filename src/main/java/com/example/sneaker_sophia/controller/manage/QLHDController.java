@@ -17,7 +17,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Controller
-@RequestMapping("/admin/hoa-don")
+@RequestMapping("/staff/hoa-don")
 public class QLHDController {
     public static String tempIdHD = "";
     @Resource(name = "hoaDonService")
@@ -85,7 +85,7 @@ public class QLHDController {
         try {
             UUID uuid = UUID.fromString(idhd);
         } catch (IllegalArgumentException e) {
-            return "redirect:/admin/hoa-don/hien-thi";
+            return "redirect:/staff/hoa-don/hien-thi";
         }
         HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
         if (hoaDon != null) {
@@ -107,26 +107,27 @@ public class QLHDController {
             session.setAttribute("lichSuHoaDon", lshdService.getLSHDBYIdhd(idhd));
             return "admin/hoadon/detailhd";
         } else {
-            return "redirect:/admin/hoa-don/hien-thi";
+            return "redirect:/staff/hoa-don/hien-thi";
         }
 
     }
 
     @PostMapping("updatehdcxn")
     public String updatehdcxn(
-            @RequestParam(value = "idhd", required = false) List<String> listhd
+            @RequestParam(value = "idhd", required = false) List<String> listhd,
+             @RequestParam(value = "value", required = false) String ghiChu
     ) {
         session.setAttribute("tabActive", "tabChoXacNhan");
         if (listhd == null) {
             alertInfo.alert("errTaiQuay", "Không có hóa đơn được chọn");
-            return "redirect:/admin/hoa-don/hien-thi";
+            return "redirect:/staff/hoa-don/hien-thi";
         }
         for (String idhd : listhd) {
             try {
                 UUID uuid = UUID.fromString(idhd);
             } catch (IllegalArgumentException e) {
                 alertInfo.alert("errTaiQuay", null);
-                return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+                return "redirect:/staff/hoa-don/detail/" + tempIdHD;
             }
 
             HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
@@ -135,38 +136,41 @@ public class QLHDController {
                     hoaDon.setTrangThai(4);
                     LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
                     lichSuHoaDon.setHoaDon(hoaDon);
+                    lichSuHoaDon.setGhiChu(ghiChu);
                     lichSuHoaDon.setPhuongThuc("4");
                     lshdService.savelshd(lichSuHoaDon);
                     hoaDonService.savehd(hoaDon);
                 } else {
                     alertInfo.alert("errTaiQuay", null);
-                    return "redirect:/admin/hoa-don/hien-thi";
+                    return "redirect:/staff/hoa-don/hien-thi";
                 }
             } else {
                 alertInfo.alert("errTaiQuay", null);
-                return "redirect:/admin/hoa-don/hien-thi";
+                return "redirect:/staff/hoa-don/hien-thi";
             }
 
         }
         alertInfo.alert("successTaiQuay", "Đơn hàng đã được xác nhận");
-        return "redirect:/admin/hoa-don/hien-thi";
+        return "redirect:/staff/hoa-don/hien-thi";
     }
 
     @PostMapping("updatehdcg")
     public String updatehdcg(
-            @RequestParam(value = "idhd", required = false) List<String> listhdcg, Model model
+            @RequestParam(value = "idhd", required = false) List<String> listhdcg,
+            Model model,
+            @RequestParam(value = "value", required = false) String ghiChu
     ) {
         session.setAttribute("tabActive", "tabChoGiao");
         if (listhdcg == null) {
             alertInfo.alert("errTaiQuay", "Không có hóa đơn được chọn");
-            return "redirect:/admin/hoa-don/hien-thi";
+            return "redirect:/staff/hoa-don/hien-thi";
         }
         for (String idhd : listhdcg) {
             try {
                 UUID uuid = UUID.fromString(idhd);
             } catch (IllegalArgumentException e) {
                 alertInfo.alert("errTaiQuay", null);
-                return "redirect:/admin/hoa-don/hien-thi";
+                return "redirect:/staff/hoa-don/hien-thi";
             }
             HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
             if (hoaDon != null) {
@@ -174,50 +178,51 @@ public class QLHDController {
                     List<HoaDonChiTiet> listhdct = hoaDonChiTietServive.getHDCTByIdHD(hoaDon.getId());
                     if (listhdct.size() == 0) {
                         alertInfo.alert("errTaiQuay", "Hóa đơn không có sản phẩm");
-                        return "redirect:/admin/hoa-don/hien-thi";
+                        return "redirect:/staff/hoa-don/hien-thi";
                     }
                     hoaDon.setTrangThai(5);
                     LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
                     lichSuHoaDon.setHoaDon(hoaDon);
                     lichSuHoaDon.setPhuongThuc("5");
+                    lichSuHoaDon.setGhiChu(ghiChu);
                     lshdService.savelshd(lichSuHoaDon);
                     hoaDonService.savehd(hoaDon);
                 } else {
                     alertInfo.alert("errTaiQuay", null);
-                    return "redirect:/admin/hoa-don/hien-thi";
+                    return "redirect:/staff/hoa-don/hien-thi";
                 }
             } else {
                 alertInfo.alert("errTaiQuay", null);
-                return "redirect:/admin/hoa-don/hien-thi";
+                return "redirect:/staff/hoa-don/hien-thi";
             }
         }
         alertInfo.alert("successTaiQuay", "Đơn hàng đã được giao");
-        return "redirect:/admin/hoa-don/hien-thi";
+        return "redirect:/staff/hoa-don/hien-thi";
     }
 
     @PostMapping("updatehddg")
     public String updatehddg(
             @RequestParam(value = "idhd", required = false) List<String> listhddg,
-            @RequestParam("value") String ghiChu
+            @RequestParam(value = "value", required = false) String ghiChu
 
     ) {
         session.setAttribute("tabActive", "tabDangGiao");
         if (listhddg == null) {
             alertInfo.alert("errTaiQuay", "Không có hóa đơn được chọn");
-            return "redirect:/admin/hoa-don/hien-thi";
+            return "redirect:/staff/hoa-don/hien-thi";
         }
         if (ghiChu == null) {
             ghiChu = "";
         } else if (ghiChu.length() > 50) {
             alertInfo.alert("errTaiQuay", "Tối đa 50 kí tự");
-            return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+            return "redirect:/staff/hoa-don/detail/" + tempIdHD;
         }
         for (String idhd : listhddg) {
             try {
                 UUID uuid = UUID.fromString(idhd);
             } catch (IllegalArgumentException e) {
                 alertInfo.alert("errTaiQuay", null);
-                return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+                return "redirect:/staff/hoa-don/detail/" + tempIdHD;
             }
             HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
             if (hoaDon != null) {
@@ -232,33 +237,35 @@ public class QLHDController {
                     hoaDon.setTrangThai(1);
                     LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
                     lichSuHoaDon.setHoaDon(hoaDon);
+                    lichSuHoaDon.setGhiChu(ghiChu);
                     lichSuHoaDon.setPhuongThuc("1");
                     lshdService.savelshd(lichSuHoaDon);
                     hoaDonService.savehd(hoaDon);
                 } else {
                     alertInfo.alert("errTaiQuay", null);
-                    return "redirect:/admin/hoa-don/hien-thi";
+                    return "redirect:/staff/hoa-don/hien-thi";
                 }
 
             } else {
                 alertInfo.alert("errTaiQuay", null);
-                return "redirect:/admin/hoa-don/hien-thi";
+                return "redirect:/staff/hoa-don/hien-thi";
             }
 
         }
         alertInfo.alert("successTaiQuay", "Đơn hàng đã hoàn thành");
-        return "redirect:/admin/hoa-don/hien-thi";
+        return "redirect:/staff/hoa-don/hien-thi";
     }
 
     @GetMapping("updatehdcxn/{id}")
     public String updatehdcxnd(
-            @PathVariable(value = "id", required = false) String idhd
+            @PathVariable(value = "id", required = false) String idhd,
+            @RequestParam(value = "value", required = false) String ghiChu
     ) {
         try {
             UUID uuid = UUID.fromString(idhd);
         } catch (IllegalArgumentException e) {
             alertInfo.alert("errTaiQuay", null);
-            return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+            return "redirect:/staff/hoa-don/detail/" + tempIdHD;
         }
         HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
         if (hoaDon != null) {
@@ -266,31 +273,33 @@ public class QLHDController {
                 hoaDon.setTrangThai(4);
                 LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
                 lichSuHoaDon.setHoaDon(hoaDon);
+                lichSuHoaDon.setGhiChu(ghiChu);
                 lichSuHoaDon.setPhuongThuc("4");
                 lshdService.savelshd(lichSuHoaDon);
                 hoaDonService.savehd(hoaDon);
             } else {
                 alertInfo.alert("errTaiQuay", null);
-                return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+                return "redirect:/staff/hoa-don/detail/" + tempIdHD;
             }
 
         } else {
             alertInfo.alert("errTaiQuay", null);
-            return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+            return "redirect:/staff/hoa-don/detail/" + tempIdHD;
         }
         alertInfo.alert("successTaiQuay", "Đơn hàng đã được xác nhận");
-        return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+        return "redirect:/staff/hoa-don/detail/" + tempIdHD;
     }
 
     @GetMapping("updatehdcg/{id}")
     public String updatehdcg(
-            @PathVariable(value = "id", required = false) String idhd
+            @PathVariable(value = "id", required = false) String idhd,
+            @RequestParam(value = "value", required = false) String ghiChu
     ) {
         try {
             UUID uuid = UUID.fromString(idhd);
         } catch (IllegalArgumentException e) {
             alertInfo.alert("errTaiQuay", null);
-            return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+            return "redirect:/staff/hoa-don/detail/" + tempIdHD;
         }
         HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
         if (hoaDon != null) {
@@ -298,25 +307,26 @@ public class QLHDController {
                 List<HoaDonChiTiet> listhdct = hoaDonChiTietServive.getHDCTByIdHD(hoaDon.getId());
                 if (listhdct.size() == 0) {
                     alertInfo.alert("errTaiQuay", "Hóa đơn không có sản phẩm");
-                    return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+                    return "redirect:/staff/hoa-don/detail/" + tempIdHD;
                 }
                 hoaDon.setTrangThai(5);
                 LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
                 lichSuHoaDon.setHoaDon(hoaDon);
                 lichSuHoaDon.setPhuongThuc("5");
+                lichSuHoaDon.setGhiChu(ghiChu);
                 lshdService.savelshd(lichSuHoaDon);
                 hoaDonService.savehd(hoaDon);
             } else {
                 alertInfo.alert("errTaiQuay", null);
-                return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+                return "redirect:/staff/hoa-don/detail/" + tempIdHD;
             }
 
         } else {
             alertInfo.alert("errTaiQuay", null);
-            return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+            return "redirect:/staff/hoa-don/detail/" + tempIdHD;
         }
         alertInfo.alert("successTaiQuay", "Đơn hàng đã được giao");
-        return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+        return "redirect:/staff/hoa-don/detail/" + tempIdHD;
     }
 
     @GetMapping("updatehddg/{id}")
@@ -328,7 +338,7 @@ public class QLHDController {
             UUID uuid = UUID.fromString(idhd);
         } catch (IllegalArgumentException e) {
             alertInfo.alert("errTaiQuay", null);
-            return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+            return "redirect:/staff/hoa-don/detail/" + tempIdHD;
         }
         HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
         HinhThucThanhToan hinhThucThanhToan = htttService.getHTTTByIdhd(idhd);
@@ -337,7 +347,7 @@ public class QLHDController {
         }
         if (ghiChu.length() > 50) {
             alertInfo.alert("errTaiQuay", "Tối đa 50 kí tự");
-            return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+            return "redirect:/staff/hoa-don/detail/" + tempIdHD;
         }
         if (hoaDon != null) {
             if (hoaDon.getTrangThai() == 5) {
@@ -350,19 +360,20 @@ public class QLHDController {
                 LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
                 lichSuHoaDon.setHoaDon(hoaDon);
                 lichSuHoaDon.setPhuongThuc("1");
+                lichSuHoaDon.setGhiChu(ghiChu);
                 lshdService.savelshd(lichSuHoaDon);
                 hoaDonService.savehd(hoaDon);
             } else {
                 alertInfo.alert("errTaiQuay", null);
-                return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+                return "redirect:/staff/hoa-don/detail/" + tempIdHD;
             }
 
         } else {
             alertInfo.alert("errTaiQuay", null);
-            return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+            return "redirect:/staff/hoa-don/detail/" + tempIdHD;
         }
         alertInfo.alert("successTaiQuay", "Đơn hàng đã hoàn thành");
-        return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+        return "redirect:/staff/hoa-don/detail/" + tempIdHD;
     }
 
     public String handleHuyHd(String idhd, String liDoHuy) {
@@ -370,11 +381,11 @@ public class QLHDController {
             UUID uuid = UUID.fromString(idhd);
         } catch (IllegalArgumentException e) {
             alertInfo.alert("errTaiQuay", null);
-            return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+            return "redirect:/staff/hoa-don/detail/" + tempIdHD;
         }
         if (liDoHuy.length() > 50) {
             alertInfo.alert("errTaiQuay", "Tối đa 50 kí tự");
-            return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+            return "redirect:/staff/hoa-don/detail/" + tempIdHD;
         }
         HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
 
@@ -389,6 +400,7 @@ public class QLHDController {
                 hoaDon.setTrangThai(6);
                 LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
                 lichSuHoaDon.setHoaDon(hoaDon);
+                lichSuHoaDon.setGhiChu(liDoHuy);
                 lichSuHoaDon.setPhuongThuc("6");
                 hoaDon.setGhiChu(liDoHuy);
                 lshdService.savelshd(lichSuHoaDon);
@@ -405,15 +417,15 @@ public class QLHDController {
 
             } else {
                 alertInfo.alert("errTaiQuay", null);
-                return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+                return "redirect:/staff/hoa-don/detail/" + tempIdHD;
             }
 
         } else {
             alertInfo.alert("errTaiQuay", null);
-            return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+            return "redirect:/staff/hoa-don/detail/" + tempIdHD;
         }
         alertInfo.alert("successTaiQuay", "Đơn hàng đã được hủy");
-        return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+        return "redirect:/staff/hoa-don/detail/" + tempIdHD;
     }
 
     @GetMapping("huyhdcxn/{id}")
@@ -442,11 +454,11 @@ public class QLHDController {
             UUID uuid = UUID.fromString(idhd);
         } catch (IllegalArgumentException e) {
             alertInfo.alert("errTaiQuay", null);
-            return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+            return "redirect:/staff/hoa-don/detail/" + tempIdHD;
         }
         if (liDoHuy.length() > 50) {
             alertInfo.alert("errTaiQuay", "Tối đa 50 kí tự");
-            return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+            return "redirect:/staff/hoa-don/detail/" + tempIdHD;
         }
         HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
         if (hoaDon != null) {
@@ -462,6 +474,7 @@ public class QLHDController {
                 LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
                 lichSuHoaDon.setHoaDon(hoaDon);
                 lichSuHoaDon.setPhuongThuc("6");
+                lichSuHoaDon.setGhiChu(liDoHuy);
                 hoaDon.setGhiChu(liDoHuy);
                 lshdService.savelshd(lichSuHoaDon);
                 hoaDonService.savehd(hoaDon);
@@ -477,15 +490,15 @@ public class QLHDController {
 
             } else {
                 alertInfo.alert("errTaiQuay", "Hóa đơn chưa quá 3 ngày");
-                return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+                return "redirect:/staff/hoa-don/detail/" + tempIdHD;
             }
 
         } else {
             alertInfo.alert("errTaiQuay", null);
-            return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+            return "redirect:/staff/hoa-don/detail/" + tempIdHD;
         }
         alertInfo.alert("successTaiQuay", "Đơn hàng đã được hủy");
-        return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+        return "redirect:/staff/hoa-don/detail/" + tempIdHD;
     }
 
     // 4/12
@@ -498,11 +511,11 @@ public class QLHDController {
             UUID uuid = UUID.fromString(idhd);
         } catch (IllegalArgumentException e) {
             alertInfo.alert("errTaiQuay", null);
-            return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+            return "redirect:/staff/hoa-don/detail/" + tempIdHD;
         }
         if (liDoHuy.length() > 50) {
             alertInfo.alert("errTaiQuay", "Tối đa 50 kí tự");
-            return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+            return "redirect:/staff/hoa-don/detail/" + tempIdHD;
         }
         HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
         if (hoaDon != null) {
@@ -517,20 +530,21 @@ public class QLHDController {
                 LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
                 lichSuHoaDon.setHoaDon(hoaDon);
                 lichSuHoaDon.setPhuongThuc("6");
+                lichSuHoaDon.setGhiChu(liDoHuy);
                 hoaDon.setGhiChu(liDoHuy);
                 lshdService.savelshd(lichSuHoaDon);
                 hoaDonService.savehd(hoaDon);
             } else {
                 alertInfo.alert("errTaiQuay", "Không thể hủy hóa đơn");
-                return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+                return "redirect:/staff/hoa-don/detail/" + tempIdHD;
             }
 
         } else {
             alertInfo.alert("errTaiQuay", null);
-            return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+            return "redirect:/staff/hoa-don/detail/" + tempIdHD;
         }
         alertInfo.alert("successTaiQuay", "Đơn hàng đã được hủy");
-        return "redirect:/admin/hoa-don/detail/" + tempIdHD;
+        return "redirect:/staff/hoa-don/detail/" + tempIdHD;
     }
 
 

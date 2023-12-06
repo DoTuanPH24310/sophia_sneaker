@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +34,12 @@ public class account {
     private AccountRepository accountRepository;
 
     @Autowired
+    private HinhThucThanhToanWebRepository hinhThucThanhToanWebRepository;
+    @Autowired
+    private LichSuHoaDonWebRepository lichSuHoaDonWebRepository;
+    @Autowired
     private LoginRepository loginRepository;
+
     @Autowired
     private AccountService accountService;
     @Autowired
@@ -50,7 +54,8 @@ public class account {
     @Resource(name = "hoaDonService")
     HoaDonService hoaDonService;
 
-    @Autowired private HoaDonWebRepository hoaDonWebRepository;
+    @Autowired
+    private HoaDonWebRepository hoaDonWebRepository;
 
     @Resource(name = "anhRepository")
     AnhRepository anhRepository;
@@ -97,8 +102,10 @@ public class account {
     }
 
     @GetMapping("detail/{idhd}")
-    private String detail(@PathVariable("idhd") HoaDon hd, Model model){
+    private String detail(@PathVariable("idhd") HoaDon hd, Model model, HttpSession session) {
         List<HoaDonChiTiet> listhdct = hoaDonChiTietServive.getHDCTByIdHD(hd.getId());
+        HoaDon hoaDon = this.hoaDonWebRepository.findById(hd.getId()).orElse(null);
+        session.setAttribute("maHD", hoaDon.getMaHoaDOn());
         Map<UUID, String> avtctgMap = new HashMap<>();
         for (HoaDonChiTiet hdct : listhdct) {
             UUID idctg = hdct.getChiTietGiay().getId();
@@ -107,13 +114,51 @@ public class account {
         }
         model.addAttribute("lichSuHoaDon", lshdService.getLSHDBYIdhd(hd.getId()));
         model.addAttribute("avtctgMap", avtctgMap);
-        model.addAttribute("hoaDon",hd);
+        model.addAttribute("hoaDon", hd);
         model.addAttribute("listhdct", listhdct);
         HinhThucThanhToan hinhThucThanhToan = htttService.getHTTTByIdhd(hd.getId());
         if (hinhThucThanhToan != null) {
             model.addAttribute("httt", hinhThucThanhToan);
         }
         return "website/productwebsite/detail-hoa-don";
+    }
+
+    @GetMapping("/thanh-toan")
+    public String thanhToan(@RequestParam(value = "hinhThucThanhToan", required = false) Integer hinhThucThanhToan,
+                            @RequestParam(value = "ghiChu", required = false) String ghiChu,
+                            Model model, HttpSession session
+    ) {
+        if (hinhThucThanhToan != null) {
+            alertInfo.alert("errOnline", "Bạn chưa chọn hình thức thanh toán!");
+        }
+        String mahd = (String) session.getAttribute("maHD");
+        HoaDon don = this.hoaDonWebRepository.findByMaHoaDOn(mahd);
+        if (!(hinhThucThanhToan == 1) && !(hinhThucThanhToan == 2)) {
+            if (hinhThucThanhToan == 3) {
+                don.setTrangThai(3);
+            } else if (hinhThucThanhToan == 2) {
+                don.setTrangThai(2);
+            }
+            don.setGhiChu(ghiChu);
+            this.hoaDonWebRepository.save(don);
+            HinhThucThanhToan hinhThuc = this.hinhThucThanhToanWebRepository.findByHoaDon(don);
+            hinhThuc.setTrangThai(hinhThucThanhToan);
+            hinhThuc.setHoaDon(don);
+            this.hinhThucThanhToanWebRepository.save(hinhThuc);
+
+            LichSuHoaDon lichSuHoaDon = this.lichSuHoaDonWebRepository.findByHoaDon(don);
+            lichSuHoaDon.setHoaDon(don);
+            if (hinhThucThanhToan == 3) {
+                lichSuHoaDon.setPhuongThuc("3");
+            } else if (hinhThucThanhToan == 2) {
+                lichSuHoaDon.setPhuongThuc("2");
+            }
+            this.lichSuHoaDonWebRepository.save(lichSuHoaDon);
+            alertInfo.alert("errOnline", "Bạn chưa chọn hình thức thanh toán!");
+            return "redirect:/my-account/home";
+        }
+
+        return "/my-account/detail/" + don.getId();
     }
 
     @GetMapping("/cancel/{idhd}")
