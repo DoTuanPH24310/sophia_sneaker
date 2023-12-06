@@ -5,7 +5,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
 
 
     <style>
@@ -120,7 +119,6 @@
                     </tr>
                     </thead>
                     <tbody>
-
                     <tr style="line-height: 25px" th:each="hdct : ${listhdct}">
                         <td><img th:src="${avtctgMap[hdct.chiTietGiay.id]}" alt="" width="100" height="100"></td>
                         <td th:text="${hdct.chiTietGiay.ma}"></td>
@@ -172,10 +170,23 @@
                                 <i class="fa fa-trash"></i>
                             </a>
                         </td>
-                    </tr>
-                    </tbody>
-                </table>
 
+                    </tr>
+
+
+                    </tbody>
+
+                </table>
+                <div th:if="${#lists.size(listhdct) == 0}" class="mt-4">
+                    <div class="row d-flex justify-content-center">
+                        <img src="/img/cart_trong.png" style="width: 450px">
+                    </div>
+                    <div class="row text-center">
+                        <h6>Hiện tại không có sản phẩm nào !</h6>
+                    </div>
+
+
+                </div>
             </div>
         </div>
         <div class="row mb-3" th:if="${listhdct != null}">
@@ -201,7 +212,6 @@
 
                 <a onclick="findAllKH();" type="button" class="btn btn-primary float-right" data-toggle="modal"
                    data-target="#modalKhachHang">
-                    <i style="font-size: 18px" class="fab fa-plus"></i>
                     Chọn tài khoản
                 </a>
             </div>
@@ -248,7 +258,7 @@
                 <th:block th:if="${nhanVienRequest != null}">
                     <div class="col-6">
                         <div id="form" style="display: none;">
-                            <div class="row mt-1 mx-1 mb-3">
+                            <div class="row mt-1 mb-3" style="margin-left: -8px">
                                 <div class="col-3">
                                     <button onclick="loadAllDC();" type="button" class="btn btn-primary float-left"
                                             data-toggle="modal"
@@ -455,11 +465,11 @@
     </div>
 
     <div th:unless="${session.get('checkBill')}" class="bill-empty">
-        <div class="row d-flex justify-content-center mb-2 mt-5">
+        <div class="row d-flex justify-content-center mb-2 mt-5" style="">
             <img class="d-flex align-items-center" style="width: 300px; height: auto;" src="/img/bills-empty.png">
         </div>
         <div class="row d-flex justify-content-center">
-            <h5 class="text-center secondary">Chọn hóa đơn để bán hàng</h5>
+            <h5 class="text-center secondary" style="margin-bottom: 300px">Chọn hóa đơn để bán hàng</h5>
         </div>
     </div>
 
@@ -921,7 +931,6 @@
         const phiPhip = [[${phiVanChuyen}]];
         const httt = [[${httt}]];
         const tthd = [[${trangThaiDon}]];
-        console.log("check nè: ")
         console.log(checkIHD);
         if (checkIHD != null && checkIHD == 1) {
             removeSeesion('checkTTHT');
@@ -929,6 +938,7 @@
                 $('#modalInHoaDon').modal('show');
                 document.getElementById('inHoaDon').href = 'http://localhost:8080/staff/tai-quay/pdf/' + idHoaDon;
                 document.getElementById('inHoaDon').addEventListener('click', function () {
+                    // removeSeesion('idHoaDon');
                     $('#modalInHoaDon').modal('hide');
                 });
             };

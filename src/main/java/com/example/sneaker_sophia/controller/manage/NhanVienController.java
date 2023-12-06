@@ -7,10 +7,12 @@ import com.example.sneaker_sophia.request.TaiKhoanRequest;
 import com.example.sneaker_sophia.service.DiaChiService;
 import com.example.sneaker_sophia.service.FileUpload;
 import com.example.sneaker_sophia.service.TaiKhoanService;
+import com.example.sneaker_sophia.validate.AlertInfo;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,6 +36,9 @@ public class NhanVienController {
 
     @Resource(name = "diaChiService")
     DiaChiService diaChiService;
+
+    @Autowired
+    private AlertInfo alertInfo;
 
     @GetMapping("/staff/nhanvien/hienthi")
     public String index(
@@ -127,7 +132,8 @@ public class NhanVienController {
             }
             nv_rq.setAnhDaiDien(imageURL);
             taiKhoanService.save(nv_rq, model);
-            return "redirect:/admin/nhanvien/hienthi";
+            alertInfo.alert("successTaiQuay", "Nhân viên đã được thêm");
+            return "redirect:/staff/nhanvien/hienthi";
 
         }
 
@@ -145,7 +151,7 @@ public class NhanVienController {
         String imageURL = null;
 
         nv_rq.setIdVaiTro(taiKhoan.getIdVaiTro());
-        if (!taiKhoanService.validateUppdate(nv_rq, model)) {
+        if (!taiKhoanService.validateUppdate(idTaiKhoan, nv_rq, model)) {
             session.setAttribute("tinh", nv_rq.getTinh());
             session.setAttribute("quan", nv_rq.getQuanHuyen());
             session.setAttribute("phuong", nv_rq.getPhuongXa());
@@ -158,14 +164,11 @@ public class NhanVienController {
         }
         nv_rq.setAnhDaiDien(imageURL);
         taiKhoanService.update(idTaiKhoan, nv_rq, model);
-        if(taiKhoan.getIdTaiKhoan().equals(vaiTroRepository.getIdByTenNV())){
-            return "redirect:/admin/nhanvien/hienthi";
-        }else {
-            return "redirect:/admin/tai-quay/hien-thi";
-        }
+        alertInfo.alert("successTaiQuay", "Nhân viên đã được cập nhật");
+        return "redirect:/staff/nhanvien/hienthi";
+
 
     }
-
 
 
 }

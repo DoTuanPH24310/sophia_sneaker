@@ -219,8 +219,8 @@
                                                 </a>
 
                                                 <button th:if="${hdc.loaiHoaDon == 3}"
-                                                   class="btn btn-warning edit" disabled
-                                                   style="padding: 5px 10px; font-size: 12px">
+                                                        class="btn btn-warning edit" disabled
+                                                        style="padding: 5px 10px; font-size: 12px">
                                                     <i class="material-icons text-white mt-1" title="Sửa">&#xE254;</i>
                                                 </button>
 
@@ -249,7 +249,7 @@
                             <form id="formTrCNX" action="/staff/hoa-don/updatehdcxn" method="post">
                                 <div th:if="${#lists.size(listhdhcxn) > 0}">
                                     <!-- If listhdhcxn has elements, display the button -->
-                                    <button type="submit" onclick="return confirm('Xác nhận đơn?')"
+                                    <button type="submit" id="ghiChuXND"
                                             class="btn btn-primary mb-3 mr-2 float-right">
                                         Xác nhận đơn
                                     </button>
@@ -325,7 +325,7 @@
 
                                 <div th:if="${#lists.size(listhdcg) > 0}">
                                     <!-- If listhdhcxn has elements, display the button -->
-                                    <button type="submit" onclick="return confirm('Xác nhận giao hàng?')"
+                                    <button type="submit" id="ghiChuCG"
                                             class="btn btn-primary mb-3 mr-2 float-right">
                                         Xác
                                         nhận giao
@@ -371,7 +371,7 @@
                                             <td>
                                                 <button th:if="${hd.loaiHoaDon == 3}" class="btn btn-info "
                                                         style="border-radius: 30px; font-size: 12px; height: 40px;width: 114px;">
-                                                  Online
+                                                    Online
                                                 </button>
                                                 <button th:if="${hd.loaiHoaDon == 2}" class="btn btn-primary "
                                                         style="border-radius: 30px; font-size: 12px; height: 40px;width: 114px;">
@@ -626,7 +626,13 @@
         let idSelectAll = '';
         let classSelectChild = '';
         let myLinksXNTC = document.getElementById('ghiChuXNTC');
+        let myLinksXND = document.getElementById('ghiChuXND');
         let actionFormXNTC = document.getElementById('formTrTC');
+        let actionFormCXN = document.getElementById('formTrCNX');
+
+        let myLinksCG = document.getElementById('ghiChuCG');
+        let actionFormCG = document.getElementById('formTrCG');
+
         let checkevent = 0;
 
 
@@ -644,10 +650,35 @@
             myLinksXNTC.addEventListener('click', function (event) {
                 event.preventDefault();
                 let mess = prompt("Nhập ghi chú : ");
-                if (mess!=null){
+                if (mess != null) {
                     let action = actionFormXNTC.getAttribute('action') + '?value=' + mess;
                     actionFormXNTC.setAttribute('action', action);
                     actionFormXNTC.submit();
+                }
+
+            });
+        }
+        if (myLinksXND != null) {
+            myLinksXND.addEventListener('click', function (event) {
+                event.preventDefault();
+                let mess = prompt("Nhập ghi chú : ");
+                if (mess != null) {
+                    let action = actionFormCXN.getAttribute('action') + '?value=' + mess;
+                    actionFormCXN.setAttribute('action', action);
+                    actionFormCXN.submit();
+                }
+
+            });
+        }
+
+        if (myLinksCG != null) {
+            myLinksCG.addEventListener('click', function (event) {
+                event.preventDefault();
+                let mess = prompt("Nhập ghi chú : ");
+                if (mess != null) {
+                    let action = actionFormCG.getAttribute('action') + '?value=' + mess;
+                    actionFormCG.setAttribute('action', action);
+                    actionFormCG.submit();
                 }
 
             });
@@ -663,7 +694,6 @@
 
             });
         });
-
 
 
         function eventCheckbox() {
@@ -698,16 +728,16 @@
 
         function eventCheckbox2(prId) {
             let prClass = '';
-            if (prId == 'tabChoXacNhan'){
+            if (prId == 'tabChoXacNhan') {
                 prId = 'selectAllCXN';
                 prClass = '.checkboxCXN';
-            }else if(prId == 'tabChoGiao'){
+            } else if (prId == 'tabChoGiao') {
                 prId = 'selectAllCG';
                 prClass = '.checkboxCG';
-            }else if (prId == 'tabDangGiao') {
+            } else if (prId == 'tabDangGiao') {
                 prId = 'selectAllDG';
                 prClass = '.checkboxDG';
-            }else return;
+            } else return;
 
             checkevent = 1;
             let selectAllCheckbox = document.getElementById(prId);
@@ -804,27 +834,27 @@ type="checkbox">`;
             }
 
             row.insertCell().innerHTML = loaiDonbtn;
-            if ((activeTab == '#choThanhToan') ) {
-                if (x.loaiHoaDon != 3){
-                    let button1 = `<a href="/staff/tai-quay/detail/${id}" class="btn btn-warning edit" style=" padding: 5px 10px; font-size: 12px"><i class="material-icons text-white mt-1" title="Chi tiết">&#xE254;</i></a>`
-                    let button2 = `<a href="/staff/hoa-don/detail/${id}" class="btn btn-success ms-1" style=" padding: 5px 10px; font-size: 12px;"><i class="material-icons text-white mt-1" title="Chi tiết">visibility</i></a>`;
-                    row.insertCell().innerHTML = button1 + button2;
-                }else{
-                    let button1 =`<button class="btn btn-warning edit" disabled style="padding: 5px 10px; font-size: 12px"><i class="material-icons text-white mt-1" title="Sửa">&#xE254;</i></button>`
-
-                    let button2 = `<a href="/staff/hoa-don/detail/${id}" class="btn btn-success ms-1" style=" padding: 5px 10px; font-size: 12px;"><i class="material-icons text-white mt-1" title="Chi tiết">visibility</i></a>`;
-                    row.insertCell().innerHTML = button1+button2;
-                }
-
-            }else if (activeTab == '' || activeTab == '#choGiao'){
+            if ((activeTab == '#choThanhToan')) {
                 if (x.loaiHoaDon != 3) {
                     let button1 = `<a href="/staff/tai-quay/detail/${id}" class="btn btn-warning edit" style=" padding: 5px 10px; font-size: 12px"><i class="material-icons text-white mt-1" title="Chi tiết">&#xE254;</i></a>`
                     let button2 = `<a href="/staff/hoa-don/detail/${id}" class="btn btn-success ms-1" style=" padding: 5px 10px; font-size: 12px;"><i class="material-icons text-white mt-1" title="Chi tiết">visibility</i></a>`;
                     row.insertCell().innerHTML = button1 + button2;
-                }else{
-                    let button1 =`<button class="btn btn-warning edit" disabled style="padding: 5px 10px; font-size: 12px"><i class="material-icons text-white mt-1" title="Sửa">&#xE254;</i></button>`
+                } else {
+                    let button1 = `<button class="btn btn-warning edit" disabled style="padding: 5px 10px; font-size: 12px"><i class="material-icons text-white mt-1" title="Sửa">&#xE254;</i></button>`
+
                     let button2 = `<a href="/staff/hoa-don/detail/${id}" class="btn btn-success ms-1" style=" padding: 5px 10px; font-size: 12px;"><i class="material-icons text-white mt-1" title="Chi tiết">visibility</i></a>`;
-                    row.insertCell().innerHTML = button1+button2;
+                    row.insertCell().innerHTML = button1 + button2;
+                }
+
+            } else if (activeTab == '' || activeTab == '#choGiao') {
+                if (x.loaiHoaDon != 3) {
+                    let button1 = `<a href="/staff/tai-quay/detail/${id}" class="btn btn-warning edit" style=" padding: 5px 10px; font-size: 12px"><i class="material-icons text-white mt-1" title="Chi tiết">&#xE254;</i></a>`
+                    let button2 = `<a href="/staff/hoa-don/detail/${id}" class="btn btn-success ms-1" style=" padding: 5px 10px; font-size: 12px;"><i class="material-icons text-white mt-1" title="Chi tiết">visibility</i></a>`;
+                    row.insertCell().innerHTML = button1 + button2;
+                } else {
+                    let button1 = `<button class="btn btn-warning edit" disabled style="padding: 5px 10px; font-size: 12px"><i class="material-icons text-white mt-1" title="Sửa">&#xE254;</i></button>`
+                    let button2 = `<a href="/staff/hoa-don/detail/${id}" class="btn btn-success ms-1" style=" padding: 5px 10px; font-size: 12px;"><i class="material-icons text-white mt-1" title="Chi tiết">visibility</i></a>`;
+                    row.insertCell().innerHTML = button1 + button2;
                 }
 
 
@@ -911,8 +941,6 @@ type="checkbox">`;
                 url: 'http://localhost:8080/api/hoa-don/deleteSession/' + name,
             })
         }
-
-
 
 
     </script>

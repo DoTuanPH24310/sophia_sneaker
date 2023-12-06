@@ -730,7 +730,7 @@ public class TaiQuayController {
         session.removeAttribute("idhd");
         session.removeAttribute("checkBill");
         session.removeAttribute("listhdct");
-        session.removeAttribute("idHoaDon");
+
         session.removeAttribute("avtctsp");
         session.removeAttribute("tongTienHD");
         session.removeAttribute("countDC");
@@ -753,6 +753,7 @@ public class TaiQuayController {
         String headerValue = "attachment; filename="+hd.getMaHoaDOn()+".pdf";
         response.setHeader(headerKey, headerValue);
         export(response, idHD);
+        session.removeAttribute("idHoaDon");
     }
 
     public void export(HttpServletResponse response, String idHD) throws IOException {
@@ -810,8 +811,15 @@ public class TaiQuayController {
         p = new Paragraph(hd.getMaHoaDOn() + "\n\n");
         p.setAlignment(Paragraph.ALIGN_CENTER);
         document.add(p);
-        p = new Paragraph("Ngày mua:    " + formatter.format(hd.getCreatedDate()) + "\n\n" + "Khách hàng:    " + hd.getTaiKhoan().getTen() + "\n\n" + "Địa chỉ:    " +
-                hd.getTenKhachHang() + "," + hd.getSoDienThoai() + "/ " + hd.getDiaChi() + "\n\n" + "Điện thoại:    " +  hd.getTaiKhoan().getSdt() + "\n\n" + "Người bán:    " + "Nguyễn Huy Hoàng" + "\n\n", font4);
+        TaiKhoan tk = new TaiKhoan();
+        tk.setTen("");
+        tk.setSdt("");
+        if (hd.getTaiKhoan() != null){
+            tk = hd.getTaiKhoan();
+        }
+        p = new Paragraph("Ngày mua:    " + formatter.format(hd.getCreatedDate()) + "\n\n" + "Khách hàng:    " + tk.getTen() + "\n\n" + "Địa chỉ:    " +
+                (hd.getLoaiHoaDon() == 1 ? "" :hd.getTenKhachHang() + "," + hd.getSoDienThoai() + "/ " + hd.getDiaChi())
+                + "\n\n" + "Điện thoại:    " +  tk.getSdt() + "\n\n" + "Người bán:    " + "Nguyễn Huy Hoàng" + "\n\n", font4);
         document.add(p);
         p = new Paragraph(pdf.get(3) + "\n", font5);
         p.setAlignment(Paragraph.ALIGN_CENTER);

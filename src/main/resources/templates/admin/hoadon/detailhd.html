@@ -171,7 +171,7 @@
         </button>
 
         <div th:if="${hoaDon.trangThai == 4}" class="float-right mr-3">
-            <a th:href="@{/staff/hoa-don/updatehdcg/{id}(id=${hoaDon.id})}" onclick="return confirm('Xác nhận giao?')"
+            <a th:href="@{/staff/hoa-don/updatehdcg/{id}(id=${hoaDon.id})}" id="myLinhXacNhanGiao"
                class="btn btn-primary">Xác nhận
                 giao</a>
             <a th:href="@{/staff/hoa-don/huyhdcg/{id}(id=${hoaDon.id})}" class=" myLinkHuy btn btn-danger mr-3">Hủy</a>
@@ -186,7 +186,7 @@
                class=" myLinkHuy btn btn-danger mr-3">Hủy</a>
         </div>
         <div th:if="${hoaDon.trangThai == 5}" class="float-right">
-            <a th:href="@{/staff/hoa-don/updatehddg/{id}(id=${hoaDon.id})}" id="myLinhXacNhan"
+            <a th:href="@{/staff/hoa-don/updatehddg/{id}(id=${hoaDon.id})}" id="myLinhXacNhanTC"
                class="btn btn-primary mr-1">Xác
                 nhận
                 thành công</a>
@@ -196,7 +196,8 @@
 
         </div>
         <div th:if="${hoaDon.trangThai == 3}" class="float-right">
-            <a th:href="@{/staff/hoa-don/updatehdcxn/{id}(id=${hoaDon.id})}" class="btn btn-primary">Xác nhận đơn</a>
+            <a th:href="@{/staff/hoa-don/updatehdcxn/{id}(id=${hoaDon.id})}" id="myLinhXacNhanXND"
+               class="btn btn-primary">Xác nhận đơn</a>
             <a th:href="@{/staff/hoa-don/huyhdcxn/{id}(id=${hoaDon.id})}" class="myLinkHuy btn btn-danger mr-3">Hủy</a>
         </div>
 
@@ -483,7 +484,9 @@
 
 
         let myLinks = document.querySelectorAll('.myLinkHuy');
-        let myLinksXN = document.getElementById('myLinhXacNhan');
+        let myLinksXN = document.getElementById('myLinhXacNhanTC');
+        let myLinksXNG = document.getElementById('myLinhXacNhanGiao');
+        let myLinksXND = document.getElementById('myLinhXacNhanXND');
 
         if (myLinks != null) {
             myLinks.forEach(function (link) {
@@ -507,11 +510,32 @@
         if (myLinksXN != null) {
             myLinksXN.addEventListener('click', function (event) {
                 event.preventDefault();
-                let rs = confirm('Xác nhận thành công: ');
-                if (!rs) return;
                 let hrefValue = myLinksXN.getAttribute('href');
                 let mess = prompt("Nhập ghi chú: ");
-                window.location.href = hrefValue + "?value=" + mess;
+                if (mess != null) {
+                    window.location.href = hrefValue + "?value=" + mess;
+                }
+            });
+        }
+        if (myLinksXNG != null) {
+            myLinksXNG.addEventListener('click', function (event) {
+                event.preventDefault();
+                let hrefValue = myLinksXNG.getAttribute('href');
+                let mess = prompt("Nhập ghi chú: ");
+                if (mess != null) {
+                    window.location.href = hrefValue + "?value=" + mess;
+                }
+            });
+        }
+
+        if (myLinksXND != null) {
+            myLinksXND.addEventListener('click', function (event) {
+                event.preventDefault();
+                let hrefValue = myLinksXND.getAttribute('href');
+                let mess = prompt("Nhập ghi chú: ");
+                if (mess != null) {
+                    window.location.href = hrefValue + "?value=" + mess;
+                }
             });
         }
 

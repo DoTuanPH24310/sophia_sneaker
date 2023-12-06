@@ -133,7 +133,7 @@
     <nav id="sidebar">
         <div class="notifications"></div>
         <div class="sidebar-header">
-            <h3><img src="/img/logosophia.jpg" class="img-fluid"/><span>SOPHIA STORE</span></h3>
+            <h3><img src="/img/logosophia.jpg" style="width: 180px; height: auto"/></h3>
         </div>
         <ul class="list-unstyled components">
 
@@ -202,14 +202,14 @@
     </nav>
     <div id="content">
         <div class="content1">
-            <div class="top-navbar">
+            <div class="top-navbar" style="height: 55px">
                 <div class="xp-topbar">
                     <!-- Start XP Row -->
                     <div class="row">
                         <!-- Start XP Col -->
                         <div class="col-2 col-md-1 col-lg-1 order-2 order-md-1 align-self-center">
                             <div class="xp-menubar">
-                                    <span class="material-icons text-white">*
+                                    <span class="material-icons text-white">signal_cellular_alt
                                     </span>
                             </div>
                         </div>
@@ -223,15 +223,15 @@
                         <!-- Start XP Col -->
                         <div class="col-10 col-md-6 col-lg-8 order-1 order-md-3">
                             <div class="xp-profilebar text-right">
-                                <nav class="navbar p-0">
+                                <nav class="navbar p-0" style="height: 4px">
                                     <ul class="nav navbar-nav flex-row ml-auto">
                                         <li class="nav-item dropdown">
                                             <a class="nav-link" href="#" data-toggle="dropdown">
                                                 <img th:src="@{(${session[avt]} eq 'thumbnail.png') ? '/getimage/thumbnail.png' : ${session[avt]}}"
-                                                     style="width:40px; height: 40px; border-radius:50%;" alt=""/>
+                                                     style="width:40px; height: 40px; border-radius:50%; position: relative; top: -12px; right: -19px" alt=""/>
                                                 <span class="xp-user-live"></span>
                                             </a>
-                                            <ul class="dropdown-menu small-menu">
+                                            <ul class="dropdown-menu small-menu" style="margin-left: -72px; padding-left: 19px;">
                                                 <li>
                                                     <a th:href="@{/staff/nhanvien/infor/{id}(id=${session[idnv]})}">
                                                             <span class="material-icons">
