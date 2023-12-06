@@ -40,7 +40,7 @@ public class CartService {
         this.gioHangRepository = gioHangRepository;
     }
 
-    public void addToCart(String userEmail, UUID chiTietGiayId) {
+    public void addToCart(String userEmail, UUID chiTietGiayId, Integer soLuong) {
         Double giaMoi = (Double) session.getAttribute("giaMoi_" + chiTietGiayId);
         if (!loginRepository.existsByEmail(userEmail)) {
             return;
@@ -61,16 +61,30 @@ public class CartService {
         }
 
         GioHangChiTiet cartItem = gioHangChiTietRepository.findById_GioHangAndId_ChiTietGiay(gioHang, chiTietGiay);
-        if (cartItem == null) {
-            cartItem = new GioHangChiTiet(new IdGioHangChiTiet(gioHang, chiTietGiay), 1);
-            cartItem.setNgayTao(LocalDate.now());
-        } else if (cartItem != null) {
-            if (cartItem.getSoLuong() >= chiTietGiay.getSoLuong()) {
-                cartItem.setSoLuong(chiTietGiay.getSoLuong());
-            } else {
-                cartItem.setSoLuong(cartItem.getSoLuong() + 1);
+        if(soLuong != null) {
+            if (cartItem == null) {
+                cartItem = new GioHangChiTiet(new IdGioHangChiTiet(gioHang, chiTietGiay), soLuong);
+                cartItem.setNgayTao(LocalDate.now());
+            } else if (cartItem != null) {
+                if (cartItem.getSoLuong() >= chiTietGiay.getSoLuong()) {
+                    cartItem.setSoLuong(chiTietGiay.getSoLuong());
+                } else {
+                    cartItem.setSoLuong(cartItem.getSoLuong() + soLuong);
+                }
+                cartItem.setNgaySua(LocalDate.now());
             }
-            cartItem.setNgaySua(LocalDate.now());
+        }else{
+            if (cartItem == null) {
+                cartItem = new GioHangChiTiet(new IdGioHangChiTiet(gioHang, chiTietGiay), 1);
+                cartItem.setNgayTao(LocalDate.now());
+            } else if (cartItem != null) {
+                if (cartItem.getSoLuong() >= chiTietGiay.getSoLuong()) {
+                    cartItem.setSoLuong(chiTietGiay.getSoLuong());
+                } else {
+                    cartItem.setSoLuong(cartItem.getSoLuong() + 1);
+                }
+                cartItem.setNgaySua(LocalDate.now());
+            }
         }
         gioHangChiTietRepository.save(cartItem);
     }

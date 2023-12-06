@@ -1,9 +1,8 @@
 package com.example.sneaker_sophia.controller.websiteshop;
 
 import com.example.sneaker_sophia.entity.ChiTietGiay;
-import com.example.sneaker_sophia.entity.Giay;
 import com.example.sneaker_sophia.entity.GioHangChiTiet;
-import com.example.sneaker_sophia.entity.Hang;
+import com.example.sneaker_sophia.entity.KichCo;
 import com.example.sneaker_sophia.service.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,15 +13,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("sophia-store")
 public class
-WebsiteshopController {
+WebsiteShopController {
     @Autowired
     ChiTietGiayService chiTietGiayService;
     @Autowired
@@ -45,8 +46,9 @@ WebsiteshopController {
     private CartService cartService;
     @Autowired
     HoaDonChiTietServive hoaDonChiTietServive;
+
     @GetMapping("/home")
-    public String home(Model model,HttpSession httpSession){
+    public String home(Model model, HttpSession httpSession) {
         List<ChiTietGiay> productList = chiTietGiayService.getAll();
         productList.sort(Comparator.comparing(ChiTietGiay::getNgayTao));
         List<ChiTietGiay> top16Products = productList.subList(0, Math.min(productList.size(), 16));
@@ -73,25 +75,30 @@ WebsiteshopController {
         model.addAttribute("totalCartPrice", totalCartPrice);
         model.addAttribute("chiTietGiays", chiTietGiays);
         model.addAttribute("cartItems", cartItems);
-        model.addAttribute("top10",hoaDonChiTietServive.findTop10IdChiTietGiay());
+        model.addAttribute("top10", hoaDonChiTietServive.findTop10IdChiTietGiay());
 
         return "website/websiteShop/index";
     }
 
 
     @GetMapping("/detail/{id}")
-    public String Detail(Model model, @PathVariable("id") UUID id){
+    public String Detail(Model model, @PathVariable("id") ChiTietGiay chiTietGiay, HttpSession session) {
+        List<KichCo> sizeChiTietGiay = chiTietGiayService.findSimilarSizeChiTietGiay(
+                giayService.findGiaysByIdChiTietGiay(chiTietGiay.getId()),
+                deGiayService.findDeGiaysByIdChiTiet(chiTietGiay.getId()),
+                hangService.findHangsByIdChiTietGiay(chiTietGiay.getId()),
+                loaiGiayService.findHangsByIdChiTietGiay(chiTietGiay.getId()),
+                mauSacService.findMauSacsByIdChiTiet(chiTietGiay.getId())
+        );
+        session.setAttribute("giay", chiTietGiay.getId());
 
-        model.addAttribute("giay",chiTietGiayService.getOne(id));
-        model.addAttribute("kichCo",kichCoService.getAll());
-        model.addAttribute("chiTietGiayById",chiTietGiayService.findChiTietGiaysById(id));
-        model.addAttribute("size",chiTietGiayService.getChiTietGiaysByIdChiTietGiay(
-                giayService.findGiaysByIdChiTietGiay(id),
-                deGiayService.findDeGiaysByIdChiTiet(id),
-                hangService.findHangsByIdChiTietGiay(id),
-                loaiGiayService.findHangsByIdChiTietGiay(id),
-                mauSacService.findMauSacsByIdChiTiet(id)
-        ));
+        List<KichCo> distinctSizeChiTietGiay = sizeChiTietGiay.stream()
+                .distinct()
+                .collect(Collectors.toList());
+
+        model.addAttribute("giay", chiTietGiayService.getOne(chiTietGiay.getId()));
+        model.addAttribute("chiTietGiayById", chiTietGiayService.findChiTietGiaysById(chiTietGiay.getId()));
+        model.addAttribute("size", distinctSizeChiTietGiay);
         // cart
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         List<GioHangChiTiet> cartItems = cartService.getCartItems(authentication.getName());
@@ -105,4 +112,19 @@ WebsiteshopController {
         return "website/websiteShop/product-details-default";
     }
 
+
+    @GetMapping("/detaill/{id}")
+    public String DetailChiTietGiayTheoSize(@PathVariable("id") UUID id, HttpSession session
+    ) {
+        UUID idCTG = (UUID) session.getAttribute("giay");
+        List<ChiTietGiay> fillChiTietGiayBySize = chiTietGiayService.findSimilarChiTietGiay(
+                giayService.findGiaysByIdChiTietGiay(idCTG),
+                deGiayService.findDeGiaysByIdChiTiet(idCTG),
+                hangService.findHangsByIdChiTietGiay(idCTG),
+                loaiGiayService.findHangsByIdChiTietGiay(idCTG),
+                mauSacService.findMauSacsByIdChiTiet(idCTG),
+                id
+        );
+        return "redirect:/sophia-store/detail/" +fillChiTietGiayBySize.get(0).getId();
+    }
 }

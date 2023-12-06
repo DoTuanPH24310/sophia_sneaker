@@ -374,5 +374,14 @@ public class ChiTietGiayService {
     public List<Object[]> getConcatenatedInfoAndSoLuongBySoLuong(int soLuong){
         return chiTietGiayRepository.getConcatenatedInfoAndSoLuongBySoLuong(soLuong);
     }
+
+    // lấy chitietgiay có sz khác nhau
+    public List<ChiTietGiay> findSimilarChiTietGiay(Giay giay,DeGiay deGiay,Hang hang,LoaiGiay loaiGiay,MauSac mauSac,UUID kichCo){
+        return chiTietGiayRepository.findSimilarChiTietGiay(giay,deGiay,hang,loaiGiay,mauSac,kichCo);
+    }
+
+    public List<KichCo> findSimilarSizeChiTietGiay(Giay giay,DeGiay deGiay,Hang hang,LoaiGiay loaiGiay,MauSac mauSac){
+        return chiTietGiayRepository.findSimilarSizeChiTietGiay(giay,deGiay,hang,loaiGiay,mauSac);
+    }
 }
 

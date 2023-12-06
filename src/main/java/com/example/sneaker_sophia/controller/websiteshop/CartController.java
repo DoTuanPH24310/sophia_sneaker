@@ -120,7 +120,10 @@ public class CartController {
 
 
     @GetMapping("/add-to-cart/{id}")
-    public String addToCart(@PathVariable("id") UUID chiTietGiayId, Model model, HttpSession httpSession) {
+    public String addToCart(@PathVariable("id") UUID chiTietGiayId, Model model,
+                            @RequestParam(value = "soLuonggg", required = false) Integer soLuong,
+                            HttpSession httpSession) {
+        System.out.println("soluongne"+soLuong);
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             ChiTietGiay chiTietGiay = chiTietGiayRepository.findById(chiTietGiayId).orElse(null);
@@ -132,7 +135,7 @@ public class CartController {
                 if (authentication != null && authentication.isAuthenticated() && !authentication.getPrincipal().equals("anonymousUser")) {
                     // Người dùng đã đăng nhập
                     TaiKhoan taiKhoan = loginRepository.findByEmail(authentication.getName());
-                    cartService.addToCart(taiKhoan.getEmail(), chiTietGiayId);
+                    cartService.addToCart(taiKhoan.getEmail(), chiTietGiayId,soLuong);
 
                     // Hiển thị giỏ hàng từ database
                     GioHang gioHang = gioHangRepository.findByTaiKhoan(taiKhoan);
@@ -141,9 +144,9 @@ public class CartController {
                     double totalCartPrice = cartItems.stream()
                             .mapToDouble(item -> item.getId().getChiTietGiay().getGia() * item.getSoLuong())
                             .sum();
-                    Long soLuong = this.cartService.countCartItems(authentication.getName());
+                    Long soLuongg = this.cartService.countCartItems(authentication.getName());
 
-                    model.addAttribute("soLuong", soLuong);
+                    model.addAttribute("soLuong", soLuongg);
                     model.addAttribute("totalCartPrice", totalCartPrice);
                     model.addAttribute("gioHang", gioHang);
 
@@ -160,8 +163,8 @@ public class CartController {
                         double totalCartPrice = cartItems.stream()
                                 .mapToDouble(item -> item.getGia() * item.getSoLuong())
                                 .sum();
-                        Long soLuong = cartItems.stream().mapToLong(CartItem::getSoLuong).sum();
-                        model.addAttribute("soLuong", soLuong);
+                        Long soLuongg = cartItems.stream().mapToLong(CartItem::getSoLuong).sum();
+                        model.addAttribute("soLuong", soLuongg);
                         model.addAttribute("totalCartPrice", totalCartPrice);
                         model.addAttribute("cartItems", cartItems);
 
