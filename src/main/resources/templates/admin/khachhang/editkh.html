@@ -28,7 +28,7 @@
 <body>
 
 <div style="background-color: white; height: 680px;" layout:fragment="content" class="col-md-12">
-    <form th:action="@{/admin/khachhang/update/{id}#tableCTG(id=${khachHang.idTaiKhoan})}"
+    <form th:action="@{/staff/khachhang/update/{id}#tableCTG(id=${khachHang.idTaiKhoan})}"
           method="post" th:object="${khachHang}" enctype="multipart/form-data">
         <div class="row mt-3">
             <div class="col-2">
@@ -246,7 +246,7 @@
     <div class="modal fade" id="modalThemDiaChi" tabindex="-1" data-backdrop="static"
          aria-labelledby="exampleModalLabel"
          aria-hidden="true">
-        <form action="/admin/khachhang/adddc#labeltaiKhoan" method="get" id="formThemDiaChi">
+        <form action="/staff/khachhang/adddc#labeltaiKhoan" method="get" id="formThemDiaChi">
             <div class="modal-dialog" style="max-width: 500px;">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -460,13 +460,13 @@
         function loadTrDDC(x, index) {
             let buttonChon = document.createElement('a');
             let buttonSua = document.createElement('a');
-            buttonChon.href = '/admin/khachhang/updateDCMD/' + x.id + '#labelKhachhang';
+            buttonChon.href = '/staff/khachhang/updateDCMD/' + x.id + '#labelKhachhang';
             buttonChon.text = 'Chọn'
             buttonChon.classList.add('btn');
             buttonChon.classList.add('btn-warning');
 
 
-            buttonSua.href = '/admin/khachhang/deleteDC/' + x.id + '#labelKhachhang';
+            buttonSua.href = '/staff/khachhang/deleteDC/' + x.id + '#labelKhachhang';
             buttonSua.text = 'Xóa'
             buttonSua.classList.add('btn');
             buttonSua.classList.add('btn-danger');

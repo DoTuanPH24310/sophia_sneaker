@@ -133,16 +133,16 @@
     <nav id="sidebar">
         <div class="notifications"></div>
         <div class="sidebar-header">
-            <h3><img src="/img/logosophia.jpg" class="img-fluid"/><span>SOPHIA STORE</span></h3>
+            <h3><img src="/img/logosophia.jpg" style="width: 180px; height: auto"/></h3>
         </div>
         <ul class="list-unstyled components">
 
             <li class="">
-                <a href="/admin/tai-quay/hien-thi"><i class="material-icons">shopping_cart</i><span>BÁN HÀNG</span></a>
+                <a href="/staff/tai-quay/hien-thi"><i class="material-icons">shopping_cart</i><span>BÁN HÀNG</span></a>
             </li>
 
             <li class="">
-                <a href="/admin/hoa-don/hien-thi"><i class="material-icons">receipt_long</i><span>ĐƠN HÀNG</span></a>
+                <a href="/staff/hoa-don/hien-thi"><i class="material-icons">receipt_long</i><span>ĐƠN HÀNG</span></a>
             </li>
 
 
@@ -152,10 +152,10 @@
                     <span>TÀI KHOẢN  </span></a>
                 <ul class="collapse list-unstyled menu" id="pageSubmenu3">
                     <li>
-                        <a href="/admin/nhanvien/hienthi">Nhân viên</a>
+                        <a href="/staff/nhanvien/hienthi">Nhân viên</a>
                     </li>
                     <li>
-                        <a href="/admin/khachhang/hienthi">Khách hàng</a>
+                        <a href="/staff/khachhang/hienthi">Khách hàng</a>
                     </li>
                 </ul>
             </li>
@@ -169,7 +169,7 @@
                     <i class="material-icons">legend_toggle</i><span>THỐNG KÊ</span></a>
             </li>
             <li class="dropdown">
-                <a href="/admin/chi-tiet-giay">
+                <a href="/staff/chi-tiet-giay">
                     <i class="material-symbols-outlined">footprint</i><span>SẢN PHẨM</span></a>
             </li>
             <li class="dropdown">
@@ -202,14 +202,14 @@
     </nav>
     <div id="content">
         <div class="content1">
-            <div class="top-navbar">
+            <div class="top-navbar" style="height: 55px">
                 <div class="xp-topbar">
                     <!-- Start XP Row -->
                     <div class="row">
                         <!-- Start XP Col -->
                         <div class="col-2 col-md-1 col-lg-1 order-2 order-md-1 align-self-center">
                             <div class="xp-menubar">
-                                    <span class="material-icons text-white">*
+                                    <span class="material-icons text-white">signal_cellular_alt
                                     </span>
                             </div>
                         </div>
@@ -223,17 +223,17 @@
                         <!-- Start XP Col -->
                         <div class="col-10 col-md-6 col-lg-8 order-1 order-md-3">
                             <div class="xp-profilebar text-right">
-                                <nav class="navbar p-0">
+                                <nav class="navbar p-0" style="height: 4px">
                                     <ul class="nav navbar-nav flex-row ml-auto">
                                         <li class="nav-item dropdown">
                                             <a class="nav-link" href="#" data-toggle="dropdown">
                                                 <img th:src="@{(${session[avt]} eq 'thumbnail.png') ? '/getimage/thumbnail.png' : ${session[avt]}}"
-                                                     style="width:40px; height: 40px; border-radius:50%;" alt=""/>
+                                                     style="width:40px; height: 40px; border-radius:50%; position: relative; top: -12px; right: -19px" alt=""/>
                                                 <span class="xp-user-live"></span>
                                             </a>
-                                            <ul class="dropdown-menu small-menu">
+                                            <ul class="dropdown-menu small-menu" style="margin-left: -72px; padding-left: 19px;">
                                                 <li>
-                                                    <a th:href="@{/admin/nhanvien/infor/{id}(id=${session[idnv]})}">
+                                                    <a th:href="@{/staff/nhanvien/infor/{id}(id=${session[idnv]})}">
                                                             <span class="material-icons">
                                                                 person_outline
                                                             </span>Thông tin

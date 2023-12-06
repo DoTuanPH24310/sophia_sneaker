@@ -300,16 +300,24 @@
                                     <p class="cart_amount" id="totalAmount"
                                        th:text="${#numbers.formatCurrency(hoaDon.tongTien + hoaDon.phiShip)}"></p>
                                 </div>
-                                <div th:if="${hoaDon.trangThai == 3}" class="checkout_btn">
-                                    <a th:href="@{/my-account/cancel/{idhd}(idhd=${hoaDon.id})}"
-                                       class="btn btn-md btn-golden" id="CancelBill">Hủy đơn</a>
+                                <div th:if="${hoaDon.trangThai == 3 || hoaDon.trangThai == 2}" class="checkout_btn">
+                                    <div class="row">
+                                        <div class="col-4">
+
+                                        </div>
+                                        <div class="col-8">
+                                            <button style="background-color: #e66666"  th:href="@{/my-account/cancel/{idhd}(idhd=${hoaDon.id})}" onclick="return confirm('Xác nhận hủy đơn?');"
+                                               class="btn btn-md btn-golden" id="CancelBill">Hủy đơn</button>
+                                            <button th:if="${hoaDon.trangThai == 2}" type="button" class="btn btn-md btn-golden ml-2" data-bs-toggle="modal" data-bs-target="#modalChonPhuongThuc">
+                                                Thanh toán Ngay
+                                            </button>
+                                        </div>
+                                    </div>
+
                                 </div>
-                                <div th:if="${hoaDon.trangThai == 2}" class="checkout_btn">
-                                    <button type="button" class="btn btn-md btn-golden" data-bs-toggle="modal"
-                                            data-bs-target="#modalChonPhuongThuc">
-                                        Thanh toán Ngay
-                                    </button>
-                                </div>
+
+
+
                             </div>
                         </div>
                     </div>

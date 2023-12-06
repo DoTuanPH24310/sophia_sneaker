@@ -56,7 +56,7 @@ public class LoginConfiguration {
                         .logoutSuccessUrl("/login/home")
                 )
                 .exceptionHandling(exceptions -> exceptions
-                        .accessDeniedPage("/login/home")
+                        .accessDeniedPage("/login/403")
                         .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login/home"))
                 );
 

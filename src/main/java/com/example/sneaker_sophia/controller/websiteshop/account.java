@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,8 +39,7 @@ public class account {
     private LichSuHoaDonWebRepository lichSuHoaDonWebRepository;
     @Autowired
     private LoginRepository loginRepository;
-    @Autowired
-    private AlertInfo alertInfo;
+
     @Autowired
     private AccountService accountService;
     @Autowired
@@ -64,6 +62,13 @@ public class account {
 
     @Resource(name = "htttService")
     HTTTService htttService;
+
+
+    @Resource(name = "chiTietGiayService")
+    ChiTietGiayService chiTietGiayService;
+
+    @Autowired
+    private AlertInfo alertInfo;
 
     @GetMapping("home")
     public String home(Model model, HttpSession session) {
@@ -159,19 +164,26 @@ public class account {
 
     @GetMapping("/cancel/{idhd}")
     private String cancel(@PathVariable("idhd") HoaDon hd,
-                          @RequestParam(value = "value", required = false) String value) {
-        if (value == null || value.length() > 150 || hd.getTrangThai() != 3) {
-            return "/my-account/detail/" + hd.getId();
+                          @RequestParam(value = "value",required = false) String value){
+        if (value == null || value.length() > 150 || hd.getTrangThai() != 3){
+            alertInfo.alert("errTaiQuay", null);
+            return "/my-account/detail/"+hd.getId();
         }
 
         LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
-
-        lshdService.savelshd(lichSuHoaDon);
+        List<HoaDonChiTiet> listhdct = hoaDonChiTietServive.getHDCTByIdHD(hd.getId());
+        for (HoaDonChiTiet hdct : listhdct) {
+            ChiTietGiay chiTietGiay = hdct.getChiTietGiay();
+            chiTietGiay.setSoLuong(chiTietGiay.getSoLuong() + hdct.getSoLuong());
+            chiTietGiayService.save(chiTietGiay);
+        }
         hd.setGhiChu(value);
         hd.setTrangThai(6);
         lichSuHoaDon.setHoaDon(hd);
         lichSuHoaDon.setPhuongThuc("6");
+        lshdService.savelshd(lichSuHoaDon);
         hoaDonService.savehd(hd);
+        alertInfo.alert("successTaiQuay", "Đơn hàng đã được hủy");
         return "redirect:/my-account/home";
     }
 
