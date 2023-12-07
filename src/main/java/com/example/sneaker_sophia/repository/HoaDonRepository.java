@@ -53,7 +53,10 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
             "(:ngayBatDau IS NULL OR c.createdDate >= :ngayBatDau) AND " +
             "(:ngayKetThuc IS NULL OR c.createdDate <= :ngayKetThuc) AND " +
             "(:loaiHoaDon IS NULL OR c.loaiHoaDon = :loaiHoaDon) AND " +
-            "(:textSearch IS NULL OR c.maHoaDOn like :textSearch) AND" +
+            "((:textSearch IS NULL OR c.maHoaDOn like :textSearch) or" +
+            "(:textSearch IS NULL OR c.soDienThoai like :textSearch) or" +
+            "(:textSearch IS NULL OR c.taiKhoan.ten like :textSearch) or " +
+            "(:textSearch IS NULL OR c.tenKhachHang like :textSearch)) AND" +
             "(c.trangThai = :trangThai)" +
             "order by c.createdDate desc ")
     List<HoaDon> findHoaDonByMultipleParamsAPIDate(
@@ -67,7 +70,10 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
             "(:ngayBatDau IS NULL OR c.createdDate >= :ngayBatDau) AND " +
             "(:ngayKetThuc IS NULL OR c.createdDate <= :ngayKetThuc) AND " +
             "(:loaiHoaDon IS NULL OR c.loaiHoaDon = :loaiHoaDon) AND " +
-            "(:textSearch IS NULL OR c.maHoaDOn like :textSearch) AND" +
+            "((:textSearch IS NULL OR c.maHoaDOn like :textSearch) or" +
+            "(:textSearch IS NULL OR c.soDienThoai like :textSearch) or" +
+            "(:textSearch IS NULL OR c.taiKhoan.ten like :textSearch) or " +
+            "(:textSearch IS NULL OR c.tenKhachHang like :textSearch)) AND" +
             "(c.trangThai = :trangThai)" +
             "order by c.tongTien desc ")
     List<HoaDon> findHoaDonByMultipleParamsAPITongTien(
@@ -82,7 +88,10 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
             "(:ngayBatDau IS NULL OR c.createdDate >= :ngayBatDau) AND " +
             "(:ngayKetThuc IS NULL OR c.createdDate <= :ngayKetThuc) AND " +
             "(:loaiHoaDon IS NULL OR c.loaiHoaDon = :loaiHoaDon) AND " +
-            "(:textSearch IS NULL OR c.maHoaDOn like :textSearch) AND" +
+            "((:textSearch IS NULL OR c.maHoaDOn like :textSearch) or" +
+            "(:textSearch IS NULL OR c.soDienThoai like :textSearch) or" +
+            "(:textSearch IS NULL OR c.taiKhoan.ten like :textSearch) or " +
+            "(:textSearch IS NULL OR c.tenKhachHang like :textSearch)) AND" +
             "(c.trangThai = :trangThai)" +
             "order by c.maHoaDOn desc ")
     List<HoaDon> findHoaDonByMultipleParamsAPImaHoaDOn(

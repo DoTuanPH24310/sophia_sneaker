@@ -1,5 +1,7 @@
 package com.example.sneaker_sophia.config;
 
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.servlet.error.ErrorViewResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,8 +15,11 @@ public class ErrorConfig {
 
     @Bean
     public ErrorViewResolver customErrorViewResolver() {
+
         return (request, status, model) -> {
             if (status == HttpStatus.INTERNAL_SERVER_ERROR) {
+                System.out.println("check: ");
+                System.out.println(request.getContextPath());
                 // Nếu là lỗi 500, trả về trang lỗi tùy chỉnh
                 return new ModelAndView("error");
             }
