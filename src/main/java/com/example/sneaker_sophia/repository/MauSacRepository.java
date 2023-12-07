@@ -1,5 +1,6 @@
 package com.example.sneaker_sophia.repository;
 
+import com.example.sneaker_sophia.entity.Hang;
 import com.example.sneaker_sophia.entity.LoaiGiay;
 import com.example.sneaker_sophia.entity.MauSac;
 import org.springframework.data.domain.Page;
@@ -41,6 +42,9 @@ public interface MauSacRepository extends JpaRepository<MauSac, UUID> {
             "join ChiTietGiay on MauSac.Id = ChiTietGiay.IdMauSac\n" +
             "where ChiTietGiay.id =? ", nativeQuery = true)
     MauSac findMauSacsByIdChiTiet(UUID uuid);
+
+    @Query("SELECT g FROM MauSac g WHERE g.trangThai IN (0)")
+    List<MauSac> findAll();
 
     //cuongdv
     List<MauSac> findByTrangThaiEquals(Integer trangThai);

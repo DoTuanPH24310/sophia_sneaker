@@ -3,6 +3,7 @@ package com.example.sneaker_sophia.repository;
 import com.example.sneaker_sophia.entity.DeGiay;
 import com.example.sneaker_sophia.entity.Hang;
 import com.example.sneaker_sophia.entity.KichCo;
+import com.example.sneaker_sophia.entity.MauSac;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -36,4 +37,7 @@ public interface KichCoRepository extends JpaRepository<KichCo, UUID> {
 
     @Query(value = "select * from KichCo where trangThai= 0 or trangThai =1",nativeQuery = true)
     List<KichCo> finAllTrangThai();
+
+    @Query("SELECT g FROM KichCo g WHERE g.trangThai IN (0)")
+    List<KichCo> findAll();
 }

@@ -109,5 +109,10 @@ public class DeGiayIplm implements DeGiayService {
         deGiayRepository.save(kc);
     }
 
+    @Override
+    public List<DeGiay> findAll() {
+        return deGiayRepository.findAll();
+    }
+
 
 }

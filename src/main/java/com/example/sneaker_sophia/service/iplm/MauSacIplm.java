@@ -106,4 +106,9 @@ public class MauSacIplm implements MauSacService {
     public void save(MauSac ms) {
         mauSacRepository.save(ms);
     }
+
+    @Override
+    public List<MauSac> findAll() {
+        return mauSacRepository.findAll();
+    }
 }

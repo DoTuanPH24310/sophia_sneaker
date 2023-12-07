@@ -155,7 +155,21 @@
 
 <a th:fragment="pageproductDetail_link(pageNum, label)"
    class="page-link"
-   th:href="@{'/admin/chi-tiet-giay/page/' + ${pageNum} + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword=' + keyword : ''} + ${productName != null ? '&productName=' + productName : ''}}"> [[${label}]]</a>
+   th:href="@{'/admin/chi-tiet-giay/page/'
+   + ${pageNum}
+   + '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}
+   +${keyword != null ? '&keyword=' + keyword : ''}
+   + ${productName != null ? '&productName=' + productName : ''}
+   + ${giaMin != null ? '&giaMin=' + giaMin : ''}
+   + ${giaMax != null ? '&giaMax=' + giaMax : ''}
+   + ${hang != null ? '&hang=' + hang : ''}
+   + ${giay != null ? '&giay=' + giay : ''}
+   + ${deGiay != null ? '&deGiay=' + deGiay : ''}
+   + ${loaiGiay != null ? '&loaiGiay=' + loaiGiay : ''}
+   + ${kichCo != null ? '&kichCo=' + kichCo : ''}
+   + ${mauSac != null ? '&mauSac=' + mauSac : ''}
+   + ${trangThai != null ? '&trangThai=' + trangThai : ''}
+   }"> [[${label}]]</a>
 
 <a th:fragment="pagecategory_link(pageNum, label)"
    class="page-link"

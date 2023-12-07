@@ -2,6 +2,7 @@ package com.example.sneaker_sophia.repository;
 
 import com.example.sneaker_sophia.entity.Giay;
 import com.example.sneaker_sophia.entity.LoaiGiay;
+import com.example.sneaker_sophia.entity.MauSac;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -37,4 +38,7 @@ public interface LoaiGiayRepository extends JpaRepository<LoaiGiay, UUID> {
 
     @Query(value = "select * from LoaiGiay where trangThai= 0 or trangThai =1",nativeQuery = true)
     List<LoaiGiay> finAllTrangThai();
+
+    @Query("SELECT g FROM LoaiGiay g WHERE g.trangThai IN (0)")
+    List<LoaiGiay> findAll();
 }
