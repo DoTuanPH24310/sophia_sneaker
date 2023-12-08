@@ -87,7 +87,7 @@ public class ImportExportFileController {
         // Dòng 1
         Row luuY2 = sheet.createRow(1);
         Cell cellluuY2 = luuY2.createCell(0);
-        cellluuY2.setCellValue("     Các thuộc tính của sản phẩm không được bỏ trống trừ mô tả, thêm ít nhất 2 ảnh " +
+        cellluuY2.setCellValue("     Các thuộc tính của sản phẩm không được bỏ trống trừ mô tả và QR code nếu bỏ trống QR code sẽ được tạo ngẫu nhiên, thêm ít nhất 2 ảnh " +
                 "nếu ảnh để trống sẽ tự động thêm ảnh mặc định.");
         cellluuY2.setCellStyle(redItalicStyle);
 
@@ -195,6 +195,7 @@ public class ImportExportFileController {
     public ResponseEntity<String> importFromExcel(@RequestParam("file") MultipartFile file) {
         // Set để theo dõi các mã đã xuất hiện
         Set<String> existingMaSet = new HashSet<>();
+        Set<String> existingQRCodeSet = new HashSet<>();
         try {
             Workbook workbook = new XSSFWorkbook(file.getInputStream());
             Sheet sheet = workbook.getSheetAt(0);
@@ -222,18 +223,25 @@ public class ImportExportFileController {
                 }
 
                 ChiTietGiay existingChiTietGiay = chiTietGiayService.findByMa(ma);
+                ChiTietGiay existingChiTietGiayByQr = chiTietGiayService.getCTGByQrCode(qrCode);
 
                 if (existingChiTietGiay != null) {
                     // Nếu mã đã tồn tại, cập nhật số lượng
-                        existingChiTietGiay.setSoLuong(importedSoLuong);
-                        existingChiTietGiay.setGia(importedGia); // Cập nhật giá
-                    if(qrCode.isEmpty() || qrCode==null){
-                        existingChiTietGiay.setQrCode(generateRandomQRCode());
-                    }else{
+                    existingChiTietGiay.setSoLuong(importedSoLuong);
+                    existingChiTietGiay.setGia(importedGia);
+                    if (qrCode.isEmpty() || qrCode == null) {
+                        qrCode = chiTietGiayService.generateRandomQRCode();
+                        existingChiTietGiay.setQrCode(qrCode);
+                    }else if (!qrCode.equals(existingChiTietGiay.getQrCode())) {
+                        // Kiểm tra nếu mã QR code đã tồn tại ở một sản phẩm khác
+                        if (existingChiTietGiayByQr != null) {
+                            return ResponseEntity.badRequest().body("Lỗi: Mã QR bị trùng lặp ở mã giày: " + existingChiTietGiay.getMa());
+                        }
                         existingChiTietGiay.setQrCode(qrCode); // Cập nhật QR
                     }
-                        chiTietGiayService.save(existingChiTietGiay);
-                } else {
+
+                    chiTietGiayService.save(existingChiTietGiay);
+            } else {
                     // Nếu mã chưa tồn tại, thêm mới
                     ChiTietGiay chiTietGiay = new ChiTietGiay();
                     chiTietGiay.setMa(getStringValue(row.getCell(0)));
@@ -249,15 +257,15 @@ public class ImportExportFileController {
                     chiTietGiay.setSoLuong(getIntegerValue(row.getCell(10)));
                     chiTietGiay.setTrangThai(getIntegerValue(row.getCell(11)));
                     //check QR
-                    String generatedQRCode;
-                    do {
-                        generatedQRCode = generateRandomQRCode();
-                    } while (existingMaSet.contains(generatedQRCode));
-
-                    chiTietGiay.setQrCode(generatedQRCode);
-                    existingMaSet.add(generatedQRCode);
-
-
+                    String generatedQRCode= getStringValue(row.getCell(12));
+                    if (generatedQRCode.isEmpty() || generatedQRCode == null) {
+                        generatedQRCode = chiTietGiayService.generateRandomQRCode();
+                        chiTietGiay.setQrCode(generatedQRCode);
+                    } else if (existingQRCodeSet.contains(generatedQRCode)) {
+                        // Nếu QR code đã tồn tại, xử lý lỗi hoặc thông báo mà bạn muốn
+                        return ResponseEntity.badRequest().body("Lỗi: Mã QR code đã xuất hiện trước đó - " + generatedQRCode);
+                    }
+                    existingQRCodeSet.add(generatedQRCode);
 
                     // Kiểm tra giá và số lượng
                     double importedGia1 = getDoubleValue(row.getCell(9));

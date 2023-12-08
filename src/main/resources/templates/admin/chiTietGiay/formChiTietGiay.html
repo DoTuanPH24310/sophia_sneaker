@@ -258,7 +258,6 @@
                                 <label for="soLuong"><span style="color: #c82333">*</span> Số lượng:</label>
                                 <input th:field="*{soLuong}" class="form-control custom-width" id="soluong"
                                        name="soluong">
-                                <p id="soLuongValidationMessage" class="text-danger"></p>
                                 <p class="text-danger" th:if="${#fields.hasErrors('soLuong')}" th:errors="*{soLuong}"></p>
                             </div>
                             <div class="col">

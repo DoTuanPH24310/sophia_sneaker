@@ -36,6 +36,9 @@ function showSelectedImages(input) {
         if (input.files.length > maxImages) {
             alert("Chỉ được tải lên tối đa " + maxImages + " ảnh.");
             break;
+        } else if(input.files.length < 2){
+            alert("Chọn tối thiểu 2 ảnh");
+            break;
         } else {
 
             var file = input.files[i];

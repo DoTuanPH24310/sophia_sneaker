@@ -17,9 +17,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.security.SecureRandom;
+import java.util.*;
 
 @Service
 public class ChiTietGiayService {
@@ -368,9 +367,9 @@ public class ChiTietGiayService {
     }
 
 
-    public boolean validateUpdate(ChiTietGiayDTO chiTietGiay,MultipartFile[] imageFiles, Model model) {
+    public boolean validateUpdate(ChiTietGiay chiTietGiay, Model model) {
         int check = 0;
-        String errQr = null,errAnhs="";
+        String errQr = null;
 
         // Kiểm tra xem mã QR code đã được sử dụng hay chưa
         ChiTietGiay existingChiTietGiay = chiTietGiayRepository.getChiTietGiayByQrCode(chiTietGiay.getQrCode());
@@ -379,6 +378,17 @@ public class ChiTietGiayService {
             errQr = "QR code đã được sử dụng";
             check++;
         }
+
+
+        // Thêm thông báo lỗi vào model
+        model.addAttribute("errQr", errQr);
+
+        return check == 0;
+    }
+
+    public boolean validateUpdateAnh(MultipartFile[] imageFiles, Model model) {
+        int check = 0;
+        String errAnhs="";
 
         // Kiểm tra số lượng ảnh
         int numberOfImages = imageFiles.length;
@@ -401,9 +411,6 @@ public class ChiTietGiayService {
                 break; // Ngưng kiểm tra nếu có ít nhất một ảnh không hợp lệ
             }
         }
-
-        // Thêm thông báo lỗi vào model
-        model.addAttribute("errQr", errQr);
         model.addAttribute("errAnhs", errAnhs);
 
         return check == 0;
@@ -420,6 +427,30 @@ public class ChiTietGiayService {
 
     public List<KichCo> findSimilarSizeChiTietGiay(Giay giay,DeGiay deGiay,Hang hang,LoaiGiay loaiGiay,MauSac mauSac){
         return chiTietGiayRepository.findSimilarSizeChiTietGiay(giay,deGiay,hang,loaiGiay,mauSac);
+    }
+
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    private static final int QR_CODE_LENGTH = 16;
+    private static final Random RANDOM = new SecureRandom();
+    private static final Set<String> generatedCodes = new HashSet<>();
+
+    public static String generateRandomQRCode() {
+        String qrCode;
+        do {
+            qrCode = generateRandomCode();
+        } while (!generatedCodes.add(qrCode));
+        return qrCode;
+    }
+
+    private static String generateRandomCode() {
+        StringBuilder qrCode = new StringBuilder(QR_CODE_LENGTH);
+
+        for (int i = 0; i < QR_CODE_LENGTH; i++) {
+            int randomIndex = RANDOM.nextInt(CHARACTERS.length());
+            qrCode.append(CHARACTERS.charAt(randomIndex));
+        }
+
+        return qrCode.toString();
     }
 }
 

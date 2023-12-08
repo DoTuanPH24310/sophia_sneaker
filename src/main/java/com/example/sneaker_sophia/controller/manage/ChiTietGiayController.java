@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.SecureRandom;
 import java.util.*;
 import java.util.List;
 
@@ -180,7 +181,9 @@ public class ChiTietGiayController {
                 model.addAttribute("anh", anhService.getAll());
                 return "admin/chiTietGiay/formChiTietGiay";
             }
-
+            if(chiTietGiay.getQrCode().isEmpty() || chiTietGiay.getQrCode()==null){
+                chiTietGiay.setQrCode(chiTietGiayService.generateRandomQRCode());
+            }
             ChiTietGiay chiTietGiaySaved = chiTietGiayService.save(chiTietGiayDTO.loadChiTietGiayDTO(chiTietGiay));
             boolean isFirstImage = true;
 
@@ -215,60 +218,82 @@ public class ChiTietGiayController {
 
         return "redirect:/admin/chi-tiet-giay";
     }
-    @PostMapping("chi-tiet-giay/update")
-    public String update(@ModelAttribute("chiTietGiay") @Validated ChiTietGiayDTO chiTietGiay,
+    @PostMapping("chi-tiet-giay/edit/{id}")
+    public String update(@PathVariable("id") String id,@ModelAttribute("chiTietGiay") @Validated ChiTietGiayDTO chiTietGiay1,
                          BindingResult bindingResult,
                          @RequestParam("imageFile") MultipartFile[] imageFiles,
                          Model model) {
+        ChiTietGiay chiTietGiay = chiTietGiayService.getOne(UUID.fromString(id));
+        chiTietGiay.setId(chiTietGiay1.getId());
         try {
             // Kiểm tra lỗi validation
-            if (bindingResult.hasErrors() || !chiTietGiayService.validateUpdate(chiTietGiay, imageFiles, model)) {
+            if (bindingResult.hasErrors() || !chiTietGiayService.validateUpdate(chiTietGiay, model)) {
                 model.addAttribute("giay", giayService.getAll());
                 model.addAttribute("hang", hangService.getAll());
                 model.addAttribute("deGiay", deGiayService.getAll());
                 model.addAttribute("mauSac", mauSacService.getAll());
                 model.addAttribute("loaiGiay", loaiGiayService.getAll());
                 model.addAttribute("kichCo", kichCoService.getAll());
-                model.addAttribute("anh", anhService.getAll());
+                model.addAttribute("anh", anhService.anhsFindIdChitietGiay(chiTietGiay));
                 return "admin/chiTietGiay/formEditChiTietGiay";
             }
 
-            // Kiểm tra xem có sự thay đổi trong ảnh hay không
-            boolean imagesChanged = imageFiles != null && imageFiles.length > 0;
-
-            // Nếu có sự thay đổi, xóa các ảnh cũ
-            if (imagesChanged) {
-                anhService.deleteAnhByChiTietGiay(chiTietGiayService.getOne(chiTietGiay.getId()));
-            }
-
-            // Lưu chi tiết giày vào cơ sở dữ liệu
-            chiTietGiayService.save(chiTietGiayDTO.loadChiTietGiayDTO(chiTietGiay));
-
-            // Lưu ảnh mới
-            boolean isFirstImage = true;
-            for (MultipartFile imageFile : imageFiles) {
-                String originalFilename = imageFile.getOriginalFilename();
-
-                // Tải ảnh lên Cloudinary và nhận URL của ảnh
-                String imageUrl = fileUpload.uploadFile(imageFile);
-
-                if (imageUrl != null) {
-                    // Tạo đối tượng ảnh và thiết lập các thông tin cần thiết
-                    Anh anh = new Anh();
-
-                    if (isFirstImage) {
-                        anh.setAnhChinh(1);
-                        isFirstImage = false;
-                    } else {
-                        anh.setAnhChinh(0);
-                    }
-
-                    anh.setDuongDan(imageUrl); // Lưu URL của ảnh từ Cloudinary
-                    anh.setChiTietGiay(chiTietGiayDTO.loadChiTietGiayDTO(chiTietGiay));
-
-                    // Lưu đối tượng ảnh vào cơ sở dữ liệu
-                    anhService.save(anh);
+            System.out.println("có "+ Arrays.stream(imageFiles).count());
+            // Nếu có sự thay đổi, xóa các ảnh cũ và thực hiện cập nhật
+            if (Arrays.stream(imageFiles).count() > 1) {
+                if (bindingResult.hasErrors() || !chiTietGiayService.validateUpdateAnh(imageFiles, model)) {
+                    model.addAttribute("giay", giayService.getAll());
+                    model.addAttribute("hang", hangService.getAll());
+                    model.addAttribute("deGiay", deGiayService.getAll());
+                    model.addAttribute("mauSac", mauSacService.getAll());
+                    model.addAttribute("loaiGiay", loaiGiayService.getAll());
+                    model.addAttribute("kichCo", kichCoService.getAll());
+                    model.addAttribute("anh", anhService.anhsFindIdChitietGiay(chiTietGiay));
+                    return "admin/chiTietGiay/formEditChiTietGiay";
                 }
+
+                // Xóa các ảnh cũ
+                anhService.deleteAnhByChiTietGiay(chiTietGiayService.getOne(chiTietGiay.getId()));
+
+                // Lưu chi tiết giày vào cơ sở dữ liệu
+                chiTietGiayService.save(chiTietGiay);
+
+                // Lưu ảnh mới
+                boolean isFirstImage = true;
+                for (MultipartFile imageFile : imageFiles) {
+                    String originalFilename = imageFile.getOriginalFilename();
+
+                    // Tải ảnh lên Cloudinary và nhận URL của ảnh
+                    String imageUrl = fileUpload.uploadFile(imageFile);
+
+                    if (imageUrl != null) {
+                        // Tạo đối tượng ảnh và thiết lập các thông tin cần thiết
+                        Anh anh = new Anh();
+
+                        if (isFirstImage) {
+                            anh.setAnhChinh(1);
+                            isFirstImage = false;
+                        } else {
+                            anh.setAnhChinh(0);
+                        }
+
+                        anh.setDuongDan(imageUrl); // Lưu URL của ảnh từ Cloudinary
+                        anh.setChiTietGiay(chiTietGiay);
+
+                        // Lưu đối tượng ảnh vào cơ sở dữ liệu
+                        anhService.save(anh);
+                    }
+                }
+            }else{
+                // Không có sự thay đổi, giữ nguyên ảnh
+                List<Anh> currentImages = anhService.anhsFindIdChitietGiay(chiTietGiay);
+                for (Anh currentImage : currentImages) {
+                    anhService.save(currentImage);
+                }
+                chiTietGiayService.save(chiTietGiay);
+
+                // Đặt danh sách ảnh vào model sau khi lưu
+                model.addAttribute("anh", anhService.anhsFindIdChitietGiay(chiTietGiay));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -296,4 +321,6 @@ public class ChiTietGiayController {
         anhService.delete(id);
         return "redirect:/admin/chi-tiet-giay/edit/"+uuid;
     }
+
+
 }
