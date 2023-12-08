@@ -115,7 +115,7 @@ public class QLHDController {
     @PostMapping("updatehdcxn")
     public String updatehdcxn(
             @RequestParam(value = "idhd", required = false) List<String> listhd,
-             @RequestParam(value = "value", required = false) String ghiChu
+            @RequestParam(value = "value", required = false) String ghiChu
     ) {
         session.setAttribute("tabActive", "tabChoXacNhan");
         if (listhd == null) {

@@ -2,16 +2,13 @@ package com.example.sneaker_sophia.controller.manage;
 
 
 import com.example.sneaker_sophia.dto.DTO_API_CTG;
-import com.example.sneaker_sophia.dto.DTO_API_Giay;
 import com.example.sneaker_sophia.entity.*;
 import com.example.sneaker_sophia.repository.AnhRepository;
 import com.example.sneaker_sophia.service.*;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
