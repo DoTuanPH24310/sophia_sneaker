@@ -26,21 +26,29 @@ public class GlobalControllerAdvice {
     public long getCartItemCount(Authentication authentication) {
         HttpSession httpSession = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
         Cart cartSession = (Cart) httpSession.getAttribute("cart");
-        long cartItemCount = Objects.requireNonNullElse(cartSession, new Cart()).getItems().stream().mapToLong(CartItem::getSoLuong).count();
+        long cartItemCount = 0;
 
-        if (authentication != null && authentication.isAuthenticated()) {
-            // Kiểm tra vai trò VT003 trước khi gọi hàm
-            boolean hasRoleVT003 = authentication.getAuthorities().stream()
-                    .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("VT003"));
+        if (authentication != null && authentication.isAuthenticated() && !authentication.getPrincipal().equals("anonymousUser")) {
 
-            if (hasRoleVT003) {
-                GioHang gioHang = this.gioHangService.getCartByEmail(authentication.getName());
-                List<GioHangChiTiet> cartItemsDatabase = gioHangService.getCartItems(gioHang.getId());
-                cartItemCount += cartItemsDatabase != null ? cartItemsDatabase.stream().mapToLong(GioHangChiTiet::getSoLuong).count() : 0;
+            GioHang gioHang = this.gioHangService.getCartByEmail(authentication.getName());
+
+            if (cartSession != null && cartSession.getItems() != null) {
+                cartItemCount = cartSession.getItems().stream().mapToLong(CartItem::getSoLuong).sum();
+            }
+            if (gioHang != null) {
+                if (authentication != null && authentication.isAuthenticated()) {
+                    List<GioHangChiTiet> cartItemsDatabase = gioHangService.getCartItems(gioHang.getId());
+
+                    cartItemCount = cartItemsDatabase != null ?
+                            cartItemsDatabase.size() : 0;
+                }
+            } else {
+                return 0;
             }
         }
 
         return cartItemCount;
     }
+
 
 }

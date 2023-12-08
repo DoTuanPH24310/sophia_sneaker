@@ -23,6 +23,7 @@ public class CartItem {
     private String loaiGiay;
 
     private String mauSac;
+    private String kichCo;
 
 
     private Integer soLuong;
