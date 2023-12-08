@@ -96,6 +96,7 @@ public class CartService {
                     chiTietSanPham.get().getHang().getTen(),
                     chiTietSanPham.get().getLoaiGiay().getTen(),
                     chiTietSanPham.get().getMauSac().getTen(),
+                    chiTietSanPham.get().getKichCo().getTen(),
                     soLuong,
                     giaMoi != null ? giaMoi : chiTietSanPham.get().getGia());
 
@@ -133,6 +134,7 @@ public class CartService {
                         chiTietSanPham.get().getHang().getTen(),
                         chiTietSanPham.get().getLoaiGiay().getTen(),
                         chiTietSanPham.get().getMauSac().getTen(),
+                        chiTietSanPham.get().getKichCo().getTen(),
                         soLuong,
                         giaMoi != null ? giaMoi : chiTietSanPham.get().getGia());
 

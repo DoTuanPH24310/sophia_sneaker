@@ -277,7 +277,7 @@
                     </a>
                     <div class="offcanvas-cart-item-content">
                         <a href="#" class="offcanvas-cart-item-link"
-                           th:text="${item.hang + ' ' + item.giay + ' ' + item.loaiGiay + ' ' + item.mauSac}"></a>
+                           th:text="${item.hang + ' ' + item.giay + ' ' + item.loaiGiay + ' ' + item.mauSac + '[' + item.kichCo + ']'}"></a>
                         <div class="offcanvas-cart-item-details">
                             <span class="offcanvas-cart-item-details-quantity" th:text="${item.soLuong} + ' x'"></span>
                             <span class="offcanvas-cart-item-details-price"
@@ -358,6 +358,7 @@
                                     <th class="product_remove">Xóa</th>
                                     <th class="product_thumb">Ảnh</th>
                                     <th class="product_name">Sản phẩm</th>
+                                    <th class="product_name">Kích cỡ</th>
                                     <th class="product-price">Đơn giá</th>
                                     <th class="product_quantity">Số lượng</th>
                                     <th class="product_total">Tổng tiền</th>
@@ -374,14 +375,17 @@
                                     </td>
 
                                     <td class="product_thumb">
-                                        <a href="product-details-default.html">
+                                        <a th:href="@{'/sophia-store/detail/' + ${item.id}}">
                                             <img class="offcanvas-cart-image" th:src="@{${item.anh}}"
                                                  style="width: 92px; height: 92px" alt="">
                                         </a>
                                     </td>
                                     <td class="product_name">
-                                        <a href="product-details-default.html"
-                                           th:text="${item.hang + ' ' + item.giay + ' ' + item.loaiGiay + ' ' + item.mauSac}"></a>
+                                        <a th:href="@{'/sophia-store/detail/' + ${item.id}}"
+                                           th:text="${item.hang + ' ' + item.giay + ' ' + item.loaiGiay + ' ' + item.mauSac }"></a>
+                                    </td>
+                                    <td>
+                                        <span th:text="${item.kichCo}"></span>
                                     </td>
                                     <td class="product-price" th:attr="data-gia=${item.gia}">
                                         <span th:if="${session['giaCu_' + item.id] != session['giaMoi_' + item.id]}"
@@ -400,7 +404,7 @@
                                     <td class="product_quantity">
                                         <label for="quantity">Số lượng:</label>
                                         <button class="buttonCT decreaseQuantity" th:data-id="${item.id}">-</button>
-                                        <input min="1" max="100" id="quantity" th:data-id="${item.id}" type="text"
+                                        <input min="1" id="quantity" th:data-id="${item.id}" type="text"
                                                th:value="${item.soLuong}" onchange="updateQuantity(this)">
                                         <button class="buttonCT increaseQuantity" th:data-id="${item.id}">+</button>
                                     </td>

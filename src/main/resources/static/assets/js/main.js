@@ -519,10 +519,10 @@ document.querySelectorAll(".add-to-cart").forEach(function (addToCartButton) {
                                     let icon = 'fa-solid fa-check-circle';
                                     let title = 'Thành công!';
                                     let text = "Đã thêm vào giỏ hàng.";
+                                    createToast(type, icon, title, text);
                                     $.get("/cart/get-cart-item-count", function (cartItemCount) {
                                         $(".item-count").text(cartItemCount);
                                     });
-                                    createToast(type, icon, title, text);
                                 }
                             });
                         }
@@ -584,4 +584,16 @@ function scrollToShopSection() {
     if (shopSection) {
         shopSection.scrollIntoView({behavior: 'smooth'});
     }
+}
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    updateCartItemCounttt();
+});
+
+/* Hàm để cập nhật số lượng giỏ hàng */
+function updateCartItemCounttt() {
+    $.get("/cart/get-cart-item-count", function (cartItemCount) {
+        $("#soLuongSessionGioHang").text(cartItemCount);
+    });
 }
