@@ -8,6 +8,7 @@ import com.example.sneaker_sophia.service.DiaChiService;
 import com.example.sneaker_sophia.service.EmailService;
 import com.example.sneaker_sophia.service.FileUpload;
 import com.example.sneaker_sophia.service.TaiKhoanService;
+import com.example.sneaker_sophia.validate.AlertInfo;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpSession;
@@ -25,7 +26,7 @@ import java.io.IOException;
 import java.util.List;
 
 @Controller
-@RequestMapping("/admin/khachhang")
+@RequestMapping("/staff/khachhang")
 public class KhachHangController {
     @Resource(name = "taiKhoanService")
     TaiKhoanService taiKhoanService;
@@ -38,6 +39,9 @@ public class KhachHangController {
 
     @Autowired
     FileUpload fileUpload;
+
+    @Autowired
+    private AlertInfo alertInfo;
 
     @GetMapping("/hienthi")
     public String index(
@@ -83,7 +87,6 @@ public class KhachHangController {
         session.setAttribute("tinh", diaChiList.getTinh());
         session.setAttribute("quan", diaChiList.getQuanHuyen());
         session.setAttribute("phuong", diaChiList.getPhuongXa());
-        session.setAttribute("anhDaiDien", taiKhoanDiaChi.getAnhDaiDien());
         session.setAttribute("idkh", id);
         return "admin/khachhang/editkh";
     }
@@ -112,8 +115,8 @@ public class KhachHangController {
             }
             kh_rq.setAnhDaiDien(imageURL);
             taiKhoanService.save(kh_rq, model);
-
-            return "redirect:/admin/khachhang/hienthi";
+            alertInfo.alert("successTaiQuay", "Khách hàng đã được thêm");
+            return "redirect:/staff/khachhang/hienthi";
         }
 
     }
@@ -142,7 +145,8 @@ public class KhachHangController {
         kh_rq.setAnhDaiDien(imageURL);
         kh_rq.setIdVaiTro(vaiTroRepository.getIdByTenKH());
         taiKhoanService.update(idTaiKhoan, kh_rq, model);
-        return "redirect:/admin/khachhang/hienthi";
+        alertInfo.alert("successTaiQuay", "Khách hàng đã được cập nhật");
+        return "redirect:/staff/khachhang/hienthi";
     }
 
     @GetMapping("adddc")
@@ -156,7 +160,7 @@ public class KhachHangController {
             HttpSession session
     ) {
         diaChiService.adddc(xa, quan, tinh, dcCuThe, hoTen, sdt, session);
-        return "redirect:/admin/khachhang/edit/" + session.getAttribute("idkh");
+        return "redirect:/staff/khachhang/edit/" + session.getAttribute("idkh");
     }
 
     @GetMapping("updateDCMD/{id}")
@@ -164,7 +168,7 @@ public class KhachHangController {
             @PathVariable("id") String iddc, HttpSession session
     ) {
         diaChiService.updateDCMD(iddc, session);
-        return "forward:/admin/khachhang/edit/" + session.getAttribute("idkh");
+        return "forward:/staff/khachhang/edit/" + session.getAttribute("idkh");
     }
 
     @GetMapping("deleteDC/{id}")
@@ -174,6 +178,6 @@ public class KhachHangController {
     ) {
         diaChiService.deleteById(iddc);
 
-        return "forward:/admin/khachhang/edit/" + session.getAttribute("idkh");
+        return "forward:/staff/khachhang/edit/" + session.getAttribute("idkh");
     }
 }

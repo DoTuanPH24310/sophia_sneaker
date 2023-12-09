@@ -107,7 +107,7 @@ public class HoaDonService {
         LocalDateTime ngayBatDau = hd.getNgayBatDau().equals("") ? null: LocalDateTime.parse(hd.getNgayBatDau());
         LocalDateTime ngayKetThuc = hd.getNgayKetThuc().equals("") || hd.getNgayBatDau().equals("") ? null: LocalDateTime.parse(hd.getNgayKetThuc());
         Integer loaiDon = hd.getLoaiDon().equals("") ? null: Integer.parseInt(hd.getLoaiDon());
-        String txtSearch = hd.getTextSearch().equals("") ? null: "%"+hd.getTextSearch()+"%";
+        String txtSearch =  hd.getTextSearch()==null  || hd.getTextSearch().equals("")? null: "%"+hd.getTextSearch()+"%";
         if (hd.getSapXep().equals("1")){
             return hoaDonRepository.findHoaDonByMultipleParamsAPIDate(ngayBatDau,ngayKetThuc,Integer.parseInt(hd.getTrangThai()),loaiDon,txtSearch);
         }else if(hd.getSapXep().equals("2")){

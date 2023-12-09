@@ -1,9 +1,7 @@
 package com.example.sneaker_sophia.controller.manage;
 
-import com.example.sneaker_sophia.dto.ChiTietGiayDTO;
 import com.example.sneaker_sophia.entity.*;
 import com.example.sneaker_sophia.service.*;
-import com.example.sneaker_sophia.validate.AlertInfo;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +25,6 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/admin/")
 public class ChiTietGiayController {
 
     @Autowired
@@ -57,7 +54,7 @@ public class ChiTietGiayController {
 
 
 
-    @GetMapping("chi-tiet-giay")
+    @GetMapping("/staff/chi-tiet-giay")
     public String listFirstPage(Model model) {
         return listByPage(1, model, "ngayTao", "asc", null, null, null, null, null, null, null, "0", null, null, null);
     }
@@ -136,7 +133,7 @@ public class ChiTietGiayController {
         return "admin/chiTietGiay/chiTietGiay";
     }
 
-    @GetMapping("chi-tiet-giay/add")
+    @GetMapping("/admin/chi-tiet-giay/add")
     public String formAdd(Model model) {
         ChiTietGiay chiTietGiay = new ChiTietGiay();
         model.addAttribute("chiTietGiay", chiTietGiay);
@@ -151,7 +148,7 @@ public class ChiTietGiayController {
     }
 
 
-    @GetMapping("chi-tiet-giay/edit/{id}")
+    @GetMapping("/admin/chi-tiet-giay/edit/{id}")
     public String edit(Model model, @PathVariable("id") UUID id) {
         ChiTietGiay chiTietGiay = chiTietGiayService.getOne(id);
         model.addAttribute("chiTietGiay", chiTietGiay);
@@ -165,7 +162,7 @@ public class ChiTietGiayController {
 
         return "admin/chiTietGiay/formEditChiTietGiay";
     }
-    @PostMapping("/chi-tiet-giay/add")
+    @PostMapping("/admin/chi-tiet-giay/add")
     public String add(
             @ModelAttribute("chiTietGiay") @Validated ChiTietGiayDTO chiTietGiay,
             BindingResult bindingResult,
@@ -221,7 +218,7 @@ public class ChiTietGiayController {
         alertInfo.alert("successTaiQuay", "Thêm thành công");
         return "redirect:/admin/chi-tiet-giay";
     }
-    @PostMapping("chi-tiet-giay/edit/{id}")
+    @PostMapping("/adminchi-tiet-giay/edit/{id}")
     public String update(@PathVariable("id") String id,@ModelAttribute("chiTietGiay") @Validated ChiTietGiayDTO chiTietGiay1,
                          BindingResult bindingResult,
                          @RequestParam("imageFile") MultipartFile[] imageFiles,
@@ -312,26 +309,23 @@ public class ChiTietGiayController {
         return "redirect:/admin/chi-tiet-giay";
     }
 
-
-    @GetMapping("chi-tiet-giay/delete/{id}")
+    @GetMapping("/admin/chi-tiet-giay/delete/{id}")
     public String delete(@PathVariable("id") UUID id) {
         chiTietGiayService.delete(id);
         alertInfo.alert("successTaiQuay", "Xóa thành công");
         return "redirect:/admin/chi-tiet-giay";
     }
 
-    @GetMapping("chi-tiet-giay/delete-anh/{id}")
+    @GetMapping("/admin/chi-tiet-giay/delete-anh/{id}")
     public String deleteAnhByChiTietGiay(@PathVariable("id") UUID id) {
         anhService.deleteAnhByChiTietGiay(chiTietGiayService.getOne(id));
         return "redirect:/admin/chi-tiet-giay/edit/{id}";
     }
 
-    @GetMapping("anh/delete-anh/{id}")
+    @GetMapping("/admin/anh/delete-anh/{id}")
     public String deleteAnhById(@PathVariable("id") String id) {
         UUID uuid = chiTietGiayService.findChiTietGiayIdByAnhId(id);
         anhService.delete(id);
         return "redirect:/admin/chi-tiet-giay/edit/"+uuid;
     }
-
-
 }

@@ -32,6 +32,8 @@ public class GioHangChiTietController {
     private SoluongService soluongService;
 
     @Autowired
+    private GioHangChiTietRepository gioHangChiTietRepository;
+    @Autowired
     private ChiTietGiayRepository chiTietGiayRepository;
 
     @GetMapping("/{gioHangId}/{chiTietGiayId}/increase")
@@ -80,7 +82,7 @@ public class GioHangChiTietController {
 
     @GetMapping("/check-quantity/{id}")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> checkProductQuantity(@PathVariable("id") UUID chiTietGiayId, HttpSession httpSession) {
+    public ResponseEntity<Map<String, Object>> checkProductQuantity(@PathVariable("id") UUID chiTietGiayId, HttpSession httpSession, Authentication authentication) {
         Map<String, Object> response = new HashMap<>();
 
         ChiTietGiay chiTietGiay = chiTietGiayRepository.findById(chiTietGiayId).orElse(null);
@@ -88,24 +90,45 @@ public class GioHangChiTietController {
             response.put("success", true);
             response.put("quantity", chiTietGiay.getSoLuong());
 
-            // Kiểm tra số lượng trong giỏ hàng
-            Cart cartSession = (Cart) httpSession.getAttribute("cart");
-            if (cartSession != null) {
-                long cartQuantity = cartSession.getItems().stream()
-                        .filter(item -> item.getId().equals(chiTietGiayId))
-                        .mapToLong(CartItem::getSoLuong)
-                        .sum();
+            // Kiểm tra số lượng trong giỏ hàng session nếu chưa đăng nhập
+            if (authentication == null || !authentication.isAuthenticated()) {
+                Cart cartSession = (Cart) httpSession.getAttribute("cart");
+                boolean errorOccurred = false;
 
-                if (cartQuantity >= chiTietGiay.getSoLuong()) {
-                    response.put("maxQuantityReached", true);
+                if (cartSession != null) {
+                    long cartQuantity = cartSession.getItems().stream()
+                            .filter(item -> item.getId().equals(chiTietGiayId))
+                            .mapToLong(CartItem::getSoLuong)
+                            .sum();
+
+                    if (cartQuantity >= chiTietGiay.getSoLuong()) {
+                        response.put("maxQuantityReached", true);
+                        errorOccurred = true;
+                    } else {
+                        response.put("maxQuantityReached", false);
+                    }
                 } else {
                     response.put("maxQuantityReached", false);
                 }
-            } else {
-                response.put("maxQuantityReached", false);
-            }
 
-            response.put("message", "Kiểm tra số lượng thành công.");
+                if (errorOccurred) {
+                    response.put("message", "Số lượng vượt quá giới hạn.");
+                } else {
+                    response.put("message", "Kiểm tra số lượng thành công.");
+                }
+            } else {
+                // Kiểm tra số lượng trong giỏ hàng database nếu đã đăng nhập
+                List<GioHangChiTiet> gioHangChiTiets = gioHangChiTietRepository.findByChiTietGiayId(chiTietGiayId);
+                long databaseQuantity = gioHangChiTiets.stream().mapToLong(GioHangChiTiet::getSoLuong).sum();
+
+                if (databaseQuantity >= chiTietGiay.getSoLuong()) {
+                    response.put("maxQuantityReachedInDatabase", true);
+                } else {
+                    response.put("maxQuantityReachedInDatabase", false);
+                }
+
+                response.put("message", "Kiểm tra số lượng thành công.");
+            }
         } else {
             response.put("success", false);
             response.put("message", "Sản phẩm không tồn tại.");
@@ -113,6 +136,9 @@ public class GioHangChiTietController {
 
         return ResponseEntity.ok(response);
     }
+
+
+
 
 
 

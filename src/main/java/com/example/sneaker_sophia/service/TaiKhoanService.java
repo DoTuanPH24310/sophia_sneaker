@@ -386,7 +386,7 @@ public class TaiKhoanService {
     }
 
 
-    public boolean validateUppdate(TaiKhoanRequest nhanVienRequest, Model model) {
+    public boolean validateUppdate(String idTaiKhoan, TaiKhoanRequest nhanVienRequest, Model model) {
         int i = 0;
         String errTen = null, errEmail = null, errCCCD = null, errSDT = null, errGT = null, errTrangThai = null, errTinh = null, errQuanHuyen = null, errPhuongXa = null, errDCCuThe = null, errNgaySinh = null;
         LocalDate gioHT = LocalDate.now();
@@ -430,12 +430,17 @@ public class TaiKhoanService {
             i++;
         }
         if (taiKhoanRepository.getTaiKhoanByEmail(nhanVienRequest.getEmail()) != null &&
-                !taiKhoanRepository.getTaiKhoanByCCCD(nhanVienRequest.getCanCuoc()).getEmail().equals(nhanVienRequest.getEmail())) {
+                !taiKhoanRepository.findById(idTaiKhoan).orElse(null).getEmail().equals(nhanVienRequest.getEmail())) {
             errEmail = "Email đã được sử dụng";
             i++;
         }
         if (nhanVienRequest.getCanCuoc().equals("")) {
             errCCCD = "Không để trống CCCD";
+            i++;
+        }
+        if (taiKhoanRepository.getTaiKhoanByCCCD(nhanVienRequest.getCanCuoc()) != null &&
+                !taiKhoanRepository.findById(idTaiKhoan).orElse(null).getCanCuoc().equals(nhanVienRequest.getCanCuoc())) {
+            errCCCD = "CCCD đã được sử dụng";
             i++;
         }
         if (nhanVienRequest.getTen().equals("")) {
@@ -513,8 +518,8 @@ public class TaiKhoanService {
             }
 
             if (taiKhoanRepository.getTaiKhoanByCCCD(nhanVienRequest.getCanCuoc()) != null &&
-                    !taiKhoanRepository.getTaiKhoanByEmail(nhanVienRequest.getEmail()).getCanCuoc().equals(nhanVienRequest.getCanCuoc())) {
-                errEmail = "CCCD đã được sử dụng";
+                    !taiKhoanRepository.findById(idTaiKhoan).orElse(null).getCanCuoc().equals(nhanVienRequest.getCanCuoc())) {
+                errCCCD = "CCCD đã được sử dụng";
                 i++;
             }
         }

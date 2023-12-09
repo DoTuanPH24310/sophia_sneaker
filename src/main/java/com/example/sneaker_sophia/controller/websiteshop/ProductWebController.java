@@ -113,13 +113,24 @@ public class ProductWebController {
     }
 
 
-
     @GetMapping("them-modal/{id}")
     public String modal(@PathVariable("id") ChiTietGiay giay, Model model){
         Optional<ChiTietGiay> chiTietGiay = this.chiTietGiayRepository.findById(giay.getId());
         model.addAttribute("layGiay", chiTietGiay);
         return "website/productwebsite/shop-grid-sidebar-left";
     }
+
+    @GetMapping("lien-he")
+    public String lienHe(){
+        return "/website/productwebsite/contact-us";
+    }
+
+    @GetMapping("chung-toi")
+    public String chungToi(){
+        return "/website/productwebsite/about-us";
+    }
+
+
 
 }
 

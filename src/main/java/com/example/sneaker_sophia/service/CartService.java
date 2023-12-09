@@ -61,35 +61,21 @@ public class CartService {
         }
 
         GioHangChiTiet cartItem = gioHangChiTietRepository.findById_GioHangAndId_ChiTietGiay(gioHang, chiTietGiay);
-        if(soLuong != null) {
-            if (cartItem == null) {
-                cartItem = new GioHangChiTiet(new IdGioHangChiTiet(gioHang, chiTietGiay), soLuong);
-                cartItem.setNgayTao(LocalDate.now());
-            } else if (cartItem != null) {
-                if (cartItem.getSoLuong() >= chiTietGiay.getSoLuong()) {
-                    cartItem.setSoLuong(chiTietGiay.getSoLuong());
-                } else {
-                    cartItem.setSoLuong(cartItem.getSoLuong() + soLuong);
-                }
-                cartItem.setNgaySua(LocalDate.now());
+        if (cartItem == null) {
+            cartItem = new GioHangChiTiet(new IdGioHangChiTiet(gioHang, chiTietGiay), soLuong);
+            cartItem.setNgayTao(LocalDate.now());
+        } else if (cartItem != null) {
+            if (cartItem.getSoLuong() >= chiTietGiay.getSoLuong()) {
+                cartItem.setSoLuong(chiTietGiay.getSoLuong());
+            } else {
+                cartItem.setSoLuong(cartItem.getSoLuong() + soLuong);
             }
-        }else{
-            if (cartItem == null) {
-                cartItem = new GioHangChiTiet(new IdGioHangChiTiet(gioHang, chiTietGiay), 1);
-                cartItem.setNgayTao(LocalDate.now());
-            } else if (cartItem != null) {
-                if (cartItem.getSoLuong() >= chiTietGiay.getSoLuong()) {
-                    cartItem.setSoLuong(chiTietGiay.getSoLuong());
-                } else {
-                    cartItem.setSoLuong(cartItem.getSoLuong() + 1);
-                }
-                cartItem.setNgaySua(LocalDate.now());
-            }
+            cartItem.setNgaySua(LocalDate.now());
         }
         gioHangChiTietRepository.save(cartItem);
     }
 
-    public void addToCartNoLogin(UUID id, HttpSession httpSession) {
+    public void addToCartNoLogin(UUID id, HttpSession httpSession, Integer soLuong) {
         Optional<ChiTietGiay> chiTietSanPham = this.chiTietGiayRepository.findById(id);
 
         Cart cartSession = (Cart) httpSession.getAttribute("cart");
@@ -110,7 +96,8 @@ public class CartService {
                     chiTietSanPham.get().getHang().getTen(),
                     chiTietSanPham.get().getLoaiGiay().getTen(),
                     chiTietSanPham.get().getMauSac().getTen(),
-                    1,
+                    chiTietSanPham.get().getKichCo().getTen(),
+                    soLuong,
                     giaMoi != null ? giaMoi : chiTietSanPham.get().getGia());
 
             list.add(item);
@@ -122,7 +109,7 @@ public class CartService {
             boolean itemExists = false;
             for (CartItem itemTmp : listItem) {
                 if (itemTmp.getId().equals(id)) {
-                    int newQuantity = itemTmp.getSoLuong() + 1;
+                    int newQuantity = itemTmp.getSoLuong() + soLuong;
                     int availableQuantity = chiTietSanPham.get().getSoLuong();
 
                     if (newQuantity > availableQuantity) {
@@ -147,7 +134,8 @@ public class CartService {
                         chiTietSanPham.get().getHang().getTen(),
                         chiTietSanPham.get().getLoaiGiay().getTen(),
                         chiTietSanPham.get().getMauSac().getTen(),
-                        1,
+                        chiTietSanPham.get().getKichCo().getTen(),
+                        soLuong,
                         giaMoi != null ? giaMoi : chiTietSanPham.get().getGia());
 
                 listItem.add(item);
@@ -182,13 +170,27 @@ public class CartService {
                     cartItemDatabase = new GioHangChiTiet(new IdGioHangChiTiet(gioHang, chiTietGiay), cartItem.getSoLuong());
                     cartItemDatabase.setNgayTao(LocalDate.now());
                 } else {
-                    cartItemDatabase.setSoLuong(cartItemDatabase.getSoLuong() + cartItem.getSoLuong());
-                    cartItemDatabase.setNgaySua(LocalDate.now());
+                    // Kiểm tra xem tổng số lượng đã có và số lượng trong giỏ hàng session
+                    Integer totalQuantity = cartItemDatabase.getSoLuong() + cartItem.getSoLuong();
+                    if (totalQuantity > chiTietGiay.getSoLuong()) {
+                        // Nếu vượt quá, giảm số lượng cần thêm vào giỏ hàng database
+                        int remainingQuantity = (int) (chiTietGiay.getSoLuong() - cartItemDatabase.getSoLuong());
+                        if (remainingQuantity > 0) {
+                            cartItemDatabase.setSoLuong(cartItemDatabase.getSoLuong() + remainingQuantity);
+                            cartItemDatabase.setNgaySua(LocalDate.now());
+                        }
+                    } else {
+                        // Nếu không vượt quá, tăng số lượng như bình thường
+                        cartItemDatabase.setSoLuong(totalQuantity);
+                        cartItemDatabase.setNgaySua(LocalDate.now());
+                    }
                 }
                 gioHangChiTietRepository.save(cartItemDatabase);
             }
         }
     }
+
+
 
     public Cart getOrCreateCartFromSession(HttpSession session) {
         Cart cart = (Cart) session.getAttribute("cart");

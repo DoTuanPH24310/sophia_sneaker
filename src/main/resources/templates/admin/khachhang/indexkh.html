@@ -56,7 +56,7 @@
             <h5 style="font-weight: bold;" class="mt-3">Bộ lọc</h5>
             <hr>
 
-            <form th:action="@{/admin/khachhang/hienthi#table}" class="mt-3 mb-3">
+            <form th:action="@{/staff/khachhang/hienthi#table}" class="mt-3 mb-3">
 
                 <div class="row">
                     <div class="col-6">
@@ -84,7 +84,7 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-center">
-                    <a th:href="@{/admin/khachhang/hienthi}" class="btn btn-primary">Làm mới</a>
+                    <a th:href="@{/staff/khachhang/hienthi}" class="btn btn-primary">Làm mới</a>
                 </div>
             </form>
         </div>
@@ -96,7 +96,7 @@
         <h5 style="font-weight: bold; text-align: center;" class="mt-3">Danh Sách Khách Hàng </h5>
         <hr>
         <div class="table table-wrapper-scroll-y my-custom-scrollbar">
-            <a th:href="@{/admin/khachhang/create}" class="btn btn-primary mt-1 mb-3 float-right">
+            <a th:href="@{/staff/khachhang/create}" class="btn btn-primary mt-1 mb-3 float-right">
                 <i style="font-size: 18px" class="fab fa-plus"></i> Thêm
             </a>
             <table id="table" class="table  table-borderless  formTable">
@@ -148,14 +148,14 @@
                         <!--                        </a>-->
 
                         <a
-                                th:href="@{/admin/khachhang/edit/{id}(id=${kh.id})}" class="btn btn-warning edit"
+                                th:href="@{/staff/khachhang/edit/{id}(id=${kh.id})}" class="btn btn-warning edit"
                                 style=" padding: 5px 10px; font-size: 12px">
                             <i class="material-icons text-white mt-1"
                                title="Sửa">&#xE254;</i>
                         </a>
 
                         <a data-toggle="modal" th:attr="data-target='#detail'+${kh.id}"
-                           th:href="@{/admin/khachhang/detail/{id}(id=${kh.id})}" class="btn btn-success delete"
+                           th:href="@{/staff/khachhang/detail/{id}(id=${kh.id})}" class="btn btn-success delete"
                            style=" padding: 5px 10px; font-size: 12px;">
                             <i class="material-icons text-white mt-1"
                                title="Chi tiết">visibility</i>
@@ -193,18 +193,18 @@
                     <ul class="pagination">
                         <li class="page-item">
                             <a class="page-link" th:if="${pageNo > 0}"
-                               th:href="@{/admin/khachhang/hienthi#table(pageNo=${i},trangThai=${trangThai},textSearch=${textSearch})}">Prev</a>
+                               th:href="@{/staff/khachhang/hienthi#table(pageNo=${i},trangThai=${trangThai},textSearch=${textSearch})}">Prev</a>
                             <span class="page-link" th:unless="${pageNo > 0}">Prev</span>
                         </li>
                         <li th:each="i: ${#numbers.sequence(0, listKH.totalPages-1)}" class="page-item">
-                            <a th:href="@{/admin/khachhang/hienthi#table(pageNo=${i},trangThai=${trangThai},textSearch=${textSearch})}"
+                            <a th:href="@{/staff/khachhang/hienthi#table(pageNo=${i},trangThai=${trangThai},textSearch=${textSearch})}"
                                class="page-link"
                                th:text="${i +1}"></a>
                         </li>
 
                         <li class="page-item">
                             <a class="page-link" th:if="${pageNo < listKH.totalPages -1}"
-                               th:href="@{/admin/khachhang/hienthi#table(pageNo=${i},trangThai=${trangThai},textSearch=${textSearch})}">Next</a>
+                               th:href="@{/staff/khachhang/hienthi#table(pageNo=${i},trangThai=${trangThai},textSearch=${textSearch})}">Next</a>
                             <span class="page-link" th:unless="${pageNo < listKH.totalPages -1}">Next</span>
                         </li>
                     </ul>
@@ -221,7 +221,7 @@
             <div class="modal-dialog" style="max-width: 800px;">
                 <div class="modal-content">
                     <div class="modal-header text-light" style="background-color: #aea7a7;">
-                        <h4 class="modal-title">Chi tiết sản phẩm</h4>
+                        <h4 class="modal-title">Chi tiết thông tin khách hàng</h4>
                         <button type="button" class="close" data-dismiss="modal"
                                 aria-hidden="true">&times;
                         </button>
@@ -311,7 +311,7 @@
     <div class="modal fade" id="modalThemDiaChi" tabindex="-1" data-backdrop="static"
          aria-labelledby="exampleModalLabel"
          aria-hidden="true">
-        <form action="/admin/khachhang/adddc" method="post">
+        <form action="/staff/khachhang/adddc" method="post">
             <div class="modal-dialog" style="max-width: 500px;">
                 <div class="modal-content">
                     <div class="modal-header">

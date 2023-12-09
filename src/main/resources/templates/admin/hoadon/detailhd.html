@@ -116,7 +116,7 @@
 <body>
 
 <div layout:fragment="content" class="container">
-    <div style="background-color: white; height: 300px;">
+    <div style="background-color: white; height: 270px;">
 
         <div class="main">
             <ul class="ultag mt-3">
@@ -164,31 +164,41 @@
 
         </div>
 
+        <button type="button" class="btn btn-info float-left ml-2"
+                data-toggle="modal"
+                data-target="#modalLichSu">
+            Lịch sử
+        </button>
+
         <div th:if="${hoaDon.trangThai == 4}" class="float-right mr-3">
-            <a th:href="@{/admin/hoa-don/updatehdcg/{id}(id=${hoaDon.id})}" onclick="return confirm('Xác nhận giao?')"
+            <a th:href="@{/staff/hoa-don/updatehdcg/{id}(id=${hoaDon.id})}" id="myLinhXacNhanGiao"
                class="btn btn-primary">Xác nhận
                 giao</a>
-            <a th:href="@{/admin/hoa-don/huyhdcg/{id}(id=${hoaDon.id})}" class=" myLinkHuy btn btn-danger mr-3">Hủy</a>
+            <a th:href="@{/staff/hoa-don/huyhdcg/{id}(id=${hoaDon.id})}" class=" myLinkHuy btn btn-danger mr-3">Hủy</a>
         </div>
 
         <div th:if="${hoaDon.trangThai == 2 && hoaDon.loaiHoaDon == 3}" class="float-right mr-3">
-            <a th:href="@{/admin/hoa-don/huyhdctt/{id}(id=${hoaDon.id})}" class=" myLinkHuy btn btn-danger mr-3">Hủy</a>
+            <a th:href="@{/staff/hoa-don/huyhdctt/{id}(id=${hoaDon.id})}"
+               class=" myLinkHuy btn btn-danger mr-3">Hủy</a>
         </div>
         <div th:if="${hoaDon.trangThai == 5}" class="float-right mr-3">
-            <a th:href="@{/admin/hoa-don/huyhdddg/{id}(id=${hoaDon.id})}" class=" myLinkHuy btn btn-danger mr-3">Hủy</a>
+            <a th:href="@{/staff/hoa-don/huyhdddg/{id}(id=${hoaDon.id})}"
+               class=" myLinkHuy btn btn-danger mr-3">Hủy</a>
         </div>
         <div th:if="${hoaDon.trangThai == 5}" class="float-right">
-            <a th:href="@{/admin/hoa-don/updatehddg/{id}(id=${hoaDon.id})}" id="myLinhXacNhan" class="btn btn-primary mr-1">Xác
+            <a th:href="@{/staff/hoa-don/updatehddg/{id}(id=${hoaDon.id})}" id="myLinhXacNhanTC"
+               class="btn btn-primary mr-1">Xác
                 nhận
                 thành công</a>
         </div>
         <div th:if="${hoaDon.trangThai == 1}" class="float-right">
-            <a th:href="@{/admin/tai-quay/pdf/{id}(id=${hoaDon.id})}"  class="btn btn-primary">In HĐ</a>
+            <a th:href="@{/staff/tai-quay/pdf/{id}(id=${hoaDon.id})}" class="btn btn-primary mr-3">In HĐ</a>
 
         </div>
         <div th:if="${hoaDon.trangThai == 3}" class="float-right">
-            <a th:href="@{/admin/hoa-don/updatehdcxn/{id}(id=${hoaDon.id})}" class="btn btn-primary">Xác nhận đơn</a>
-            <a th:href="@{/admin/hoa-don/huyhdcxn/{id}(id=${hoaDon.id})}" class="myLinkHuy btn btn-danger mr-3">Hủy</a>
+            <a th:href="@{/staff/hoa-don/updatehdcxn/{id}(id=${hoaDon.id})}" id="myLinhXacNhanXND"
+               class="btn btn-primary">Xác nhận đơn</a>
+            <a th:href="@{/staff/hoa-don/huyhdcxn/{id}(id=${hoaDon.id})}" class="myLinkHuy btn btn-danger mr-3">Hủy</a>
         </div>
 
     </div>
@@ -208,7 +218,6 @@
                             <th>Thời gian</th>
                             <th>Số tiền</th>
                             <th>Loại giao dịch</th>
-                            <th>Ghi chú</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -222,13 +231,12 @@
                                 <span th:case="3">Trả sau</span>
                             </button>
                         </td>
-                        <td th:text="${httt.hoaDon.ghiChu}"></td>
                         </tbody>
                     </table>
                     <h2 class="text-center mt-4" id="err"></h2>
                 </div>
                 <div class="mb-3" th:unless="${httt != null}">
-                    <h5  style="text-align: center">Chưa có lịch sử thanh toán</h5>
+                    <h5 style="text-align: center">Chưa có lịch sử thanh toán</h5>
                 </div>
             </div>
         </div>
@@ -249,7 +257,7 @@
                     <div class="col-7">
                     <span>Trạng thái: &ensp;&ensp;&ensp;&ensp;
                     <button class="bg-info text-light"
-                            style="border-radius: 50px; border: white; width: 150px;">
+                            style="border-radius: 50px; border: white; width: 150px; height: 33px;">
                         <span th:if="${hoaDon.trangThai == 1}">Thành công</span>
                         <span th:if="${hoaDon.trangThai == 2}">Chờ thanh toán</span>
                         <span th:if="${hoaDon.trangThai == 3}">Chờ xác nhận</span>
@@ -263,7 +271,7 @@
                     <div class="col-5">
                 <span>Loại đơn: &ensp;&ensp;&ensp;&ensp;
                     <button class="bg-info text-light"
-                            style="border-radius: 50px; border: white; width: 150px;">
+                            style="border-radius: 50px; border: white; width: 150px; height: 33px;">
 <span th:if="${hoaDon.loaiHoaDon == 1}">Tại quầy</span>
                         <span th:if="${hoaDon.loaiHoaDon == 2}">Giao hàng</span>
                         <span th:if="${hoaDon.loaiHoaDon == 3}">Online</span>
@@ -295,6 +303,10 @@
                     </div>
                     <div th:if="${hoaDon.trangThai == 6}" class="col-1">Lí do hủy:</div>
                     <div th:if="${hoaDon.trangThai == 6}" class="col-4">
+                        <span th:text="${hoaDon.ghiChu == null ? '' : hoaDon.ghiChu}"></span>
+                    </div>
+                    <div th:unless="${hoaDon.trangThai == 6}" class="col-1">Ghi chú:</div>
+                    <div th:unless="${hoaDon.trangThai == 6}" class="col-4">
                         <span th:text="${hoaDon.ghiChu == null ? '' : hoaDon.ghiChu}"></span>
                     </div>
                 </div>
@@ -403,7 +415,60 @@
         </div>
 
     </div>
+    <div class="modal fade" id="modalLichSu" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="max-width: 900px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Lịch sử hóa đơn</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="table table-wrapper-scroll-y my-custom-scrollbar" style="height: 385px">
+                                <table id="table" class="table  table-borderless  formTable">
+                                    <thead>
+                                    <tr class="bg-light">
+                                        <th width="10%">STT</th>
+                                        <th width="20%">Trạng thái</th>
+                                        <th width="20%">Thời gian</th>
+                                        <th width="20%">Người xác nhận</th>
+                                        <th width="30%">Ghi chú</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:each="x, start : ${session.get('lichSuHoaDon')}">
+                                        <td th:text="${start.index + 1}"></td>
+                                        <td>
+                                            <span th:if="${x.phuongThuc.equals('1')}">Thành công</span>
+                                            <span th:if="${x.phuongThuc.equals('2')}">Chờ thanh toán</span>
+                                            <span th:if="${x.phuongThuc.equals('3')}">Chờ xác nhận</span>
+                                            <span th:if="${x.phuongThuc.equals('4')}">Chờ giao</span>
+                                            <span th:if="${x.phuongThuc.equals('5')}">Đang giao</span>
+                                            <span th:if="${x.phuongThuc.equals('6')}">Hủy</span>
+                                        </td>
+                                        <td th:text=" ${#temporals.format(x.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
+                                        <td th:text="${x.createdBy}"></td>
+                                        <td th:text="${x.ghiChu}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
 
+
+                        <div th:unless="${session.get('countDC') < 5}" class="row mt-2">
+                            <h6>(*) Chỉ được thêm tối đa 5 đa địa chỉ</h6>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
 
     <!--  Phần table-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
@@ -419,7 +484,9 @@
 
 
         let myLinks = document.querySelectorAll('.myLinkHuy');
-        let myLinksXN = document.getElementById('myLinhXacNhan');
+        let myLinksXN = document.getElementById('myLinhXacNhanTC');
+        let myLinksXNG = document.getElementById('myLinhXacNhanGiao');
+        let myLinksXND = document.getElementById('myLinhXacNhanXND');
 
         if (myLinks != null) {
             myLinks.forEach(function (link) {
@@ -443,11 +510,32 @@
         if (myLinksXN != null) {
             myLinksXN.addEventListener('click', function (event) {
                 event.preventDefault();
-                let rs = confirm('Xác nhận thành công: ');
-                if (!rs) return;
                 let hrefValue = myLinksXN.getAttribute('href');
                 let mess = prompt("Nhập ghi chú: ");
-                window.location.href = hrefValue + "?value=" + mess;
+                if (mess != null) {
+                    window.location.href = hrefValue + "?value=" + mess;
+                }
+            });
+        }
+        if (myLinksXNG != null) {
+            myLinksXNG.addEventListener('click', function (event) {
+                event.preventDefault();
+                let hrefValue = myLinksXNG.getAttribute('href');
+                let mess = prompt("Nhập ghi chú: ");
+                if (mess != null) {
+                    window.location.href = hrefValue + "?value=" + mess;
+                }
+            });
+        }
+
+        if (myLinksXND != null) {
+            myLinksXND.addEventListener('click', function (event) {
+                event.preventDefault();
+                let hrefValue = myLinksXND.getAttribute('href');
+                let mess = prompt("Nhập ghi chú: ");
+                if (mess != null) {
+                    window.location.href = hrefValue + "?value=" + mess;
+                }
             });
         }
 
@@ -462,7 +550,7 @@
                 fillTimeLine('icon1', 'text1', value, 'Chờ Xác nhận', 'uil-comment-alt-question');
             }
             value = check('6');
-            if (value != null &&  listLSHD.length == 2) {
+            if (value != null && listLSHD.length == 2) {
                 fillTimeLine('icon2', 'text2', value, 'Hủy', 'uil-trash-alt');
             }
             value = check('4');
@@ -496,7 +584,7 @@
             document.getElementById(text).innerHTML =
                 `<span style="font-weight: 550;">${trangThai}</span> <br>
                         <span style="font-size: 12px;  text-align: center;">${date}</span> <br>
-                        <span style="font-size: 12px;  text-align: center;">${value.createdBy}</span>`;
+                       `;
         }
 
 

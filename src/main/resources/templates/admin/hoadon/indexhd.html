@@ -51,9 +51,9 @@
 
 
             <div class="row mb-5 mt-3">
-                <div class="col-3">
+                <div class="col-4">
                     <input type="text" class="form-control ms-3" id="textSearchHoaDOn"
-                           placeholder="Nhập mã hóa đơn....">
+                           placeholder="Nhập mã đơn, tên, số điện thoại....">
                 </div>
 
                 <div class="col-3">
@@ -61,7 +61,6 @@
                     <button class="btn btn-danger" onclick="resetSelectAndTab();">Làm mới</button>
                 </div>
 
-                <div class="col-1"></div>
                 <div class="col-2">
                     <div class="form-floating">
                         <input type="datetime-local" class="form-control" name="maGiamGia" id="NBDHoaDon"
@@ -212,13 +211,20 @@
                                             <td>
 
                                                 <a th:unless="${hdc.loaiHoaDon == 3}"
-                                                   th:href="@{/admin/tai-quay/detail/{id}(id=${hdc.id})}"
+                                                   th:href="@{/staff/tai-quay/detail/{id}(id=${hdc.id})}"
                                                    class="btn btn-warning edit"
                                                    style="padding: 5px 10px; font-size: 12px">
                                                     <i class="material-icons text-white mt-1" title="Sửa">&#xE254;</i>
                                                 </a>
 
-                                                <a th:href="@{/admin/hoa-don/detail/{id}(id=${hdc.id})}"
+                                                <button th:if="${hdc.loaiHoaDon == 3}"
+                                                        class="btn btn-warning edit" disabled
+                                                        style="padding: 5px 10px; font-size: 12px">
+                                                    <i class="material-icons text-white mt-1" title="Sửa">&#xE254;</i>
+                                                </button>
+
+
+                                                <a th:href="@{/staff/hoa-don/detail/{id}(id=${hdc.id})}"
                                                    class="btn btn-success "
                                                    style=" padding: 5px 10px; font-size: 12px;">
                                                     <i class="material-icons text-white mt-1"
@@ -239,10 +245,10 @@
 
 
                         <div class="row">
-                            <form id="formTrCNX" action="/admin/hoa-don/updatehdcxn" method="post">
+                            <form id="formTrCNX" action="/staff/hoa-don/updatehdcxn" method="post">
                                 <div th:if="${#lists.size(listhdhcxn) > 0}">
                                     <!-- If listhdhcxn has elements, display the button -->
-                                    <button type="submit" onclick="return confirm('Xác nhận đơn?')"
+                                    <button type="submit" id="ghiChuXND"
                                             class="btn btn-primary mb-3 mr-2 float-right">
                                         Xác nhận đơn
                                     </button>
@@ -289,13 +295,13 @@
                                                 </button>
                                             </td>
                                             <td>
-                                                <a th:href="@{/admin/tai-quay/detail/{id}(id=${hd.id})}"
+                                                <a th:href="@{/staff/tai-quay/detail/{id}(id=${hd.id})}"
                                                    class="btn btn-warning edit"
                                                    style=" padding: 5px 10px; font-size: 12px">
                                                     <i class="material-icons text-white mt-1" title="Sửa">&#xE254;</i>
                                                 </a>
 
-                                                <a th:href="@{/admin/hoa-don/detail/{id}(id=${hd.id})}"
+                                                <a th:href="@{/staff/hoa-don/detail/{id}(id=${hd.id})}"
                                                    class="btn btn-success "
                                                    style=" padding: 5px 10px; font-size: 12px;">
                                                     <i class="material-icons text-white mt-1"
@@ -314,11 +320,11 @@
 
                     <div role="tabpanel" class="tab-pane" id="choGiao">
                         <div class="row">
-                            <form id="formTrCG" action="/admin/hoa-don/updatehdcg" method="post">
+                            <form id="formTrCG" action="/staff/hoa-don/updatehdcg" method="post">
 
                                 <div th:if="${#lists.size(listhdcg) > 0}">
                                     <!-- If listhdhcxn has elements, display the button -->
-                                    <button type="submit" onclick="return confirm('Xác nhận giao hàng?')"
+                                    <button type="submit" id="ghiChuCG"
                                             class="btn btn-primary mb-3 mr-2 float-right">
                                         Xác
                                         nhận giao
@@ -364,7 +370,7 @@
                                             <td>
                                                 <button th:if="${hd.loaiHoaDon == 3}" class="btn btn-info "
                                                         style="border-radius: 30px; font-size: 12px; height: 40px;width: 114px;">
-                                                  Online
+                                                    Online
                                                 </button>
                                                 <button th:if="${hd.loaiHoaDon == 2}" class="btn btn-primary "
                                                         style="border-radius: 30px; font-size: 12px; height: 40px;width: 114px;">
@@ -373,14 +379,20 @@
                                             </td>
                                             <td>
 
+                                                <button th:if="${hd.loaiHoaDon == 3}"
+                                                        class="btn btn-warning edit" disabled
+                                                        style="padding: 5px 10px; font-size: 12px">
+                                                    <i class="material-icons text-white mt-1" title="Sửa">&#xE254;</i>
+                                                </button>
+
                                                 <a th:unless="${hd.loaiHoaDon == 3}"
-                                                   th:href="@{/admin/tai-quay/detail/{id}(id=${hd.id})}"
+                                                   th:href="@{/staff/tai-quay/detail/{id}(id=${hd.id})}"
                                                    class="btn btn-warning edit"
                                                    style="padding: 5px 10px; font-size: 12px">
                                                     <i class="material-icons text-white mt-1" title="Sửa">&#xE254;</i>
                                                 </a>
 
-                                                <a th:href="@{/admin/hoa-don/detail/{id}(id=${hd.id})}"
+                                                <a th:href="@{/staff/hoa-don/detail/{id}(id=${hd.id})}"
                                                    class="btn btn-success "
                                                    style=" padding: 5px 10px; font-size: 12px;">
                                                     <!--                            <i class="material-icons mt-2" data-toggle="tooltip" title="Delete">&#xE872;</i>-->
@@ -400,7 +412,7 @@
 
                     <div role="tabpanel" class="tab-pane" id="dangGiao">
                         <div class="row">
-                            <form id="formTrTC" action="/admin/hoa-don/updatehddg" method="post">
+                            <form id="formTrTC" action="/staff/hoa-don/updatehddg" method="post">
 
                                 <div th:if="${#lists.size(listhddg) > 0}">
                                     <!-- If listhdhcxn has elements, display the button -->
@@ -457,7 +469,7 @@
                                                 </button>
                                             </td>
                                             <td>
-                                                <a th:href="@{/admin/hoa-don/detail/{id}(id=${hd.id})}"
+                                                <a th:href="@{/staff/hoa-don/detail/{id}(id=${hd.id})}"
                                                    class="btn btn-success "
                                                    style=" padding: 5px 10px; font-size: 12px;">
                                                     <i class="material-icons text-white mt-1"
@@ -515,7 +527,7 @@
                                             </button>
                                         </td>
                                         <td>
-                                            <a th:href="@{/admin/hoa-don/detail/{id}(id=${hdht.id})}"
+                                            <a th:href="@{/staff/hoa-don/detail/{id}(id=${hdht.id})}"
                                                class="btn btn-warning "
                                                style=" padding: 5px 10px; font-size: 12px;">
                                                 <!--                            <i class="material-icons mt-2" data-toggle="tooltip" title="Delete">&#xE872;</i>-->
@@ -570,12 +582,12 @@
                                         </td>
                                         <td>
 
-                                            <a th:href="@{/admin/tai-quay/detail/{id}(id=${hdh.id})}"
+                                            <a th:href="@{/staff/tai-quay/detail/{id}(id=${hdh.id})}"
                                                class="btn btn-warning edit" style=" padding: 5px 10px; font-size: 12px">
                                                 <i class="material-icons text-white mt-1" title="Sửa">&#xE254;</i>
                                             </a>
 
-                                            <a th:href="@{/admin/hoa-don/detail/{id}(id=${hdh.id})}"
+                                            <a th:href="@{/staff/hoa-don/detail/{id}(id=${hdh.id})}"
                                                class="btn btn-success " style=" padding: 5px 10px; font-size: 12px;">
                                                 <i class="material-icons text-white mt-1"
                                                    title="Chi tiết">visibility</i>
@@ -613,7 +625,13 @@
         let idSelectAll = '';
         let classSelectChild = '';
         let myLinksXNTC = document.getElementById('ghiChuXNTC');
+        let myLinksXND = document.getElementById('ghiChuXND');
         let actionFormXNTC = document.getElementById('formTrTC');
+        let actionFormCXN = document.getElementById('formTrCNX');
+
+        let myLinksCG = document.getElementById('ghiChuCG');
+        let actionFormCG = document.getElementById('formTrCG');
+
         let checkevent = 0;
 
 
@@ -631,9 +649,37 @@
             myLinksXNTC.addEventListener('click', function (event) {
                 event.preventDefault();
                 let mess = prompt("Nhập ghi chú : ");
-                let action = actionFormXNTC.getAttribute('action') + '?value=' + mess;
-                actionFormXNTC.setAttribute('action', action);
-                actionFormXNTC.submit();
+                if (mess != null) {
+                    let action = actionFormXNTC.getAttribute('action') + '?value=' + mess;
+                    actionFormXNTC.setAttribute('action', action);
+                    actionFormXNTC.submit();
+                }
+
+            });
+        }
+        if (myLinksXND != null) {
+            myLinksXND.addEventListener('click', function (event) {
+                event.preventDefault();
+                let mess = prompt("Nhập ghi chú : ");
+                if (mess != null) {
+                    let action = actionFormCXN.getAttribute('action') + '?value=' + mess;
+                    actionFormCXN.setAttribute('action', action);
+                    actionFormCXN.submit();
+                }
+
+            });
+        }
+
+        if (myLinksCG != null) {
+            myLinksCG.addEventListener('click', function (event) {
+                event.preventDefault();
+                let mess = prompt("Nhập ghi chú : ");
+                if (mess != null) {
+                    let action = actionFormCG.getAttribute('action') + '?value=' + mess;
+                    actionFormCG.setAttribute('action', action);
+                    actionFormCG.submit();
+                }
+
             });
         }
 
@@ -647,7 +693,6 @@
 
             });
         });
-
 
 
         function eventCheckbox() {
@@ -682,16 +727,16 @@
 
         function eventCheckbox2(prId) {
             let prClass = '';
-            if (prId == 'tabChoXacNhan'){
+            if (prId == 'tabChoXacNhan') {
                 prId = 'selectAllCXN';
                 prClass = '.checkboxCXN';
-            }else if(prId == 'tabChoGiao'){
+            } else if (prId == 'tabChoGiao') {
                 prId = 'selectAllCG';
                 prClass = '.checkboxCG';
-            }else if (prId == 'tabDangGiao') {
+            } else if (prId == 'tabDangGiao') {
                 prId = 'selectAllDG';
                 prClass = '.checkboxDG';
-            }else return;
+            } else return;
 
             checkevent = 1;
             let selectAllCheckbox = document.getElementById(prId);
@@ -788,29 +833,32 @@ type="checkbox">`;
             }
 
             row.insertCell().innerHTML = loaiDonbtn;
-            if ((activeTab == '#choThanhToan') ) {
-                if (x.loaiHoaDon != 3){
-                    let button1 = `<a href="/admin/tai-quay/detail/${id}" class="btn btn-warning edit" style=" padding: 5px 10px; font-size: 12px"><i class="material-icons text-white mt-1" title="Chi tiết">&#xE254;</i></a>`
-                    let button2 = `<a href="/admin/hoa-don/detail/${id}" class="btn btn-success ms-1" style=" padding: 5px 10px; font-size: 12px;"><i class="material-icons text-white mt-1" title="Chi tiết">visibility</i></a>`;
+            if ((activeTab == '#choThanhToan')) {
+                if (x.loaiHoaDon != 3) {
+                    let button1 = `<a href="/staff/tai-quay/detail/${id}" class="btn btn-warning edit" style=" padding: 5px 10px; font-size: 12px"><i class="material-icons text-white mt-1" title="Chi tiết">&#xE254;</i></a>`
+                    let button2 = `<a href="/staff/hoa-don/detail/${id}" class="btn btn-success ms-1" style=" padding: 5px 10px; font-size: 12px;"><i class="material-icons text-white mt-1" title="Chi tiết">visibility</i></a>`;
                     row.insertCell().innerHTML = button1 + button2;
-                }else{
-                    let button2 = `<a href="/admin/hoa-don/detail/${id}" class="btn btn-success ms-1" style=" padding: 5px 10px; font-size: 12px;"><i class="material-icons text-white mt-1" title="Chi tiết">visibility</i></a>`;
-                    row.insertCell().innerHTML = button2;
+                } else {
+                    let button1 = `<button class="btn btn-warning edit" disabled style="padding: 5px 10px; font-size: 12px"><i class="material-icons text-white mt-1" title="Sửa">&#xE254;</i></button>`
+
+                    let button2 = `<a href="/staff/hoa-don/detail/${id}" class="btn btn-success ms-1" style=" padding: 5px 10px; font-size: 12px;"><i class="material-icons text-white mt-1" title="Chi tiết">visibility</i></a>`;
+                    row.insertCell().innerHTML = button1 + button2;
                 }
 
-            }else if (activeTab == '' || activeTab == '#choGiao'){
+            } else if (activeTab == '' || activeTab == '#choGiao') {
                 if (x.loaiHoaDon != 3) {
-                    let button1 = `<a href="/admin/tai-quay/detail/${id}" class="btn btn-warning edit" style=" padding: 5px 10px; font-size: 12px"><i class="material-icons text-white mt-1" title="Chi tiết">&#xE254;</i></a>`
-                    let button2 = `<a href="/admin/hoa-don/detail/${id}" class="btn btn-success ms-1" style=" padding: 5px 10px; font-size: 12px;"><i class="material-icons text-white mt-1" title="Chi tiết">visibility</i></a>`;
+                    let button1 = `<a href="/staff/tai-quay/detail/${id}" class="btn btn-warning edit" style=" padding: 5px 10px; font-size: 12px"><i class="material-icons text-white mt-1" title="Chi tiết">&#xE254;</i></a>`
+                    let button2 = `<a href="/staff/hoa-don/detail/${id}" class="btn btn-success ms-1" style=" padding: 5px 10px; font-size: 12px;"><i class="material-icons text-white mt-1" title="Chi tiết">visibility</i></a>`;
                     row.insertCell().innerHTML = button1 + button2;
-                }else{
-                    let button2 = `<a href="/admin/hoa-don/detail/${id}" class="btn btn-success ms-1" style=" padding: 5px 10px; font-size: 12px;"><i class="material-icons text-white mt-1" title="Chi tiết">visibility</i></a>`;
-                    row.insertCell().innerHTML = button2;
+                } else {
+                    let button1 = `<button class="btn btn-warning edit" disabled style="padding: 5px 10px; font-size: 12px"><i class="material-icons text-white mt-1" title="Sửa">&#xE254;</i></button>`
+                    let button2 = `<a href="/staff/hoa-don/detail/${id}" class="btn btn-success ms-1" style=" padding: 5px 10px; font-size: 12px;"><i class="material-icons text-white mt-1" title="Chi tiết">visibility</i></a>`;
+                    row.insertCell().innerHTML = button1 + button2;
                 }
 
 
             } else if (activeTab == '#hoanThanh' || activeTab == '#dangGiao' || activeTab == '#huy' || activeTab == '#choXacNhan') {
-                let button = `<a href="/admin/hoa-don/detail/${id}" class="btn btn-success ms-1" style=" padding: 5px 10px; font-size: 12px;"><i class="material-icons text-white mt-1" title="Chi tiết">visibility</i></a>`;
+                let button = `<a href="/staff/hoa-don/detail/${id}" class="btn btn-success ms-1" style=" padding: 5px 10px; font-size: 12px;"><i class="material-icons text-white mt-1" title="Chi tiết">visibility</i></a>`;
                 row.insertCell().innerHTML = button;
             }
         }
@@ -892,8 +940,6 @@ type="checkbox">`;
                 url: 'http://localhost:8080/api/hoa-don/deleteSession/' + name,
             })
         }
-
-
 
 
     </script>

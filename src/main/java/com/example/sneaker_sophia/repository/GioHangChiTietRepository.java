@@ -19,6 +19,9 @@ public interface GioHangChiTietRepository extends JpaRepository<GioHangChiTiet, 
     GioHangChiTiet findById_GioHangAndId_ChiTietGiay(GioHang gioHang, ChiTietGiay chiTietGiay);
     List<GioHangChiTiet> findById_GioHang(GioHang gioHang);
 
+    @Query("SELECT g FROM GioHangChiTiet g WHERE g.id.chiTietGiay.id = :chiTietGiayId")
+    List<GioHangChiTiet> findByChiTietGiayId(@Param("chiTietGiayId") UUID chiTietGiayId);
+
     @Query(value = "SELECT COUNT(*) FROM GioHangChiTiet ght\n" +
             "JOIN GioHang gh ON ght.IdGioHang = gh.Id\n" +
             "JOIN TaiKhoan tk ON gh.IdTaiKhoan = tk.Id\n" +

@@ -1,5 +1,6 @@
 package com.example.sneaker_sophia.repository;
 
+import com.example.sneaker_sophia.entity.HoaDon;
 import com.example.sneaker_sophia.entity.LichSuHoaDon;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -27,4 +28,6 @@ public interface LichSuHoaDonWebRepository extends JpaRepository<LichSuHoaDon, S
     Double sumTongTienByHoaDonTrangThaiAndPhuongThuc(
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate);
+
+    LichSuHoaDon findByHoaDon(HoaDon hoaDon);
 }

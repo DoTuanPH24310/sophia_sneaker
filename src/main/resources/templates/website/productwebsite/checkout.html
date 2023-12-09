@@ -8,7 +8,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <title>HONO - Multi Purpose HTML Template</title>
+<style>
+    .out-of-stock-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.7); /* Màu nền overlay, có thể điều chỉnh độ trong suốt tùy ý */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
+    .circle {
+        width: 100px; /* Đặt kích thước hình tròn */
+        height: 100px; /* Đặt kích thước hình tròn */
+        background-color: red; /* Đặt màu nền hình tròn */
+        border-radius: 50%; /* Làm hình tròn */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .out-of-stock-text {
+        color: white; /* Màu chữ trong hình tròn */
+        margin: 0; /* Loại bỏ margin để chữ không bị dính vào mép hình tròn */
+    }
+
+    /* Optional: Thiết lập margin hoặc padding cho mỗi product container nếu cần thiết */
+    #product-container {
+        margin-bottom: 20px; /* Ví dụ: Đặt margin dưới cho mỗi product container */
+    }
+    .page-pagination ul li.active a {
+        /* Màu cho trang đã chọn */
+        background-color: #B19361!important;
+        color: #fff!important;
+        /* Các thuộc tính khác tùy thuộc vào thiết kế của bạn */
+    }
+
+    .page-pagination ul li a {
+        /* Màu cho các trang không được chọn */
+        background-color: #fff!important;
+        color: #000!important;
+        /* Các thuộc tính khác tùy thuộc vào thiết kế của bạn */
+    }
+
+    .sidebar-content::-webkit-scrollbar {
+        width: 6px; /* Đặt chiều rộng của thanh cuộn */
+    }
+
+    .sidebar-content::-webkit-scrollbar-thumb {
+        background-color: #B19361; /* Màu nền của thanh cuộn */
+        border-radius: 4px; /* Độ cong của góc thanh cuộn */
+    }
+
+    .sidebar-content::-webkit-scrollbar-track {
+        background-color: #f1f1f1; /* Màu nền của phần dưới thanh cuộn */
+        border-radius: 4px; /* Độ cong của góc phần dưới thanh cuộn */
+    }
+</style>
 
 </head>
 
@@ -414,14 +473,14 @@
                                 </div>
                             </div>
                             <div class="col-12">
-                                <label class="checkbox-default" for="currencyCod" data-bs-toggle="collapse">
+                                <label class="checkbox-default">
                                     <input type="radio" name="giaoHang" checked>
-                                    <span>Giao hàng tiêu chuẩn</span>
+                                    <span class="font-weight-bold">Giao hàng tiêu chuẩn</span>
                                     <br>
                                     <br>
-                                    <span>Miễn phí vận chuyển đối với đơn hàng từ 2.000.000đ.<br>
-                                            Giao tại Hà Nội 20.000đ.<br>
-                                            Các địa chỉ khác: 30.000đ</span>
+                                    <span class="d-block mb-3">Miễn phí vận chuyển đối với đơn hàng từ 2.000.000đ.</span>
+                                    <span class="d-block mb-3">Giao tại Hà Nội 20.000đ.</span>
+                                    <span class="d-block">Các địa chỉ khác: 30.000đ</span>
                                 </label>
                             </div>
                         </div>
@@ -441,7 +500,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr th:each="item : ${cartItems}">
+                                    <tr th:each="item : ${cartItems}" style="max-height: 150px;overflow-y: auto;">
                                         <td class="product_thumb">
                                             <img class="offcanvas-cart-image"
                                                  th:src="@{${item.id.chiTietGiay.anhs.get(0).getDuongDan()}}"
@@ -449,7 +508,7 @@
                                                  alt="">
                                         </td>
                                         <td>
-                                            <p th:text="${item.id.chiTietGiay.hang.ten + ' ' + item.id.chiTietGiay.giay.ten + ' ' + item.id.chiTietGiay.loaiGiay.ten + ' ' + item.id.chiTietGiay.mauSac.ten}"></p>
+                                            <p th:text="${item.id.chiTietGiay.hang.ten + ' ' + item.id.chiTietGiay.giay.ten + ' ' + item.id.chiTietGiay.loaiGiay.ten + ' ' + item.id.chiTietGiay.mauSac.ten + '  [' + item.id.chiTietGiay.kichCo.ten + ']'}"></p>
                                         </td>
                                         <td>
                                             <p th:text="${item.soLuong}"></p>
@@ -494,7 +553,7 @@
                                 <div class="panel-default">
                                     <label class="checkbox-default" for="currencyCod" data-bs-toggle="collapse"
                                            data-bs-target="#methodCod">
-                                        <input type="radio" id="currencyCod" name="hinhThucThanhToan" value="3">
+                                        <input type="radio" id="currencyCod" name="hinhThucThanhToan" value="3" checked>
                                         <span>Thanh toán khi nhận hàng</span>
                                     </label>
 
@@ -518,7 +577,7 @@
                                     </div>
                                 </div>
                                 <div class="order_button pt-3">
-                                    <button id="btnThanhToan" onclick="handlePaymentButtonClick()" class="btn btn-md btn-black-default-hover" type="submit">
+                                    <button id="btnThanhToan" class="btn btn-md btn-black-default-hover" type="submit">
                                         Thanh
                                         toán
                                     </button>
@@ -1107,53 +1166,43 @@
 
     // Hàm cập nhật tổng tiền
     function updateTotalAmount(newTotal, shippingFee) {
-        // Calculate the total amount including the shipping fee
         const totalAmountWithShipping = newTotal + shippingFee;
         var formattedAmount = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalAmountWithShipping);
 
-        // Display and format the total amount with shipping
         $("#totalAmount").text(`${formattedAmount}`);
-        // Display and format the shipping cost
         var shippingFee3 = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(shippingFee);
         $("#shipping-cost").text(`${shippingFee3}`);
     }
 
-    // Hàm cập nhật phí vận chuyển khi chọn tỉnh
     function updateShippingFee(selectedProvinceCode) {
         if (!selectedProvinceCode) {
-            // Chưa chọn địa chỉ
             $("#shipping-cost").text("Vui lòng chọn địa chỉ");
             return 0;
         } else {
+            $("#shipping-cost").text("");
             var shippingFee = 0;
             if(initialTotalAmount < 2000000){
                 shippingFee = selectedProvinceCode === "1" ? 20000 : 30000;
             }
-            // Hiển thị phí vận chuyển
             var formattedAmount = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(shippingFee);
 
             $("#shipping-cost").text(formattedAmount);
 
-            // Cập nhật giá trị phí vận chuyển trong form ẩn
             $("#feeShipped").val(shippingFee);
 
             return shippingFee;
         }
     }
 
-    // Sự kiện khi chọn tỉnh
     $("#province").change(() => {
         const selectedProvinceCode = $("#province").val();
 
-        // Cập nhật phí vận chuyển khi chọn tỉnh và lấy giá trị phí vận chuyển
         const shippingFee = updateShippingFee(selectedProvinceCode);
 
-        // Gọi hàm updateTotalAmount với tổng tiền ban đầu cộng với phí vận chuyển mới
         updateTotalAmount(initialTotalAmount, shippingFee);
 
         console.log("Initial Total:", $("#totalAmount").text());
 
-        // Gọi các hàm renderOptions và printResult
         callAPI(host + "p/" + selectedProvinceCode + "?depth=2", "district", (data, selectId) => {
             renderOptions(data.districts, selectId, "--Chọn Quận/Huyện--");
         });
@@ -1165,9 +1214,7 @@
         printResult();
     });
 
-    // Sự kiện khi chọn quận/huyện
     $("#district").change(() => {
-        // Call API to load wards based on the selected district
         callAPI(host + "d/" + $("#district").val() + "?depth=2", "ward", (data, selectId) => {
             renderOptions(data.wards, selectId, "--Chọn Phường/Xã--");
         });
@@ -1175,7 +1222,6 @@
         printResult();
     });
 
-    // Call updateTotalAmount with the initial total (you may adjust this based on your scenario)
     updateTotalAmount(initialTotalAmount, calculateShippingFee());
 
     function calculateShippingFee() {

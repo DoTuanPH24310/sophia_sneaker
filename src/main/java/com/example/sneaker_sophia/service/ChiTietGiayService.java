@@ -253,7 +253,6 @@ public class ChiTietGiayService {
 
     //28-10 hoanghh
     public List<ChiTietGiay> findChiTietGiayByMultipleParamsAPI(DTO_API_CTG ctg) {
-        System.out.println(ctg.getIdLoaigiay() + "test2");
         UUID idGiay = !ctg.getIdGiay().equals("null") ? UUID.fromString(ctg.getIdGiay()) : null;
         UUID idDeGiay = !ctg.getIdDe().equals("null") ? UUID.fromString(ctg.getIdDe()) : null;
         UUID idHang = !ctg.getIdHang().equals("null") ? UUID.fromString(ctg.getIdHang()) : null;
