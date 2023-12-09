@@ -1,7 +1,9 @@
 package com.example.sneaker_sophia.controller.manage;
 
+import com.example.sneaker_sophia.dto.ChiTietGiayDTO;
 import com.example.sneaker_sophia.entity.*;
 import com.example.sneaker_sophia.service.*;
+import com.example.sneaker_sophia.validate.AlertInfo;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +61,7 @@ public class ChiTietGiayController {
         return listByPage(1, model, "ngayTao", "asc", null, null, null, null, null, null, null, "0", null, null, null);
     }
 
-    @GetMapping("chi-tiet-giay/page/{pageNum}")
+    @GetMapping("/staff/chi-tiet-giay/page/{pageNum}")
     private String listByPage(@PathVariable(name = "pageNum") int pageNum, Model model,
                               @RequestParam(name = "sortField", required = false, defaultValue = "defaultSortField") String sortField,
                               @RequestParam(name = "sortDir", required = false, defaultValue = "defaultSortDir") String sortDir,
