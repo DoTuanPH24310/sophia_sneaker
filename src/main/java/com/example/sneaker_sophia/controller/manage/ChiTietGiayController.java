@@ -3,6 +3,7 @@ package com.example.sneaker_sophia.controller.manage;
 import com.example.sneaker_sophia.dto.ChiTietGiayDTO;
 import com.example.sneaker_sophia.entity.*;
 import com.example.sneaker_sophia.service.*;
+import com.example.sneaker_sophia.validate.AlertInfo;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,8 @@ public class ChiTietGiayController {
     AnhService anhService;
     @Autowired
     HttpServletRequest request;
-
+    @Autowired
+    private AlertInfo alertInfo;
     @Autowired
     ChiTietGiayDTO chiTietGiayDTO;
 
@@ -118,7 +120,7 @@ public class ChiTietGiayController {
         model.addAttribute("giayList", giayService.getAll());
         model.addAttribute("hangList", hangService.getAll());
         model.addAttribute("hangList", hangService.getAll());
-            model.addAttribute("trangThai", trangThai);
+        model.addAttribute("trangThai", trangThai);
 
 // để giữ cac giá trị combobõx
         model.addAttribute("loaiGiay", params != null ? params.get("loaiGiay") : null);
@@ -179,6 +181,7 @@ public class ChiTietGiayController {
                 model.addAttribute("loaiGiay", loaiGiayService.getAll());
                 model.addAttribute("kichCo", kichCoService.getAll());
                 model.addAttribute("anh", anhService.getAll());
+                alertInfo.alert("errTaiQuay", "Thất bại, vui lòng kiểm tra lại");
                 return "admin/chiTietGiay/formChiTietGiay";
             }
             if(chiTietGiay.getQrCode().isEmpty() || chiTietGiay.getQrCode()==null){
@@ -215,7 +218,7 @@ public class ChiTietGiayController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        alertInfo.alert("successTaiQuay", "Thêm thành công");
         return "redirect:/admin/chi-tiet-giay";
     }
     @PostMapping("chi-tiet-giay/edit/{id}")
@@ -234,7 +237,9 @@ public class ChiTietGiayController {
                 model.addAttribute("mauSac", mauSacService.getAll());
                 model.addAttribute("loaiGiay", loaiGiayService.getAll());
                 model.addAttribute("kichCo", kichCoService.getAll());
+                model.addAttribute("anh", anhService.getAll());
                 model.addAttribute("anh", anhService.anhsFindIdChitietGiay(chiTietGiay));
+                alertInfo.alert("errTaiQuay", "Thất bại, vui lòng kiểm tra lại");
                 return "admin/chiTietGiay/formEditChiTietGiay";
             }
 
@@ -248,7 +253,9 @@ public class ChiTietGiayController {
                     model.addAttribute("mauSac", mauSacService.getAll());
                     model.addAttribute("loaiGiay", loaiGiayService.getAll());
                     model.addAttribute("kichCo", kichCoService.getAll());
+                    model.addAttribute("anh", anhService.getAll());
                     model.addAttribute("anh", anhService.anhsFindIdChitietGiay(chiTietGiay));
+                    alertInfo.alert("errTaiQuay", "Thất bại, vui lòng kiểm tra lại");
                     return "admin/chiTietGiay/formEditChiTietGiay";
                 }
 
@@ -291,7 +298,7 @@ public class ChiTietGiayController {
                     anhService.save(currentImage);
                 }
                 chiTietGiayService.save(chiTietGiay);
-
+                chiTietGiayService.save(chiTietGiayDTO.loadChiTietGiayDTO(chiTietGiay1));
                 // Đặt danh sách ảnh vào model sau khi lưu
                 model.addAttribute("anh", anhService.anhsFindIdChitietGiay(chiTietGiay));
             }
@@ -299,6 +306,9 @@ public class ChiTietGiayController {
             e.printStackTrace();
             // Xử lý lỗi, có thể thêm thông báo lỗi vào model để hiển thị trên giao diện
         }
+        chiTietGiayService.save(chiTietGiay);
+        chiTietGiayService.save(chiTietGiayDTO.loadChiTietGiayDTO(chiTietGiay1));
+        alertInfo.alert("successTaiQuay", "Sửa thành công");
         return "redirect:/admin/chi-tiet-giay";
     }
 
@@ -306,6 +316,7 @@ public class ChiTietGiayController {
     @GetMapping("chi-tiet-giay/delete/{id}")
     public String delete(@PathVariable("id") UUID id) {
         chiTietGiayService.delete(id);
+        alertInfo.alert("successTaiQuay", "Xóa thành công");
         return "redirect:/admin/chi-tiet-giay";
     }
 

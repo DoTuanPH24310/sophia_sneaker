@@ -128,7 +128,7 @@
                         <div class="row">
                             <div class="col">
                                 <label for="maChiTietGiay">Mã chi tiết giày:</label>
-                                <input th:text="*{ma}" class="form-control custom-width" id="maChiTietGiay"
+                                <input th:field="*{ma}" class="form-control custom-width" id="maChiTietGiay"
                                        name="maChiTietGiay" readonly>
                                 <p th:text="${errMa}" class="text-danger"></p>
                                 <p class="text-danger" th:if="${#fields.hasErrors('ma')}" th:errors="*{ma}"></p>

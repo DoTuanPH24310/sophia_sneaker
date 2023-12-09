@@ -2,6 +2,7 @@ package com.example.sneaker_sophia.controller.manage;
 
 import com.example.sneaker_sophia.entity.*;
 import com.example.sneaker_sophia.service.*;
+import com.example.sneaker_sophia.validate.AlertInfo;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddressList;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -44,7 +45,8 @@ public class ImportExportFileController {
     KichCoService kichCoService;
     @Autowired
     AnhService anhService;
-
+    @Autowired
+    private AlertInfo alertInfo;
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private static final int QR_CODE_LENGTH = 16;
 
@@ -189,6 +191,7 @@ public class ImportExportFileController {
         headers.setContentDispositionFormData("attachment", fileName);
 
         // Trả về ResponseEntity
+        alertInfo.alert("successTaiQuay", "Xuất file excel thành công");
         return new ResponseEntity<>(excelBytes, headers, HttpStatus.OK);
     }
     @RequestMapping(value = "/importFromExcel", method = RequestMethod.POST)
@@ -320,7 +323,6 @@ public class ImportExportFileController {
         } catch (IOException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lỗi khi tải lên danh sách");
-
         }
     }
 
