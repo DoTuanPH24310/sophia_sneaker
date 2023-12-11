@@ -6,9 +6,14 @@ import com.example.sneaker_sophia.repository.*;
 import com.example.sneaker_sophia.service.CartService;
 import com.example.sneaker_sophia.service.ChiTietGiayService;
 import com.example.sneaker_sophia.service.KhuyenMaiWebService;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -42,6 +47,9 @@ public class ProductWebController {
     private KhuyenMaiWebService khuyenMaiWebService;
     @Autowired
     private ChiTietGiayService chiTietGiayService;
+
+    @Autowired
+    private JavaMailSender javaMailSender;
 
     @GetMapping("/product")
     public String home(
@@ -136,6 +144,37 @@ public class ProductWebController {
     }
 
 
+    @PostMapping("/contact")
+    public String handleContactForm(String ten, String email, String soDienThoai, String message) {
+
+        try {
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+            helper.setTo("leducnam1204@gmail.com");
+            helper.setSubject("Tôi cần giúp đỡ");
+            String content = "<html><body style='font-family: Arial, sans-serif;'>" +
+                    "<div style='background-color: #f4f4f4; padding: 20px;'>" +
+                    "<h2 style='color: #333; text-align: center; margin-bottom: 20px;'>Yêu cầu giúp đỡ</h2>" +
+                    "<p><strong>Tên:</strong> " + ten + "</p>" +
+                    "<p><strong>Email:</strong> " + email + "</p>" +
+                    "<p><strong>Số điện thoại:</strong> " + soDienThoai + "</p>" +
+                    "<p><strong>Nội dung:</strong></p>" +
+                    "<p style='white-space: pre-wrap;'>" + message + "</p>" +
+                    "</div>" +
+                    "</body></html>";
+
+            helper.setText(content, true);
+
+            javaMailSender.send(mimeMessage);
+
+            return "redirect:/sophia-store/lien-he";
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            // Handle the exception (e.g., log it, show an error page)
+            return "redirect:/sophia-store/lien-he?error"; // Redirect with an error parameter
+        }
+    }
 
 }
 
