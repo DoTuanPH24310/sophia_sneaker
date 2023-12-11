@@ -346,30 +346,25 @@ public class CheckoutController {
 
             phiVanChuyen = (total < 2000000) ? ((diaChi.getTinh() == 1) ? 20000.0 : 30000.0) : 0.0;
 
-            // Create a random password
-            String matKhauNgauNhien = emailService.taoMatKhauNgauNhien();
-
-            // Create an order
-            // Create an order
             if (diaChi == null || StringUtils.isEmpty(diaChi.getEmail())) {
                 // If email is provided, create an order without creating an account
                 HoaDon hoaDonMoi = emailService.taoHoaDonMoi(null, hinhThucThanhToan, diaChiCuThe, tinh, huyen, xa, phiVanChuyen, ghiChu, ten, sdt);
-                emailService.themSanPhamVaoHoaDonChiTiet(cartItems, hoaDonMoi);
-                emailService.guiEmailXacNhanThanhToan(null, hoaDonMoi);
+                emailService.themSanPhamVaoHoaDonChiTiet(cartItems, hoaDonMoi, phiVanChuyen);
             }
             // If email is not provided, create an account and an order
             if (diaChi != null && !StringUtils.isEmpty(diaChi.getEmail())) {
 
                 TaiKhoan taiKhoanMoi = emailService.taoTaiKhoanMoi(diaChi);
-                if (taiKhoanMoi != null) {  // Check if taiKhoanMoi is not null
-                    emailService.guiEmailDangKyTaiKhoan(taiKhoanMoi.getEmail(), matKhauNgauNhien);
+                if (taiKhoanMoi != null) {
                     HoaDon hoaDonMoi = emailService.taoHoaDonMoi(taiKhoanMoi, hinhThucThanhToan, diaChiCuThe, tinh, huyen, xa, phiVanChuyen, ghiChu, diaChi.getTen(), diaChi.getSdt());
-                    emailService.themSanPhamVaoHoaDonChiTiet(cartItems, hoaDonMoi);
+                    emailService.themSanPhamVaoHoaDonChiTiet(cartItems, hoaDonMoi, phiVanChuyen);
                     diaChi.setTaiKhoan(taiKhoanMoi);
                     emailService.themDiaChiVaoTaiKhoan(diaChi, taiKhoanMoi);
-                    emailService.guiEmailXacNhanThanhToan(taiKhoanMoi.getEmail(), hoaDonMoi);
+                    if (hinhThucThanhToan == 3) {
+                        emailService.guiEmailXacNhanThanhToan(taiKhoanMoi.getEmail(), hoaDonMoi);
+                    }
+                    session.setAttribute("mailTaiKhoan", taiKhoanMoi.getEmail());
                 } else {
-                    // Handle the case where creating the account fails
                     model.addAttribute("error", "Failed to create a new account.");
                     return "redirect:/shophia-store/home";
                 }
@@ -391,6 +386,7 @@ public class CheckoutController {
             @RequestParam(value = "vnp_TransactionNo", required = false) String transactionNo,
             @RequestParam(value = "vnp_Amount", required = false) String amountPaidString, HttpSession session) {
         String maHD = (String) session.getAttribute("maHD");
+        String mailTaiKhoan = (String) session.getAttribute("mailTaiKhoan");
         if (responseCode != null && responseCode.equals("00")) {
             HoaDon hoaDon = hoaDonWebRepository.findByMaHoaDOn(maHD);
 //            HinhThucThanhToan hinhThuc = new HinhThucThanhToan();
@@ -403,6 +399,7 @@ public class CheckoutController {
                     this.hinhThucThanhToanWebRepository.save(hinhThuc); // Update HinhThucThanhToan in the database
                     hoaDon.setTrangThai(3);
                     this.hoaDonWebRepository.save(hoaDon);
+                    emailService.guiEmailXacNhanThanhToan(mailTaiKhoan, hoaDon);
                 }
                 return "redirect:/check-out/success";
             } else {

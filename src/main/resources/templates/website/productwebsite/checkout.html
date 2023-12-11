@@ -409,8 +409,8 @@
                             <div class="col-lg-6">
                                 <div class="default-form-box">
                                     <label> Địa chỉ email <span>*</span></label>
-                                    <input type="text" th:value="${email}" disabled>
-                                    <!--                                                                        <span th:errors="*{taiKhoan.email}" style="color: red"></span>-->
+                                    <span class="form-control" th:text="${email}"
+                                          style="background-color: #f0f0f0;"></span>
                                 </div>
                             </div>
                             <div class="col-4">
@@ -473,14 +473,14 @@
                                 </div>
                             </div>
                             <div class="col-12">
-                                <label class="checkbox-default">
+                                <label class="checkbox-default" for="currencyCod" data-bs-toggle="collapse">
                                     <input type="radio" name="giaoHang" checked>
-                                    <span class="font-weight-bold">Giao hàng tiêu chuẩn</span>
+                                    <span>Giao hàng tiêu chuẩn</span>
                                     <br>
                                     <br>
-                                    <span class="d-block mb-3">Miễn phí vận chuyển đối với đơn hàng từ 2.000.000đ.</span>
-                                    <span class="d-block mb-3">Giao tại Hà Nội 20.000đ.</span>
-                                    <span class="d-block">Các địa chỉ khác: 30.000đ</span>
+                                    <span>Miễn phí vận chuyển đối với đơn hàng từ 2.000.000đ.<br>
+                                            Giao tại Hà Nội 20.000đ.<br>
+                                            Các địa chỉ khác: 30.000đ</span>
                                 </label>
                             </div>
                         </div>
@@ -577,7 +577,7 @@
                                     </div>
                                 </div>
                                 <div class="order_button pt-3">
-                                    <button id="btnThanhToan" class="btn btn-md btn-black-default-hover" type="submit">
+                                    <button id="btnThanhToan" class="btn btn-md btn-black-default-hover" type="submit" onclick="handlePaymentButtonClick()">
                                         Thanh
                                         toán
                                     </button>
@@ -1164,8 +1164,18 @@
     // Lấy giá trị tổng tiền ban đầu khi trang web được tải lần đầu
     initialTotalAmount = parseFloat($("#totalAmount").data("id"));
 
-    // Hàm cập nhật tổng tiền
     function updateTotalAmount(newTotal, shippingFee) {
+        // Check if a province is selected
+        const selectedProvinceCode = $("#province").val();
+        if (selectedProvinceCode === null) {
+            // Chưa chọn tỉnh
+            $("#shipping-cost").text("Vui lòng chọn địa chỉ");
+            var totalAmount = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(initialTotalAmount);
+
+            $("#totalAmount").text(totalAmount);
+            return;
+        }
+
         const totalAmountWithShipping = newTotal + shippingFee;
         var formattedAmount = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalAmountWithShipping);
 
@@ -1174,8 +1184,11 @@
         $("#shipping-cost").text(`${shippingFee3}`);
     }
 
+
+    // Hàm cập nhật phí vận chuyển khi chọn tỉnh
     function updateShippingFee(selectedProvinceCode) {
         if (!selectedProvinceCode) {
+            // Chưa chọn địa chỉ
             $("#shipping-cost").text("Vui lòng chọn địa chỉ");
             return 0;
         } else {
@@ -1184,6 +1197,7 @@
             if(initialTotalAmount < 2000000){
                 shippingFee = selectedProvinceCode === "1" ? 20000 : 30000;
             }
+            // Hiển thị phí vận chuyển
             var formattedAmount = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(shippingFee);
 
             $("#shipping-cost").text(formattedAmount);

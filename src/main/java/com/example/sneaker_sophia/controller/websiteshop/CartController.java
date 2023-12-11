@@ -124,6 +124,7 @@ public class CartController {
                             @RequestParam(value = "quantity", defaultValue = "1") int quantity,
                             HttpSession httpSession) {
         try {
+
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             ChiTietGiay chiTietGiay = chiTietGiayRepository.findById(chiTietGiayId).orElse(null);
 

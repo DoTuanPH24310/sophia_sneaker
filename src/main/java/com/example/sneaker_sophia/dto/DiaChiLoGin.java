@@ -2,10 +2,7 @@ package com.example.sneaker_sophia.dto;
 
 import com.example.sneaker_sophia.entity.DiaChi;
 import com.example.sneaker_sophia.entity.TaiKhoan;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 @Getter
@@ -15,6 +12,8 @@ import lombok.*;
 @ToString
 public class DiaChiLoGin {
     private String id;
+    @Pattern(regexp = "[^!@#$%^&*(),.?\":{}|<>0-9]*", message = "Tên không được chứa kí tự đặc biệt")
+    @Size(max = 50, message = "Tên người nhận không được vượt quá 50 kí tự")
     @NotBlank(message = "Vui lòng nhập tên người nhận")
     private String ten;
     @NotBlank(message = "Vui lòng nhập số điện thoại người nhận")
@@ -28,7 +27,8 @@ public class DiaChiLoGin {
     private Integer quanHuyen;
     @NotNull(message = "Vui lòng chọn tỉnh")
     private Integer tinh;
-
+    @Size(max = 10, message = "Ghi chú không được vượt quá 150 kí tự")
+    private String ghiChu;
     private Integer diaChiMacDinh;
 
     private Integer trangThai;

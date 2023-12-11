@@ -66,10 +66,11 @@ public class EmailService {
             taiKhoanMoi.setMatKhau(hashedMatKhau);
             System.out.println("matkhau1" + matKhauNgauNhien);
 
-            VaiTro vaiTro = this.vaiTroRepository.findByTen("ADMIN");
+            VaiTro vaiTro = this.vaiTroRepository.findByTen("KhachHang");
             taiKhoanMoi.setVaiTro(vaiTro);
             taiKhoanMoi.setSdt(diaChiDTO.getSdt());
             taiKhoanMoi = this.taiKhoanRepository.save(taiKhoanMoi);
+            guiEmailDangKyTaiKhoan(diaChiDTO.getEmail(),matKhauNgauNhien);
         } else {
             System.err.println("DiaChiDTO or TaiKhoan is null, or email is empty.");
         }
@@ -166,7 +167,7 @@ public class EmailService {
         return matKhau.toString();
     }
 
-    public void themSanPhamVaoHoaDonChiTiet(List<CartItem> cartItems, HoaDon hoaDon) {
+    public void themSanPhamVaoHoaDonChiTiet(List<CartItem> cartItems, HoaDon hoaDon, Double phiVanChuyen) {
         double total = 0.0;
         double tongTienDonHang = 0.0;
         int tongSoLuongGiam = 0;
@@ -188,29 +189,24 @@ public class EmailService {
                 List<CTG_KhuyenMai> listCTG_KM = chiTietGiay.getListCTG_KM();
                 // Tính toán số lượng giảm và giảm giá tương ứng
                 for (CTG_KhuyenMai ctg : listCTG_KM) {
-                    // Kiểm tra trạng thái giảm giá
                     if (ctg.getId().getVoucher().getTrangThai() == 1 && ctg.getId().getVoucher().getSoLuong() > 0) {
                         if (ctg.getId().getVoucher() != null) {
                             soLuongGiam = ctg.getId().getVoucher().getSoLuong();
                         }
                         int soLuongGiamApDung = Math.min(soLuongGiam - soLuongPhieuGiamDaSuDung, soLuongMua);
 
-                        // Cập nhật số lượng giảm giá của sản phẩm
                         soLuongGiamTheoSanPham.put(cartItem.getId(), soLuongPhieuGiamDaSuDung + soLuongGiamApDung);
                         session.setAttribute("tongSoLuongGiam" + chiTietGiay.getId(), tongSoLuongGiam);
                         // Cập nhật giảm giá của sản phẩm
                         phanTramGiam = ctg.getId().getVoucher().getPhanTramGiam();
                         int giamGia = phanTramGiam * soLuongGiam;
                         tongGiamGia = giamGia;
-                        // Cập nhật tổng số tiền giảm
                         double donGia = chiTietGiay.getGia();
                         int giam = ctg.getId().getVoucher().getPhanTramGiam();
                         double tienGiam = donGia * giam / 100 * soLuongGiamApDung;
                         tongTienGiam += tienGiam;
-                        tongTienDonHang = total - tongTienGiam;
                         soLuongPhieuGiamDaSuDung += soLuongGiamApDung;
 
-                        // Trừ đi số lượng đã sử dụng từ bảng giảm giá
                         ctg.getId().getVoucher().setSoLuong(ctg.getId().getVoucher().getSoLuong() - soLuongGiamApDung);
                         voucherRepository.save(ctg.getId().getVoucher());
                     }
@@ -234,7 +230,8 @@ public class EmailService {
             hoaDon.getListHoaDonChiTiet().add(hoaDonChiTiet);
             this.hoaDonChiTietWebRepository.save(hoaDonChiTiet);
         }
-        hoaDon.setTongTien(tongTienDonHang);
+        hoaDon.setPhiShip(phiVanChuyen);
+        hoaDon.setTongTien((total - tongTienGiam) );
         hoaDon.setKhuyenMai(tongTienGiam);
         this.hoaDonRepository.save(hoaDon);
 

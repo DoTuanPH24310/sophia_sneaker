@@ -47,8 +47,9 @@ public class ThanhToanService {
     @Resource(name = "hoaDonRepository")
     HoaDonRepository hoaDonRepository;
 
-    public void thucHienThanhToan(String email, List<GioHangChiTiet> cartItems, Integer hinhThucThanhToan,String diaChi, String tinh, String huyen, String xa, Double phiVanChuyen,String ghiChu) {
+    public void thucHienThanhToan(String email, List<GioHangChiTiet> cartItems, Integer hinhThucThanhToan, String diaChi, String tinh, String huyen, String xa, Double phiVanChuyen, String ghiChu) {
         TaiKhoan taiKhoan = this.loginRepository.findByEmail(email);
+        taiKhoan.setTrangThai(1);
         double total = 0.0;
         for (GioHangChiTiet cartItem : cartItems) {
             total += cartItem.getId().getChiTietGiay().getGia() * cartItem.getSoLuong();
@@ -64,9 +65,9 @@ public class ThanhToanService {
         hoaDon.setMaHoaDOn("HD" + soHD);
         hoaDon.setTaiKhoan(taiKhoan);
         hoaDon.setLoaiHoaDon(3);
-        if(hinhThucThanhToan == 3) {
+        if (hinhThucThanhToan == 3) {
             hoaDon.setTrangThai(3);
-        }else if(hinhThucThanhToan == 2){
+        } else if (hinhThucThanhToan == 2) {
             hoaDon.setTrangThai(2);
         }
         hoaDon.setTenKhachHang(taiKhoan.getTen());
@@ -134,7 +135,7 @@ public class ThanhToanService {
             this.hoaDonChiTietRepository.save(hoaDonChiTiet);
         }
 
-        savedHoaDon.setTongTien(total - tongTienGiam);
+        savedHoaDon.setTongTien((total - tongTienGiam) + phiVanChuyen);
         savedHoaDon.setKhuyenMai(tongTienGiam);
         hoaDonWebRepository.save(savedHoaDon);
         session.setAttribute("maHD", savedHoaDon.getMaHoaDOn());
@@ -148,9 +149,9 @@ public class ThanhToanService {
 
         LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
         lichSuHoaDon.setHoaDon(hoaDon);
-        if(hinhThucThanhToan == 3) {
+        if (hinhThucThanhToan == 3) {
             lichSuHoaDon.setPhuongThuc("3");
-        }else if(hinhThucThanhToan == 2){
+        } else if (hinhThucThanhToan == 2) {
             lichSuHoaDon.setPhuongThuc("2");
         }
         this.lichSuHoaDonWebRepository.save(lichSuHoaDon);
@@ -158,7 +159,10 @@ public class ThanhToanService {
         for (GioHangChiTiet cartItem : cartItems) {
             gioHangChiTietRepository.delete(cartItem);
         }
-        this.emailService.guiEmailXacNhanThanhToan(email, savedHoaDon);
+        session.setAttribute("mailTaiKhoan", email);
+        if (hinhThucThanhToan == 3) {
+            this.emailService.guiEmailXacNhanThanhToan(email, savedHoaDon);
+        }
     }
 
 
