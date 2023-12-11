@@ -90,8 +90,8 @@
 </head>
 <body>
 <section layout:fragment="content" style="background-color: white">
-    <form method="post" th:action="@{/admin/chi-tiet-giay/update}" th:object="${chiTietGiay}"
-          enctype="multipart/form-data" onsubmit="return validateForm()">
+    <form method="post" th:action="@{'/admin/chi-tiet-giay/edit/'+ ${chiTietGiay.id}}" th:object="${chiTietGiay}"
+    enctype="multipart/form-data">
         <h3 class="text-center mt-2 mb-4" style="font-weight: bold">Cập nhật chi tiết giày</h3>
         <div class="row">
 
@@ -102,24 +102,19 @@
                             <h3 class="text-center mb-3">Tải ảnh</h3>
                             <div th:with="anhList=${anh}" class="mb-4">
                                 <ul id="imageList">
-                                    <li th:each="a : ${anh}">
-                                        <img th:src="@{${a.getDuongDan()}}" style="width: 100px; height: 100px">
-                                        <a th:href="@{'/admin/anh/delete-anh/' + ${a.getId()}}" class="deleteAnh">
+                                    <li th:each="a : ${anhList}">
+                                        <img th:src="@{${a.duongDan}}" style="width: 100px; height: 100px" class="image-to-hide">
+                                        <a onclick="hideImage(this)" class="deleteAnh">
                                             <i class="fa fa-times-circle"></i>
                                         </a>
                                     </li>
                                 </ul>
                             </div>
-                            <p id="imageValidationMessage" class="text-danger"></p>
+                            <p id="imageValidationMessage" class="text-danger" th:text="${errAnhs}"></p>
                             <input id="customFileInput" type="file" name="imageFile" multiple
                                    onchange="showSelectedImages(this)"/>
                             <label for="customFileInput" class="btn btn-success">
                                 Chọn ảnh
-                            </label>
-                            <label>
-                                <a type="button" class="btn btn-danger"
-                                   th:href="@{'/admin/chi-tiet-giay/delete-anh/' + ${id}}" title="Xóa"
-                                   onclick="deleteSelectedImages()">Xóa ảnh đã chọn</a>
                             </label>
                         </div>
                     </div>
@@ -135,14 +130,15 @@
                                 <label for="maChiTietGiay">Mã chi tiết giày:</label>
                                 <input th:field="*{ma}" class="form-control custom-width" id="maChiTietGiay"
                                        name="maChiTietGiay" readonly>
-                                <p id="maValidationMessage" class="text-danger"></p>
+                                <p th:text="${errMa}" class="text-danger"></p>
+                                <p class="text-danger" th:if="${#fields.hasErrors('ma')}" th:errors="*{ma}"></p>
                             </div>
                             <div class="col">
                                 <label for="tenChiTietGiay"><span style="color: #c82333">*</span> Tên chi tiết
                                     giày:</label>
                                 <input th:field="*{ten}" class="form-control custom-width" id="tenChiTietGiay"
                                        name="tenChiTietGiay">
-                                <p id="tenValidationMessage" class="text-danger"></p>
+                                <p th:if="${#fields.hasErrors('ten')}" th:errors="*{ten}" class="text-danger"></p>
                             </div>
                         </div>
                     </div>
@@ -261,7 +257,7 @@
                                 <label for="soLuong"><span style="color: #c82333">*</span> Số lượng:</label>
                                 <input th:field="*{soLuong}" class="form-control custom-width" id="soluong"
                                        name="soluong">
-                                <p id="soLuongValidationMessage" class="text-danger"></p>
+                                <p class="text-danger" th:if="${#fields.hasErrors('soLuong')}" th:errors="*{soLuong}"></p>
                             </div>
                             <div class="col">
                                 <label for="gia"><span style="color: #c82333">*</span> Giá:</label>
@@ -269,6 +265,7 @@
                                 <input th:field="*{gia}" class="form-control custom-width" id="gia" name="gia"
                                        th:value="${#numbers.formatDecimal(chiTietGiay.gia, 0, 'COMMA', 2, 'POINT')}"/>
                                 <p id="giaValidationMessage" class="text-danger"></p>
+                                <p class="text-danger" th:if="${#fields.hasErrors('gia')}" th:errors="*{gia}"></p>
                             </div>
 
                         </div>
@@ -279,18 +276,18 @@
                                 <label for="moTa">Mô tả: </label>
                                 <textarea th:field="*{moTa}" class="form-control custom-width" id="moTa"
                                           name="moTa"></textarea>
-                                <p id="moTaValidationMessage" class="text-danger"></p>
+                                <p class="text-danger" th:if="${#fields.hasErrors('moTa')}" th:errors="*{moTa}"></p>
                             </div>
                             <div class="col">
                                 <label>Trạng thái:</label>
                                 <div class="row mt-3">
                                     <div class="col-6">
-                                        <input type="radio" id="active" name="trangThai" value="0"
+                                        <input type="radio" id="active" name="trangThai" value="0" th:value="0" th:field="*{trangThai}"
                                                checked>
                                         <label for="active">Hoạt động</label>
                                     </div>
                                     <div class="col-6">
-                                        <input type="radio" id="inactive" name="trangThai" value="1">
+                                        <input type="radio" id="inactive" name="trangThai" value="1" th:value="1" th:field="*{trangThai}">
 
                                         <label for="inactive">Ngưng hoạt động</label>
                                     </div>
@@ -308,16 +305,13 @@
                                 <input th:field="*{qrCode}" class="form-control custom-width" id="qrCode"
                                        name="qrCode">
                                 <p th:text="${errQr}" class="text-danger"></p>
-                                <p id="qrCodeValidationMessage" class="text-danger"></p>
-
+                                <p id="qrCodeValidationMessage" th:if="${#fields.hasErrors('qrCode')}" th:errors="*{qrCode}" class="text-danger"></p>
                             </div>
                             <div class="qr-code col">
                                 <div th:text="*{qrCode}"></div>
                             </div>
                         </div>
                     </div>
-
-
                 </div>
             </div>
         </div>
@@ -367,7 +361,17 @@
             </div>
         </div>
     </div>
+    <script>
+        function hideImage(deleteLink) {
+            // Lấy thẻ img từ cha của nó
+            var imageToHide = deleteLink.parentNode.querySelector('.image-to-hide');
+            var deleteA = deleteLink.parentNode.querySelector('.deleteAnh');
 
+            // Ẩn thẻ img
+            imageToHide.style.display = 'none';
+            deleteA.style.display = 'none';
+        }
+    </script>
     <script src="/js/addThuocTinh.js"></script>
 </section>
 </body>

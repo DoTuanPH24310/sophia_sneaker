@@ -44,6 +44,9 @@ public interface DeGiayRepository extends JpaRepository<DeGiay, UUID> {
             "where ChiTietGiay.id =? ", nativeQuery = true)
     DeGiay findDeGiaysByIdChiTiet(UUID uuid);
 
+    @Query("SELECT g FROM DeGiay g WHERE g.trangThai IN (0)")
+    List<DeGiay> findAll();
+
     // cuogndv
     List<DeGiay> findByTrangThaiEquals(Integer trangThai);
 

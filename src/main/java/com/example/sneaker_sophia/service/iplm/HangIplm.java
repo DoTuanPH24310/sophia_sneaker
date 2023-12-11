@@ -104,6 +104,11 @@ public class HangIplm implements HangService {
     }
 
     @Override
+    public List<Hang> findAll() {
+        return hangRepository.findAll();
+    }
+
+    @Override
     public List<Hang> finAllTrangThai() {
         return hangRepository.finAllTrangThai();
     }

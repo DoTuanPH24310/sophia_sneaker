@@ -37,6 +37,6 @@ public interface HangService {
 
    void save(Hang hang);
 
-
+    List<Hang> findAll();
     List<Hang> finAllTrangThai();
 }

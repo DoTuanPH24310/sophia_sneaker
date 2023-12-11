@@ -17,9 +17,33 @@
             display: flex;
             justify-content: flex-start;
         }
+        .btn-container {
+            display: flex;
+        }
 
-        .color-button {
-            margin-right: 10px; /* Khoảng cách giữa các nút màu */
+        .btn-size {
+            display: inline-block;
+            padding: 10px 15px;
+            margin: 5px;
+            text-decoration: none;
+            color: #000;
+            background-color: #FFF;
+            border: 1px solid #b19361;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+            font-size: large;
+        }
+
+        .btn-size:hover {
+            background-color: #a27f40;
+            color: #FFF;
+            font-size: large;
+        }
+
+        .btn-size.active {
+            background-color: #a27f40;
+            border-color: #a27f40;
+            color: #FFF;
         }
     </style>
 </head>
@@ -209,9 +233,14 @@
                     <div class="product-details-variable">
                         <div class="variable-single-item">
                             <span>Kích cỡ</span>
-                            <span class="product-stock-in"
-                                  th:text="${giay.getKichCo().getTen()}">
-                                </span>
+                            <div class="btn-container">
+                                    <div th:each="sizeGiay : ${size}">
+                                        <a class="btn-size"
+                                           th:href="@{'/sophia-store/detaill/'+${sizeGiay.id}}"
+                                           th:text="${sizeGiay.ten}"
+                                           th:classappend="${giay.kichCo} == ${sizeGiay} ? 'active' : ''"></a>
+                                    </div>
+                            </div>
                         </div>
                         <!-- Product Variable Single Item -->
                         <div class="variable-single-item">
@@ -233,8 +262,7 @@
                             </div>
 
                             <div class="product-add-to-cart-btn">
-                                <a th:attr="data-product-id=${id}" class="add-to-cart btn btn-block btn-lg btn-black-default-hover"
-                                   >+ Thêm giỏ hàng</a>
+                                <a th:attr="data-product-id=${giay.getId()}" class="add-to-cart btn btn-block btn-lg btn-black-default-hover">+ Thêm giỏ hàng</a>
                             </div>
                         </div>
                     </div> <!-- End Product Variable Area -->
@@ -321,7 +349,22 @@
     </div>
 </div>
 <!-- End Product Default Slider Section -->
+<script>
+    // Thêm sự kiện click để thêm hoặc xóa lớp 'active' khi nút được chọn
+    document.addEventListener("DOMContentLoaded", function() {
+        var btns = document.querySelectorAll('.btn');
+        btns.forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                btns.forEach(function(innerBtn) {
+                    innerBtn.classList.remove('active');
+                });
+                btn.classList.add('active');
+            });
+        });
+    });
 
+
+</script>
 <!-- material-scrolltop button -->
 <button class="material-scrolltop" type="button"></button>
 

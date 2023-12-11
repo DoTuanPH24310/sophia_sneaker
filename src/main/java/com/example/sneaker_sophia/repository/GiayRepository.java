@@ -51,6 +51,9 @@ public interface GiayRepository extends JpaRepository<Giay, UUID> {
             "join ChiTietGiay on Giay.Id = ChiTietGiay.IdGiay\n" +
             "where ChiTietGiay.id =? ", nativeQuery = true)
     Giay findGiaysByIdChiTietGiay(UUID uuid);
+
+    @Query("SELECT g FROM Giay g WHERE g.trangThai IN (0)")
+    List<Giay> findAll();
 }
 
 

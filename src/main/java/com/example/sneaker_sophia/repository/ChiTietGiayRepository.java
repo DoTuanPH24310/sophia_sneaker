@@ -43,32 +43,6 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
     String findMaByIdCTG(UUID id);
     // Hàm tìm kiếm theo cả keyword và tên sản phẩm
 
-    @Query("""
-                SELECT ctsp
-                FROM ChiTietGiay ctsp
-                WHERE (UPPER(ctsp.ma) LIKE %?1%
-                    OR UPPER(ctsp.hang.ten) LIKE %?1%
-                    OR UPPER(ctsp.ten) LIKE %?1%
-                    OR UPPER(ctsp.mauSac.ten) LIKE %?1%
-                    OR UPPER(ctsp.kichCo.ten) LIKE %?1%
-                    OR UPPER(ctsp.deGiay.ten) LIKE %?1%
-                    OR UPPER(ctsp.loaiGiay.ten) LIKE %?1%
-                    OR UPPER(ctsp.giay.ten) LIKE %?1%)
-                    AND (?2 = -1 OR ctsp.trangThai = ?2)
-            """)
-    Page<ChiTietGiay> findByKeyword(String keyword, String trangThai, Pageable pageable);
-
-
-    public Page<ChiTietGiay> findByGiay_TenContainingIgnoreCase(String tenSanPham, Pageable pageable);
-
-    @Query("""
-                SELECT ctsp
-                FROM ChiTietGiay ctsp
-                WHERE (LOWER(CONCAT(ctsp.ma, ctsp.giay.ten)) LIKE %?1%)
-                AND (ctsp.giay.ten LIKE %?2%)
-            """)
-    Page<ChiTietGiay> findByMaAndKeyWord(String keyword, String productName, Pageable pageable);
-
     @Query("SELECT c FROM ChiTietGiay c WHERE " +
             "(:giay IS NULL OR c.giay = :giay) AND " +
             "(:deGiay IS NULL OR c.deGiay = :deGiay) AND " +
@@ -76,9 +50,20 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
             "(:loaiGiay IS NULL OR c.loaiGiay = :loaiGiay) AND " +
             "(:mauSac IS NULL OR c.mauSac = :mauSac) AND " +
             "(:kichCo IS NULL OR c.kichCo = :kichCo) AND " +
-            "(:trangThai IS NULL OR c.trangThai = :trangThai OR (:trangThai = -1 AND c.trangThai IS NOT NULL)) AND " +
+            "(:trangThai IS NULL OR " +
+            "   (c.trangThai = :trangThai OR (:trangThai = -1 AND c.trangThai IN (0, 1))) ) AND " +
             "(:giaMin IS NULL OR c.gia >= :giaMin) AND " +
-            "(:giaMax IS NULL OR c.gia <= :giaMax) ")
+            "(:giaMax IS NULL OR c.gia <= :giaMax) AND " +
+            "(:keyword IS NULL OR " +
+            "   LOWER(c.giay.ten) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "   LOWER(c.deGiay.ten) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "   LOWER(c.hang.ten) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "   LOWER(c.loaiGiay.ten) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "   LOWER(c.mauSac.ten) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "   LOWER(c.kichCo.ten) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "   LOWER(c.ten) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "   LOWER(c.ma) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "   LOWER(CAST(c.trangThai AS STRING)) LIKE LOWER(CONCAT('%', :keyword, '%')))")
     Page<ChiTietGiay> findChiTietGiayByMultipleParams(
             @Param("giay") Giay giay,
             @Param("deGiay") DeGiay deGiay,
@@ -89,29 +74,12 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
             @Param("trangThai") String trangThai,
             @Param("giaMin") Double giaMin,
             @Param("giaMax") Double giaMax,
+            @Param("keyword") String keyword,
             Pageable pageable
     );
 
-
-    @Query("SELECT MAX(c.ma) FROM ChiTietGiay c")
-        Integer findMaxMa();
-        @Query(value = "SELECT ChiTietGiay.* FROM dbo.ChiTietGiay WHERE ChiTietGiay.IdGiay = (SELECT IdGiay FROM dbo.ChiTietGiay WHERE Id = ?)", nativeQuery = true)
+    @Query(value = "SELECT ChiTietGiay.* FROM dbo.ChiTietGiay WHERE ChiTietGiay.IdGiay = (SELECT IdGiay FROM dbo.ChiTietGiay WHERE Id = ?)", nativeQuery = true)
         List<ChiTietGiay> findChiTietGiaysById(UUID uuid);
-
-
-    @Query("SELECT c FROM ChiTietGiay c WHERE " +
-            "(c.giay = :giay) AND " +
-            "(c.deGiay = :deGiay) AND " +
-            "(c.hang = :hang) AND " +
-            "(c.loaiGiay = :loaiGiay) AND " +
-            "(c.mauSac = :mauSac)")
-    List<ChiTietGiay> getChiTietGiaysByIdChiTietGiay(
-            @Param("giay") Giay giay,
-            @Param("deGiay") DeGiay deGiay,
-            @Param("hang") Hang hang,
-            @Param("loaiGiay") LoaiGiay loaiGiay,
-            @Param("mauSac") MauSac mauSac);
-
 
     Page<ChiTietGiay> findAll(Specification<ChiTietGiay> spec, Pageable pageable);
 
@@ -164,7 +132,7 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
     //xóa mềm chi tiết giày
     @Transactional
     @Modifying
-    @Query(value = "UPDATE ChiTietGiay SET trangThai = 1 WHERE id = :id", nativeQuery = true)
+    @Query(value = "UPDATE ChiTietGiay SET trangThai = 2 WHERE id = :id", nativeQuery = true)
     void updateTrangThaiTo1ById(UUID id);
 
     ChiTietGiay findByMa(String ma);
@@ -179,13 +147,28 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
             "ORDER BY c.soLuong ASC")
     List<Object[]> getConcatenatedInfoAndSoLuongBySoLuong(@Param("soLuongInput") int soLuongInput);
 
-    @Query("SELECT c FROM ChiTietGiay c " +
-            "WHERE c.giay = :giay " +
-            "   AND c.deGiay = :deGiay " +
-            "   AND c.hang = :hang " +
-            "   AND c.loaiGiay = :loaiGiay " +
-            "   AND c.mauSac = :mauSac")
+    @Query("SELECT c FROM ChiTietGiay c WHERE " +
+            "c.giay = :giay AND " +
+            "c.deGiay = :deGiay AND " +
+            "c.hang = :hang AND " +
+            "c.loaiGiay = :loaiGiay AND " +
+            "c.mauSac = :mauSac AND " +
+            "c.kichCo.id = :kichCo")
     List<ChiTietGiay> findSimilarChiTietGiay(
+            @Param("giay") Giay giay,
+            @Param("deGiay") DeGiay deGiay,
+            @Param("hang") Hang hang,
+            @Param("loaiGiay") LoaiGiay loaiGiay,
+            @Param("mauSac") MauSac mauSac,
+            @Param("kichCo") UUID kichCo
+    );
+    @Query("SELECT c.kichCo FROM ChiTietGiay c WHERE " +
+            "c.giay = :giay AND " +
+            "c.deGiay = :deGiay AND " +
+            "c.hang = :hang AND " +
+            "c.loaiGiay = :loaiGiay AND " +
+            "c.mauSac = :mauSac" )
+    List<KichCo> findSimilarSizeChiTietGiay(
             @Param("giay") Giay giay,
             @Param("deGiay") DeGiay deGiay,
             @Param("hang") Hang hang,

@@ -1,34 +1,24 @@
 package com.example.sneaker_sophia.service;
 
+import com.example.sneaker_sophia.dto.ChiTietGiayDTO;
 import com.example.sneaker_sophia.dto.DTO_API_CTG;
-import com.example.sneaker_sophia.dto.VoucherDTO;
 import com.example.sneaker_sophia.entity.*;
 import com.example.sneaker_sophia.repository.ChiTietGiayRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.thymeleaf.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.security.SecureRandom;
+import java.util.*;
 
 @Service
 public class ChiTietGiayService {
@@ -125,8 +115,9 @@ public class ChiTietGiayService {
         return chiTietGiayRepository.findAllAndOrder(0);
     }
 
-    public void save(ChiTietGiay chiTietGiay) {
+    public ChiTietGiay save(ChiTietGiay chiTietGiay) {
         chiTietGiayRepository.save(chiTietGiay);
+        return chiTietGiay;
     }
 
     public ChiTietGiay getOne(UUID id) {
@@ -141,36 +132,17 @@ public class ChiTietGiayService {
         return chiTietGiayRepository.findAll(pageable);
     }
 
-    public Page<ChiTietGiay> listByPageAndProductName(int pageNum, String sortField, String sortDir, String keyword, String productName, String trangThai) {
+    public Page<ChiTietGiay> filterCombobox(int pageNum, String sortField, String sortDir, Giay giay, DeGiay deGiay, Hang hang, LoaiGiay loaiGiay, MauSac mauSac, KichCo kichCo, String trangThai, Double giaMin, Double giaMax,String keyWord) {
         Sort sort = Sort.by(sortField);
         sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
         Pageable pageable = PageRequest.of(pageNum - 1, PRODUCT_DETAIL_PER_PAGE, sort);
-
-        if (StringUtils.isEmpty(productName) && StringUtils.isEmpty(keyword)) {
-            return chiTietGiayRepository.findAll(pageable);
-        } else if (StringUtils.isEmpty(productName)) {
-            return chiTietGiayRepository.findByKeyword(keyword, trangThai, pageable);
-        } else if (StringUtils.isEmpty(keyword)) {
-            return chiTietGiayRepository.findByGiay_TenContainingIgnoreCase(productName, pageable);
-        } else {
-            return chiTietGiayRepository.findByMaAndKeyWord(keyword, productName, pageable);
-        }
-    }
-
-    public Page<ChiTietGiay> filterCombobox(int pageNum, String sortField, String sortDir, Giay giay, DeGiay deGiay, Hang hang, LoaiGiay loaiGiay, MauSac mauSac, KichCo kichCo, String trangThai, Double giaMin, Double giaMax) {
-        Sort sort = Sort.by(sortField);
-        sort = sortDir.equals("asc") ? sort.ascending() : sort.descending();
-        Pageable pageable = PageRequest.of(pageNum - 1, PRODUCT_DETAIL_PER_PAGE, sort);
-        return chiTietGiayRepository.findChiTietGiayByMultipleParams(giay, deGiay, hang, loaiGiay, mauSac, kichCo, trangThai, giaMin, giaMax, pageable);
+        return chiTietGiayRepository.findChiTietGiayByMultipleParams(giay, deGiay, hang, loaiGiay, mauSac, kichCo, trangThai, giaMin, giaMax,keyWord,pageable);
     }
 
     public List<ChiTietGiay> findChiTietGiaysById(UUID uuid) {
         return chiTietGiayRepository.findChiTietGiaysById(uuid);
     }
 
-    public List<ChiTietGiay> getChiTietGiaysByIdChiTietGiay(Giay giay, DeGiay deGiay, Hang hang, LoaiGiay loaiGiay, MauSac mauSac) {
-        return chiTietGiayRepository.getChiTietGiaysByIdChiTietGiay(giay, deGiay, hang, loaiGiay, mauSac);
-    }
 
     public Page<ChiTietGiay> filterChiTietGiay(
             List<String> tenGiay,
@@ -331,28 +303,72 @@ public class ChiTietGiayService {
         return chiTietGiayRepository.findByMa(ma);
     }
 
-    public boolean validate(ChiTietGiay chiTietGiay, Model model) {
+    public boolean validate(ChiTietGiayDTO chiTietGiay, MultipartFile[] imageFiles, Model model) {
         int check = 0;
-        String errMa = null, errQr = null;
+        String errMa = null, errQr = null, errAnhs = "";
 
-        if (chiTietGiayRepository.getIdCTGByMa(chiTietGiay.getMa()) != null){
+        // Kiểm tra mã đã được sử dụng hay chưa
+        if (chiTietGiayRepository.getIdCTGByMa(chiTietGiay.getMa()) != null) {
             errMa = "Mã đã được sử dụng";
             check++;
         }
 
-        if (chiTietGiayRepository.getChiTietGiayByQrCode(chiTietGiay.getQrCode()) != null){
+        // Kiểm tra QR code đã được sử dụng hay chưa
+        if (chiTietGiayRepository.getChiTietGiayByQrCode(chiTietGiay.getQrCode()) != null) {
             errQr = "QR code đã được sử dụng";
             check++;
         }
+
+        // Kiểm tra số lượng ảnh
+        int numberOfImages = imageFiles.length;
+        if (numberOfImages == 0) {
+            errAnhs = "Không có ảnh nào được tải lên.";
+            check++;
+        } else if (numberOfImages > 3) {
+            errAnhs = "Số lượng ảnh không được vượt quá 3.";
+            check++;
+        } else if (numberOfImages < 2) {
+            errAnhs = "Số lượng ảnh không đủ. Yêu cầu tối thiểu 2 ảnh.";
+            check++;
+        }
+
+        // Kiểm tra định dạng ảnh
+        for (MultipartFile imageFile : imageFiles) {
+            if (!isValidImageFormat(imageFile)) {
+                errAnhs = "Định dạng ảnh không hợp lệ. Chấp nhận chỉ JPG,JPEG, PNG, và GIF.";
+                check++;
+                break; // Ngưng kiểm tra nếu có ít nhất một ảnh không hợp lệ
+            }
+        }
+
+        // Thêm thông báo lỗi vào model
         model.addAttribute("errMa", errMa);
         model.addAttribute("errQr", errQr);
+        model.addAttribute("errAnhs", errAnhs);
 
         return check == 0;
     }
 
+    // Hàm kiểm tra định dạng ảnh
+    private boolean isValidImageFormat(MultipartFile file) {
+        String[] allowedFormats = {"jpg", "jpeg", "png", "gif"};
+
+        String originalFilename = file.getOriginalFilename();
+        String fileExtension = originalFilename != null ? originalFilename.substring(originalFilename.lastIndexOf(".") + 1) : "";
+
+        for (String format : allowedFormats) {
+            if (format.equalsIgnoreCase(fileExtension)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
     public boolean validateUpdate(ChiTietGiay chiTietGiay, Model model) {
         int check = 0;
-        String errMa = null, errQr = null;
+        String errQr = null;
 
         // Kiểm tra xem mã QR code đã được sử dụng hay chưa
         ChiTietGiay existingChiTietGiay = chiTietGiayRepository.getChiTietGiayByQrCode(chiTietGiay.getQrCode());
@@ -362,16 +378,78 @@ public class ChiTietGiayService {
             check++;
         }
 
-        // Các kiểm tra khác (nếu có)
 
-        model.addAttribute("errMa", errMa);
+        // Thêm thông báo lỗi vào model
         model.addAttribute("errQr", errQr);
+
+        return check == 0;
+    }
+
+    public boolean validateUpdateAnh(MultipartFile[] imageFiles, Model model) {
+        int check = 0;
+        String errAnhs="";
+
+        // Kiểm tra số lượng ảnh
+        int numberOfImages = imageFiles.length;
+        if (numberOfImages == 0) {
+            errAnhs = "Không có ảnh nào được tải lên.";
+            check++;
+        } else if (numberOfImages > 3) {
+            errAnhs = "Số lượng ảnh không được vượt quá 3.";
+            check++;
+        } else if (numberOfImages < 2) {
+            errAnhs = "Số lượng ảnh không đủ. Yêu cầu tối thiểu 2 ảnh.";
+            check++;
+        }
+
+        // Kiểm tra định dạng ảnh
+        for (MultipartFile imageFile : imageFiles) {
+            if (!isValidImageFormat(imageFile)) {
+                errAnhs = "Định dạng ảnh không hợp lệ. Chấp nhận chỉ JPG,JPEG, PNG, và GIF.";
+                check++;
+                break; // Ngưng kiểm tra nếu có ít nhất một ảnh không hợp lệ
+            }
+        }
+        model.addAttribute("errAnhs", errAnhs);
 
         return check == 0;
     }
     // thong ke
     public List<Object[]> getConcatenatedInfoAndSoLuongBySoLuong(int soLuong){
         return chiTietGiayRepository.getConcatenatedInfoAndSoLuongBySoLuong(soLuong);
+    }
+
+    // lấy chitietgiay có sz khác nhau
+    public List<ChiTietGiay> findSimilarChiTietGiay(Giay giay,DeGiay deGiay,Hang hang,LoaiGiay loaiGiay,MauSac mauSac,UUID kichCo){
+        return chiTietGiayRepository.findSimilarChiTietGiay(giay,deGiay,hang,loaiGiay,mauSac,kichCo);
+    }
+
+    public List<KichCo> findSimilarSizeChiTietGiay(Giay giay,DeGiay deGiay,Hang hang,LoaiGiay loaiGiay,MauSac mauSac){
+        return chiTietGiayRepository.findSimilarSizeChiTietGiay(giay,deGiay,hang,loaiGiay,mauSac);
+    }
+
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    private static final int QR_CODE_LENGTH = 16;
+    private static final Random RANDOM = new SecureRandom();
+    private static final Set<String> generatedCodes = new HashSet<>();
+
+    public static String generateRandomQRCode() {
+        String qrCode;
+        do {
+            qrCode = generateRandomCode();
+        } while (!generatedCodes.add(qrCode));
+        return qrCode;
+    }
+
+    private static String generateRandomCode() {
+        StringBuilder qrCode = new StringBuilder(QR_CODE_LENGTH);
+
+        for (int i = 0; i < QR_CODE_LENGTH; i++) {
+            int randomIndex = RANDOM.nextInt(CHARACTERS.length());
+            qrCode.append(CHARACTERS.charAt(randomIndex));
+        }
+
+        return qrCode.toString();
     }
 }
 

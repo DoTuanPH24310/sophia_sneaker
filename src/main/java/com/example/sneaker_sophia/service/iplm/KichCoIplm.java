@@ -20,6 +20,11 @@ public class KichCoIplm implements KichCoService {
     KichCoRepository kichCoRepository;
 
     @Override
+    public List<KichCo> findAll() {
+        return kichCoRepository.findAll();
+    }
+
+    @Override
     public List<KichCo> getAll() {
         return kichCoRepository.findAll();
     }

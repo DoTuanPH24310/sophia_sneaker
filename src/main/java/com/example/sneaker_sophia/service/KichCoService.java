@@ -19,7 +19,7 @@ public interface KichCoService {
 //    public Page<KichCoResponse> getAll(Pageable pageable) {
 //        return this.kichCoRepository.getAll(pageable);
 //    }
-
+    List<KichCo> findAll();
     List<KichCo> getAll();
 
     KichCo add(KichCoRequest kichCoRequest);

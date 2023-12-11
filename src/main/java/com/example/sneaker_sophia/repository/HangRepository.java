@@ -39,4 +39,7 @@ public interface HangRepository extends JpaRepository<Hang, UUID> {
 
     @Query(value = "select * from Hang where trangThai= 0 or trangThai =1",nativeQuery = true)
     List<Hang> finAllTrangThai();
+
+    @Query("SELECT g FROM Hang g WHERE g.trangThai IN (0)")
+    List<Hang> findAll();
 }
