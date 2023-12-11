@@ -130,6 +130,11 @@ public class ProductWebController {
         return "/website/productwebsite/about-us";
     }
 
+    @GetMapping("FAQS")
+    public String FAQS(){
+        return "/website/productwebsite/privacy-policy";
+    }
+
 
 
 }

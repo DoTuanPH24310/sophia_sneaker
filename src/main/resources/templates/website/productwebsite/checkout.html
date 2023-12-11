@@ -409,8 +409,8 @@
                             <div class="col-lg-6">
                                 <div class="default-form-box">
                                     <label> Địa chỉ email <span>*</span></label>
-                                    <input type="text" th:value="${email}" disabled>
-                                    <!--                                                                        <span th:errors="*{taiKhoan.email}" style="color: red"></span>-->
+                                    <span class="form-control" th:text="${email}"
+                                          style="background-color: #f0f0f0;"></span>
                                 </div>
                             </div>
                             <div class="col-4">
@@ -553,7 +553,7 @@
                                 <div class="panel-default">
                                     <label class="checkbox-default" for="currencyCod" data-bs-toggle="collapse"
                                            data-bs-target="#methodCod">
-                                        <input type="radio" id="currencyCod" name="hinhThucThanhToan" value="3">
+                                        <input type="radio" id="currencyCod" name="hinhThucThanhToan" value="3" checked>
                                         <span>Thanh toán khi nhận hàng</span>
                                     </label>
 
@@ -577,7 +577,7 @@
                                     </div>
                                 </div>
                                 <div class="order_button pt-3">
-                                    <button id="btnThanhToan" class="btn btn-md btn-black-default-hover" type="submit">
+                                    <button id="btnThanhToan" class="btn btn-md btn-black-default-hover" type="submit" onclick="handlePaymentButtonClick()">
                                         Thanh
                                         toán
                                     </button>
@@ -1167,7 +1167,7 @@
     function updateTotalAmount(newTotal, shippingFee) {
         // Check if a province is selected
         const selectedProvinceCode = $("#province").val();
-        if (!selectedProvinceCode) {
+        if (selectedProvinceCode === null) {
             // Chưa chọn tỉnh
             $("#shipping-cost").text("Vui lòng chọn địa chỉ");
             var totalAmount = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(initialTotalAmount);

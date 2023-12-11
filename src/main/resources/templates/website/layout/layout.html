@@ -117,11 +117,11 @@
                                     <li class="has-megaitem">
                                         <a th:href="@{/sophia-store/product}">Sản phẩm </a>
                                     </li>
-                                    <li class="has-dropdown">
-                                        <a href="">Bài Viết</a>
-                                    </li>
-                                    <li class="has-dropdown">
-                                        <a href="#">Trang</a>
+<!--                                    <li class="has-dropdown">-->
+<!--                                        <a href="">Bài Viết</a>-->
+<!--                                    </li>-->
+                                    <li>
+                                        <a th:href="@{/sophia-store/FAQS}">FAQS</a>
                                     </li>
                                     <li>
                                         <a th:href="@{/sophia-store/chung-toi}">Về chúng tôi</a>
@@ -152,11 +152,11 @@
                                     <span id="soLuongSessionGioHang" class="item-count" th:utext="${#authentication.principal != null ? soLuongSessionGioHang : '0'}"></span>
                                 </a>
                             </li>
-                            <li>
-                                <a href="#search">
-                                    <i class="icon-magnifier"></i>
-                                </a>
-                            </li>
+<!--                            <li>-->
+<!--                                <a href="#search">-->
+<!--                                    <i class="icon-magnifier"></i>-->
+<!--                                </a>-->
+<!--                            </li>-->
 <!--                            <li>-->
 <!--                                <a href="#offcanvas-about" class="offacnvas offside-about offcanvas-toggle">-->
 <!--                                    <i class="icon-menu"></i>-->

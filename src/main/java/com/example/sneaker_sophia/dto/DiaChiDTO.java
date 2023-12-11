@@ -13,6 +13,8 @@ import lombok.*;
 @ToString
 public class DiaChiDTO {
     private String id;
+    @Pattern(regexp = "[^!@#$%^&*(),.?\":{}|<>0-9]*", message = "Tên không được chứa kí tự đặc biệt")
+    @Size(max = 50, message = "Tên người nhận không được vượt quá 50 kí tự")
     @NotBlank(message = "Vui lòng nhập tên người nhận")
     private String ten;
     @NotBlank(message = "Vui lòng nhập số điện thoại người nhận")
