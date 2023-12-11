@@ -16,6 +16,6 @@ public interface VaiTroRepository extends JpaRepository<VaiTro, String> {
     @Query(value = "select id from VaiTro where ten = 'NhanVien'", nativeQuery = true)
     String getIdByTenNV();
 
-    @Query(value = "select id from VaiTro where ten = 'Khach Hang'", nativeQuery = true)
+    @Query(value = "select id from VaiTro where ten = 'KhachHang'", nativeQuery = true)
     String getIdByTenKH();
 }
