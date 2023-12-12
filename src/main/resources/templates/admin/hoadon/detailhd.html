@@ -454,6 +454,7 @@
                                             <span th:if="${x.phuongThuc.equals('4')}">Chờ giao</span>
                                             <span th:if="${x.phuongThuc.equals('5')}">Đang giao</span>
                                             <span th:if="${x.phuongThuc.equals('6')}">Hủy</span>
+                                            <span th:if="${x.phuongThuc.equals('7')}">Hoàn hàng</span>
                                         </td>
                                         <td th:text=" ${#temporals.format(x.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
                                         <td th:text="${x.createdBy}"></td>
@@ -553,11 +554,12 @@
             }
             value = check('3');
             if (value != null) {
-                fillTimeLine('icon1', 'text1', value, 'Chờ Xác nhận', 'uil-comment-alt-question');
+                fillTimeLine('icon1', 'text1', value, 'Chờ xác nhận', 'uil-comment-alt-question');
             }
             value = check('6');
             if (value != null && listLSHD.length == 2) {
                 fillTimeLine('icon2', 'text2', value, 'Hủy', 'uil-trash-alt');
+                return;
             }
             value = check('4');
             if (value != null && value.hoaDon.loaiHoaDon != 1) {
@@ -566,10 +568,16 @@
             value = check('6');
             if (value != null && listLSHD.length == 3) {
                 fillTimeLine('icon3', 'text3', value, 'Hủy', 'uil-trash-alt');
+                return;
             }
             value = check('5');
             if (value != null && value.hoaDon.loaiHoaDon != 1) {
                 fillTimeLine('icon3', 'text3', value, 'Đang giao', 'uil-truck');
+            }
+            value = check('7');
+            if (value != null && value.hoaDon.loaiHoaDon != 1) {
+                fillTimeLine('icon3', 'text3', value, 'Hoàn hàng', 'uil-truck');
+                return;
             }
             value = check('1');
             if (value != null) {

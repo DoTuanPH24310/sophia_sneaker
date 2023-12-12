@@ -102,6 +102,10 @@ public class HoaDonService {
         return hoaDonRepository.getAllHDHuy();
     }
 
+    public List<HoaDon> getAllHDHoan(){
+        return hoaDonRepository.getAllHDHoan();
+    }
+
     ///////////    20/11
     public List<HoaDon> findHoaDonByMultipleParamsAPI(DTO_API_HoaDon hd) {
         LocalDateTime ngayBatDau = hd.getNgayBatDau().equals("") ? null: LocalDateTime.parse(hd.getNgayBatDau());

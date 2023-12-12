@@ -40,6 +40,9 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
     @Query(value = "select hd from HoaDon hd where hd.trangThai = 6 order by hd.createdDate desc ")
     List<HoaDon> getAllHDHuy();
 
+    @Query(value = "select hd from HoaDon hd where hd.trangThai = 7 order by hd.createdDate desc ")
+    List<HoaDon> getAllHDHoan();
+
     @Query(value = "select count(hd) from HoaDon hd where hd.trangThai = 5")
     Integer soHDDG();
 
