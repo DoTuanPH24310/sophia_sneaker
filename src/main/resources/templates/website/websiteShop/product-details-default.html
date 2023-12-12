@@ -7,11 +7,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-    <title>HONO - Multi Purpose HTML Template</title>
-
-    <!-- ::::::::::::::Favicon icon::::::::::::::-->
-
-
     <style>
         .color-list {
             display: flex;
@@ -45,6 +40,46 @@
             border-color: #a27f40;
             color: #FFF;
         }
+        .image-box {
+            width: 320px;
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .img-fluid {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .out-of-stock-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .circle {
+            width: 150px;
+            height: 150px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .out-of-stock-text {
+            color: #FF6347;
+            font-weight: bold;
+            font-size: 24px;
+            margin: 0;
+        }
+
     </style>
 </head>
 
@@ -313,24 +348,40 @@
                                 <!-- Start Product Default Single Item -->
                                 <div class="product-default-single-item product-color--golden swiper-slide" th:each="chiTietGiay : ${chiTietGiayById}">
                                     <div class="image-box">
-                                        <a th:href="@{'/sophia-store/detail/' + ${chiTietGiay.getId()}}" class="image-link">
+                                        <a th:href="@{'/sophia-store/detail/' + ${chiTietGiay.getId()}}"
+                                           class="image-link">
+                                            <!-- Hiển thị ảnh sản phẩm -->
                                             <img class="img-fluid"
-                                                 th:src="@{${chiTietGiay.getAnhs().get(0).getDuongDan()}}"
-                                                 style="width: 330px; height: 300px" alt=""/>
+                                                 th:src="@{${chiTietGiay.anhs.get(0).getDuongDan()}}"
+                                                 alt=""
+                                                 th:classappend="${chiTietGiay.soLuong == 0} ? 'gray-scale-image' : ''">
+
+                                            <!-- Hiển thị ảnh phụ (nếu cần) -->
                                             <img class="img-fluid"
-                                                 th:src="@{${chiTietGiay.getAnhs().get(1).getDuongDan()}}"
-                                                 style="width: 330px; height: 300px" alt=""/>
+                                                 th:src="@{${chiTietGiay.anhs.get(1).getDuongDan()}}"
+                                                 alt=""
+                                                 th:classappend="${chiTietGiay.soLuong == 0} ? 'gray-scale-image' : ''">
+
+                                            <!-- Hiển thị overlay khi sản phẩm hết hàng -->
+                                            <div th:if="${chiTietGiay.soLuong == 0}"
+                                                 class="out-of-stock-overlay">
+                                                <!-- Chữ Hết hàng nằm trong một thẻ div hình tròn -->
+                                                <div class="circle">
+                                                    <p class="out-of-stock-text">Hết hàng</p>
+                                                </div>
+                                            </div>
                                         </a>
+
                                         <div class="action-link">
                                             <div class="action-link-left">
-                                                <a href="#" data-bs-toggle="modal"
-                                                   data-bs-target="#modalAddcart">Thêm Vào Giỏ</a>
+                                                <a class="add-to-cart btn"
+                                                   th:attr="data-product-id=${chiTietGiay.getId()}">Thêm vào giỏ</a>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="content">
                                         <div class="content-left">
-                                            <h6 class="title"><a href="product-details-default.html" th:text="${chiTietGiay.getHang().getTen()}+' '+
+                                            <h6 class="title"><a th:href="@{'/sophia-store/detail/' + ${chiTietGiay.getId()}}" th:text="${chiTietGiay.getHang().getTen()}+' '+
                                             ${chiTietGiay.getTen()}+' '+
                                             ${chiTietGiay.getGiay().getTen()}+' '+
                                             ${chiTietGiay.getMauSac().getTen()}+' '+

@@ -5,22 +5,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>HONO - Multi Purpose HTML Template</title>
 </head>
 
 <body layout:fragment="content2">
 <style>
-    /* Thiết lập kích thước cố định cho hình ảnh */
     .image-box {
-        width: 320px; /* Đặt kích thước chiều rộng của container */
-        height: 300px; /* Đặt kích thước chiều cao của container */
+        width: 320px;
+        height: 300px;
         overflow: hidden;
     }
 
     .img-fluid {
         width: 100%;
         height: 100%;
-        object-fit: cover; /* Giữ nguyên tỷ lệ khung hình */
+        object-fit: cover;
     }
 
     .out-of-stock-overlay {
@@ -29,29 +27,26 @@
         left: 0;
         width: 100%;
         height: 100%;
-        /*background: rgba(255, 0, 0, 0.8); !* Màu nền overlay, có thể điều chỉnh độ trong suốt tùy ý *!*/
         display: flex;
         align-items: center;
         justify-content: center;
     }
 
-    /* Thay đổi màu và kích thước của hình tròn chứa chữ "Hết hàng" */
     .circle {
-        width: 150px; /* Đặt kích thước hình tròn */
-        height: 150px; /* Đặt kích thước hình tròn */
-        background-color: #ffffff; /* Đặt màu nền hình tròn */
-        border-radius: 50%; /* Làm hình tròn */
+        width: 150px;
+        height: 150px;
+        background-color: #ffffff;
+        border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
     }
 
-    /* Thay đổi màu chữ và kích thước chữ trong hình tròn */
     .out-of-stock-text {
-        color: #FF6347; /* Màu chữ trong hình tròn */
+        color: #ff365d;
         font-weight: bold;
-        font-size: 24px; /* Đặt kích thước chữ */
-        margin: 0; /* Loại bỏ margin để chữ không bị dính vào mép hình tròn */
+        font-size: 24px;
+        margin: 0;
     }
 
 </style>

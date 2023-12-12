@@ -5,7 +5,7 @@
       xsi:schemaLocation="http://www.ultraq.net.nz/thymeleaf/layout ">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Sophia Sneaker</title>
 
     <link rel="shortcut icon" href="/assets/images/favicon.ico" type="image/png">
     <link rel="stylesheet" href="/assets/css/vendor/vendor.min.css">
@@ -88,7 +88,10 @@
             box-shadow: 2px 2px 4px 4px #999999;
         }
 
-
+        .header-logo .logo img {
+            width: 140%;
+            height: auto;
+        }
     </style>
 </head>
 
@@ -102,7 +105,7 @@
                         <!-- Start Header Logo -->
                         <div class="header-logo">
                             <div class="logo">
-                                <a th:href="@{/sophia-store/product}"><img src="/assets/images/logo/logo_black.png"
+                                <a th:href="@{/sophia-store/home}"><img src="/assets/images/logo/logo.jpg"
                                                                            alt=""></a>
                             </div>
                         </div>
