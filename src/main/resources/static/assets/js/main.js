@@ -485,14 +485,18 @@ document.querySelectorAll(".add-to-cart").forEach(async function (addToCartButto
         if (quantityInput !== null) {
             var quantity = quantityInput.value;
 
-            // if (!isValidQuantity(quantity)) {
-            //     let type = 'error';
-            //     let icon = 'fa-solid fa-exclamation-triangle';
-            //     let title = 'Số lượng không hợp lệ!';
-            //     let text = "Vui lòng nhập một số lượng hợp lệ.";
-            //     createToast(type, icon, title, text);
-            //     return;
-            // }
+            // Kiểm tra sự hợp lệ của số lượng
+            if (!isValidQuantity(quantity)) {
+                let type = 'error';
+                let icon = 'fa-solid fa-exclamation-triangle';
+                let title = 'Số lượng không hợp lệ!';
+                let text = "Vui lòng nhập một số lượng hợp lệ.";
+                createToast(type, icon, title, text);
+
+                // Nếu giá trị không hợp lệ, đặt lại giá trị về 1
+                quantityInput.value = 1;
+                return;
+            }
 
             quantity = quantity !== null && quantity !== "" ? quantity : 1;
         } else {
@@ -517,8 +521,7 @@ document.querySelectorAll(".add-to-cart").forEach(async function (addToCartButto
                     if (typeof data.cartQuantity !== 'undefined') {
                         remainingQuantity = data.quantity - data.cartQuantity;
                     } else {
-                        remainingQuantity = data.quan
-                        tity;
+                        remainingQuantity = data.quantity;
                     }
 
                     if (quantity > remainingQuantity) {
@@ -575,9 +578,9 @@ document.querySelectorAll(".add-to-cart").forEach(async function (addToCartButto
 });
 
 
-function isValidQuantity(quantity) {
-    // Thực hiện kiểm tra số lượng hợp lệ ở đây, ví dụ:
-    return Number.isInteger(parseInt(quantity)) && parseInt(quantity) > 0;
+function isValidQuantity(value) {
+    // Kiểm tra xem giá trị có phải là số dương hay không
+    return !isNaN(value) && parseInt(value) > 0;
 }
 
 //filter shop product
