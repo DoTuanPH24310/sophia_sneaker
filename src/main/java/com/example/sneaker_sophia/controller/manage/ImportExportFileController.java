@@ -65,8 +65,7 @@ public class ImportExportFileController {
     // import excel
     @GetMapping("/exportToExcel")
     public ResponseEntity<byte[]> exportToExcel() throws IOException {
-
-        List<ChiTietGiay> chiTietGiayList = chiTietGiayService.getAll();
+        List<ChiTietGiay> chiTietGiayList = chiTietGiayService.getAllExcel();
 
         // Tạo một workbook mới
         Workbook workbook = new XSSFWorkbook();
@@ -96,7 +95,7 @@ public class ImportExportFileController {
         // Dòng 2
         Row luuY3 = sheet.createRow(2);
         Cell cellluuY3 = luuY3.createCell(0);
-        cellluuY3.setCellValue("     Giá và số lượng phải lơn hơn 0, Số lượng phải bé hơn 10.000, và giá thấp hơn 10 tỉ");
+        cellluuY3.setCellValue("     Giá và số lượng phải lơn hơn 0, Số lượng phải bé hơn 10.000, và giá thấp hơn 10 tỉ. Trạng thái 0 sẽ là hoạt động, 1 là ngưng hoạt động");
         cellluuY3.setCellStyle(redItalicStyle);
         // Tạo hàng đầu tiên để đặt tên cho các cột
         Row headerRow = sheet.createRow(3);
@@ -191,7 +190,6 @@ public class ImportExportFileController {
         headers.setContentDispositionFormData("attachment", fileName);
 
         // Trả về ResponseEntity
-        alertInfo.alert("successTaiQuay", "Xuất file excel thành công");
         return new ResponseEntity<>(excelBytes, headers, HttpStatus.OK);
     }
     @RequestMapping(value = "/importFromExcel", method = RequestMethod.POST)
@@ -199,6 +197,7 @@ public class ImportExportFileController {
         // Set để theo dõi các mã đã xuất hiện
         Set<String> existingMaSet = new HashSet<>();
         Set<String> existingQRCodeSet = new HashSet<>();
+
         try {
             Workbook workbook = new XSSFWorkbook(file.getInputStream());
             Sheet sheet = workbook.getSheetAt(0);
@@ -219,8 +218,12 @@ public class ImportExportFileController {
                 // Kiểm tra điều kiện số lượng và giá trước khi truy cập vào đối tượng
                 int importedSoLuong = getIntegerValue(row.getCell(10));
                 double importedGia = getDoubleValue(row.getCell(9));
+                int inportTrangThai = getIntegerValue(row.getCell(11));
                 String qrCode = getStringValue(row.getCell(12));
 
+                if(inportTrangThai != 0 && inportTrangThai != 1){
+                    return ResponseEntity.badRequest().body("Lỗi: Trạng thái không hợp lệ cho sản phẩm có mã: " + ma);
+                }
                 if (importedGia <= 0 || importedSoLuong <= 0 || importedGia >= 1000000000 || importedSoLuong >= 10000) {
                     return ResponseEntity.badRequest().body("Lỗi: Giá hoặc số lượng không hợp lệ cho sản phẩm có mã: " + ma);
                 }
@@ -229,12 +232,18 @@ public class ImportExportFileController {
                 ChiTietGiay existingChiTietGiayByQr = chiTietGiayService.getCTGByQrCode(qrCode);
 
                 if (existingChiTietGiay != null) {
+                    LocalDateTime dateLocalDateTime = LocalDateTime.now();
                     // Nếu mã đã tồn tại, cập nhật số lượng
                     existingChiTietGiay.setSoLuong(importedSoLuong);
                     existingChiTietGiay.setGia(importedGia);
+                    existingChiTietGiay.setTrangThai(inportTrangThai);
+                    if(qrCode.length()>20){
+                        return ResponseEntity.badRequest().body("Lỗi: Mã QR chỉ được giới hạn 20 kí tự ở mã giày: " + ma);
+                    }
                     if (qrCode.isEmpty() || qrCode == null) {
                         qrCode = chiTietGiayService.generateRandomQRCode();
                         existingChiTietGiay.setQrCode(qrCode);
+                        existingChiTietGiay.setNgaySua(dateLocalDateTime);
                     }else if (!qrCode.equals(existingChiTietGiay.getQrCode())) {
                         // Kiểm tra nếu mã QR code đã tồn tại ở một sản phẩm khác
                         if (existingChiTietGiayByQr != null) {
@@ -247,6 +256,7 @@ public class ImportExportFileController {
             } else {
                     // Nếu mã chưa tồn tại, thêm mới
                     ChiTietGiay chiTietGiay = new ChiTietGiay();
+                    LocalDateTime dateLocalDateTime = LocalDateTime.now();
                     chiTietGiay.setMa(getStringValue(row.getCell(0)));
                     chiTietGiay.setTen(getStringValue(row.getCell(1)));
                     chiTietGiay.setGiay(giayService.findByTen(getStringValue(row.getCell(2))));
@@ -259,23 +269,37 @@ public class ImportExportFileController {
                     chiTietGiay.setGia(getDoubleValue(row.getCell(9)));
                     chiTietGiay.setSoLuong(getIntegerValue(row.getCell(10)));
                     chiTietGiay.setTrangThai(getIntegerValue(row.getCell(11)));
+                    chiTietGiay.setNgayTao(dateLocalDateTime);
+                    chiTietGiay.setNgaySua(dateLocalDateTime);
                     //check QR
                     String generatedQRCode= getStringValue(row.getCell(12));
-                    if (generatedQRCode.isEmpty() || generatedQRCode == null) {
+
+                    if(generatedQRCode.length()>20){
+                        return ResponseEntity.badRequest().body("Lỗi: Mã QR chỉ được giới hạn 20 kí tự ở mã giày: " + ma);
+                    }
+                    if (generatedQRCode.isEmpty() || qrCode == null) {
                         generatedQRCode = chiTietGiayService.generateRandomQRCode();
                         chiTietGiay.setQrCode(generatedQRCode);
-                    } else if (existingQRCodeSet.contains(generatedQRCode)) {
-                        // Nếu QR code đã tồn tại, xử lý lỗi hoặc thông báo mà bạn muốn
-                        return ResponseEntity.badRequest().body("Lỗi: Mã QR code đã xuất hiện trước đó - " + generatedQRCode);
+                    }else if (!generatedQRCode.equals(chiTietGiay.getQrCode())) {
+                        // Kiểm tra nếu mã QR code đã tồn tại ở một sản phẩm khác
+                        if (existingChiTietGiayByQr != null) {
+                            return ResponseEntity.badRequest().body("Lỗi: Mã QR bị trùng lặp ở mã giày: " + ma);
+                        }
+                        chiTietGiay.setQrCode(qrCode); // Cập nhật QR
                     }
-                    existingQRCodeSet.add(generatedQRCode);
-
+                    if(inportTrangThai != 0 && inportTrangThai != 1){
+                        return ResponseEntity.badRequest().body("Lỗi: Trạng thái không hợp lệ cho sản phẩm có mã: " + ma);
+                    }
                     // Kiểm tra giá và số lượng
                     double importedGia1 = getDoubleValue(row.getCell(9));
                     int importedSoLuong1 = getIntegerValue(row.getCell(10));
+                    String importedMoTa = String.valueOf(row.getCell(8));
                     if (importedGia1 <= 0 || importedSoLuong1 <= 0 || importedGia1 >= 1000000000 || importedSoLuong1 >= 10000) {
                         // Nếu giá hoặc số lượng không đúng, có thể thực hiện xử lý tùy ý
                         return ResponseEntity.badRequest().body("Lỗi: Giá hoặc số lượng không hợp lệ cho sản phẩm có mã: " + ma);
+                    }
+                    if(importedMoTa.length()>=500){
+                        return ResponseEntity.badRequest().body("Lỗi: Mô tả quá dài chỉ giới hạn 500 kí tự cho sản phẩm có mã: " + ma);
                     }
 
                     // Kiểm tra các trường khác không được trống
