@@ -165,6 +165,21 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
             @Param("mauSac") MauSac mauSac,
             @Param("kichCo") UUID kichCo
     );
+    @Query("SELECT c FROM ChiTietGiay c WHERE " +
+            "c.giay = :giay AND " +
+            "c.deGiay = :deGiay AND " +
+            "c.hang = :hang AND " +
+            "c.loaiGiay = :loaiGiay AND " +
+            "c.kichCo = :kichCo AND " +
+            "c.mauSac.id = :mauSac")
+    List<ChiTietGiay> findSimilarChiTietGiayByMauSac(
+            @Param("giay") Giay giay,
+            @Param("deGiay") DeGiay deGiay,
+            @Param("hang") Hang hang,
+            @Param("loaiGiay") LoaiGiay loaiGiay,
+            @Param("kichCo") KichCo kichCo,
+            @Param("mauSac") UUID mauSac
+    );
     @Query("SELECT c.kichCo FROM ChiTietGiay c WHERE " +
             "c.giay = :giay AND " +
             "c.deGiay = :deGiay AND " +
@@ -177,6 +192,19 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
             @Param("hang") Hang hang,
             @Param("loaiGiay") LoaiGiay loaiGiay,
             @Param("mauSac") MauSac mauSac
+    );
+    @Query("SELECT c.mauSac FROM ChiTietGiay c WHERE " +
+            "c.giay = :giay AND " +
+            "c.deGiay = :deGiay AND " +
+            "c.hang = :hang AND " +
+            "c.loaiGiay = :loaiGiay AND " +
+            "c.kichCo = :kichCo" )
+    List<MauSac> findSimilarMauSacChiTietGiay(
+            @Param("giay") Giay giay,
+            @Param("deGiay") DeGiay deGiay,
+            @Param("hang") Hang hang,
+            @Param("loaiGiay") LoaiGiay loaiGiay,
+            @Param("kichCo") KichCo kichCo
     );
 }
 
