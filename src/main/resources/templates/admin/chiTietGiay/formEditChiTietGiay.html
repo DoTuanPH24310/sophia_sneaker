@@ -92,7 +92,7 @@
 <section layout:fragment="content" style="background-color: white">
     <form method="post" th:action="@{'/admin/chi-tiet-giay/edit/'+ ${chiTietGiay.id}}" th:object="${chiTietGiay}"
     enctype="multipart/form-data">
-        <h3 class="text-center mt-2 mb-4" style="font-weight: bold">Cập nhật chi tiết giày</h3>
+        <h3 class="text-center mt-2 mb-4" style="font-weight: bold">Cập nhật sản phẩm</h3>
         <div class="row">
 
             <div class="col-4">
@@ -122,13 +122,11 @@
             </div>
             <div class="col-8">
                 <div class="container">
-
-                    <input th:field="*{id}" class="form-control custom-width" id="id" name="id" style="display: none;">
                     <div class="form-group">
                         <div class="row">
                             <div class="col">
                                 <label for="maChiTietGiay">Mã chi tiết giày:</label>
-                                <input th:field="*{ma}" class="form-control custom-width" id="maChiTietGiay"
+                                <input th:value="*{ma}" class="form-control custom-width" id="maChiTietGiay"
                                        name="maChiTietGiay" readonly>
                                 <p th:text="${errMa}" class="text-danger"></p>
                                 <p class="text-danger" th:if="${#fields.hasErrors('ma')}" th:errors="*{ma}"></p>
@@ -320,6 +318,8 @@
                    style=" margin-top: 28px"
                    value="Cập nhật">
         </div>
+        <input th:field="*{ma}" class="form-control custom-width" name="maChiTietGiay" style="display: none;">
+        <input th:field="*{id}" class="form-control custom-width" id="id" name="id" style="display: none;">
     </form>
     <div class="modal fade" id="modalThuocTinh" tabindex="-1" data-backdrop="static"
          aria-labelledby="exampleModalLabel"

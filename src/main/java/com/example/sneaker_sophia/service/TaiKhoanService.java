@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.security.SecureRandom;
 import java.time.LocalDate;
@@ -101,6 +102,30 @@ public class TaiKhoanService {
         return true;
     }
 
+    public boolean savekh(TaiKhoanRequest khachHangRequest, Model model) {
+        int check = 0;
+        TaiKhoan taiKhoan = new TaiKhoan();
+        taiKhoan.getTaiKhoanKHAD(khachHangRequest);
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String randomString = generateRandomString(6);
+        String encodedPassword = passwordEncoder.encode(randomString);
+        taiKhoan.setMatKhau(encodedPassword);
+        taiKhoan.setAnhDaiDien(khachHangRequest.getAnhDaiDien());
+        taiKhoan.setTrangThai(1);
+        DiaChi diaChi = new DiaChi(khachHangRequest);
+        diaChi.setTaiKhoan(taiKhoan);
+        diaChi.setDiaChiMacDinh(1);
+        diaChi.setTen(khachHangRequest.getTen());
+        diaChi.setSdt(khachHangRequest.getSdt());
+
+        if (khachHangRequest.getAnhDaiDien().equals("")) {
+            taiKhoan.setAnhDaiDien("thumbnail.png");
+        }
+        emailService.guiEmailDangKyTaiKhoan(khachHangRequest.getEmail(), randomString);
+        this.taiKhoanRepository.save(taiKhoan);
+        this.diaChiRepository.save(diaChi);
+        return true;
+    }
 
     public boolean update(String id, TaiKhoanRequest nhanVienRequest, Model model) {
         TaiKhoan taiKhoan = taiKhoanRepository.findById(id).orElse(null);
@@ -108,12 +133,7 @@ public class TaiKhoanService {
         if (taiKhoan != null && diaChi != null) {
             taiKhoan.setTen(nhanVienRequest.getTen());
             taiKhoan.setEmail(nhanVienRequest.getEmail());
-            if(!nhanVienRequest.getNgaySinh().equals("")){
-                taiKhoan.setNgaySinh(LocalDate.parse(nhanVienRequest.getNgaySinh()));
-            }
-
             taiKhoan.setGioiTinh(Integer.parseInt(nhanVienRequest.getGioiTinh()));
-            taiKhoan.setCanCuoc(nhanVienRequest.getCanCuoc());
             taiKhoan.setSdt(nhanVienRequest.getSdt());
             taiKhoan.setTrangThai(nhanVienRequest.getTrangThai());
             taiKhoan.setAnhDaiDien(nhanVienRequest.getAnhDaiDien());
@@ -135,10 +155,26 @@ public class TaiKhoanService {
         return true;
     }
 
-    public boolean validateAddNV(TaiKhoanRequest nhanVienRequest, Model model) {
+    private static boolean containsSpecialCharacters(String input) {
+        // Biểu thức chính quy kiểm tra xem có kí tự đặc biệt nào trong chuỗi hay không
+        String regex = "[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]+";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(input);
+        return matcher.find();
+    }
+
+    private static boolean containsSpecialCharactersDC(String input) {
+        // Biểu thức chính quy kiểm tra xem có kí tự đặc biệt nào trong chuỗi hay không
+        String regex = "[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|.<>\\?]+";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(input);
+        return matcher.find();
+    }
+
+    public boolean validateAddNV(TaiKhoanRequest nhanVienRequest, Model model, MultipartFile file) {
         int i = 0;
         String errTen = null, errEmail = null, errCCCD = null, errSDT = null, errGT = null, errTrangThai = null,
-                errTinh = null, errQuanHuyen = null, errPhuongXa = null, errDCCuThe = null, errNgaySinh = null;
+                errTinh = null, errQuanHuyen = null, errPhuongXa = null, errDCCuThe = null, errNgaySinh = null, errAnh = null;
         LocalDate gioHT = LocalDate.now();
         String regex = "^(0\\d{9}|(\\+|00)84\\d{9})$";
         Pattern pattern = Pattern.compile(regex);
@@ -182,7 +218,7 @@ public class TaiKhoanService {
             errEmail = "Email đã được sử dụng";
             i++;
         }
-        if(nhanVienRequest.getCanCuoc().length() == 12){
+        if (nhanVienRequest.getCanCuoc().length() == 12) {
             if (taiKhoanRepository.getTaiKhoanByCCCD(nhanVienRequest.getCanCuoc()) != null) {
                 errCCCD = "CCCD đã được sử dụng";
                 i++;
@@ -193,19 +229,27 @@ public class TaiKhoanService {
             errSDT = "Số điện thoại đã được sử dụng";
             i++;
         }
-        if (nhanVienRequest.getTen().equals("")) {
+        if (nhanVienRequest.getTen().trim().equals("")) {
             errTen = "Không để trống tên";
             i++;
         }
-        if (nhanVienRequest.getTen().length() > 50) {
+        if (nhanVienRequest.getTen().trim().length() > 50) {
             errTen = "Tên không vượt quá 50 kí tự";
+            i++;
+        }
+        if (nhanVienRequest.getTen().trim().length() < 5) {
+            errTen = "Tên tối thiểu 5 kí tự";
+            i++;
+        }
+        if (containsSpecialCharacters(nhanVienRequest.getTen())) {
+            errTen = "Tên không được chứa kí tự đặc biệt";
             i++;
         }
         if (nhanVienRequest.getEmail().equals("")) {
             errEmail = "Không để trống email";
             i++;
         }
-        if (nhanVienRequest.getEmail().length() > 50) {
+        if (nhanVienRequest.getEmail().trim().length() > 50) {
             errEmail = "Email không vượt quá 50 kí tự";
             i++;
         }
@@ -240,12 +284,24 @@ public class TaiKhoanService {
             errPhuongXa = "Không để trống Phường/Xã";
             i++;
         }
-        if (nhanVienRequest.getDiaChiCuThe().equals("")) {
+        if (nhanVienRequest.getDiaChiCuThe().trim().equals("")) {
             errDCCuThe = "Không để trống địa chỉ cụ thể";
             i++;
         }
-        if (nhanVienRequest.getDiaChiCuThe().length() > 50) {
-            errDCCuThe = "Địa chỉ cụ thể không vượt quá 50 kí tự";
+        if (nhanVienRequest.getDiaChiCuThe().trim().length() > 150) {
+            errDCCuThe = "Địa chỉ cụ thể không vượt quá 150 kí tự";
+            i++;
+        }
+        if (nhanVienRequest.getDiaChiCuThe().trim().length() < 5) {
+            errDCCuThe = "Địa chỉ cụ thể tối thiểu 5 kí tự";
+            i++;
+        }
+        if (containsSpecialCharactersDC(nhanVienRequest.getDiaChiCuThe())) {
+            errDCCuThe = "Địa chỉ cụ thể không được chứa kí tự đặc biệt";
+            i++;
+        }
+        if (!isValidImageFormat2(file) && !file.isEmpty()) {
+            errAnh = "Định dạng ảnh không hợp lệ. Chấp nhận chỉ JPG,JPEG, PNG, và GIF.";
             i++;
         }
         model.addAttribute("errNgaySinh", errNgaySinh);
@@ -260,47 +316,36 @@ public class TaiKhoanService {
         model.addAttribute("errQuanHuyen", errQuanHuyen);
         model.addAttribute("errPhuongXa", errPhuongXa);
         model.addAttribute("errDCCuThe", errDCCuThe);
+        model.addAttribute("errAnh", errAnh);
         return i == 0;
     }
 
-    public boolean validateAddKH(TaiKhoanRequest nhanVienRequest, Model model) {
+    private boolean isValidImageFormat2(MultipartFile file) {
+        String[] allowedFormats = {"jpg", "jpeg", "png", "gif"};
+
+        String originalFilename = file.getOriginalFilename();
+        String fileExtension = originalFilename != null ? originalFilename.substring(originalFilename.lastIndexOf(".") + 1) : "";
+
+        for (String format : allowedFormats) {
+            if (format.equalsIgnoreCase(fileExtension)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean validateAddKH(TaiKhoanRequest nhanVienRequest, Model model, MultipartFile file) {
         int i = 0;
-        String errTen = null, errEmail = null, errCCCD = null, errSDT = null, errGT = null, errTrangThai = null,
-                errTinh = null, errQuanHuyen = null, errPhuongXa = null, errDCCuThe = null, errNgaySinh = null;
+        String errTen = null, errEmail = null, errSDT = null, errGT = null, errTrangThai = null,
+                errTinh = null, errQuanHuyen = null, errPhuongXa = null, errDCCuThe = null, errAnh = null;
         LocalDate gioHT = LocalDate.now();
         String regex = "^(0\\d{9}|(\\+|00)84\\d{9})$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(nhanVienRequest.getSdt());
 
-        if(!nhanVienRequest.getCanCuoc().equals("")){
-            String idCardRegex = "^\\d{12}$";
-            Pattern idCardPattern = Pattern.compile(idCardRegex);
-            Matcher idCardMatcher = idCardPattern.matcher(nhanVienRequest.getCanCuoc());
 
-            if (!idCardMatcher.matches()) {
-                errCCCD = "Số CCCD không đúng định dạng (12 số)";
-                i++;
-            }
-            if (taiKhoanRepository.getTaiKhoanByCCCD(nhanVienRequest.getCanCuoc()) != null) {
-                errCCCD = "CCCD đã được sử dụng";
-                i++;
-            }
-        }
-        if(!nhanVienRequest.getNgaySinh().equals("")){
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-            try {
-                LocalDate ngaySinh = LocalDate.parse(String.valueOf(nhanVienRequest.getNgaySinh()), formatter);
-                if (ngaySinh.isAfter((gioHT))) {
-                    errNgaySinh = "Ngày sinh không hợp lệ";
-                    i++;
-                }
-            } catch (Exception e) {
-                errNgaySinh = "Nhập đúng định dạng ngày";
-                i++;
-            }
-        }
-        if(!nhanVienRequest.getEmail().equals("")){
+        if (!nhanVienRequest.getEmail().equals("")) {
             String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.com";
             Pattern emailPattern = Pattern.compile(emailRegex);
             Matcher emailMatcher = emailPattern.matcher(nhanVienRequest.getEmail());
@@ -324,16 +369,24 @@ public class TaiKhoanService {
 //            errSDT = "Số điện thoại đã được sử dụng";
 //            i++;
 //        }
-        if (nhanVienRequest.getTen().equals("")) {
+        if (nhanVienRequest.getTen().trim().equals("")) {
             errTen = "Không để trống tên";
             i++;
         }
-        if (nhanVienRequest.getTen().length() > 50) {
+        if (nhanVienRequest.getTen().trim().length() > 50) {
             errTen = "Tên không vượt quá 50 kí tự";
+            i++;
+        }
+        if (nhanVienRequest.getTen().trim().length() < 5) {
+            errTen = "Tên tối thiểu 5 kí tự";
             i++;
         }
         if (nhanVienRequest.getEmail().length() > 50) {
             errEmail = "Email không vượt quá 50 kí tự";
+            i++;
+        }
+        if (containsSpecialCharacters(nhanVienRequest.getTen())) {
+            errTen = "Tên không được chứa kí tự đặc biệt";
             i++;
         }
         if (nhanVienRequest.getSdt().equals("")) {
@@ -362,19 +415,28 @@ public class TaiKhoanService {
             errPhuongXa = "Không để trống Phường/Xã";
             i++;
         }
-        if (nhanVienRequest.getDiaChiCuThe().equals("")) {
+        if (nhanVienRequest.getDiaChiCuThe().trim().equals("")) {
             errDCCuThe = "Không để trống địa chỉ cụ thể";
             i++;
         }
-        if (nhanVienRequest.getDiaChiCuThe().length() > 50) {
-            errDCCuThe = "Địa chỉ cụ thể không vượt quá 50 kí tự";
+        if (nhanVienRequest.getDiaChiCuThe().trim().length() > 150) {
+            errDCCuThe = "Địa chỉ cụ thể không vượt quá 150 kí tự";
             i++;
         }
-        model.addAttribute("errNgaySinh", errNgaySinh);
+        if (nhanVienRequest.getDiaChiCuThe().trim().length() < 5) {
+            errDCCuThe = "Địa chỉ cụ thể tối thiểu 5 kí tự";
+            i++;
+        }
+        if (containsSpecialCharactersDC(nhanVienRequest.getDiaChiCuThe())) {
+            errDCCuThe = "Địa chỉ cụ thể không được chứa kí tự đặc biệt";
+            i++;
+        }
+        if (!isValidImageFormat2(file) && !file.isEmpty()) {
+            errAnh = "Định dạng ảnh không hợp lệ. Chấp nhận chỉ JPG,JPEG, PNG, và GIF.";
+            i++;
+        }
         model.addAttribute("errTen", errTen);
         model.addAttribute("errEmail", errEmail);
-        model.addAttribute("errCCCD", errCCCD);
-        model.addAttribute("errNgaySinh", errNgaySinh);
         model.addAttribute("errSDT", errSDT);
         model.addAttribute("errGT", errGT);
         model.addAttribute("errTrangThai", errTrangThai);
@@ -382,13 +444,15 @@ public class TaiKhoanService {
         model.addAttribute("errQuanHuyen", errQuanHuyen);
         model.addAttribute("errPhuongXa", errPhuongXa);
         model.addAttribute("errDCCuThe", errDCCuThe);
+        model.addAttribute("errAnh", errAnh);
         return i == 0;
     }
 
 
-    public boolean validateUppdate(String idTaiKhoan, TaiKhoanRequest nhanVienRequest, Model model) {
+    public boolean validateUppdate(String idTaiKhoan, TaiKhoanRequest nhanVienRequest, Model model, MultipartFile file) {
         int i = 0;
-        String errTen = null, errEmail = null, errCCCD = null, errSDT = null, errGT = null, errTrangThai = null, errTinh = null, errQuanHuyen = null, errPhuongXa = null, errDCCuThe = null, errNgaySinh = null;
+        String errTen = null, errEmail = null, errCCCD = null, errSDT = null, errGT = null, errTrangThai = null,
+                errTinh = null, errQuanHuyen = null, errPhuongXa = null, errDCCuThe = null, errNgaySinh = null, errAnh = null;
         LocalDate gioHT = LocalDate.now();
         String regex = "^(0\\d{9}|(\\+|00)84\\d{9})$";
         Pattern pattern = Pattern.compile(regex);
@@ -443,8 +507,20 @@ public class TaiKhoanService {
             errCCCD = "CCCD đã được sử dụng";
             i++;
         }
-        if (nhanVienRequest.getTen().equals("")) {
+        if (nhanVienRequest.getTen().trim().equals("")) {
             errTen = "Không để trống tên";
+            i++;
+        }
+        if (nhanVienRequest.getTen().trim().length() > 50) {
+            errTen = "Tên không vượt quá 50 kí tự";
+            i++;
+        }
+        if (nhanVienRequest.getTen().trim().length() < 5) {
+            errTen = "Tên tối thiểu 5 kí tự";
+            i++;
+        }
+        if (containsSpecialCharacters(nhanVienRequest.getTen())) {
+            errTen = "Tên không được chứa kí tự đặc biệt";
             i++;
         }
         if (nhanVienRequest.getEmail().equals("")) {
@@ -479,11 +555,26 @@ public class TaiKhoanService {
             errPhuongXa = "Không để trống Phường/Xã";
             i++;
         }
-        if (nhanVienRequest.getDiaChiCuThe().equals("")) {
+        if (nhanVienRequest.getDiaChiCuThe().trim().equals("")) {
             errDCCuThe = "Không để trống địa chỉ cụ thể";
             i++;
         }
-
+        if (nhanVienRequest.getDiaChiCuThe().trim().length() > 150) {
+            errDCCuThe = "Địa chỉ cụ thể không vượt quá 150 kí tự";
+            i++;
+        }
+        if (nhanVienRequest.getDiaChiCuThe().trim().length() < 5) {
+            errDCCuThe = "Địa chỉ cụ thể tối thiểu 5 kí tự";
+            i++;
+        }
+        if (containsSpecialCharactersDC(nhanVienRequest.getDiaChiCuThe())) {
+            errDCCuThe = "Địa chỉ cụ thể không được chứa kí tự đặc biệt";
+            i++;
+        }
+        if (!isValidImageFormat2(file) && !file.isEmpty()) {
+            errAnh = "Định dạng ảnh không hợp lệ. Chấp nhận chỉ JPG,JPEG, PNG, và GIF.";
+            i++;
+        }
         model.addAttribute("errNgaySinh", errNgaySinh);
         model.addAttribute("errTen", errTen);
         model.addAttribute("errEmail", errEmail);
@@ -496,48 +587,21 @@ public class TaiKhoanService {
         model.addAttribute("errQuanHuyen", errQuanHuyen);
         model.addAttribute("errPhuongXa", errPhuongXa);
         model.addAttribute("errDCCuThe", errDCCuThe);
+        model.addAttribute("errAnh", errAnh);
         return i == 0;
     }
 
-    public boolean validateUppdateKH(String idTaiKhoan, TaiKhoanRequest nhanVienRequest, Model model) {
+    public boolean validateUppdateKH(String idTaiKhoan, TaiKhoanRequest nhanVienRequest, Model model, MultipartFile file) {
         int i = 0;
-        String errTen = null, errEmail = null, errCCCD = null, errSDT = null, errGT = null, errTrangThai = null, errTinh = null, errQuanHuyen = null, errPhuongXa = null, errDCCuThe = null, errNgaySinh = null;
+        String errTen = null, errEmail = null, errSDT = null, errGT = null, errTrangThai = null,
+                errTinh = null, errQuanHuyen = null, errPhuongXa = null, errDCCuThe = null, errAnh = null;
         LocalDate gioHT = LocalDate.now();
         String regex = "^(0\\d{9}|(\\+|00)84\\d{9})$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(nhanVienRequest.getSdt());
 
-        if(!nhanVienRequest.getCanCuoc().equals("")){
-            String idCardRegex = "^\\d{12}$";
-            Pattern idCardPattern = Pattern.compile(idCardRegex);
-            Matcher idCardMatcher = idCardPattern.matcher(nhanVienRequest.getCanCuoc());
 
-            if (!idCardMatcher.matches()) {
-                errCCCD = "Số CCCD không đúng định dạng (12 số)";
-                i++;
-            }
-
-            if (taiKhoanRepository.getTaiKhoanByCCCD(nhanVienRequest.getCanCuoc()) != null &&
-                    !taiKhoanRepository.findById(idTaiKhoan).orElse(null).getCanCuoc().equals(nhanVienRequest.getCanCuoc())) {
-                errCCCD = "CCCD đã được sử dụng";
-                i++;
-            }
-        }
-        if(!nhanVienRequest.getNgaySinh().equals("")){
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-            try {
-                LocalDate ngaySinh = LocalDate.parse(String.valueOf(nhanVienRequest.getNgaySinh()), formatter);
-                if (ngaySinh.isAfter((gioHT))) {
-                    errNgaySinh = "Ngày sinh không hợp lệ";
-                    i++;
-                }
-            } catch (Exception e) {
-                errNgaySinh = "Nhập đúng định dạng ngày";
-                i++;
-            }
-        }
-        if(!nhanVienRequest.getEmail().equals("")){
+        if (!nhanVienRequest.getEmail().equals("")) {
             String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.com";
             Pattern emailPattern = Pattern.compile(emailRegex);
             Matcher emailMatcher = emailPattern.matcher(nhanVienRequest.getEmail());
@@ -558,8 +622,20 @@ public class TaiKhoanService {
             i++;
         }
 
-        if (nhanVienRequest.getTen().equals("")) {
+        if (nhanVienRequest.getTen().trim().equals("")) {
             errTen = "Không để trống tên";
+            i++;
+        }
+        if (nhanVienRequest.getTen().trim().length() > 50) {
+            errTen = "Tên không vượt quá 50 kí tự";
+            i++;
+        }
+        if (nhanVienRequest.getTen().trim().length() < 5) {
+            errTen = "Tên tối thiểu 5 kí tự";
+            i++;
+        }
+        if (containsSpecialCharacters(nhanVienRequest.getTen())) {
+            errTen = "Tên không được chứa kí tự đặc biệt";
             i++;
         }
         if (nhanVienRequest.getSdt().equals("")) {
@@ -590,16 +666,28 @@ public class TaiKhoanService {
             errPhuongXa = "Không để trống Phường/Xã";
             i++;
         }
-        if (nhanVienRequest.getDiaChiCuThe().equals("")) {
+        if (nhanVienRequest.getDiaChiCuThe().trim().equals("")) {
             errDCCuThe = "Không để trống địa chỉ cụ thể";
             i++;
         }
-
-        model.addAttribute("errNgaySinh", errNgaySinh);
+        if (nhanVienRequest.getDiaChiCuThe().trim().length() > 150) {
+            errDCCuThe = "Địa chỉ cụ thể không vượt quá 150 kí tự";
+            i++;
+        }
+        if (nhanVienRequest.getDiaChiCuThe().trim().length() < 5) {
+            errDCCuThe = "Địa chỉ cụ thể tối thiểu 5 kí tự";
+            i++;
+        }
+        if (containsSpecialCharactersDC(nhanVienRequest.getDiaChiCuThe())) {
+            errDCCuThe = "Địa chỉ cụ thể không được chứa kí tự đặc biệt";
+            i++;
+        }
+        if (!isValidImageFormat2(file) && !file.isEmpty()) {
+            errAnh = "Định dạng ảnh không hợp lệ. Chấp nhận chỉ JPG,JPEG, PNG, và GIF.";
+            i++;
+        }
         model.addAttribute("errTen", errTen);
         model.addAttribute("errEmail", errEmail);
-        model.addAttribute("errCCCD", errCCCD);
-        model.addAttribute("errNgaySinh", errNgaySinh);
         model.addAttribute("errSDT", errSDT);
         model.addAttribute("errGT", errGT);
         model.addAttribute("errTrangThai", errTrangThai);
@@ -607,6 +695,7 @@ public class TaiKhoanService {
         model.addAttribute("errQuanHuyen", errQuanHuyen);
         model.addAttribute("errPhuongXa", errPhuongXa);
         model.addAttribute("errDCCuThe", errDCCuThe);
+        model.addAttribute("errAnh", errAnh);
         return i == 0;
     }
 
@@ -657,8 +746,20 @@ public class TaiKhoanService {
             errEmail = "Email đã được sử dụng";
             i++;
         }
-        if (nhanVienRequest.getTen().equals("")) {
+        if (nhanVienRequest.getTen().trim().equals("")) {
             errTen = "Không để trống tên";
+            i++;
+        }
+        if (nhanVienRequest.getTen().trim().length() > 50) {
+            errTen = "Tên không vượt quá 50 kí tự";
+            i++;
+        }
+        if (nhanVienRequest.getTen().trim().length() < 5) {
+            errTen = "Tên tối thiểu 5 kí tự";
+            i++;
+        }
+        if (containsSpecialCharactersDC(nhanVienRequest.getTen())) {
+            errTen = "Tên không được chứa kí tự đặc biệt";
             i++;
         }
         if (nhanVienRequest.getEmail().equals("")) {

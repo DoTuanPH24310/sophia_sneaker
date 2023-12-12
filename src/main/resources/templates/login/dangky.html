@@ -131,9 +131,8 @@
                                                 <span class="text-danger" th:text="${errTen}"></span>
                                             </div>
                                         </div>
-
                                         <div class="d-flex flex-row align-items-center mb-4">
-                                            <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
+                                            <i class="fas fa-solid fa-phone fa-lg me-3 fa-fw"></i>
                                             <div class=" flex-fill mb-0">
                                                 <input type="text" id="sdt" th:field="*{sdt}" class="form-control"
                                                        placeholder="Số điện thoại"/>
@@ -152,18 +151,21 @@
                                         </div>
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
-                                            <div class=" flex-fill mb-0">
-                                                <input type="password" id="passwordInput" placeholder="Mật khẩu" th:field="*{matKhau}" class="form-control"/>
-
+                                            <div class="flex-fill mb-0 position-relative">
+                                                <input type="password" id="passwordInput" placeholder="Mật khẩu"
+                                                       th:field="*{matKhau}" class="form-control"/>
                                                 <span class="text-danger" th:text="${errMatKhau}"></span>
-
+                                                <i id="togglePassword" class="fas fa-eye-slash"
+                                                   onclick="togglePassword()"
+                                                   style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;"></i>
                                             </div>
                                         </div>
-
                                         <div class="d-flex flex-row align-items-center mb-4">
                                             <i class="fas fa-key fa-lg me-3 fa-fw"></i>
                                             <div class=" flex-fill mb-0">
-                                                <input type="password" id="confirmPasswordInput" placeholder="Nhập lại mật khẩu" th:field="*{XNmatKhau}" class="form-control"/>
+                                                <input type="password" id="confirmPasswordInput"
+                                                       placeholder="Nhập lại mật khẩu" th:field="*{XNmatKhau}"
+                                                       class="form-control"/>
 
                                                 <span class="text-danger" th:text="${errNLMatKhau}"></span>
                                             </div>
@@ -173,7 +175,8 @@
                                             <div class="d-flex flex-row align-items-center mb-4">
                                                 <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
                                                 <div class="flex-fill mb-0">
-                                                    <input type="text" id="verificationCode" name="otp" th:field="*{otp}"  class="form-control"
+                                                    <input type="text" id="verificationCode" name="otp"
+                                                           th:field="*{otp}" class="form-control"
                                                            placeholder="Mã xác thực email"/>
                                                     <span class="text-danger" th:text="${errOTP}"></span>
 
@@ -189,8 +192,8 @@
                                 </div>
                                 <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
 
-                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"
-                                         class="img-fluid" alt="Sample image">
+                                    <img src="https://res.cloudinary.com/deihbhsfj/image/upload/v1702029904/718c8109-cd38-495a-815d-0b3d9db16c24.png"
+                                         class="img-fluid" alt="Sample image" style="margin-left: 80px;">
 
                                 </div>
                             </div>
@@ -239,6 +242,22 @@
                 document.getElementById('confirmPasswordInput').value = savedConfirmPassword;
             }
         });
+
+
+        function togglePassword() {
+            var passwordInput = document.getElementById("passwordInput");
+            var toggleIcon = document.getElementById("togglePassword");
+
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                toggleIcon.classList.remove("fa-eye-slash");
+                toggleIcon.classList.add("fa-eye");
+            } else {
+                passwordInput.type = "password";
+                toggleIcon.classList.remove("fa-eye");
+                toggleIcon.classList.add("fa-eye-slash");
+            }
+        }
     </script>
 </div>
 </body>

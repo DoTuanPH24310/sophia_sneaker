@@ -39,6 +39,9 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
     List<ChiTietGiay> findAllByTrangThaiEquals(Integer trangThai);
     @Query(value = "select * from ChiTietGiay  where trangThai = ?1 order by ngayTao desc",nativeQuery = true)
     List<ChiTietGiay> findAllAndOrder(Integer trangThai);
+    // find All xuất excel
+    @Query(value = "select * from ChiTietGiay  where trangThai = :trangThai OR (:trangThai = -1 AND trangThai IN (0, 1)) order by ngayTao asc",nativeQuery = true)
+    List<ChiTietGiay> findAllAndOrderExcel(Integer trangThai);
     @Query(value = "select ma from ChiTietGiay where id =?1", nativeQuery = true)
     String findMaByIdCTG(UUID id);
     // Hàm tìm kiếm theo cả keyword và tên sản phẩm
@@ -162,6 +165,21 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
             @Param("mauSac") MauSac mauSac,
             @Param("kichCo") UUID kichCo
     );
+    @Query("SELECT c FROM ChiTietGiay c WHERE " +
+            "c.giay = :giay AND " +
+            "c.deGiay = :deGiay AND " +
+            "c.hang = :hang AND " +
+            "c.loaiGiay = :loaiGiay AND " +
+            "c.kichCo = :kichCo AND " +
+            "c.mauSac.id = :mauSac")
+    List<ChiTietGiay> findSimilarChiTietGiayByMauSac(
+            @Param("giay") Giay giay,
+            @Param("deGiay") DeGiay deGiay,
+            @Param("hang") Hang hang,
+            @Param("loaiGiay") LoaiGiay loaiGiay,
+            @Param("kichCo") KichCo kichCo,
+            @Param("mauSac") UUID mauSac
+    );
     @Query("SELECT c.kichCo FROM ChiTietGiay c WHERE " +
             "c.giay = :giay AND " +
             "c.deGiay = :deGiay AND " +
@@ -174,6 +192,19 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
             @Param("hang") Hang hang,
             @Param("loaiGiay") LoaiGiay loaiGiay,
             @Param("mauSac") MauSac mauSac
+    );
+    @Query("SELECT c.mauSac FROM ChiTietGiay c WHERE " +
+            "c.giay = :giay AND " +
+            "c.deGiay = :deGiay AND " +
+            "c.hang = :hang AND " +
+            "c.loaiGiay = :loaiGiay AND " +
+            "c.kichCo = :kichCo" )
+    List<MauSac> findSimilarMauSacChiTietGiay(
+            @Param("giay") Giay giay,
+            @Param("deGiay") DeGiay deGiay,
+            @Param("hang") Hang hang,
+            @Param("loaiGiay") LoaiGiay loaiGiay,
+            @Param("kichCo") KichCo kichCo
     );
 }
 

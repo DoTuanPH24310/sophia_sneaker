@@ -242,6 +242,17 @@
                                     </div>
                             </div>
                         </div>
+                        <div class="variable-single-item">
+                            <span>Màu sắc</span>
+                            <div class="btn-container">
+                                <div th:each="mauSacGiay : ${mauSac}">
+                                    <a class="btn-size"
+                                       th:href="@{'/sophia-store/detailll/'+${mauSacGiay.id}}"
+                                       th:text="${mauSacGiay.ten}"
+                                       th:classappend="${giay.mauSac} == ${mauSacGiay} ? 'active' : ''"></a>
+                                </div>
+                            </div>
+                        </div>
                         <!-- Product Variable Single Item -->
                         <div class="variable-single-item">
                             <div class="product-stock">

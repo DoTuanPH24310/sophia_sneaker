@@ -97,12 +97,14 @@ public class KhachHangController {
             @RequestParam("image") MultipartFile multipartFile,
             @ModelAttribute(value = "khachHangRequest") TaiKhoanRequest kh_rq, HttpSession session
     ) throws IOException {
+
+
         kh_rq.setIdVaiTro(vaiTroRepository.getIdByTenKH());
         String imageURL = "";
         session.removeAttribute("tinh");
         session.removeAttribute("quan");
         session.removeAttribute("phuong");
-        if (!taiKhoanService.validateAddKH(kh_rq, model)) {
+        if (!taiKhoanService.validateAddKH(kh_rq, model, multipartFile)) {
             session.setAttribute("tinh", kh_rq.getTinh());
             session.setAttribute("quan", kh_rq.getQuanHuyen());
             session.setAttribute("phuong", kh_rq.getPhuongXa());
@@ -114,7 +116,7 @@ public class KhachHangController {
                 imageURL = fileUpload.uploadFile(multipartFile);
             }
             kh_rq.setAnhDaiDien(imageURL);
-            taiKhoanService.save(kh_rq, model);
+            taiKhoanService.savekh(kh_rq, model);
             alertInfo.alert("successTaiQuay", "Khách hàng đã được thêm");
             return "redirect:/staff/khachhang/hienthi";
         }
@@ -131,7 +133,7 @@ public class KhachHangController {
         TaiKhoanRequest taiKhoan = taiKhoanService.getTaiKhoanById(idTaiKhoan);
         kh_rq.setIdTaiKhoan(idTaiKhoan);
         String imageURL = null;
-        if (!taiKhoanService.validateUppdateKH(idTaiKhoan, kh_rq, model)) {
+        if (!taiKhoanService.validateUppdateKH(idTaiKhoan, kh_rq, model, multipartFile)) {
             session.setAttribute("tinh", kh_rq.getTinh());
             session.setAttribute("quan", kh_rq.getQuanHuyen());
             session.setAttribute("phuong", kh_rq.getPhuongXa());

@@ -13,7 +13,7 @@ function uploadExcel() {
             .then(response => response.text())
             .then(message => {
                 alert(message);
-                window.location.href = '/staff/chi-tiet-giay';
+                window.location.href = '/staff/chi-tiet-giay/page/1?sortField=ngaySua';
             })
             .catch(error => {
                 alert('Tải danh sách thất bại, vui lòng kiểm tra lại');

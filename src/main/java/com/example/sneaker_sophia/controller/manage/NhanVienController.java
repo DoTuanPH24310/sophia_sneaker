@@ -118,7 +118,7 @@ public class NhanVienController {
         session.removeAttribute("tinh");
         session.removeAttribute("quan");
         session.removeAttribute("phuong");
-        if (!taiKhoanService.validateAddNV(nv_rq, model)) {
+        if (!taiKhoanService.validateAddNV(nv_rq, model, multipartFile)) {
             session.setAttribute("tinh", nv_rq.getTinh());
             session.setAttribute("quan", nv_rq.getQuanHuyen());
             session.setAttribute("phuong", nv_rq.getPhuongXa());
@@ -151,7 +151,7 @@ public class NhanVienController {
         String imageURL = null;
 
         nv_rq.setIdVaiTro(taiKhoan.getIdVaiTro());
-        if (!taiKhoanService.validateUppdate(idTaiKhoan, nv_rq, model)) {
+        if (!taiKhoanService.validateUppdate(idTaiKhoan, nv_rq, model, multipartFile)) {
             session.setAttribute("tinh", nv_rq.getTinh());
             session.setAttribute("quan", nv_rq.getQuanHuyen());
             session.setAttribute("phuong", nv_rq.getPhuongXa());

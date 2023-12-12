@@ -114,7 +114,9 @@ public class ChiTietGiayService {
     public List<ChiTietGiay> getAll() {
         return chiTietGiayRepository.findAllAndOrder(0);
     }
-
+    public List<ChiTietGiay> getAllExcel() {
+        return chiTietGiayRepository.findAllAndOrderExcel(-1);
+    }
     public ChiTietGiay save(ChiTietGiay chiTietGiay) {
         chiTietGiayRepository.save(chiTietGiay);
         return chiTietGiay;
@@ -235,7 +237,7 @@ public class ChiTietGiayService {
         } else if ("ten".equals(sortField)) {
             sort = Sort.by("ten").ascending();
         } else if ("newest".equals(sortField)) {
-            sort = Sort.by("ngayTao").descending();
+            sort = Sort.by("ngaySua").descending();
         }
 
         Pageable pageable = PageRequest.of(page - 1, pageSize, sort);
@@ -423,11 +425,15 @@ public class ChiTietGiayService {
     public List<ChiTietGiay> findSimilarChiTietGiay(Giay giay,DeGiay deGiay,Hang hang,LoaiGiay loaiGiay,MauSac mauSac,UUID kichCo){
         return chiTietGiayRepository.findSimilarChiTietGiay(giay,deGiay,hang,loaiGiay,mauSac,kichCo);
     }
-
+    public List<ChiTietGiay> findSimilarChiTietGiayByMauSac(Giay giay,DeGiay deGiay,Hang hang,LoaiGiay loaiGiay,KichCo kichCo,UUID mauSac){
+        return chiTietGiayRepository.findSimilarChiTietGiayByMauSac(giay,deGiay,hang,loaiGiay,kichCo,mauSac);
+    }
     public List<KichCo> findSimilarSizeChiTietGiay(Giay giay,DeGiay deGiay,Hang hang,LoaiGiay loaiGiay,MauSac mauSac){
         return chiTietGiayRepository.findSimilarSizeChiTietGiay(giay,deGiay,hang,loaiGiay,mauSac);
     }
-
+    public List<MauSac> findSimilarMauSacChiTietGiay(Giay giay,DeGiay deGiay,Hang hang,LoaiGiay loaiGiay,KichCo kichCo){
+        return chiTietGiayRepository.findSimilarMauSacChiTietGiay(giay,deGiay,hang,loaiGiay,kichCo);
+    }
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     private static final int QR_CODE_LENGTH = 16;
     private static final Random RANDOM = new SecureRandom();

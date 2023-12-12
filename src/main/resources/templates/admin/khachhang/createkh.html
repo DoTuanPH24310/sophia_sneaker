@@ -1,7 +1,7 @@
 <section xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
          layout:decorate="~{/layouts/layout}">
 
-    <div style="background-color: white; height: 680px" layout:fragment="content" class="col-md-12">
+    <div style="background-color: white; height: 846px" layout:fragment="content" class="col-md-12">
         <form th:action="@{/staff/khachhang/store}" method="post" th:object="${khachHangRequest}" enctype="multipart/form-data">
             <div class="row mt-3">
                 <div class="col-2">
@@ -9,6 +9,7 @@
                     <img th:src="@{'/getimage/' + 'thumbnail.png'}" class="rounded-circle mb-3 ml-3" style="width: 160px; height: 150px"
                          alt="Avatar"/>
                     <input type="file" name="image" placeholder="upload file" multiple onchange="previewImage(event)">
+                    <span class="text-danger" th:text="${errAnh}"></span>
                 </div>
                 <div class="col-1">
 
@@ -30,10 +31,10 @@
                     </div>
                     <div class="row mt-3">
                         <div class="col-6">
-                            <label for="ngaySinh"><span style="color: #c82333">*</span> Ngày sinh</label>
-                            <input id="ngaySinh" type="date" class="form-control" th:field="*{ngaySinh}"
-                                   placeholder="Nhập ngày sinh">
-                            <span class="text-danger" th:text="${errNgaySinh}"></span>
+                            <label for="soDienThoai"><span style="color: #c82333">*</span> Số điện thoại</label>
+                            <input id="soDienThoai" type="text" class="form-control" th:field="*{sdt}"
+                                   placeholder="Số điện thoại">
+                            <span class="text-danger" th:text="${errSDT}"></span>
                         </div>
                         <div class="col-6">
 
@@ -55,21 +56,6 @@
                         </div>
                     </div>
 
-                    <div class="row mt-3">
-                        <div class="col-6">
-                            <label for="cccd"><span style="color: #c82333">*</span> CCCD</label>
-                            <input id="cccd" type="text" class="form-control" th:field="*{canCuoc}"
-                                   placeholder="Nhập CCCD">
-                            <span class="text-danger" th:text="${errCCCD}"></span>
-                        </div>
-
-                        <div class="col-6">
-                            <label for="soDienThoai"><span style="color: #c82333">*</span> Số điện thoại</label>
-                            <input id="soDienThoai" type="text" class="form-control" th:field="*{sdt}"
-                                   placeholder="Số điện thoại">
-                            <span class="text-danger" th:text="${errSDT}"></span>
-                        </div>
-                    </div>
                     <div class="row mt-3">
                         <div class="col-4">
                             <label for="province"><span style="color: #c82333">*</span>Tỉnh/Thành phố</label>

@@ -7,13 +7,13 @@ function mapStatusToLabel(status) {
         case 1:
             return 'Thành công';
         case 2:
-            return 'Đang xử lý';
+            return 'Chờ thanh toán';
         case 3:
-            return 'Chờ xử lý';
+            return 'Chờ xác nhận';
         case 4:
-            return 'Thất bại';
+            return 'Chờ giao';
         case 5:
-            return 'Đã gửi';
+            return 'Đang giao';
         case 6:
             return 'Hủy';
         default:
