@@ -218,7 +218,7 @@ public class ChiTietGiayController {
             e.printStackTrace();
         }
         alertInfo.alert("successTaiQuay", "Thêm thành công");
-        return "redirect:/staff/chi-tiet-giay/page/1?sortField=ngayTao";
+        return "redirect:/staff/chi-tiet-giay/page/1?sortField=ngaySua";
     }
     @PostMapping("/admin/chi-tiet-giay/edit/{id}")
     public String update(@PathVariable("id") String id,@ModelAttribute("chiTietGiay") @Validated ChiTietGiayDTO chiTietGiay1,
@@ -308,14 +308,14 @@ public class ChiTietGiayController {
         chiTietGiayService.save(chiTietGiay);
         chiTietGiayService.save(chiTietGiayDTO.loadChiTietGiayDTO(chiTietGiay1));
         alertInfo.alert("successTaiQuay", "Sửa thành công");
-        return "redirect:/staff/chi-tiet-giay/page/1?sortField=ngayTao";
+        return "redirect:/staff/chi-tiet-giay/page/1?sortField=ngaySua";
     }
 
     @GetMapping("/admin/chi-tiet-giay/delete/{id}")
     public String delete(@PathVariable("id") UUID id) {
         chiTietGiayService.delete(id);
         alertInfo.alert("successTaiQuay", "Xóa thành công");
-        return "redirect:/staff/chi-tiet-giay/page/1?sortField=ngayTao";
+        return "redirect:/staff/chi-tiet-giay/page/1?sortField=ngaySua";
     }
 
     @GetMapping("/admin/chi-tiet-giay/delete-anh/{id}")

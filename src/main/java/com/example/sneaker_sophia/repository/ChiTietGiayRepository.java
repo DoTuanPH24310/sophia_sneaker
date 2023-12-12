@@ -39,6 +39,9 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
     List<ChiTietGiay> findAllByTrangThaiEquals(Integer trangThai);
     @Query(value = "select * from ChiTietGiay  where trangThai = ?1 order by ngayTao desc",nativeQuery = true)
     List<ChiTietGiay> findAllAndOrder(Integer trangThai);
+    // find All xuất excel
+    @Query(value = "select * from ChiTietGiay  where trangThai = :trangThai OR (:trangThai = -1 AND trangThai IN (0, 1)) order by ngayTao asc",nativeQuery = true)
+    List<ChiTietGiay> findAllAndOrderExcel(Integer trangThai);
     @Query(value = "select ma from ChiTietGiay where id =?1", nativeQuery = true)
     String findMaByIdCTG(UUID id);
     // Hàm tìm kiếm theo cả keyword và tên sản phẩm

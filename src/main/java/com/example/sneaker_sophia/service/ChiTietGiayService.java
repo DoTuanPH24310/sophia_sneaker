@@ -114,7 +114,9 @@ public class ChiTietGiayService {
     public List<ChiTietGiay> getAll() {
         return chiTietGiayRepository.findAllAndOrder(0);
     }
-
+    public List<ChiTietGiay> getAllExcel() {
+        return chiTietGiayRepository.findAllAndOrderExcel(-1);
+    }
     public ChiTietGiay save(ChiTietGiay chiTietGiay) {
         chiTietGiayRepository.save(chiTietGiay);
         return chiTietGiay;
@@ -235,7 +237,7 @@ public class ChiTietGiayService {
         } else if ("ten".equals(sortField)) {
             sort = Sort.by("ten").ascending();
         } else if ("newest".equals(sortField)) {
-            sort = Sort.by("ngayTao").descending();
+            sort = Sort.by("ngaySua").descending();
         }
 
         Pageable pageable = PageRequest.of(page - 1, pageSize, sort);
