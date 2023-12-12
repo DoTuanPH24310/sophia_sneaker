@@ -964,8 +964,10 @@ type="checkbox">`;
                 temActiveTab = 3;
             } else if (temActiveTab == 'dangGiao') {
                 temActiveTab = 5;
-            } else {
+            } else if (temActiveTab == 'huy') {
                 temActiveTab = 6;
+            }else{
+                temActiveTab = 7;
             }
             let params = {
                 ngayBatDau: NBD.value,
