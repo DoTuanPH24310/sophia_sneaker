@@ -6,6 +6,7 @@ import com.example.sneaker_sophia.entity.*;
 import com.example.sneaker_sophia.repository.*;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpSession;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
@@ -13,7 +14,10 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import java.util.*;
 
 @Service
@@ -128,23 +132,84 @@ public class EmailService {
         guiEmail(message);
     }
 
+
+
     public void guiEmailXacNhanThanhToan(String email, HoaDon hoaDon) {
         if (email == null) {
             System.err.println("Email address is null");
             return;
         }
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(email);
-        message.setSubject("Xác nhận đơn hàng");
-        message.setText("Cảm ơn bạn đã thanh toán đơn hàng. Dưới đây là chi tiết đơn hàng:\n" +
-                "Mã đơn hàng: " + hoaDon.getMaHoaDOn() + "\n" +
-                "Người nhận: " + hoaDon.getTaiKhoan().getTen() + "\n" +
-                "Địa chỉ nhận hàng: " + hoaDon.getDiaChi() + "\n" +
-                "Tổng tiền đơn hàng: " + hoaDon.getTongTien() + "\n" +
-                "Trạng thái: " + hoaDon.getTrangThai());
 
-        guiEmail(message);
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper;
+
+        try {
+            helper = new MimeMessageHelper(message, true, "UTF-8");
+            helper.setTo(email);
+            helper.setSubject("Xác nhận đơn hàng");
+
+            String trangThai = "";
+            if (hoaDon.getTrangThai() == 3) {
+                trangThai = "Chờ xác nhận";
+            } else if (hoaDon.getTrangThai() == 2) {
+                trangThai = "Chờ thanh toán";
+            }
+            StringBuilder productList = new StringBuilder();
+            productList.append("<table style='width: 100%; border-collapse: collapse; border: 1px solid #ddd;'>");
+            productList.append("<thead><tr><th>Ảnh</th><th>Tên sản phẩm</th><th>Giá</th><th>Số lượng</th><th>Thành tiền</th></tr></thead>");
+            productList.append("<tbody>");
+
+            for (HoaDonChiTiet chiTiet : hoaDon.getListHoaDonChiTiet()) {
+                ChiTietGiay chiTietGiay = chiTiet.getChiTietGiay();
+                if (chiTietGiay != null) {
+                    List<Anh> anhs = chiTietGiay.getAnhs();
+
+                    if (anhs != null && !anhs.isEmpty()) {
+                        String imageSource = anhs.get(0).getDuongDan();
+                        productList.append("<tr>");  // Start a new row for each product
+                        productList.append("<td style='text-align: center;'><img src='").append(imageSource).append("' alt='Product Image' style='max-width: 100px;'></td>");
+                    }
+                    productList.append("<td style='text-align: center;'>").append(chiTietGiay.getHang().getTen() + " " + chiTietGiay.getGiay().getTen() + " " + chiTietGiay.getLoaiGiay().getTen() + " " + chiTietGiay.getMauSac().getTen() + " [" + chiTietGiay.getKichCo().getTen() + "]").append("</td>");
+                    productList.append("<td style='text-align: center;'>").append(chiTiet.getDonGia()).append("</td>");
+                    productList.append("<td style='text-align: center;'>").append(chiTiet.getSoLuong()).append("</td>");
+                    productList.append("<td style='text-align: center;'>").append(chiTiet.getDonGia() * chiTiet.getSoLuong()).append("</td>");
+                    productList.append("</tr>");
+                } else {
+                    System.out.println("ChiTietGiay is null for product: " + chiTiet.getId());
+                }
+            }
+
+            productList.append("</tbody>");
+            productList.append("</table>");
+
+            String totalAmount = "<p style='margin-top: 20px;'><strong>Tổng tiền đơn hàng:</strong> " + hoaDon.getTongTien() + " (bao gồm phí ship: " + hoaDon.getPhiShip() + ")</p>";
+
+            String content = "<html><body style='font-family: Arial, sans-serif;'>" +
+                    "<div style='background-color: #f4f4f4; padding: 20px;'>" +
+                    "<h2 style='color: #333;'>Xác nhận đơn hàng</h2>" +
+                    "<p>Cảm ơn bạn đã thanh toán đơn hàng. Dưới đây là chi tiết đơn hàng:</p>" +
+                    "<p><strong>Mã đơn hàng:</strong> " + hoaDon.getMaHoaDOn() + "</p>" +
+                    "<p><strong>Người nhận:</strong> " + hoaDon.getTenKhachHang() + "</p>" +
+                    "<p><strong>Địa chỉ nhận hàng:</strong> " + hoaDon.getDiaChi() + "</p>" +
+                    productList.toString() +
+                    totalAmount +
+                    "<p><strong>Trạng thái:</strong> " + trangThai + "</p>" +
+                    "</div>" +
+                    "</body></html>";
+
+
+            helper.setText(content, true);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            // Handle the exception
+        }
+
+        javaMailSender.send(message);
     }
+
+
+
+
 
     private void guiEmail(SimpleMailMessage message) {
         try {
