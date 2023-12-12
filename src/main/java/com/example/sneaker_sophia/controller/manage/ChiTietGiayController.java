@@ -58,7 +58,7 @@ public class ChiTietGiayController {
 
     @GetMapping("/staff/chi-tiet-giay")
     public String listFirstPage(Model model) {
-        return listByPage(1, model, "ngayTao", "asc", null, null, null, null, null, null, null, "0", null, null, null);
+        return listByPage(1, model, "ngaySua", "asc", null, null, null, null, null, null, null, "0", null, null, null);
     }
 
     @GetMapping("/staff/chi-tiet-giay/page/{pageNum}")

@@ -82,7 +82,10 @@ public class GioHangChiTietController {
 
     @GetMapping("/check-quantity/{id}")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> checkProductQuantity(@PathVariable("id") UUID chiTietGiayId, HttpSession httpSession, Authentication authentication) {
+    public ResponseEntity<Map<String, Object>> checkProductQuantity(
+            @PathVariable("id") UUID chiTietGiayId,
+            HttpSession httpSession,
+            Authentication authentication) {
         Map<String, Object> response = new HashMap<>();
 
         ChiTietGiay chiTietGiay = chiTietGiayRepository.findById(chiTietGiayId).orElse(null);
@@ -96,16 +99,21 @@ public class GioHangChiTietController {
                 boolean errorOccurred = false;
 
                 if (cartSession != null) {
-                    long cartQuantity = cartSession.getItems().stream()
-                            .filter(item -> item.getId().equals(chiTietGiayId))
-                            .mapToLong(CartItem::getSoLuong)
-                            .sum();
+                    List<CartItem> items = cartSession.getItems();
+                    if (items != null) {
+                        long cartQuantity = items.stream()
+                                .filter(item -> item.getId().equals(chiTietGiayId))
+                                .mapToLong(CartItem::getSoLuong)
+                                .sum();
 
-                    if (cartQuantity >= chiTietGiay.getSoLuong()) {
-                        response.put("maxQuantityReached", true);
-                        errorOccurred = true;
-                    } else {
-                        response.put("maxQuantityReached", false);
+                        if (cartQuantity >= chiTietGiay.getSoLuong()) {
+                            response.put("maxQuantityReached", true);
+                            response.put("cartQuantity", cartQuantity);
+                            errorOccurred = true;
+                        } else {
+                            response.put("maxQuantityReached", false);
+                            response.put("cartQuantity", cartQuantity);
+                        }
                     }
                 } else {
                     response.put("maxQuantityReached", false);
@@ -125,6 +133,7 @@ public class GioHangChiTietController {
                     response.put("maxQuantityReachedInDatabase", true);
                 } else {
                     response.put("maxQuantityReachedInDatabase", false);
+                    response.put("cartQuantity", databaseQuantity);
                 }
 
                 response.put("message", "Kiểm tra số lượng thành công.");
@@ -136,12 +145,6 @@ public class GioHangChiTietController {
 
         return ResponseEntity.ok(response);
     }
-
-
-
-
-
-
 
 
     @DeleteMapping("/removeAll")

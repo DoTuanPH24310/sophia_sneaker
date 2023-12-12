@@ -1,6 +1,7 @@
 package com.example.sneaker_sophia.service;
 
 import com.example.sneaker_sophia.entity.KichCo;
+import com.example.sneaker_sophia.entity.LoaiGiay;
 import com.example.sneaker_sophia.repository.KichCoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,4 +16,7 @@ public class KichCoService2 {
         return kichCoRepository.findKichCoByTen(ten);
     }
 
+    public KichCo findKichCosByIdChiTietGiay(UUID uuid){
+        return kichCoRepository.findKichCosByIdChiTietGiay(uuid);
+    }
 }

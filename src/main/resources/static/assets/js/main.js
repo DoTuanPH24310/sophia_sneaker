@@ -432,7 +432,7 @@
         min: 0,
         max: 500,
         values: [75, 300],
-        slide: function(event, ui) {
+        slide: function (event, ui) {
             $("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
         }
     });
@@ -469,25 +469,40 @@ function openModal() {
     var modal = document.getElementById("modalAddcart");
     modal.style.display = "block";
 }
+
 function updateCartItemCount() {
     $.get("/cart/get-cart-item-count", function (cartItemCount) {
         $(".item-count").text(cartItemCount);
     });
 }
-document.querySelectorAll(".add-to-cart").forEach(function (addToCartButton) {
-    addToCartButton.addEventListener("click", function (e) {
+
+document.querySelectorAll(".add-to-cart").forEach(async function (addToCartButton) {
+    addToCartButton.addEventListener("click", async function (e) {
         e.preventDefault();
 
         var productId = this.getAttribute("data-product-id");
         var quantityInput = document.getElementById("quantityInput");
         if (quantityInput !== null) {
             var quantity = quantityInput.value;
+
+            // if (!isValidQuantity(quantity)) {
+            //     let type = 'error';
+            //     let icon = 'fa-solid fa-exclamation-triangle';
+            //     let title = 'Số lượng không hợp lệ!';
+            //     let text = "Vui lòng nhập một số lượng hợp lệ.";
+            //     createToast(type, icon, title, text);
+            //     return;
+            // }
+
             quantity = quantity !== null && quantity !== "" ? quantity : 1;
         } else {
             var quantity = 1;
         }
-        var checkQuantityUrl = "/giohangchitiet/check-quantity/" + productId;
-        $.get(checkQuantityUrl, function (data) {
+
+        try {
+            var checkQuantityUrl = "/giohangchitiet/check-quantity/" + productId;
+            var data = await $.get(checkQuantityUrl);
+
             if (data.success) {
                 if (data.quantity === 0) {
                     let type = 'error';
@@ -496,6 +511,25 @@ document.querySelectorAll(".add-to-cart").forEach(function (addToCartButton) {
                     let text = "Sản phẩm đã hết hàng.";
                     createToast(type, icon, title, text);
                 } else {
+                    var remainingQuantity;
+
+                    // Check if cartQuantity is defined in the response
+                    if (typeof data.cartQuantity !== 'undefined') {
+                        remainingQuantity = data.quantity - data.cartQuantity;
+                    } else {
+                        remainingQuantity = data.quan
+                        tity;
+                    }
+
+                    if (quantity > remainingQuantity) {
+                        let type = 'error';
+                        let icon = 'fa-solid fa-exclamation-triangle';
+                        let title = 'Số lượng không đủ!';
+                        let text = "Số lượng sản phẩm trong giỏ hàng và kho không đủ.";
+                        createToast(type, icon, title, text);
+                        return;
+                    }
+
                     if (data.maxQuantityReached) {
                         let type = 'error';
                         let icon = 'fa-solid fa-exclamation-triangle';
@@ -511,20 +545,19 @@ document.querySelectorAll(".add-to-cart").forEach(function (addToCartButton) {
                             createToast(type, icon, title, text);
                         } else {
                             var addToCartUrl = `/cart/add-to-cart/${productId}${quantity ? `?quantity=${quantity}` : ''}`;
-                            $.get(addToCartUrl, function (data) {
-                                if (data.includes("redirect")) {
-                                    window.location.href = data.split(":")[1].trim();
-                                } else {
-                                    let type = 'success';
-                                    let icon = 'fa-solid fa-check-circle';
-                                    let title = 'Thành công!';
-                                    let text = "Đã thêm vào giỏ hàng.";
-                                    createToast(type, icon, title, text);
-                                    $.get("/cart/get-cart-item-count", function (cartItemCount) {
-                                        $(".item-count").text(cartItemCount);
-                                    });
-                                }
-                            });
+                            var addToCartData = await $.get(addToCartUrl);
+
+                            if (addToCartData.includes("redirect")) {
+                                window.location.href = addToCartData.split(":")[1].trim();
+                            } else {
+                                let type = 'success';
+                                let icon = 'fa-solid fa-check-circle';
+                                let title = 'Thành công!';
+                                let text = "Đã thêm vào giỏ hàng.";
+                                createToast(type, icon, title, text);
+                                var cartItemCount = await $.get("/cart/get-cart-item-count");
+                                $(".item-count").text(cartItemCount);
+                            }
                         }
                     }
                 }
@@ -535,14 +568,17 @@ document.querySelectorAll(".add-to-cart").forEach(function (addToCartButton) {
                 let text = data.message || "Kiểm tra số lượng sản phẩm thất bại.";
                 createToast(type, icon, title, text);
             }
-
-        });
-        $.get("/cart/get-cart-item-count", function (cartItemCount) {
-            $(".item-count").text(cartItemCount);
-        });
+        } catch (error) {
+            console.error("Error during add to cart:", error);
+        }
     });
 });
 
+
+function isValidQuantity(quantity) {
+    // Thực hiện kiểm tra số lượng hợp lệ ở đây, ví dụ:
+    return Number.isInteger(parseInt(quantity)) && parseInt(quantity) > 0;
+}
 
 //filter shop product
 document.addEventListener("DOMContentLoaded", function () {
@@ -574,6 +610,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function submitForms() {
         document.getElementById("filterForm").submit();
     }
+
     // Gọi hàm lướt xuống phần tử có class "shop-section" ngay sau khi trang tải xong
     scrollToShopSection();
 });

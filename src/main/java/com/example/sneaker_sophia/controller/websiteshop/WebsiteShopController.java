@@ -3,6 +3,7 @@ package com.example.sneaker_sophia.controller.websiteshop;
 import com.example.sneaker_sophia.entity.ChiTietGiay;
 import com.example.sneaker_sophia.entity.GioHangChiTiet;
 import com.example.sneaker_sophia.entity.KichCo;
+import com.example.sneaker_sophia.entity.MauSac;
 import com.example.sneaker_sophia.service.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,8 @@ WebsiteShopController {
     @Autowired
     KichCoService kichCoService;
     @Autowired
+    KichCoService2 kichCoService2;
+    @Autowired
     DeGiayService2 deGiayService;
     @Autowired
     MauSacService2 mauSacService;
@@ -50,7 +53,7 @@ WebsiteShopController {
     @GetMapping("/home")
     public String home(Model model, HttpSession httpSession) {
         List<ChiTietGiay> productList = chiTietGiayService.getAll();
-        productList.sort(Comparator.comparing(ChiTietGiay::getNgayTao));
+        productList.sort(Comparator.comparing(ChiTietGiay::getNgaySua));
         List<ChiTietGiay> top16Products = productList.subList(0, Math.min(productList.size(), 16));
         model.addAttribute("products", top16Products);
 
@@ -90,15 +93,27 @@ WebsiteShopController {
                 loaiGiayService.findHangsByIdChiTietGiay(chiTietGiay.getId()),
                 mauSacService.findMauSacsByIdChiTiet(chiTietGiay.getId())
         );
+        List<MauSac> mauSacChiTietGiay = chiTietGiayService.findSimilarMauSacChiTietGiay(
+                giayService.findGiaysByIdChiTietGiay(chiTietGiay.getId()),
+                deGiayService.findDeGiaysByIdChiTiet(chiTietGiay.getId()),
+                hangService.findHangsByIdChiTietGiay(chiTietGiay.getId()),
+                loaiGiayService.findHangsByIdChiTietGiay(chiTietGiay.getId()),
+                kichCoService2.findKichCosByIdChiTietGiay(chiTietGiay.getId())
+        );
         session.setAttribute("giay", chiTietGiay.getId());
 
         List<KichCo> distinctSizeChiTietGiay = sizeChiTietGiay.stream()
                 .distinct()
                 .collect(Collectors.toList());
 
+        List<MauSac> distinctMauSacChiTietGiay = mauSacChiTietGiay.stream()
+                .distinct()
+                .collect(Collectors.toList());
+
         model.addAttribute("giay", chiTietGiayService.getOne(chiTietGiay.getId()));
         model.addAttribute("chiTietGiayById", chiTietGiayService.findChiTietGiaysById(chiTietGiay.getId()));
         model.addAttribute("size", distinctSizeChiTietGiay);
+        model.addAttribute("mauSac", distinctMauSacChiTietGiay);
         // cart
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         List<GioHangChiTiet> cartItems = cartService.getCartItems(authentication.getName());
@@ -126,5 +141,20 @@ WebsiteShopController {
                 id
         );
         return "redirect:/sophia-store/detail/" +fillChiTietGiayBySize.get(0).getId();
+    }
+
+    @GetMapping("/detailll/{id}")
+    public String DetailChiTietGiayTheoMauSac(@PathVariable("id") UUID id, HttpSession session
+    ) {
+        UUID idCTG = (UUID) session.getAttribute("giay");
+        List<ChiTietGiay> fillChiTietGiayByMauSac = chiTietGiayService.findSimilarChiTietGiayByMauSac(
+                giayService.findGiaysByIdChiTietGiay(idCTG),
+                deGiayService.findDeGiaysByIdChiTiet(idCTG),
+                hangService.findHangsByIdChiTietGiay(idCTG),
+                loaiGiayService.findHangsByIdChiTietGiay(idCTG),
+                kichCoService2.findKichCosByIdChiTietGiay(idCTG),
+                id
+        );
+        return "redirect:/sophia-store/detail/" +fillChiTietGiayByMauSac.get(0).getId();
     }
 }
