@@ -118,7 +118,7 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
             "(:loaiGiay IS NULL OR c.loaiGiay.id = :loaiGiay) AND " +
             "(:mauSac IS NULL OR c.mauSac.id = :mauSac) AND" +
             "(:kichCo IS NULL OR c.kichCo.id = :kichCo) AND ((:textSearch IS NULL OR c.ma like :textSearch) or (:textSearch IS NULL OR c.giay.ten like :textSearch)) AND" +
-            "(c.trangThai = 0)")
+            "(c.trangThai = 0) order by c.ngayTao desc")
     List<ChiTietGiay> findChiTietGiayByMultipleParamsAPI(
             @Param("giay") UUID idGiay,
             @Param("deGiay") UUID idDeGiay,

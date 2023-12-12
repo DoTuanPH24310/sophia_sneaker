@@ -54,15 +54,15 @@ public class VoucherController {
 
 
 
-//    @Async
-//    @Scheduled(cron = "0 * * * * *")
-//    public void test() {
-//        List<Voucher> listUpdate = voucherService.findByTrangThaiNotLike();
-//        if (listUpdate.size() == 0) {
-//            return;
-//        }
-//        voucherService.jobUpdate(listUpdate);
-//    }
+    @Async
+    @Scheduled(cron = "0 * * * * *")
+    public void test() {
+        List<Voucher> listUpdate = voucherService.findByTrangThaiNotLike();
+        if (listUpdate.size() == 0) {
+            return;
+        }
+        voucherService.jobUpdate(listUpdate);
+    }
 
 
     @GetMapping("/hien-thi")

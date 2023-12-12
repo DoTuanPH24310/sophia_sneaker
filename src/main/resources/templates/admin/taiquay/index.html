@@ -648,7 +648,7 @@
 
                             <siv class="col-4">
                                 <button class="btn btn-primary mx-2" onclick="findKH();">Tìm kiếm</button>
-                                <button href="" class="btn btn-primary" onclick="findAllKH();">Làm mới</button>
+                                <button href="" class="btn btn-danger" onclick="findAllKH();">Làm mới</button>
                             </siv>
                         </div>
 
@@ -931,7 +931,6 @@
         const phiPhip = [[${phiVanChuyen}]];
         const httt = [[${httt}]];
         const tthd = [[${trangThaiDon}]];
-        console.log(checkIHD);
         if (checkIHD != null && checkIHD == 1) {
             removeSeesion('checkTTHT');
             window.onload = function () {
@@ -994,7 +993,6 @@
                 return;
             }
 
-            console.log(document.getElementById('traSau').checked);
             if (tongTien != null && tongTien != 0 && document.getElementById('traSau').checked == false) {
                 tienKhachDua = tienKhachDua.replace(/[^\d.]/g, '');
                 tienKhachDua = parseFloat(tienKhachDua.replace(/\./g, ''));
@@ -1091,17 +1089,17 @@
         }
 
         function insertTrCTG(x) {
+            const row = tableBody.insertRow();
             $.ajax({
                 type: 'get',
                 url: 'http://localhost:8080/api/chi-tiet-giay/getSumKhuyenMai/' + x.id,
                 success: function (data) {
                     const avtctsp = [[${session.avtctsp}]];
                     let btn = `<button class="btn btn-warning" data-toggle="modal" data-target="#modalSoLuong" onclick="validateSoLuong('${x.ma}');">Chọn</button>`;
-                    const row = tableBody.insertRow();
 
                     row.insertCell().innerHTML = `<img src="${avtctsp[x.id]}" alt="" width="100" height="100">`;
                     row.insertCell().innerHTML = x.ma;
-                    row.insertCell().innerHTML = x.giay.ten;
+                    row.insertCell().innerHTML = x.giay.ten + ' ['+x.mauSac.ten +'] ' + '['+x.kichCo.ten +']';
                     row.insertCell().innerHTML = x.deGiay.ten;
                     row.insertCell().innerHTML = x.hang.ten;
                     row.insertCell().innerHTML = x.loaiGiay.ten;
@@ -1124,6 +1122,8 @@
                     row.insertCell().innerHTML = btn;
                     buttons = document.querySelectorAll("#sinhvien  button");
                     addEventButton();
+
+                    console.log(row);
                 }
             })
 

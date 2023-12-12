@@ -46,12 +46,13 @@ public class RestControllerCTGiay {
 
     @GetMapping("/allCTG")
     public ResponseEntity<?> getListCTG(HttpSession session) {
-        List<ChiTietGiay> list = chiTietGiayService.getAll();
+        List<ChiTietGiay> list = chiTietGiayService.findAllByTrangThaiEquals(0);
+
         for (ChiTietGiay chiTietGiay : list) {
             String avtctg = anhRepository.getAnhChinhByIdctg(chiTietGiay.getId());
             session.setAttribute("avtctsp", avtctg);
         }
-        return ResponseEntity.ok(chiTietGiayService.findAllByTrangThaiEquals(0));
+        return ResponseEntity.ok(list);
     }
 
     @GetMapping("/hang")
