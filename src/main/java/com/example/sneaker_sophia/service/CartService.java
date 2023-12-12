@@ -53,6 +53,10 @@ public class CartService {
         if (chiTietGiay != null && chiTietGiay.getSoLuong() <= 0) {
             return;
         }
+
+        if (soLuong <= 0 || soLuong > chiTietGiay.getSoLuong()) {
+            return;
+        }
         if (gioHang == null) {
             gioHang = new GioHang();
             gioHang.setTaiKhoan(taiKhoan);
@@ -80,6 +84,9 @@ public class CartService {
 
         Cart cartSession = (Cart) httpSession.getAttribute("cart");
         if (chiTietSanPham.get().getSoLuong() <= 0) {
+            return;
+        }
+        if (soLuong <= 0 || soLuong > chiTietSanPham.get().getSoLuong()) {
             return;
         }
         if (cartSession == null) {
