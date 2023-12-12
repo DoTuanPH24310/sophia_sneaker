@@ -8,28 +8,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-    <title>HONO - Multi Purpose HTML Template</title>
-
 </head>
 
 <body layout:fragment="content2">
 <style>
-    /* Thiết lập kích thước cố định cho hình ảnh */
     .image-box {
-        width: 320px; /* Đặt kích thước chiều rộng của container */
-        height: 300px; /* Đặt kích thước chiều cao của container */
+        width: 320px;
+        height: 300px;
         overflow: hidden;
     }
 
     .img-fluid {
         width: 100%;
         height: 100%;
-        object-fit: cover; /* Giữ nguyên tỷ lệ khung hình */
-    }
-
-    .gray-scale-image {
-        /* Bạn có thể thêm hiệu ứng xám bằng cách sử dụng filter: grayscale(100%); */
-        filter: grayscale(100%);
+        object-fit: cover;
     }
 
     .out-of-stock-overlay {
@@ -38,27 +30,26 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(255, 255, 255, 0.7); /* Màu nền overlay, có thể điều chỉnh độ trong suốt tùy ý */
         display: flex;
         align-items: center;
         justify-content: center;
     }
 
     .circle {
-        width: 100px; /* Đặt kích thước hình tròn */
-        height: 100px; /* Đặt kích thước hình tròn */
-        background-color: red; /* Đặt màu nền hình tròn */
-        border-radius: 50%; /* Làm hình tròn */
+        width: 150px;
+        height: 150px;
+        background-color: #ffffff;
+        border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
     }
-
     .out-of-stock-text {
-        color: white; /* Màu chữ trong hình tròn */
-        margin: 0; /* Loại bỏ margin để chữ không bị dính vào mép hình tròn */
+        color: #FF6347;
+        font-weight: bold;
+        font-size: 24px;
+        margin: 0;
     }
-
     /* Optional: Thiết lập margin hoặc padding cho mỗi product container nếu cần thiết */
     #product-container {
         margin-bottom: 20px; /* Ví dụ: Đặt margin dưới cho mỗi product container */
@@ -114,7 +105,7 @@
 
                 <!-- Start Mobile Right Side -->
                 <div class="mobile-right-side">
-                    <ul class="header-action-link action-color--black action-hover-color--golden">
+                    <ul class="header-action-link action-color--black action-hover-cohoverlor--golden">
                         <li>
                             <a href="#search">
                                 <i class="icon-magnifier"></i>
@@ -749,7 +740,8 @@
                                 <div class="product-default-single-item product-color--pink swiper-slide"
                                      th:each="product : ${products}">
                                     <div class="image-box">
-                                        <a th:href="@{'/sophia-store/detail/' + ${product.getId()}}" class="image-link">
+                                        <a th:href="@{'/sophia-store/detail/' + ${product.getId()}}"
+                                           class="image-link">
                                             <!-- Hiển thị ảnh sản phẩm -->
                                             <img class="img-fluid"
                                                  th:src="@{${product.anhs.get(0).getDuongDan()}}"
@@ -763,20 +755,19 @@
                                                  th:classappend="${product.soLuong == 0} ? 'gray-scale-image' : ''">
 
                                             <!-- Hiển thị overlay khi sản phẩm hết hàng -->
-                                            <div th:if="${product.soLuong == 0}" class="out-of-stock-overlay">
+                                            <div th:if="${product.soLuong == 0}"
+                                                 class="out-of-stock-overlay">
                                                 <!-- Chữ Hết hàng nằm trong một thẻ div hình tròn -->
                                                 <div class="circle">
                                                     <p class="out-of-stock-text">Hết hàng</p>
                                                 </div>
                                             </div>
                                         </a>
-<!--                                        <div class="tag">-->
-<!--                                            <span>sale</span>-->
-<!--                                        </div>-->
+
                                         <div class="action-link">
                                             <div class="action-link-left">
-                                                <a class="add-to-cart" th:attr="data-product-id=${product.getId()}"
-                                                   href="#">Thêm vào giỏ</a>
+                                                <a class="add-to-cart btn"
+                                                   th:attr="data-product-id=${product.id}">Thêm vào giỏ</a>
                                             </div>
                                         </div>
                                     </div>
@@ -877,6 +868,7 @@
                                     <div class="image-box">
                                         <a th:href="@{'/sophia-store/detail/' + ${products.getId()}}"
                                            class="image-link">
+                                            <!-- Hiển thị ảnh sản phẩm -->
                                             <img class="img-fluid"
                                                  th:src="@{${products.anhs.get(0).getDuongDan()}}"
                                                  alt=""
@@ -889,22 +881,19 @@
                                                  th:classappend="${products.soLuong == 0} ? 'gray-scale-image' : ''">
 
                                             <!-- Hiển thị overlay khi sản phẩm hết hàng -->
-                                            <div th:if="${products.soLuong == 0}" class="out-of-stock-overlay">
+                                            <div th:if="${products.soLuong == 0}"
+                                                 class="out-of-stock-overlay">
                                                 <!-- Chữ Hết hàng nằm trong một thẻ div hình tròn -->
                                                 <div class="circle">
                                                     <p class="out-of-stock-text">Hết hàng</p>
                                                 </div>
                                             </div>
                                         </a>
+
                                         <div class="action-link">
                                             <div class="action-link-left">
                                                 <a class="add-to-cart btn"
-                                                   th:attr="data-product-id=${products.getId()}">Thêm vào giỏ</a>
-                                            </div>
-                                            <div class="action-link-right">
-                                                <a href="#" data-bs-toggle="modal"
-                                                   data-bs-target="#modalQuickview"><i
-                                                        class="icon-magnifier"></i></a>
+                                                   th:attr="data-product-id=${products.id}">Thêm vào giỏ</a>
                                             </div>
                                         </div>
                                     </div>
