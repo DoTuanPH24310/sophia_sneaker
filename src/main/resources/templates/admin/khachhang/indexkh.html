@@ -105,7 +105,6 @@
                     <th>Ảnh đại diện</th>
                     <th>Tên</th>
                     <th>Email</th>
-                    <th>CCCD</th>
                     <th>Số điện thoại</th>
                     <th>Giới tính</th>
                     <th>Trạng thái</th>
@@ -121,7 +120,6 @@
                     </td>
                     <td th:text="${kh.ten}"></td>
                     <td th:text="${kh.email}"></td>
-                    <td th:text="${kh.canCuoc}"></td>
                     <td th:text="${kh.sdt}"></td>
                     <!--                                        <td th:text="${nv.gioiTinh}"></td>-->
                     <!--                    <td th:text="${nv.gioiTinh == 1} ? 'Nam' : 'Nữ'"></td>-->
@@ -240,7 +238,7 @@
                                 <div class="row mb-3">
                                     <div class="col-6">
                                         <div class="form-group">
-                                            <b>Tên nhân viên: </b>
+                                            <b>Tên khách hàng: </b>
                                             <span th:text="${kh.ten}"></span>
                                         </div>
                                     </div>
@@ -249,22 +247,6 @@
                                         <div class="form-group">
                                             <b>Email: </b>
                                             <span th:text="${kh.email}"></span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row mb-3">
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <b>CCCD: </b>
-                                            <span th:text="${kh.canCuoc}"></span>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <b>Ngày sinh: </b>
-                                            <span th:text="${kh.ngaySinh}"></span>
                                         </div>
                                     </div>
                                 </div>

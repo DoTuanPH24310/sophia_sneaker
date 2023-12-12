@@ -30,14 +30,14 @@ public interface TaiKhoanRepository extends JpaRepository<TaiKhoan, String> {
 
     @Query(value = "SELECT tk FROM TaiKhoan tk " +
             "JOIN VaiTro vt ON tk.vaiTro.id = vt.id " +
-            "WHERE vt.ten = 'Khach Hang' AND ((:trangThai IS NULL And :trangThai IN (0, 1)) OR tk.trangThai = :trangThai) " +
+            "WHERE vt.ten = 'KhachHang' AND ((:trangThai IS NULL And :trangThai IN (0, 1)) OR tk.trangThai = :trangThai) " +
             "AND (:search IS NULL OR tk.ten LIKE %:search% OR tk.sdt LIKE %:search%)")
     Page<TaiKhoan> getAllKhachHang(@Param("search") String search, @Param("trangThai") Integer trangThai, Pageable pageable);
 
 
 
     // 27/11
-    @Query(value = "select tk from TaiKhoan tk join VaiTro vt on tk.vaiTro.id = vt.id where vt.ten = 'Khach Hang' and tk.trangThai = 1")
+    @Query(value = "select tk from TaiKhoan tk join VaiTro vt on tk.vaiTro.id = vt.id where vt.ten = 'KhachHang' and tk.trangThai = 1")
     List<TaiKhoan> getAllTaiKhoanByTrangThai();
 
 
@@ -45,8 +45,8 @@ public interface TaiKhoanRepository extends JpaRepository<TaiKhoan, String> {
     String getAnhById(String id);
 
 
-//    cuongdv
-    @Query(value = "select tk from TaiKhoan tk where tk.vaiTro.ten like 'Khach Hang'")
+    //    cuongdv
+    @Query(value = "select tk from TaiKhoan tk where tk.vaiTro.ten like 'KhachHang'")
     List<TaiKhoan> findAllKhachHang();
 
 
@@ -58,8 +58,12 @@ public interface TaiKhoanRepository extends JpaRepository<TaiKhoan, String> {
 
     // 22/11
 
-    @Query(value = "select tk from TaiKhoan tk where tk.email = ?1")
+//    @Query(value = "select tk from TaiKhoan tk where tk.email = ?1")
+//    TaiKhoan getTaiKhoanByEmail(String text);
+
+    @Query(value = "SELECT tk FROM TaiKhoan tk WHERE tk.email = ?1 AND tk.email IS NOT NULL AND tk.email <> ''")
     TaiKhoan getTaiKhoanByEmail(String text);
+
 
     @Query(value = "select tk from TaiKhoan tk where tk.sdt = ?1 ")
     TaiKhoan getTaiKhoanBySDT(String text);

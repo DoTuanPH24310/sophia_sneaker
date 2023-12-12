@@ -14,7 +14,7 @@
 
 <body>
 
-<div style="background-color: white; height: 680px" layout:fragment="content" class="col-md-12">
+<div style="background-color: white; height: 846px" layout:fragment="content" class="col-md-12">
     <form th:action="@{/admin/nhanvien/store}" method="post" th:object="${nhanVienRequest}"
           enctype="multipart/form-data">
         <div class="row mt-3">
@@ -24,6 +24,7 @@
                      style="width: 160px; height: 150px"
                      alt="Avatar"/>
                 <input type="file" name="image" placeholder="upload file" multiple onchange="previewImage(event)">
+                <span class="text-danger" th:text="${errAnh}"></span>
             </div>
             <div class="col-1">
 
