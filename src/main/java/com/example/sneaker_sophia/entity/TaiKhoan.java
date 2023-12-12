@@ -105,6 +105,17 @@ public class TaiKhoan {
         this.setVaiTro(VaiTro.builder().id(nhanVienRequest.getIdVaiTro()).build());
     }
 
+    public void getTaiKhoanKHAD(TaiKhoanRequest taiKhoanRequest){
+        this.setTen(taiKhoanRequest.getTen());
+        this.setEmail(taiKhoanRequest.getEmail());
+        this.setGioiTinh(Integer.parseInt(taiKhoanRequest.getGioiTinh()));
+        this.setSdt(taiKhoanRequest.getSdt());
+        this.setTrangThai(taiKhoanRequest.getTrangThai());
+        this.setAnhDaiDien(taiKhoanRequest.getAnhDaiDien());
+        this.setVaiTro(VaiTro.builder().id(taiKhoanRequest.getIdVaiTro()).build());
+    }
+
+
     public void getTaiKhoanKH(TaiKhoanRequest taiKhoanRequest){
         this.setTen(taiKhoanRequest.getTen());
         this.setEmail(taiKhoanRequest.getEmail());

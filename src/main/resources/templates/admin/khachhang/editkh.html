@@ -42,6 +42,7 @@
                 <!--                <input type="file" id="fileImage" th:field="*{anhDaiDien}" name="fileImage"-->
                 <!--                       accept="image/png,image/jpg" th:value="${session.anhDaiDien}" onchange="previewImage(event)"/>-->
                 <input type="file" name="image" placeholder="upload file" multiple onchange="previewImage(event)">
+                <span class="text-danger" th:text="${errAnh}"></span>
 
             </div>
             <div class="col-1">
@@ -65,10 +66,10 @@
                 </div>
                 <div class="row mt-3">
                     <div class="col-6">
-                        <label for="ngaySinh"><span style="color: #c82333">*</span> Ngày sinh</label>
-                        <input id="ngaySinh" type="date" class="form-control" th:field="*{ngaySinh}"
-                               placeholder="Nhập ngày sinh">
-                        <span class="text-danger" th:text="${errNgaySinh}"></span>
+                        <label for="soDienThoai"><span style="color: #c82333">*</span> Số điện thoại</label>
+                        <input id="soDienThoai" type="text" class="form-control" th:field="*{sdt}"
+                               placeholder="Số điện thoại">
+                        <span class="text-danger" th:text="${errSDT}"></span>
                     </div>
                     <div class="col-6">
 
@@ -89,21 +90,6 @@
                     <span class="text-danger" th:text="${errGT}"></span>
                 </div>
 
-                <div class="row mt-3">
-                    <div class="col-6">
-                        <label for="cccd"><span style="color: #c82333">*</span> CCCD</label>
-                        <input id="cccd" type="text" class="form-control" th:field="*{canCuoc}"
-                               placeholder="Nhập CCCD">
-                        <span class="text-danger" th:text="${errCCCD}"></span>
-                    </div>
-
-                    <div class="col-6">
-                        <label for="soDienThoai"><span style="color: #c82333">*</span> Số điện thoại</label>
-                        <input id="soDienThoai" type="text" class="form-control" th:field="*{sdt}"
-                               placeholder="Số điện thoại">
-                        <span class="text-danger" th:text="${errSDT}"></span>
-                    </div>
-                </div>
                 <div class="row">
                     <div class="row">
                         <button type="button" data-target="#modalDoiDiaChi" data-toggle="modal" onclick="loadAllDC();"
