@@ -666,40 +666,6 @@
                                                 ngay</span></a>
                                 </div>
                             </div>
-                        </div>
-                        <!-- End Banner Single Item -->
-                        <!--                        &lt;!&ndash; Start Banner Single Item &ndash;&gt;-->
-                        <!--                        <div class="col-lg-6 col-sm-6 mb-6">-->
-                        <!--                            <div class="banner-single-item banner-style-2 banner-animation img-responsive"-->
-                        <!--                                 data-aos="fade-up" data-aos-delay="0">-->
-                        <!--                                <div class="image">-->
-                        <!--                                    <img src="https://assets.adidas.com/images/w_600,f_auto,q_auto/0ffde794971e4799b543afaf0070ae44_9366/Giay_adidas_4D_FWD_Xam_HP3205_01_standard.jpg" alt="">-->
-                        <!--                                </div>-->
-                        <!--                                <div class="content">-->
-                        <!--                                    <h4 class="title">Adidas 4D FWD<br>-->
-                        <!--                                        stools</h4>-->
-                        <!--                                    <a href="../product-details-default.html" class="link-text"><span>Mua-->
-                        <!--                                                ngay</span></a>-->
-                        <!--                                </div>-->
-                        <!--                            </div>-->
-                        <!--                        </div>-->
-                        <!--                        &lt;!&ndash; End Banner Single Item &ndash;&gt;-->
-                        <!--                        &lt;!&ndash; Start Banner Single Item &ndash;&gt;-->
-                        <!--                        <div class="col-lg-6 col-sm-6 mb-6">-->
-                        <!--                            <div class="banner-single-item banner-style-2 banner-animation img-responsive"-->
-                        <!--                                 data-aos="fade-up" data-aos-delay="0">-->
-                        <!--                                <div class="image">-->
-                        <!--                                    <img src="https://kallos.co/cdn/shop/products/85_White_GX2214_01_standard.jpg?v=1674061939" alt="">-->
-                        <!--                                </div>-->
-                        <!--                                <div class="content">-->
-                        <!--                                    <h4 class="title">Adidas Centennial 85 Low<br>-->
-                        <!--                                        stools</h4>-->
-                        <!--                                    <a href="../product-details-default.html" class="link-text"><span>Mua-->
-                        <!--                                                ngay</span></a>-->
-                        <!--                                </div>-->
-                        <!--                            </div>-->
-                        <!--                        </div>-->
-                        <!--                        &lt;!&ndash; End Banner Single Item &ndash;&gt;-->
                     </div>
                 </div>
             </div>
@@ -775,7 +741,7 @@
                                         <div class="content-left">
                                             <h6 class="title">
                                                 <a th:href="@{'/sophia-store/detail/' + ${product.getId()}}"
-                                                   th:text="${product.hang.ten + ' ' + product.giay.ten + ' ' + product.loaiGiay.ten + ' ' + product.mauSac.ten+ ' ' + product.kichCo.ten}">
+                                                   th:text="${product.hang.ten + ' ' + product.giay.ten + ' ' + product.ten + ' ' + product.loaiGiay.ten + ' ' + product.mauSac.ten+ ' ' + product.kichCo.ten}">
                                                 </a>
                                             </h6>
                                         </div>
@@ -901,7 +867,7 @@
                                         <div class="content-left">
                                             <h6 class="title"><a
                                                     th:href="@{'/sophia-store/detail/' + ${products.getId()}}"
-                                                    th:text="${products.hang.ten + ' ' + products.giay.ten + ' ' + products.loaiGiay.ten + ' ' + products.mauSac.ten+ ' ' + products.kichCo.ten}"></a>
+                                                    th:text="${products.hang.ten + ' ' + products.giay.ten + ' ' + products.ten + ' ' + products.loaiGiay.ten + ' ' + products.mauSac.ten+ ' ' + products.kichCo.ten}"></a>
                                             </h6>
                                         </div>
                                         <div class="content-right">
@@ -1009,232 +975,6 @@
         <!-- End Banner Single Item -->
     </div>
 </div>
-<!-- End Banner Section -->
-
-<!--&lt;!&ndash; Start Blog Slider Section &ndash;&gt;-->
-<!--<div class="blog-default-slider-section section-top-gap-100 section-fluid">-->
-<!--    &lt;!&ndash; Start Section Content Text Area &ndash;&gt;-->
-<!--    <div class="section-title-wrapper" data-aos="fade-up" data-aos-delay="0">-->
-<!--        <div class="container">-->
-<!--            <div class="row">-->
-<!--                <div class="col-12">-->
-<!--                    <div class="section-content-gap">-->
-<!--                        <div class="secton-content">-->
-<!--                            <h3 class="section-title">THE LATEST BLOGS</h3>-->
-<!--                            <p>Present posts in a best way to highlight interesting moments of your blog.</p>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--    &lt;!&ndash; Start Section Content Text Area &ndash;&gt;-->
-<!--    <div class="blog-wrapper" data-aos="fade-up" data-aos-delay="200">-->
-<!--        <div class="container">-->
-<!--            <div class="row">-->
-<!--                <div class="col-12">-->
-<!--                    <div class="blog-default-slider default-slider-nav-arrow">-->
-<!--                        &lt;!&ndash; Slider main container &ndash;&gt;-->
-<!--                        <div class="swiper-container blog-slider">-->
-<!--                            &lt;!&ndash; Additional required wrapper &ndash;&gt;-->
-<!--                            <div class="swiper-wrapper">-->
-<!--                                &lt;!&ndash; Start Product Default Single Item &ndash;&gt;-->
-<!--                                <div class="blog-default-single-item blog-color&#45;&#45;golden swiper-slide">-->
-<!--                                    <div class="image-box">-->
-<!--                                        <a href="../blog-single-sidebar-left.html" class="image-link">-->
-<!--                                            <img class="img-fluid"-->
-<!--                                                 src="/assets/images/blog/blog-grid-home-1-img-1.jpg" alt="">-->
-<!--                                        </a>-->
-<!--                                    </div>-->
-<!--                                    <div class="content">-->
-<!--                                        <h6 class="title"><a href="../blog-single-sidebar-left.html">Blog Post One</a>-->
-<!--                                        </h6>-->
-<!--                                        <p>Donec vitae hendrerit arcu, sit amet faucibus nisl. Cras pretium arcu ex.-->
-<!--                                            Aenean posuere libero eu augue condimentum rhoncus. Praesent</p>-->
-<!--                                        <div class="inner">-->
-<!--                                            <a href="../blog-single-sidebar-left.html"-->
-<!--                                               class="read-more-btn icon-space-left">Read More <span><i-->
-<!--                                                    class="ion-ios-arrow-thin-right"></i></span></a>-->
-<!--                                            <div class="post-meta">-->
-<!--                                                <a href="#" class="date">24 Apr</a>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                &lt;!&ndash; End Product Default Single Item &ndash;&gt;-->
-<!--                                &lt;!&ndash; Start Product Default Single Item &ndash;&gt;-->
-<!--                                <div class="blog-default-single-item blog-color&#45;&#45;golden swiper-slide">-->
-<!--                                    <div class="image-box">-->
-<!--                                        <a href="../blog-single-sidebar-left.html" class="image-link">-->
-<!--                                            <img class="img-fluid"-->
-<!--                                                 src="/assets/images/blog/blog-grid-home-1-img-2.jpg" alt="">-->
-<!--                                        </a>-->
-<!--                                    </div>-->
-<!--                                    <div class="content">-->
-<!--                                        <h6 class="title"><a href="../blog-single-sidebar-left.html">Blog Post Two</a>-->
-<!--                                        </h6>-->
-<!--                                        <p>Donec vitae hendrerit arcu, sit amet faucibus nisl. Cras pretium arcu ex.-->
-<!--                                            Aenean posuere libero eu augue condimentum rhoncus. Praesent</p>-->
-<!--                                        <div class="inner">-->
-<!--                                            <a href="#" class="read-more-btn icon-space-left">Read More <span><i-->
-<!--                                                    class="ion-ios-arrow-thin-right"></i></span></a>-->
-<!--                                            <div class="post-meta">-->
-<!--                                                <a href="../blog-single-sidebar-left.html" class="date">24 Apr</a>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                &lt;!&ndash; End Product Default Single Item &ndash;&gt;-->
-<!--                                &lt;!&ndash; Start Product Default Single Item &ndash;&gt;-->
-<!--                                <div class="blog-default-single-item blog-color&#45;&#45;golden swiper-slide">-->
-<!--                                    <div class="image-box">-->
-<!--                                        <a href="../blog-single-sidebar-left.html" class="image-link">-->
-<!--                                            <img class="img-fluid"-->
-<!--                                                 src="/assets/images/blog/blog-grid-home-1-img-3.jpg" alt="">-->
-<!--                                        </a>-->
-<!--                                    </div>-->
-<!--                                    <div class="content">-->
-<!--                                        <h6 class="title"><a href="../blog-single-sidebar-left.html">Blog Post-->
-<!--                                            Three</a></h6>-->
-<!--                                        <p>Donec vitae hendrerit arcu, sit amet faucibus nisl. Cras pretium arcu ex.-->
-<!--                                            Aenean posuere libero eu augue condimentum rhoncus. Praesent</p>-->
-<!--                                        <div class="inner">-->
-<!--                                            <a href="../blog-single-sidebar-left.html"-->
-<!--                                               class="read-more-btn icon-space-left">Read More <span><i-->
-<!--                                                    class="ion-ios-arrow-thin-right"></i></span></a>-->
-<!--                                            <div class="post-meta">-->
-<!--                                                <a href="#" class="date">24 Apr</a>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                &lt;!&ndash; End Product Default Single Item &ndash;&gt;-->
-<!--                                &lt;!&ndash; Start Product Default Single Item &ndash;&gt;-->
-<!--                                <div class="blog-default-single-item blog-color&#45;&#45;golden swiper-slide">-->
-<!--                                    <div class="image-box">-->
-<!--                                        <a href="../blog-single-sidebar-left.html" class="image-link">-->
-<!--                                            <img class="img-fluid"-->
-<!--                                                 src="/assets/images/blog/blog-grid-home-1-img-4.jpg" alt="">-->
-<!--                                        </a>-->
-<!--                                    </div>-->
-<!--                                    <div class="content">-->
-<!--                                        <h6 class="title"><a href="../blog-single-sidebar-left.html">Blog Post Four</a>-->
-<!--                                        </h6>-->
-<!--                                        <p>Donec vitae hendrerit arcu, sit amet faucibus nisl. Cras pretium arcu ex.-->
-<!--                                            Aenean posuere libero eu augue condimentum rhoncus. Praesent</p>-->
-<!--                                        <div class="inner">-->
-<!--                                            <a href="../blog-single-sidebar-left.html"-->
-<!--                                               class="read-more-btn icon-space-left">Read More <span><i-->
-<!--                                                    class="ion-ios-arrow-thin-right"></i></span></a>-->
-<!--                                            <div class="post-meta">-->
-<!--                                                <a href="#" class="date">24 Apr</a>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                &lt;!&ndash; End Product Default Single Item &ndash;&gt;-->
-<!--                                &lt;!&ndash; Start Product Default Single Item &ndash;&gt;-->
-<!--                                <div class="blog-default-single-item blog-color&#45;&#45;golden swiper-slide">-->
-<!--                                    <div class="image-box">-->
-<!--                                        <a href="../blog-single-sidebar-left.html" class="image-link">-->
-<!--                                            <img class="img-fluid"-->
-<!--                                                 src="/assets/images/blog/blog-grid-home-1-img-5.jpg" alt="">-->
-<!--                                        </a>-->
-<!--                                    </div>-->
-<!--                                    <div class="content">-->
-<!--                                        <h6 class="title"><a href="../blog-single-sidebar-left.html">Blog Post Five</a>-->
-<!--                                        </h6>-->
-<!--                                        <p>Donec vitae hendrerit arcu, sit amet faucibus nisl. Cras pretium arcu ex.-->
-<!--                                            Aenean posuere libero eu augue condimentum rhoncus. Praesent</p>-->
-<!--                                        <div class="inner">-->
-<!--                                            <a href="../blog-single-sidebar-left.html"-->
-<!--                                               class="read-more-btn icon-space-left">Read More <span><i-->
-<!--                                                    class="ion-ios-arrow-thin-right"></i></span></a>-->
-<!--                                            <div class="post-meta">-->
-<!--                                                <a href="#" class="date">24 Apr</a>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                &lt;!&ndash; End Product Default Single Item &ndash;&gt;-->
-<!--                                &lt;!&ndash; Start Product Default Single Item &ndash;&gt;-->
-<!--                                <div class="blog-default-single-item blog-color&#45;&#45;golden swiper-slide">-->
-<!--                                    <div class="image-box">-->
-<!--                                        <a href="../blog-single-sidebar-left.html" class="image-link">-->
-<!--                                            <img class="img-fluid"-->
-<!--                                                 src="/assets/images/blog/blog-grid-home-1-img-6.jpg" alt="">-->
-<!--                                        </a>-->
-<!--                                    </div>-->
-<!--                                    <div class="content">-->
-<!--                                        <h6 class="title"><a href="../blog-single-sidebar-left.html">Blog Post Six</a>-->
-<!--                                        </h6>-->
-<!--                                        <p>Donec vitae hendrerit arcu, sit amet faucibus nisl. Cras pretium arcu ex.-->
-<!--                                            Aenean posuere libero eu augue condimentum rhoncus. Praesent</p>-->
-<!--                                        <div class="inner">-->
-<!--                                            <a href="../blog-single-sidebar-left.html"-->
-<!--                                               class="read-more-btn icon-space-left">Read More <span><i-->
-<!--                                                    class="ion-ios-arrow-thin-right"></i></span></a>-->
-<!--                                            <div class="post-meta">-->
-<!--                                                <a href="#" class="date">24 Apr</a>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                &lt;!&ndash; End Product Default Single Item &ndash;&gt;-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        &lt;!&ndash; If we need navigation buttons &ndash;&gt;-->
-<!--                        <div class="swiper-button-prev"></div>-->
-<!--                        <div class="swiper-button-next"></div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
-<!--&lt;!&ndash; End Blog Slider Section &ndash;&gt;-->
-
-<!--&lt;!&ndash; Start Instagramr Section &ndash;&gt;-->
-<!--<div class="instagram-section section-top-gap-100 section-inner-bg">-->
-<!--    <div class="instagram-wrapper" data-aos="fade-up" data-aos-delay="0">-->
-<!--        <div class="container">-->
-<!--            <div class="row">-->
-<!--                <div class="col-12">-->
-<!--                    <div class="instagram-box">-->
-<!--                        <div id="instagramFeed" class="instagram-grid clearfix">-->
-<!--                            <a href="https://www.instagram.com/p/CCFOZKDDS6S/" target="_blank"-->
-<!--                               class="instagram-image-link float-left banner-animation"><img-->
-<!--                                    src="/assets/images/instagram/instagram-1.jpg" alt=""></a>-->
-<!--                            <a href="https://www.instagram.com/p/CCFOYDNjWF5/" target="_blank"-->
-<!--                               class="instagram-image-link float-left banner-animation"><img-->
-<!--                                    src="/assets/images/instagram/instagram-2.jpg" alt=""></a>-->
-<!--                            <a href="https://www.instagram.com/p/CCFOXH6D-zQ/" target="_blank"-->
-<!--                               class="instagram-image-link float-left banner-animation"><img-->
-<!--                                    src="/assets/images/instagram/instagram-3.jpg" alt=""></a>-->
-<!--                            <a href="https://www.instagram.com/p/CCFOVcrDDOo/" target="_blank"-->
-<!--                               class="instagram-image-link float-left banner-animation"><img-->
-<!--                                    src="/assets/images/instagram/instagram-4.jpg" alt=""></a>-->
-<!--                            <a href="https://www.instagram.com/p/CCFOUajjABP/" target="_blank"-->
-<!--                               class="instagram-image-link float-left banner-animation"><img-->
-<!--                                    src="/assets/images/instagram/instagram-5.jpg" alt=""></a>-->
-<!--                            <a href="https://www.instagram.com/p/CCFOS2MDmjj/" target="_blank"-->
-<!--                               class="instagram-image-link float-left banner-animation"><img-->
-<!--                                    src="/assets/images/instagram/instagram-6.jpg" alt=""></a>-->
-<!--                        </div>-->
-<!--                        <div class="instagram-link">-->
-<!--                            <h5><a href="https://www.instagram.com/myfurniturecom/" target="_blank"-->
-<!--                                   rel="noopener noreferrer">HONOTEMPLATE</a></h5>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
-<!--&lt;!&ndash; End Instagramr Section &ndash;&gt;-->
-
-<!-- End Footer Section -->
-
 <!-- material-scrolltop button -->
 <button class="material-scrolltop" type="button"></button>
 

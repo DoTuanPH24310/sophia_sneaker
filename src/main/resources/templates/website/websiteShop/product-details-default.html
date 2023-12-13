@@ -247,7 +247,7 @@
                     <!-- Start  Product Details Text Area-->
                     <div class="product-details-text">
                         <h4 class="title"
-                            th:text="${giay.hang.ten + ' ' + giay.giay.ten + ' ' + giay.loaiGiay.ten + ' ' + giay.mauSac.ten+ ' ' + giay.kichCo.ten}"></h4>
+                            th:text="${giay.hang.ten + ' ' + giay.giay.ten + ' ' + giay.ten + ' ' + giay.loaiGiay.ten + ' ' + giay.mauSac.ten+ ' ' + giay.kichCo.ten}"></h4>
                         <div class="price">
                             <span th:if="${session['giaCu_' + id] != session['giaMoi_' + id]}"
                                   class="original-price"
@@ -381,12 +381,12 @@
                                     </div>
                                     <div class="content">
                                         <div class="content-left">
-                                            <h6 class="title"><a th:href="@{'/sophia-store/detail/' + ${chiTietGiay.getId()}}" th:text="${chiTietGiay.getHang().getTen()}+' '+
-                                            ${chiTietGiay.getTen()}+' '+
-                                            ${chiTietGiay.getGiay().getTen()}+' '+
-                                            ${chiTietGiay.getMauSac().getTen()}+' '+
-                                            ${chiTietGiay.getKichCo().getTen()}
-"></a></h6>
+                                            <h6 class="title"><a th:href="@{'/sophia-store/detail/' + ${chiTietGiay.getId()}}" th:text="${giay.hang.ten +
+                                             ' ' + giay.giay.ten +
+                                             ' ' + giay.ten +
+                                             ' ' + giay.loaiGiay.ten +
+                                             ' ' + giay.mauSac.ten+
+                                             ' ' + giay.kichCo.ten}"></a></h6>
                                         </div>
                                         <div class="content-right">
                                             <span class="discounted-price" th:if="${session['giaCu_' + id] != session['giaMoi_' + id]}"

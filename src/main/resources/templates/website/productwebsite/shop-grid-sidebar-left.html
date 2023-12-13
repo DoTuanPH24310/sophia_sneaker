@@ -346,7 +346,7 @@
                                                         <div class="content-left">
                                                             <h6 class="title"><a
                                                                     th:href="@{'/sophia-store/detail/' + ${product.getId()}}"
-                                                                    th:text="${product.hang.ten + ' ' + product.giay.ten + ' ' + product.loaiGiay.ten + ' ' + product.mauSac.ten+ ' ' + product.kichCo.ten}"></a>
+                                                                    th:text="${product.hang.ten + ' ' + product.giay.ten + ' ' + product.ten + ' ' + product.loaiGiay.ten + ' ' + product.mauSac.ten+ ' ' + product.kichCo.ten}"></a>
                                                             </h6>
                                                         </div>
                                                         <div class="content-right">
@@ -411,7 +411,7 @@
                                                     <div class="product-list-content">
                                                         <h5 class="product-list-link"><a
                                                                 th:href="@{'/sophia-store/detail/' + ${product.getId()}}"
-                                                                th:text="${product.hang.ten + ' ' + product.giay.ten + ' ' + product.loaiGiay.ten + ' ' + product.mauSac.ten}"></a>
+                                                                th:text="${product.hang.ten + ' ' + product.giay.ten + ' ' + product.ten + ' ' + product.loaiGiay.ten + ' ' + product.mauSac.ten+ ' ' + product.kichCo.ten}"></a>
                                                         </h5>
                                                         <span th:if="${session['giaCu_' + product.id] != session['giaMoi_' + product.id]}"
                                                               class="original-price"
@@ -453,7 +453,7 @@
                                     <a href="#" th:attr="onclick='changePage(' + ${pageNumber} + ')'"
                                        th:text="${pageNumber}"></a>
                                 </li>
-                                <li th:if="${currentPage < totalPages}">
+                                <li th:with="nextPage=${currentPage + 1}" th:if="${currentPage < totalPages}">
                                     <a href="#" th:attr="onclick='changePage(' + ${nextPage} + ')'">Next</a>
                                 </li>
                             </ul>
