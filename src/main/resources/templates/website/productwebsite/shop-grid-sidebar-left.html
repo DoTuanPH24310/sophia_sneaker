@@ -445,15 +445,15 @@
                     <div class="page-pagination text-center" data-aos="fade-up" data-aos-delay="0">
                         <form id="paginationForm" method="get" action="/sophia-store/product">
                             <ul>
-                                <li th:with="previousPage=${currentPage - 1}" th:if="${previousPage > 0}">
+                                <li style="border: 1px solid" th:with="previousPage=${currentPage - 1}" th:if="${previousPage > 0}">
                                     <a href="#" th:attr="onclick='changePage(' + ${previousPage} + ')'">Previous</a>
                                 </li>
-                                <li th:each="pageNumber : ${#numbers.sequence(1, totalPages)}"
+                                <li style="border: 1px solid;" th:each="pageNumber : ${#numbers.sequence(1, totalPages)}"
                                     th:class="${pageNumber} == ${currentPage} ? 'active' : ''">
                                     <a href="#" th:attr="onclick='changePage(' + ${pageNumber} + ')'"
                                        th:text="${pageNumber}"></a>
                                 </li>
-                                <li th:with="nextPage=${currentPage + 1}" th:if="${currentPage < totalPages}">
+                                <li style="border: 1px solid" th:with="nextPage=${currentPage + 1}" th:if="${currentPage < totalPages}">
                                     <a href="#" th:attr="onclick='changePage(' + ${nextPage} + ')'">Next</a>
                                 </li>
                             </ul>
