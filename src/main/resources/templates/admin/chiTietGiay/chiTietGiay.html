@@ -317,10 +317,6 @@
                                ${ctg.kichCo != null ? ctg.kichCo.ten : ''}"></td>
                         <td th:text="${#numbers.formatCurrency(ctg.gia)}"></td>
                         <td>[[${#numbers.formatDecimal(ctg.soLuong, 0, 'COMMA', 0, 'POINT')}]]</td>
-                        <!-- Thay đổi cột hiển thị mã QR -->
-                        <!--                        <td class="qr-code">-->
-                        <!--                            <div th:text="${ctg.qrCode}"></div>-->
-                        <!--                        </td>-->
                         <td style="width: 160px;">
                             <button class="btn" th:classappend="${ctg.trangThai == 0} ? 'btn-success' : 'btn-danger'"
                                     style="border-radius: 30px; font-size: 12px;">

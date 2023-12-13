@@ -212,7 +212,7 @@ public class VoucherService {
 
     public void saveVoucher(VoucherDTO voucherDTO, List<String> listIDCTG) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
-        Voucher voucher = voucherRepository.findById(voucherDTO.getId()).get();
+        Voucher voucher = new Voucher();
         BeanUtils.copyProperties(voucherDTO, voucher);
         voucher.setPhanTramGiam(Integer.parseInt(voucherDTO.getPhanTramGiam()));
         voucher.setNgayBatDau(LocalDateTime.parse(String.valueOf(voucherDTO.getNgayBatDau()), formatter));

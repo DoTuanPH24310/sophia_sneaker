@@ -164,8 +164,8 @@
 
         </div>
 
-        <button type="button" class="btn btn-info float-left ml-2"
-                data-toggle="modal"
+        <button type="button" class="btn float-left ml-2"
+                data-toggle="modal" style="background-color: #4ed5c6; color: white"
                 data-target="#modalLichSu">
             Lịch sử
         </button>
@@ -191,10 +191,7 @@
                 nhận
                 thành công</a>
         </div>
-        <div th:if="${hoaDon.trangThai == 1}" class="float-right">
-            <a th:href="@{/staff/tai-quay/pdf/{id}(id=${hoaDon.id})}" class="btn btn-primary mr-3">In HĐ</a>
 
-        </div>
         <div th:if="${hoaDon.trangThai == 3}" class="float-right">
             <a th:href="@{/staff/hoa-don/updatehdcxn/{id}(id=${hoaDon.id})}" id="myLinhXacNhanXND"
                class="btn btn-primary">Xác nhận đơn</a>
@@ -248,8 +245,17 @@
             <div class="ttdh mb-5 mt-4">
 
                 <div class="row">
-                    <h5 style="font-size: 17px;" class="mt-3 ms-2"
-                        th:text="'Thông tin đơn hàng ' + ${' ( ' + hoaDon.maHoaDOn + ' ) '}"></h5>
+                    <div class="col-8">
+                        <h5 style="font-size: 17px;" class="mt-3 ms-2"
+                            th:text="'Thông tin đơn hàng ' + ${' ( ' + hoaDon.maHoaDOn + ' ) '}"></h5>
+                    </div>
+                    <div class="col-4 float-right">
+                        <div th:if="${hoaDon.trangThai != 2 && hoaDon.trangThai != 6}" class="float-right mt-1">
+                            <a th:href="@{/staff/tai-quay/pdf/{id}(id=${hoaDon.id})}" class="btn mr-3" style="background-color: #2ea378; color: white">In HĐ</a>
+
+                        </div>
+                    </div>
+
                     <hr style="width: 1200px;color: black;height: 1px;background-color: black;">
                 </div>
 
@@ -448,6 +454,7 @@
                                             <span th:if="${x.phuongThuc.equals('4')}">Chờ giao</span>
                                             <span th:if="${x.phuongThuc.equals('5')}">Đang giao</span>
                                             <span th:if="${x.phuongThuc.equals('6')}">Hủy</span>
+                                            <span th:if="${x.phuongThuc.equals('7')}">Hoàn hàng</span>
                                         </td>
                                         <td th:text=" ${#temporals.format(x.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
                                         <td th:text="${x.createdBy}"></td>
@@ -547,11 +554,12 @@
             }
             value = check('3');
             if (value != null) {
-                fillTimeLine('icon1', 'text1', value, 'Chờ Xác nhận', 'uil-comment-alt-question');
+                fillTimeLine('icon1', 'text1', value, 'Chờ xác nhận', 'uil-comment-alt-question');
             }
             value = check('6');
             if (value != null && listLSHD.length == 2) {
                 fillTimeLine('icon2', 'text2', value, 'Hủy', 'uil-trash-alt');
+                return;
             }
             value = check('4');
             if (value != null && value.hoaDon.loaiHoaDon != 1) {
@@ -560,10 +568,16 @@
             value = check('6');
             if (value != null && listLSHD.length == 3) {
                 fillTimeLine('icon3', 'text3', value, 'Hủy', 'uil-trash-alt');
+                return;
             }
             value = check('5');
             if (value != null && value.hoaDon.loaiHoaDon != 1) {
                 fillTimeLine('icon3', 'text3', value, 'Đang giao', 'uil-truck');
+            }
+            value = check('7');
+            if (value != null && value.hoaDon.loaiHoaDon != 1) {
+                fillTimeLine('icon3', 'text3', value, 'Hoàn hàng', 'uil-truck');
+                return;
             }
             value = check('1');
             if (value != null) {

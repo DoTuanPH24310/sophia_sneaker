@@ -157,6 +157,10 @@
                         <a class="nav-link  text-dark" href="#huy" aria-controls="huy" role="tab"
                            data-toggle="tab">Hủy</a>
                     </li>
+                    <li role="presentation" class="nav-item">
+                        <a class="nav-link  text-dark" href="#donHoan" aria-controls="donHoan" role="tab"
+                           data-toggle="tab">Đơn Hoàn</a>
+                    </li>
                 </ul>
 
 
@@ -600,6 +604,63 @@
                             </div>
                         </div>
                     </div>
+
+                    <div role="tabpanel" class="tab-pane" id="donHoan">
+                        <div class="row mt-4">
+                            <div class="table table-wrapper-scroll-y my-custom-scrollbar">
+                                <table id="tableModal" class="table table-borderless ml-2">
+                                    <thead>
+                                    <tr class="bg-light">
+                                        <th>STT</th>
+                                        <th>Mã HĐ</th>
+                                        <th>Tên khách hàng</th>
+                                        <th>Tên nhân viên</th>
+                                        <th>Ngày tạo</th>
+                                        <th>Khuyến mại</th>
+                                        <th>Tổng tiền</th>
+                                        <th>Loại đơn</th>
+                                        <th>Thao tác</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="trdonHoan">
+                                    <tr th:each="hdh, status : ${listhdh}">
+                                        <td th:text="${status.index + 1}"></td>
+                                        <td th:text="${hdh.maHoaDOn}"></td>
+                                        <td th:text="${hdh.tenKhachHang}"></td>
+                                        <td th:text="${hdh.createdBy}"></td>
+                                        <td th:text="${#temporals.format(hdh.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
+                                        <td th:text="${#numbers.formatCurrency(hdh.khuyenMai)}"></td>
+                                        <td th:text="${#numbers.formatCurrency(hdh.tongTien + hdh.phiShip)}"></td>
+                                        <td>
+                                            <button th:if="${hdh.loaiHoaDon == 1}" class="btn btn-success "
+                                                    style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                Tại quầy
+                                            </button>
+                                            <button th:if="${hdh.loaiHoaDon == 2}" class="btn btn-primary "
+                                                    style="border-radius: 30px; font-size: 12px; height: 40px">
+                                                Giao hàng
+                                            </button>
+                                        </td>
+                                        <td>
+
+                                            <a th:href="@{/staff/tai-quay/detail/{id}(id=${hdh.id})}"
+                                               class="btn btn-warning edit" style=" padding: 5px 10px; font-size: 12px">
+                                                <i class="material-icons text-white mt-1" title="Sửa">&#xE254;</i>
+                                            </a>
+
+                                            <a th:href="@{/staff/hoa-don/detail/{id}(id=${hdh.id})}"
+                                               class="btn btn-success " style=" padding: 5px 10px; font-size: 12px;">
+                                                <i class="material-icons text-white mt-1"
+                                                   title="Chi tiết">visibility</i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <h2 class="text-center mt-4" id="errdonHoan"></h2>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -621,6 +682,7 @@
         let listHDCXN = [[${listhdhcxn}]];
         let listHDDG = [[${listhddg}]];
         let listHDH = [[${listhdh}]];
+        let listHDHoan = [[${listhdhoan}]];
         let errTable = '';
         let idSelectAll = '';
         let classSelectChild = '';
@@ -741,9 +803,6 @@
             checkevent = 1;
             let selectAllCheckbox = document.getElementById(prId);
             let checkboxes = document.querySelectorAll(prClass);
-            console.log('test');
-            console.log(selectAllCheckbox);
-            console.log(checkboxes);
             selectAllCheckbox.addEventListener('click', function () {
                 checkboxes.forEach(function (checkbox) {
                     checkbox.checked = selectAllCheckbox.checked;
@@ -773,6 +832,8 @@
                 errTable = 'errdangGiao';
             } else if (tab == '#huy') {
                 errTable = 'errhuy';
+            }else if (tab == '#donHoan'){
+                errTable = 'errdonHoan';
             }
         }
 
@@ -857,7 +918,7 @@ type="checkbox">`;
                 }
 
 
-            } else if (activeTab == '#hoanThanh' || activeTab == '#dangGiao' || activeTab == '#huy' || activeTab == '#choXacNhan') {
+            } else if (activeTab == '#hoanThanh' || activeTab == '#dangGiao' || activeTab == '#huy' || activeTab == '#choXacNhan' || activeTab == '#donHoan') {
                 let button = `<a href="/staff/hoa-don/detail/${id}" class="btn btn-success ms-1" style=" padding: 5px 10px; font-size: 12px;"><i class="material-icons text-white mt-1" title="Chi tiết">visibility</i></a>`;
                 row.insertCell().innerHTML = button;
             }
@@ -877,12 +938,14 @@ type="checkbox">`;
             loadAllTable(listHDCXN, '#choXacNhan');
             loadAllTable(listHDDG, '#dangGiao');
             loadAllTable(listHDH, '#huy');
+            loadAllTable(listHDHoan, '#donHoan');
             document.getElementById('errchoGiao').innerHTML = '';
             document.getElementById('errhoanThanh').innerHTML = '';
             document.getElementById('errchoThanhToan').innerHTML = '';
             document.getElementById('errchoXacNhan').innerHTML = '';
             document.getElementById('errdangGiao').innerHTML = '';
             document.getElementById('errhuy').innerHTML = '';
+            document.getElementById('errdonHoan').innerHTML = '';
             document.getElementById('selectAllCG').checked = false;
             document.getElementById('selectAllDG').checked = false;
             document.getElementById('selectAllCXN').checked = false;
@@ -901,8 +964,10 @@ type="checkbox">`;
                 temActiveTab = 3;
             } else if (temActiveTab == 'dangGiao') {
                 temActiveTab = 5;
-            } else {
+            } else if (temActiveTab == 'huy') {
                 temActiveTab = 6;
+            }else{
+                temActiveTab = 7;
             }
             let params = {
                 ngayBatDau: NBD.value,
