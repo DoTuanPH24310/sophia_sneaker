@@ -127,6 +127,10 @@ public class TaiKhoanService {
         return true;
     }
 
+    public void save(TaiKhoan taiKhoan) {
+        taiKhoanRepository.save(taiKhoan);
+    }
+
     public boolean update(String id, TaiKhoanRequest nhanVienRequest, Model model) {
         TaiKhoan taiKhoan = taiKhoanRepository.findById(id).orElse(null);
         DiaChi diaChi = diaChiRepository.getDiaChiByIdTaiKhoan(id);

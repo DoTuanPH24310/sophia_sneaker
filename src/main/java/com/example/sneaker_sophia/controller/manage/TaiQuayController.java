@@ -4,6 +4,7 @@ import com.example.sneaker_sophia.entity.*;
 import com.example.sneaker_sophia.repository.AnhRepository;
 import com.example.sneaker_sophia.repository.TaiKhoanRepository;
 import com.example.sneaker_sophia.repository.LoginRepository;
+import com.example.sneaker_sophia.repository.VaiTroRepository;
 import com.example.sneaker_sophia.request.TaiKhoanRequest;
 import com.example.sneaker_sophia.service.*;
 import com.example.sneaker_sophia.validate.AlertInfo;
@@ -78,6 +79,9 @@ public class TaiQuayController {
 
     @Autowired
     LoginRepository loginRepository;
+
+    @Resource(name = "vaiTroRepository")
+    VaiTroRepository vaiTroRepository;
     //    alo ôla
     @GetMapping("/hien-thi")
     public String index(Model model) {
@@ -326,6 +330,7 @@ public class TaiQuayController {
             model.addAttribute("phiVanChuyen", hoaDon.getPhiShip());
             model.addAttribute("httt",hinhThucThanhToan.getTrangThai());
             model.addAttribute("trangThaiDon",hoaDon.getTrangThai());
+            model.addAttribute("khachCanTra",hoaDon.getTongTien() + hoaDon.getPhiShip());
         }
 
         model.addAttribute("tongTienTruocGiam", tongTienTruocGiam);
@@ -541,6 +546,50 @@ public class TaiQuayController {
 
     }
 
+    @PostMapping("addKH")
+    public String addKH(
+            @RequestParam(value = "xa", required = false) Integer xa,
+            @RequestParam(value = "quan", required = false) Integer quan,
+            @RequestParam(value = "tinh", required = false) Integer tinh,
+            @RequestParam(value = "dcCuThe", required = false) String dcCuThe,
+            @RequestParam(value = "hoTen", required = false) String hoTen,
+            @RequestParam(value = "sdt", required = false) String sdt,
+            @RequestParam(value = "email", required = false) String email,
+            @RequestParam(value = "gender", required = false) String gender,
+            Model model
+    ) {
+        DiaChi diaChi = new DiaChi();
+        TaiKhoan taiKhoan = new TaiKhoan();
+
+
+        if(!diaChiService.validateAddDc(dcCuThe, hoTen, sdt, model)){
+            return "redirect:/staff/tai-quay/detail/" + tempIdHD;
+        }else{
+            taiKhoan.setTen(hoTen);
+            taiKhoan.setSdt(sdt);
+            taiKhoan.setEmail(email);
+            taiKhoan.setGioiTinh(Integer.parseInt(gender));
+            taiKhoan.setVaiTro(VaiTro.builder().id(vaiTroRepository.getIdByTenKH()).build());
+            taiKhoan.setTrangThai(1);
+            taiKhoanService.save(taiKhoan);
+            diaChi.setTaiKhoan(taiKhoan);
+            diaChi.setPhuongXa(xa);
+            diaChi.setQuanHuyen(quan);
+            diaChi.setTinh(tinh);
+            diaChi.setDiaChiCuThe(dcCuThe);
+            diaChi.setTen(hoTen);
+            diaChi.setSdt(sdt);
+            diaChi.setDiaChiMacDinh(1);
+            diaChiService.saveDC(diaChi);
+            HoaDon hoaDon = hoaDonService.getHoaDonById(tempIdHD);
+            hoaDon.setTaiKhoan(taiKhoan);
+            hoaDonService.savehd(hoaDon);
+            alertInfo.alert("successTaiQuay","Tài khoản mới đã được thêm");
+            return "redirect:/staff/tai-quay/detail/" + tempIdHD;
+        }
+
+    }
+
     // 11-11
     @PostMapping(value = "/scan", consumes = "application/json")
     public String handleQRCode(@RequestBody Map<String, String> requestBody) {
@@ -684,11 +733,12 @@ public class TaiQuayController {
 
         if (!tempIdKH.equals("") && hoaDon.getLoaiHoaDon() == 2) {
             TaiKhoanRequest taiKhoan = taiKhoanService.getTaiKhoanById(tempIdKH);
+            DiaChi diaChi = diaChiService.findDcByIdDc(taiKhoan.getIdTaiKhoan());
             if(!taiQuayService.validateAđhttt(xa, quan, tinh)){
                 return "redirect:/staff/tai-quay/detail/" + tempIdHD;
             }
-            hoaDon.setTenKhachHang(taiKhoan.getTen());
-            hoaDon.setSoDienThoai(taiKhoan.getSdt());
+            hoaDon.setTenKhachHang(diaChi.getTen());
+            hoaDon.setSoDienThoai(diaChi.getSdt());
             hoaDon.setDiaChi(taiKhoan.getDiaChiCuThe() + "," + xa + "," + quan + "," + tinh);
             phiVanChuyen = phiVanChuyen.replaceAll("[^\\d]", "");
             hoaDon.setPhiShip(Double.parseDouble(phiVanChuyen));
@@ -709,12 +759,15 @@ public class TaiQuayController {
         hoaDon.setGhiChu(ghiChu);
         hoaDon.setTongTien(tongTien);
         if (hoaDon.getLoaiHoaDon() == 2) {
-            hoaDon.setTrangThai(4);
-            LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
-            lichSuHoaDon.setHoaDon(hoaDon);
-            lichSuHoaDon.setGhiChu(ghiChu);
-            lichSuHoaDon.setPhuongThuc("4");
-            lshdService.savelshd(lichSuHoaDon);
+            if (hoaDon.getTrangThai() != 4) {
+                hoaDon.setTrangThai(4);
+                LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+                lichSuHoaDon.setHoaDon(hoaDon);
+                lichSuHoaDon.setGhiChu(ghiChu);
+                lichSuHoaDon.setPhuongThuc("4");
+                lshdService.savelshd(lichSuHoaDon);
+            }
+
         } else {
             hoaDon.setTrangThai(1);
             LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
@@ -777,11 +830,11 @@ public class TaiQuayController {
         Paragraph p;
         List<String> pdf = new ArrayList<>();
         pdf.add("SOPHIA-SNEAKER");
-        pdf.add("\n\n Số điện thoại: 0123456789 \n" +
+        pdf.add("\n\n Số điện thoại: 0966772003 \n" +
                 "Email: hoangnhph24464@fpt.edu.vn \n" +
-                "Địa chỉ: Trịnh Văn Bô - Nam Từ Liêm - Hà nội \n" +
+                "Địa chỉ: Dương Liễu - Hoài Đức - Hà nội \n" +
                 "Ngân hàng: MBBank - Số tài khoản: 0001541506626 \n" +
-                "Chủ tài khoản: NGUYEN HUY HOANG \n");
+                "Chủ tài khoản: Nguyễn Huy Hoàng \n");
         pdf.add("\nHÓA ĐƠN BÁN HÀNG");
 
 //        3
@@ -819,7 +872,7 @@ public class TaiQuayController {
         }
         p = new Paragraph("Ngày mua:    " + formatter.format(hd.getCreatedDate()) + "\n\n" + "Khách hàng:    " + tk.getTen() + "\n\n" + "Địa chỉ:    " +
                 (hd.getLoaiHoaDon() == 1 ? "" :hd.getTenKhachHang() + "," + hd.getSoDienThoai() + "/ " + hd.getDiaChi())
-                + "\n\n" + "Điện thoại:    " +  tk.getSdt() + "\n\n" + "Người bán:    " + "Nguyễn Huy Hoàng" + "\n\n", font4);
+                + "\n\n" + "Người bán:    " + "Nguyễn Huy Hoàng" + "\n\n", font4);
         document.add(p);
         p = new Paragraph(pdf.get(3) + "\n", font5);
         p.setAlignment(Paragraph.ALIGN_CENTER);
@@ -887,6 +940,4 @@ public class TaiQuayController {
         }
 
     }
-
-
 }

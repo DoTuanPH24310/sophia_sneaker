@@ -123,7 +123,7 @@
                         <td><img th:src="${avtctgMap[hdct.chiTietGiay.id]}" alt="" width="100" height="100"></td>
                         <td th:text="${hdct.chiTietGiay.ma}"></td>
                         <!--                        <td th:text="${hdct.chiTietGiay.hang.ten}"></td>-->
-                        <td th:text="${'[' +  hdct.chiTietGiay.hang.ten + ']' + ' ' +  hdct.chiTietGiay.giay.ten + ' ' + hdct.chiTietGiay.ten + ' ' + '[' + hdct.chiTietGiay.mauSac.ten + ']'}"></td>
+                        <td th:text="${hdct.chiTietGiay.hang.ten + ' ' +  hdct.chiTietGiay.giay.ten + ' ' + hdct.chiTietGiay.ten + ' ' + hdct.chiTietGiay.loaiGiay.ten + ' ' + hdct.chiTietGiay.mauSac.ten }"></td>
                         <td th:text="${hdct.chiTietGiay.kichCo.ten}"></td>
                         <td>
 
@@ -657,6 +657,12 @@
                                 <a th:href="@{/staff/tai-quay/deletekhhd#labeltaiKhoan}" class="btn btn-primary">Khách
                                     lẻ</a>
                             </div>
+                            <div class="col-9">
+                                <a onclick="themKhachHang();" type="button" class="btn btn-primary float-right" data-toggle="modal"
+                                   data-target="#modalAddKhachHang">
+                                    Thêm khách hàng
+                                </a>
+                            </div>
                         </div>
 
                         <div class="row">
@@ -898,7 +904,99 @@
         </div>
     </div>
 
+    <!--    Modal thêm Khách hàng-->
 
+    <div class="modal fade" id="modalAddKhachHang" tabindex="-1" data-backdrop="static"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <form action="/staff/tai-quay/addKH#labeltaiKhoan" method="post" id="formThemKH">
+            <div class="modal-dialog" style="max-width: 600px;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Thêm khách hàng̉</h5>
+                        <a type="button" class="close" onclick="resetModalTKH();" data-dismiss="modal"
+                           aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </a>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-6">
+
+                                    <label><span style="color: #c82333">*</span> Họ và Tên</label>
+                                    <input type="text" name="hoTen" id="inputTenKH"
+                                           class="form-control">
+                                    <span class="text-danger" th:text="${errTen}"></span>
+                                </div>
+                                <div class="col-6">
+                                    <label><span style="color: #c82333">*</span> Số điện thoại</label>
+                                    <input type="text" name="sdt"
+                                           class="form-control" id="inputSDTKH">
+                                    <span class="text-danger" th:text="${errSDT}"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <label><span style="color: #c82333">*</span> Email</label>
+                                    <input type="text" name="email" id="inputEmailKH"
+                                           class="form-control">
+                                    <span class="text-danger" th:text="${errEmail}"></span>
+                                </div>
+                                <div class="col-6">
+                                    <label><span style="color: #c82333">*</span> Giới tính</label> <br>
+
+                                    <div class="form-check form-check-inline">
+                                        <label class="radio-inline">
+                                            <input type="radio" name="gender" th:value="1" checked> Nam
+                                        </label>
+                                    </div>
+
+                                    <div class="form-check form-check-inline">
+                                        <label class="radio-inline">
+                                            <input type="radio" name="gender" th:value="0"> Nữ
+                                        </label>
+                                    </div>
+                                    <br>
+                                    <span class="text-danger" th:text="${errGT}"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <label for="provincetkh"><span style="color: #c82333">*</span> Tỉnh/Thành phố</label>
+                                <select id="provincetkh" name="tinh" class="form-control">
+                                    <option value="-1">---Chọn Tỉnh/Thành Phố----</option>
+                                </select>
+                            </div>
+
+                            <div class="row">
+                                <label for="districttkh"><span style="color: #c82333">*</span> Quận/Huyện</label>
+                                <select name="quan" class="form-control" id="districttkh">
+                                    <option value="-1">---Chọn----</option>
+                                </select>
+                            </div>
+
+                            <div class="row">
+                                <label for="wardtkh"><span style="color: #c82333">*</span> Xã/Phường</label>
+                                <select name="xa" class="form-control" id="wardtkh">
+                                    <option value="-1">---Chọn----</option>
+                                </select>
+                            </div>
+
+                            <div class="row">
+                                <label><span style="color: #c82333">*</span> Đ/C chi tiết</label>
+                                <input name="dcCuThe" class="form-control" id="inputDCCTKH" type="text">
+                                <span class="text-danger" th:text="${errDCCuThe}"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <!--                    ?link day nha thang ngiu-->
+                        <button type="submit" id="validXacNhanThemTK" class="btn btn-primary">Xác nhận</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
     <!--    alo ô la-->
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -910,6 +1008,7 @@
         let modalContent = modal.querySelector('.modal-content');
         let modalDDC = document.getElementById('modalDoiDiaChi');
         let modalContentDDC = modalDDC.querySelector('.modal-content');
+        let modalContentKH = document.getElementById('modalKhachHang');
         let buttons = null;
         const tableBody = document.getElementById("sinhvien");
         const table = document.getElementById("tableModal");
@@ -1322,7 +1421,7 @@
         function apiDiaChiGender(idTinh, idQuan, idXa, tinh, quan, phuong) {
             const host = "https://provinces.open-api.vn/api/";
             let renderData = (array, select) => {
-                let row = `<option  value="0">--Chọn Tỉnh/Thành phố--</option>`;
+                let row = `<option  value="-1">--Chọn Tỉnh/Thành phố--</option>`;
                 array.forEach(element => {
                     if (tinh === element.code) {
                         renderDataDis(element.districts, idQuan);
@@ -1333,7 +1432,7 @@
             }
 
             let renderDataDis = (array, select) => {
-                let row = `<option disable value="0">--Chọn--</option>`;
+                let row = `<option disable value="-1">--Chọn--</option>`;
                 array.forEach(element => {
                     if (quan === element.code) {
                         renderDataWar(element.wards, idXa);
@@ -1345,7 +1444,7 @@
             }
 
             let renderDataWar = (array, select) => {
-                let row = `<option disable value="0">--Chọn--</option>`;
+                let row = `<option disable value="-1">--Chọn--</option>`;
                 array.forEach(element => {
                     if (phuong === element.code) {
                         row = `<option selected value="${element.name}">${element.name}</option>`;
@@ -1389,7 +1488,7 @@
             }
 
             let renderData = (array, select) => {
-                let row = ' <option disable value="0">--Chọn--</option>';
+                let row = ' <option disable value="-1">--Chọn--</option>';
                 array.forEach(element => {
                     row += `<option value="${element.code}">${element.name}</option>`
                 });
@@ -1809,6 +1908,88 @@
             tienDuSpan.textContent = formattedTienDu;
             tienKhachDuaInput.value = formattedTienKhachDua;
         }
+
+
+
+        function resetModalTKH() {
+            modalContentKH.style.opacity = '1';
+        }
+
+
+        function themKhachHang() {
+            modalContentKH.style.opacity = '0.6';
+            const host = "https://provinces.open-api.vn/api/";
+            let callAPI = (api) => {
+                return axios.get(api)
+                    .then((response) => {
+                        renderData(response.data, "provincetkh");
+                    });
+            }
+            callAPI('https://provinces.open-api.vn/api/?depth=1');
+            let callApiDistrict = (api) => {
+                return axios.get(api)
+                    .then((response) => {
+                        renderData(response.data.districts, "districttkh");
+                    });
+            }
+            let callApiWard = (api) => {
+                return axios.get(api)
+                    .then((response) => {
+                        renderData(response.data.wards, "wardtkh");
+                    });
+            }
+
+            let renderData = (array, select) => {
+                let row = ' <option disable value="-1">--Chọn--</option>';
+                array.forEach(element => {
+                    row += `<option value="${element.code}">${element.name}</option>`
+                });
+                document.querySelector("#" + select).innerHTML = row
+            }
+            $("#provincetkh").change(() => {
+                callApiDistrict(host + "p/" + $("#provincetkh").val() + "?depth=2");
+
+            });
+            $("#districttkh").change(() => {
+                callApiWard(host + "d/" + $("#districttkh").val() + "?depth=2");
+
+            });
+
+        }
+
+
+        document.getElementById('formThemKH').addEventListener('submit', function (event) {
+            let ten = document.getElementById('inputTenKH').value;
+            let sdt = document.getElementById('inputSDTKH').value;
+            let email = document.getElementById('inputEmailKH').value;
+            let tinh = document.getElementById('provincetkh').value;
+            let quan = document.getElementById('districttkh').value;
+            let xa = document.getElementById('wardtkh').value;
+            let chiTiet = document.getElementById('inputDCCTKH').value;
+            var bieuThucChu = /[a-zA-Z]/;
+            var bieuThucDacBiet = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/;
+            if (ten.trim().length == 0 || sdt.trim().length == 0 || chiTiet.trim().length == 0 || tinh == -1 || quan == -1 || xa == -1) {
+                let type = 'error';
+                let icon = 'fa-solid fa-circle-exclamation';
+                let title = 'Thất bại!';
+                let text = 'Nhập đầy đủ trường (*)';
+                createToast(type, icon, title, text);
+                event.preventDefault();
+            } else if (bieuThucChu.test(sdt) || bieuThucDacBiet.test(sdt) || (sdt.trim().length != 11 && sdt.trim().length != 10) || !sdt.startsWith('0')) {
+                let type = 'error';
+                let icon = 'fa-solid fa-circle-exclamation';
+                let title = 'Thất bại!';
+                let text = 'Số điện thoại từ 10 - 11 số,bắt đầu bằng 0';
+                createToast(type, icon, title, text);
+                event.preventDefault();
+            } else {
+                let type = 'success';
+                let icon = 'fa-solid fa-circle-check';
+                let title = 'Thành công!';
+                let text = "Thêm thành công";
+                createToast(type, icon, title, text);
+            }
+        });
     </script>
 
 </div>

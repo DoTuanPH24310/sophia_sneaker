@@ -528,10 +528,10 @@ public class QLHDController {
                     chiTietGiay.setSoLuong(chiTietGiay.getSoLuong() + hdct.getSoLuong());
                     chiTietGiayService.save(chiTietGiay);
                 }
-                hoaDon.setTrangThai(6);
+                hoaDon.setTrangThai(7);
                 LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
                 lichSuHoaDon.setHoaDon(hoaDon);
-                lichSuHoaDon.setPhuongThuc("6");
+                lichSuHoaDon.setPhuongThuc("7");
                 lichSuHoaDon.setGhiChu(liDoHuy);
                 hoaDon.setGhiChu(liDoHuy);
                 lshdService.savelshd(lichSuHoaDon);

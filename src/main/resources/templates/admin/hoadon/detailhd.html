@@ -183,7 +183,7 @@
         </div>
         <div th:if="${hoaDon.trangThai == 5}" class="float-right mr-3">
             <a th:href="@{/staff/hoa-don/huyhdddg/{id}(id=${hoaDon.id})}"
-               class=" myLinkHuy btn btn-danger mr-3">Hủy</a>
+               class=" myLinkHuy btn btn-danger mr-3">Hoàn hàng</a>
         </div>
         <div th:if="${hoaDon.trangThai == 5}" class="float-right">
             <a th:href="@{/staff/hoa-don/updatehddg/{id}(id=${hoaDon.id})}" id="myLinhXacNhanTC"
@@ -270,6 +270,7 @@
                         <span th:if="${hoaDon.trangThai == 4}">Chờ giao</span>
                         <span th:if="${hoaDon.trangThai == 5}">Đang giao</span>
                         <span th:if="${hoaDon.trangThai == 6}">Hủy</span>
+                        <span th:if="${hoaDon.trangThai == 7}">Hoàn hàng</span>
                     </button>
                 </span>
                     </div>
@@ -572,11 +573,11 @@
             }
             value = check('5');
             if (value != null && value.hoaDon.loaiHoaDon != 1) {
-                fillTimeLine('icon3', 'text3', value, 'Đang giao', 'uil-truck');
+                fillTimeLine('icon3', 'text3', value, 'Đang giao', 'uil-ambulance');
             }
             value = check('7');
             if (value != null && value.hoaDon.loaiHoaDon != 1) {
-                fillTimeLine('icon3', 'text3', value, 'Hoàn hàng', 'uil-truck');
+                fillTimeLine('icon4', 'text4', value, 'Hoàn hàng', 'uil-truck');
                 return;
             }
             value = check('1');
