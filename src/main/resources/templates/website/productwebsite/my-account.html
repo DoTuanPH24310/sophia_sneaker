@@ -197,7 +197,8 @@
                 <div class="dashboard_tab_button" data-aos="fade-up" data-aos-delay="0">
                     <ul role="tablist" class="nav flex-column dashboard-list">
                         <li id="orders-tab"><a href="#account-details" data-bs-toggle="tab"
-                               class="nav-link btn btn-block btn-md btn-black-default-hover active">Tài khoản</a>
+                                               class="nav-link btn btn-block btn-md btn-black-default-hover active">Tài
+                            khoản</a>
                         </li>
                         <li><a href="#orders" data-bs-toggle="tab"
                                class="nav-link btn btn-block btn-md btn-black-default-hover">Lịch sử mua</a></li>
@@ -213,16 +214,19 @@
                         <div class="dashboard_tab_button ">
                             <ul role="tablist" class="nav">
                                 <li><a href="#tabChoThanhToan" data-bs-toggle="tab"
-                                       class="nav-link btn btn-block btn-md btn-black-default-hover active">Chờ thanh toán</a>
+                                       class="nav-link btn btn-block btn-md btn-black-default-hover active">Chờ thanh
+                                    toán</a>
                                 </li>
                                 <li><a href="#tabChoXacNhan" data-bs-toggle="tab"
-                                       class="nav-link btn btn-block btn-md btn-black-default-hover">Chờ xác nhận</a></li>
+                                       class="nav-link btn btn-block btn-md btn-black-default-hover">Chờ xác nhận</a>
+                                </li>
                                 <li><a href="#tabChoGiao" data-bs-toggle="tab"
                                        class="nav-link btn btn-block btn-md btn-black-default-hover">Chờ giao</a></li>
                                 <li><a href="#tabDangGiao" data-bs-toggle="tab"
                                        class="nav-link btn btn-block btn-md btn-black-default-hover">Đang giao</a></li>
                                 <li><a href="#tabHoanThanh" data-bs-toggle="tab"
-                                       class="nav-link btn btn-block btn-md btn-black-default-hover">Hoàn thành</a></li>
+                                       class="nav-link btn btn-block btn-md btn-black-default-hover">Hoàn thành</a>
+                                </li>
                                 <li><a href="#tabHuy" data-bs-toggle="tab"
                                        class="nav-link btn btn-block btn-md btn-black-default-hover">Hủy</a></li>
                             </ul>
@@ -243,13 +247,15 @@
                                         </thead>
                                         <tbody>
                                         <tr th:each="hd, start : ${listHDCTT}">
-                                            <td th:text="${start.index+1}"></td>
-                                            <td th:text="${#temporals.format(hd.createdDate,'dd-MM-yyyy HH:mm:ss')}"></td>
-                                            <td th:text="${#numbers.formatCurrency(hd.tongTien + hd.phiShip)}"></td>
-                                            <td>Chờ thanh toán</td>
+                                            <div th:if="${hd.loaiHoaDon == 3}">
+                                                <td th:text="${start.index+1}"></td>
+                                                <td th:text="${#temporals.format(hd.createdDate,'dd-MM-yyyy HH:mm:ss')}"></td>
+                                                <td th:text="${#numbers.formatCurrency(hd.tongTien + hd.phiShip)}"></td>
+                                                <td>Chờ thanh toán</td>
 
-                                            <td><a th:href="@{/my-account/detail/{idhd}(idhd=${hd.id})}"
-                                                   class="view btn btn-success">Xem</a></td>
+                                                <td><a th:href="@{/my-account/detail/{idhd}(idhd=${hd.id})}"
+                                                       class="view btn btn-success">Xem</a></td>
+                                            </div>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -269,13 +275,17 @@
                                         </thead>
                                         <tbody>
                                         <tr th:each="hd, start : ${listHDCXN}">
-                                            <td th:text="${start.index+1}"></td>
-                                            <td th:text="${#temporals.format(hd.createdDate,'dd-MM-yyyy HH:mm:ss')}"></td>
-                                            <td th:text="${#numbers.formatCurrency(hd.tongTien +hd.phiShip)}"></td>
-                                            <td >Chờ xác nhận</td>
+                                            <div th:if="${hd.loaiHoaDon == 3}">
 
-                                            <td><a th:href="@{/my-account/detail/{idhd}(idhd=${hd.id})}"
-                                                   class="view btn btn-success">Xem</a></td>
+
+                                                <td th:text="${start.index+1}"></td>
+                                                <td th:text="${#temporals.format(hd.createdDate,'dd-MM-yyyy HH:mm:ss')}"></td>
+                                                <td th:text="${#numbers.formatCurrency(hd.tongTien +hd.phiShip)}"></td>
+                                                <td>Chờ xác nhận</td>
+
+                                                <td><a th:href="@{/my-account/detail/{idhd}(idhd=${hd.id})}"
+                                                       class="view btn btn-success">Xem</a></td>
+                                            </div>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -295,12 +305,16 @@
                                         </thead>
                                         <tbody>
                                         <tr th:each="hd, start : ${listHDCG}">
-                                            <td th:text="${start.index+1}"></td>
-                                            <td th:text="${#temporals.format(hd.createdDate,'dd-MM-yyyy HH:mm:ss')}"></td>
-                                            <td th:text="${#numbers.formatCurrency(hd.tongTien +hd.phiShip)}"></td>
-                                            <td>Chờ giao</td>
-                                            <td><a th:href="@{/my-account/detail/{idhd}(idhd=${hd.id})}"
-                                                   class="view btn btn-success">Xem</a></td>
+                                            <div th:if="${hd.loaiHoaDon == 3}">
+
+
+                                                <td th:text="${start.index+1}"></td>
+                                                <td th:text="${#temporals.format(hd.createdDate,'dd-MM-yyyy HH:mm:ss')}"></td>
+                                                <td th:text="${#numbers.formatCurrency(hd.tongTien +hd.phiShip)}"></td>
+                                                <td>Chờ giao</td>
+                                                <td><a th:href="@{/my-account/detail/{idhd}(idhd=${hd.id})}"
+                                                       class="view btn btn-success">Xem</a></td>
+                                            </div>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -320,13 +334,15 @@
                                         </thead>
                                         <tbody>
                                         <tr th:each="hd, start : ${listHDDG}">
-                                            <td th:text="${start.index+1}"></td>
-                                            <td th:text="${#temporals.format(hd.createdDate,'dd-MM-yyyy HH:mm:ss')}"></td>
-                                            <td th:text="${#numbers.formatCurrency(hd.tongTien +hd.phiShip)}"></td>
-                                            <td>Đang giao</td>
+                                            <div th:if="${hd.loaiHoaDon == 3}">
+                                                <td th:text="${start.index+1}"></td>
+                                                <td th:text="${#temporals.format(hd.createdDate,'dd-MM-yyyy HH:mm:ss')}"></td>
+                                                <td th:text="${#numbers.formatCurrency(hd.tongTien +hd.phiShip)}"></td>
+                                                <td>Đang giao</td>
 
-                                            <td><a th:href="@{/my-account/detail/{idhd}(idhd=${hd.id})}"
-                                                   class="view btn btn-success">Xem</a></td>
+                                                <td><a th:href="@{/my-account/detail/{idhd}(idhd=${hd.id})}"
+                                                       class="view btn btn-success">Xem</a></td>
+                                            </div>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -346,12 +362,16 @@
                                         </thead>
                                         <tbody>
                                         <tr th:each="hd, start : ${listHDHT}">
-                                            <td th:text="${start.index+1}"></td>
-                                            <td th:text="${#temporals.format(hd.createdDate,'dd-MM-yyyy HH:mm:ss')}"></td>
-                                            <td th:text="${#numbers.formatCurrency(hd.tongTien +hd.phiShip)}"></td>
-                                            <td>Hoàn thành</td>
-                                            <td><a th:href="@{/my-account/detail/{idhd}(idhd=${hd.id})}"
-                                                   class="view btn btn-success">Xem</a></td>
+                                            <div th:if="${hd.loaiHoaDon == 3}">
+
+
+                                                <td th:text="${start.index+1}"></td>
+                                                <td th:text="${#temporals.format(hd.createdDate,'dd-MM-yyyy HH:mm:ss')}"></td>
+                                                <td th:text="${#numbers.formatCurrency(hd.tongTien +hd.phiShip)}"></td>
+                                                <td>Hoàn thành</td>
+                                                <td><a th:href="@{/my-account/detail/{idhd}(idhd=${hd.id})}"
+                                                       class="view btn btn-success">Xem</a></td>
+                                            </div>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -371,12 +391,16 @@
                                         </thead>
                                         <tbody>
                                         <tr th:each="hd, start : ${listHDH}">
+                                            <div th:if="${hd.loaiHoaDon == 3}">
+
+
                                             <td th:text="${start.index+1}"></td>
                                             <td th:text="${#temporals.format(hd.createdDate,'dd-MM-yyyy HH:mm:ss')}"></td>
                                             <td th:text="${#numbers.formatCurrency(hd.tongTien +hd.phiShip)}"></td>
                                             <td>Hủy</td>
                                             <td><a th:href="@{/my-account/detail/{idhd}(idhd=${hd.id})}"
                                                    class="view btn btn-success">Xem</a></td>
+                                            </div>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -385,8 +409,6 @@
 
                         </div>
                     </div>
-
-
 
 
                     <div class="tab-pane fade show active" id="account-details">
@@ -548,7 +570,6 @@
 
 <!-- material-scrolltop button -->
 <button class="material-scrolltop" type="button"></button>
-
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
