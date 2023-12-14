@@ -455,7 +455,7 @@
                                     <span th:errors="*{diaChiCuThe}" style="color: red"></span>
                                 </div>
                             </div>
-                            <div class="col-4">
+                            <div th:if="${#lists.size(listDC) > 0}" class="col-4">
                                 <div class="default-form-box">
                                     <button type="button" onclick="loadAllDC();" class="btn btn-golden mt-8"
                                             data-bs-toggle="modal"
@@ -906,7 +906,7 @@
                         <div class="row">
                             <label for="provincetdc"><span style="color: #c82333">*</span> Tỉnh/Thành phố</label>
                             <select id="provincetdc" name="tinh" class="form-control">
-                                <option value="-1">---Chọn Tỉnh/Thành Phố----</option>
+                                <option value="-1">---Chọn----</option>
                             </select>
                         </div>
 
@@ -948,11 +948,10 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script th:inline="javascript">
-    const tinh = '[[${#strings.isEmpty(session.tinh) ? -1 : session.tinh}]]';
-    const quan = '[[${#strings.isEmpty(session.quan) ? -1 : session.quan}]]';
-    let phuong = '[[${#strings.isEmpty(session.phuong) ? -1 : session.phuong}]]';
+    const tinh = [[${#strings.isEmpty(session.tinh) ? -1 : session.tinh}]];
+    const quan = [[${#strings.isEmpty(session.quan) ? -1 : session.quan}]];
+    let phuong = [[${#strings.isEmpty(session.phuong) ? -1 : session.phuong}]];
     const tinhtinh = '[[${#strings.isEmpty(session.selectedProvince) ? "' + -1 + '" : session.selectedProvince}]]';
-    console.log(tinhtinh)
     const idKh = [[${session.idkhOL}]];
     const tbodyDDC = document.getElementById('tbodyDDC');
 
@@ -987,14 +986,26 @@
             var bieuThucChu = /[a-zA-Z]/;
             var bieuThucDacBiet = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/;
             if (ten.trim().length == 0 || sdt.trim().length == 0 || chiTiet.trim().length == 0 || tinh == -1 || quan == -1 || xa == -1) {
-                alert("Vui lòng nhập đủ các trường đánh dấu (*)");
+                let type = 'error';
+                let icon = 'fa-solid fa-circle-exclamation';
+                let title = 'Thất bại!';
+                let text = 'Nhập đầy đủ trường (*)';
+                createToast(type, icon, title, text);
                 event.preventDefault();
 
             } else if (bieuThucChu.test(sdt) || bieuThucDacBiet.test(sdt) || !sdt.startsWith('0') || (sdt.trim().length != 11 && sdt.trim().length != 10)) {
-                alert("Số điện thoại gồm 10 - 11 số và bắt đầu bằng 0");
+                let type = 'error';
+                let icon = 'fa-solid fa-circle-exclamation';
+                let title = 'Thất bại!';
+                let text = 'Số điện thoại từ 10 - 11 số,bắt đầu bằng 0';
+                createToast(type, icon, title, text);
                 event.preventDefault();
             } else {
-                alert("Thêm thành công")
+                let type = 'success';
+                let icon = 'fa-solid fa-circle-check';
+                let title = 'Thành công!';
+                let text = "Thêm thành công";
+                createToast(type, icon, title, text);
             }
         });
     }
@@ -1003,7 +1014,7 @@
     function apiDiaChiGender(idTinh, idQuan, idXa, tinh, quan, phuong) {
         const host = "https://provinces.open-api.vn/api/";
         let renderData = (array, select) => {
-            let row = `<option  value="">--Chọn Tỉnh/Thành phố--</option>`;
+            let row = `<option  value="-1">--Chọn Tỉnh/Thành phố--</option>`;
             array.forEach(element => {
                 if (tinh === element.code) {
                     renderDataDis(element.districts, idQuan);
@@ -1014,7 +1025,7 @@
         }
 
         let renderDataDis = (array, select) => {
-            let row = `<option disable value="">--Chọn--</option>`;
+            let row = `<option  value="-1">--Chọn--</option>`;
             array.forEach(element => {
                 if (quan === element.code) {
                     renderDataWar(element.wards, idXa);
@@ -1026,7 +1037,7 @@
         }
 
         let renderDataWar = (array, select) => {
-            let row = `<option disable value="">--Chọn--</option>`;
+            let row = `<option  value="-1">--Chọn--</option>`;
             array.forEach(element => {
                 if (phuong === element.code) {
                     row = `<option selected value="${element.name}">${element.name}</option>`;
@@ -1069,7 +1080,7 @@
         }
 
         let renderData = (array, select) => {
-            let row = ' <option disable value="">--Chọn--</option>';
+            let row = ' <option  value="-1">--Chọn--</option>';
             array.forEach(element => {
                 row += `<option value="${element.code}">${element.name}</option>`
             });
@@ -1113,9 +1124,9 @@
 
         let row = tbodyDDC.insertRow();
         let idHTML = index + 1;
-        let selectTinh = '<select disabled id="province' + idHTML + '" class="text-center" style="border: 0px;appearance: none;"></select>'
-        let selectQuan = '<select disabled id="district' + idHTML + '" class="text-center" style="border: 0px;appearance: none;"></select>'
-        let selectXa = '<select disabled id="ward' + idHTML + '" class="text-center" style="border: 0px;appearance: none;"></select>'
+        let selectTinh = '<select  id="province' + idHTML + '" class="text-center" style="border: 0px;appearance: none;"></select>'
+        let selectQuan = '<select  id="district' + idHTML + '" class="text-center" style="border: 0px;appearance: none;"></select>'
+        let selectXa = '<select  id="ward' + idHTML + '" class="text-center" style="border: 0px;appearance: none;"></select>'
         let checkBox = '';
 
         if (x.diaChiMacDinh == 1) {
@@ -1141,7 +1152,7 @@
     const renderOptions = (array, selectId, placeholder) => {
         let options = '';
         // Add placeholder regardless of whether the array is empty
-        options += `<option disable value="">${placeholder}</option>`;
+        options += `<option  value="">${placeholder}</option>`;
         array.forEach(element => {
             options += `<option value="${element.code}">${element.name}</option>`;
         });
@@ -1265,7 +1276,9 @@
         renderOptions([], "ward", "--Chọn Phường/Xã--");
     });
 
-    if (tinh !== "-1") {
+    if (tinh != -1) {
+
+
         callAPI(host + "?depth=3", "province", (data, selectId) => {
             renderOptions(data, selectId, "--Chọn Tỉnh/Thành phố--");
 

@@ -122,6 +122,7 @@ public class CheckoutController {
                     model.addAttribute("diaChi", diaChi);
                     model.addAttribute("cartItems", cartItems);
                     model.addAttribute("tongSoLuongGiam", tongSoLuongGiam);
+                    model.addAttribute("listDC", diaChiServiceTQ.getAllDCByIdkh(taiKhoan.getId()));
                     session.setAttribute("idkhOL", taiKhoan.getId());
                     return "website/productwebsite/checkout";
                 }
