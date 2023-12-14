@@ -1,5 +1,6 @@
 package com.example.sneaker_sophia.controller.manage;
 
+import com.example.sneaker_sophia.entity.TaiKhoan;
 import com.example.sneaker_sophia.service.DiaChiService;
 import com.example.sneaker_sophia.service.TaiKhoanService;
 import jakarta.annotation.Resource;
@@ -31,6 +32,16 @@ public class RestKhachHangController {
     @GetMapping("/findByText")
     public ResponseEntity<?> findAllKH(@RequestParam("value") String value){
         return ResponseEntity.ok(taiKhoanService.findByText(value));
+    }
+
+    @GetMapping("/getEmail")
+    public ResponseEntity<?> getEmail(
+            @RequestParam("email") String email
+    ){
+
+        TaiKhoan taiKhoan = taiKhoanService.getTaiKhoanByEmail(email);
+        System.out.println(taiKhoan);
+        return ResponseEntity.ok(taiKhoanService.getTaiKhoanByEmail(email));
     }
 
 }

@@ -805,4 +805,8 @@ public class TaiKhoanService {
         this.taiKhoanRepository.save(taiKhoan);
     }
 
+    public TaiKhoan getTaiKhoanByEmail(String email){
+        return taiKhoanRepository.getTaiKhoanByEmail(email);
+    }
+
 }

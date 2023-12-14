@@ -562,7 +562,8 @@ public class TaiQuayController {
         TaiKhoan taiKhoan = new TaiKhoan();
 
 
-        if(!diaChiService.validateAddDc(dcCuThe, hoTen, sdt, model)){
+        if(!diaChiService.validateAddKH(dcCuThe, hoTen, sdt, email, tinh, quan, xa, model)){
+            alertInfo.alert("errTaiQuay","Thao tác không hợp lệ");
             return "redirect:/staff/tai-quay/detail/" + tempIdHD;
         }else{
             taiKhoan.setTen(hoTen);
@@ -733,7 +734,7 @@ public class TaiQuayController {
 
         if (!tempIdKH.equals("") && hoaDon.getLoaiHoaDon() == 2) {
             TaiKhoanRequest taiKhoan = taiKhoanService.getTaiKhoanById(tempIdKH);
-            DiaChi diaChi = diaChiService.findDcByIdDc(taiKhoan.getIdTaiKhoan());
+            DiaChi diaChi = diaChiService.findListTKByIdKHAndDCMD(taiKhoan.getIdTaiKhoan());
             if(!taiQuayService.validateAđhttt(xa, quan, tinh)){
                 return "redirect:/staff/tai-quay/detail/" + tempIdHD;
             }

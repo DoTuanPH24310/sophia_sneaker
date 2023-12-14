@@ -938,7 +938,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-6">
-                                    <label><span style="color: #c82333">*</span> Email</label>
+                                    <label>Email</label>
                                     <input type="text" name="email" id="inputEmailKH"
                                            class="form-control">
                                     <span class="text-danger" th:text="${errEmail}"></span>
@@ -966,6 +966,7 @@
                                 <select id="provincetkh" name="tinh" class="form-control">
                                     <option value="-1">---Chọn Tỉnh/Thành Phố----</option>
                                 </select>
+                                <span class="text-danger" th:text="${errTinh}"></span>
                             </div>
 
                             <div class="row">
@@ -973,6 +974,7 @@
                                 <select name="quan" class="form-control" id="districttkh">
                                     <option value="-1">---Chọn----</option>
                                 </select>
+                                <span class="text-danger" th:text="${errQuanHuyen}"></span>
                             </div>
 
                             <div class="row">
@@ -980,6 +982,7 @@
                                 <select name="xa" class="form-control" id="wardtkh">
                                     <option value="-1">---Chọn----</option>
                                 </select>
+                                <span class="text-danger" th:text="${errPhuongXa}"></span>
                             </div>
 
                             <div class="row">
@@ -1958,6 +1961,7 @@
         }
 
 
+
         document.getElementById('formThemKH').addEventListener('submit', function (event) {
             let ten = document.getElementById('inputTenKH').value;
             let sdt = document.getElementById('inputSDTKH').value;
@@ -1966,28 +1970,58 @@
             let quan = document.getElementById('districttkh').value;
             let xa = document.getElementById('wardtkh').value;
             let chiTiet = document.getElementById('inputDCCTKH').value;
+
             var bieuThucChu = /[a-zA-Z]/;
             var bieuThucDacBiet = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/;
+            var emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.com/;
+
+            event.preventDefault();
             if (ten.trim().length == 0 || sdt.trim().length == 0 || chiTiet.trim().length == 0 || tinh == -1 || quan == -1 || xa == -1) {
                 let type = 'error';
                 let icon = 'fa-solid fa-circle-exclamation';
                 let title = 'Thất bại!';
                 let text = 'Nhập đầy đủ trường (*)';
                 createToast(type, icon, title, text);
-                event.preventDefault();
+
             } else if (bieuThucChu.test(sdt) || bieuThucDacBiet.test(sdt) || (sdt.trim().length != 11 && sdt.trim().length != 10) || !sdt.startsWith('0')) {
                 let type = 'error';
                 let icon = 'fa-solid fa-circle-exclamation';
                 let title = 'Thất bại!';
                 let text = 'Số điện thoại từ 10 - 11 số,bắt đầu bằng 0';
                 createToast(type, icon, title, text);
-                event.preventDefault();
-            } else {
+
+            } else if (email.trim().length > 0 ) {
+                if ((emailRegex.test(email) || (email.trim().length <5 || email.trim().length >50 ))){
+                    let type = 'error';
+                    let icon = 'fa-solid fa-circle-exclamation';
+                    let title = 'Thất bại!';
+                    let text = 'Email sai định dạng';
+                    createToast(type, icon, title, text);
+
+                    return;
+                }
+                $.ajax({
+                    type: 'get',
+                    url: 'http://localhost:8080/api/khachHang/getEmail?email=' + email,
+                    success: function (data) {
+                        if (data != null){
+                            let type = 'error';
+                            let icon = 'fa-solid fa-circle-exclamation';
+                            let title = 'Thất bại!';
+                            let text = 'Email đã tồn tại';
+                            createToast(type, icon, title, text);
+                        }
+                    }
+                })
+            }
+
+            else {
                 let type = 'success';
                 let icon = 'fa-solid fa-circle-check';
                 let title = 'Thành công!';
                 let text = "Thêm thành công";
                 createToast(type, icon, title, text);
+                document.getElementById('formThemKH').submit();
             }
         });
     </script>
