@@ -22,9 +22,11 @@
             right: -20px;
             z-index: 2000;
         }
-        .modal{
+
+        .modal {
             z-index: 1500;
         }
+
         .thongBao {
             position: relative;
             margin-bottom: 10px;
@@ -109,7 +111,7 @@
                         <div class="header-logo">
                             <div class="logo">
                                 <a th:href="@{/sophia-store/home}"><img src="/assets/images/logo/logo.jpg"
-                                                                           alt=""></a>
+                                                                        alt=""></a>
                             </div>
                         </div>
                         <!-- End Header Logo -->
@@ -140,8 +142,8 @@
                         <ul class="header-action-link action-color--black action-hover-color--golden">
                             <li class="has-dropdown">
                                 <a th:href="${#authorization.expression('isAuthenticated()') ? '/my-account/home' : '/login/home'}">
-                                    <i class="icon-user" ></i>
-<!--                                    <span class="item-count">3</span>-->
+                                    <i class="icon-user"></i>
+                                    <!--                                    <span class="item-count">3</span>-->
                                     <ul class="sub-menu">
                                         <li><a href="index.html">Hồ sơ cá nhân</a></li>
                                         <li><a href="index-2.html">Đơn mua</a></li>
@@ -150,21 +152,12 @@
                                 </a>
                             </li>
                             <li>
-                                <a th:href="@{/cart/hien-thi}" >
+                                <a th:href="@{/cart/hien-thi}">
                                     <i class="icon-bag"></i>
-                                    <span id="soLuongSessionGioHang" class="item-count" th:utext="${#authentication.principal != null ? soLuongSessionGioHang : '0'}"></span>
+                                    <span id="soLuongSessionGioHang" class="item-count"
+                                          th:utext="${#authentication.principal != null ? soLuongSessionGioHang : '0'}"></span>
                                 </a>
                             </li>
-<!--                            <li>-->
-<!--                                <a href="#search">-->
-<!--                                    <i class="icon-magnifier"></i>-->
-<!--                                </a>-->
-<!--                            </li>-->
-<!--                            <li>-->
-<!--                                <a href="#offcanvas-about" class="offacnvas offside-about offcanvas-toggle">-->
-<!--                                    <i class="icon-menu"></i>-->
-<!--                                </a>-->
-<!--                            </li>-->
                         </ul>
                     </div>
                 </div>
@@ -172,6 +165,56 @@
         </div>
     </div>
 </header>
+
+<div class="mobile-header mobile-header-bg-color--golden section-fluid d-lg-block d-xl-none">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 d-flex align-items-center justify-content-between">
+                <!-- Start Mobile Left Side -->
+                <div class="mobile-header-left">
+
+                    <div class="header-logo">
+                        <div class="logo">
+                            <a th:href="@{/sophia-store/home}"><img src="/assets/images/logo/logo.jpg"
+                                                                    alt=""></a>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Mobile Left Side -->
+
+                <!-- Start Mobile Right Side -->
+                <div class="mobile-right-side">
+                    <ul class="header-action-link action-color--black action-hover-color--golden">
+                        <li class="has-dropdown">
+                            <a th:href="${#authorization.expression('isAuthenticated()') ? '/my-account/home' : '/login/home'}">
+                                <i class="icon-user"></i>
+                                <!--                                    <span class="item-count">3</span>-->
+                                <ul class="sub-menu">
+                                    <li><a href="index.html">Hồ sơ cá nhân</a></li>
+                                    <li><a href="index-2.html">Đơn mua</a></li>
+                                    <li><a th:href="@{/logout}">Đăng Xuất</a></li>
+                                </ul>
+                            </a>
+                        </li>
+                        <li>
+                            <a th:href="@{/cart/hien-thi}">
+                                <i class="icon-bag"></i>
+                                <span id="" class="item-count"
+                                      th:utext="${#authentication.principal != null ? soLuongSessionGioHang : '0'}"></span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#mobile-menu-offcanvas" class="offcanvas-toggle offside-menu">
+                                <i class="icon-menu"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- End Mobile Right Side -->
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     // Đoạn mã để cập nhật số lượng sản phẩm trong giỏ hàng ngay khi thêm vào giỏ
     function updateCartItemCount() {
@@ -194,7 +237,7 @@
                 <div class="row mb-n6">
                     <div class="col-lg-3 col-sm-6 mb-6">
                         <!-- Start Footer Single Item -->
-                        <div class="footer-widget-single-item footer-widget-color--golden" >
+                        <div class="footer-widget-single-item footer-widget-color--golden">
                             <h5 class="title">THÔNG TIN</h5>
                             <ul class="footer-nav">
                                 <li><a href="#">Thông tin giao hàng</a></li>
@@ -207,7 +250,7 @@
                     </div>
                     <div class="col-lg-3 col-sm-6 mb-6">
                         <!-- Start Footer Single Item -->
-                        <div class="footer-widget-single-item footer-widget-color--golden" >
+                        <div class="footer-widget-single-item footer-widget-color--golden">
                             <h5 class="title">TÀI KHOẢN CỦA TÔI</h5>
                             <ul class="footer-nav">
                                 <li><a href="../productwebsite/my-account.html">Tài khoản của tôi</a></li>
@@ -234,10 +277,10 @@
                     </div>
                     <div class="col-lg-3 col-sm-6 mb-6">
                         <!-- Start Footer Single Item -->
-                        <div  class="footer-widget-single-item footer-widget-color--golden">
+                        <div class="footer-widget-single-item footer-widget-color--golden">
                             <h5 class="title">VỀ CHÚNG TÔI</h5>
                             <ul class="footer-nav">
-                                <li><a href="#">Chúng tôi  gồm các sinh viên của nhóm SD-52</a></li>
+                                <li><a href="#">Chúng tôi gồm các sinh viên của nhóm SD-52</a></li>
                                 <li><a href="#">Địa chỉ: Dương Liễu, Hoài Đức, Hà Nội</a></li>
                                 <li><a href="#">Email: sd-52@gmail.com</a></li>
                                 <li><a href="#">Khác</a></li>
@@ -263,9 +306,9 @@
 <script th:inline="javascript">
     const notifications = document.querySelector('.notifications');
     const errhd = [[${session.errOnline}]];
-    const successhd =[[${session.successOnline}]];
-    const thongBaook =[[${session.thongBaook}]];
-    const thongBaofalse =[[${session.thongBaofalse}]];
+    const successhd = [[${session.successOnline}]];
+    const thongBaook = [[${session.thongBaook}]];
+    const thongBaofalse = [[${session.thongBaofalse}]];
 
 
     if (errhd != null) {
@@ -278,7 +321,7 @@
             removeSeesion('errOnline');
         })
     }
-    if (successhd != null){
+    if (successhd != null) {
         window.addEventListener("DOMContentLoaded", function () {
             let type = 'success';
             let icon = 'fa-solid fa-circle-check';
@@ -302,21 +345,21 @@
             </div>`;
         notifications.appendChild(newToast);
         newToast.timeOut = setTimeout(
-            ()=>newToast.remove(), 3000
+            () => newToast.remove(), 3000
         )
     }
-    function alertInfor(){
+
+    function alertInfor() {
         console.log(thongBaook);
         console.log(thongBaofalse);
-        if(thongBaook != null){
+        if (thongBaook != null) {
             let type = 'success';
             let icon = 'fa-solid fa-circle-check';
             let title = 'Thành công!';
             let text = thongBaook;
             createToast(type, icon, title, text);
             removeSeesion('thongBaook');
-        }
-       else if(thongBaofalse != null){
+        } else if (thongBaofalse != null) {
             let type = 'error';
             let icon = 'fa-solid fa-circle-exclamation';
             let title = 'Thất bại!';

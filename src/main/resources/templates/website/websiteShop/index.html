@@ -7,137 +7,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <style>
+        .image-box {
+            width: 320px;
+            height: 300px;
+            overflow: hidden;
+        }
 
+        .img-fluid {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .out-of-stock-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .circle {
+            width: 150px;
+            height: 150px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .out-of-stock-text {
+            color: #FF6347;
+            font-weight: bold;
+            font-size: 24px;
+            margin: 0;
+        }
+        /* Optional: Thiết lập margin hoặc padding cho mỗi product container nếu cần thiết */
+        #product-container {
+            margin-bottom: 20px; /* Ví dụ: Đặt margin dưới cho mỗi product container */
+        }
+
+        .page-pagination ul li.active a {
+            /* Màu cho trang đã chọn */
+            background-color: #B19361 !important;
+            color: #fff !important;
+            /* Các thuộc tính khác tùy thuộc vào thiết kế của bạn */
+        }
+
+        .page-pagination ul li a {
+            /* Màu cho các trang không được chọn */
+            background-color: #fff !important;
+            color: #000 !important;
+            /* Các thuộc tính khác tùy thuộc vào thiết kế của bạn */
+        }
+
+        .sidebar-content::-webkit-scrollbar {
+            width: 6px; /* Đặt chiều rộng của thanh cuộn */
+        }
+
+        .sidebar-content::-webkit-scrollbar-thumb {
+            background-color: #B19361; /* Màu nền của thanh cuộn */
+            border-radius: 4px; /* Độ cong của góc thanh cuộn */
+        }
+
+        .sidebar-content::-webkit-scrollbar-track {
+            background-color: #f1f1f1; /* Màu nền của phần dưới thanh cuộn */
+            border-radius: 4px; /* Độ cong của góc phần dưới thanh cuộn */
+        }
+
+    </style>
 </head>
 
 <body layout:fragment="content2">
-<style>
-    .image-box {
-        width: 320px;
-        height: 300px;
-        overflow: hidden;
-    }
 
-    .img-fluid {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .out-of-stock-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .circle {
-        width: 150px;
-        height: 150px;
-        background-color: #ffffff;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .out-of-stock-text {
-        color: #FF6347;
-        font-weight: bold;
-        font-size: 24px;
-        margin: 0;
-    }
-    /* Optional: Thiết lập margin hoặc padding cho mỗi product container nếu cần thiết */
-    #product-container {
-        margin-bottom: 20px; /* Ví dụ: Đặt margin dưới cho mỗi product container */
-    }
-
-    .page-pagination ul li.active a {
-        /* Màu cho trang đã chọn */
-        background-color: #B19361 !important;
-        color: #fff !important;
-        /* Các thuộc tính khác tùy thuộc vào thiết kế của bạn */
-    }
-
-    .page-pagination ul li a {
-        /* Màu cho các trang không được chọn */
-        background-color: #fff !important;
-        color: #000 !important;
-        /* Các thuộc tính khác tùy thuộc vào thiết kế của bạn */
-    }
-
-    .sidebar-content::-webkit-scrollbar {
-        width: 6px; /* Đặt chiều rộng của thanh cuộn */
-    }
-
-    .sidebar-content::-webkit-scrollbar-thumb {
-        background-color: #B19361; /* Màu nền của thanh cuộn */
-        border-radius: 4px; /* Độ cong của góc thanh cuộn */
-    }
-
-    .sidebar-content::-webkit-scrollbar-track {
-        background-color: #f1f1f1; /* Màu nền của phần dưới thanh cuộn */
-        border-radius: 4px; /* Độ cong của góc phần dưới thanh cuộn */
-    }
-
-</style>
-<!-- Start Header Area -->
-<div class="mobile-header mobile-header-bg-color--golden section-fluid d-lg-block d-xl-none">
-    <div class="container">
-        <div class="row">
-            <div class="col-12 d-flex align-items-center justify-content-between">
-                <!-- Start Mobile Left Side -->
-                <div class="mobile-header-left">
-                    <ul class="mobile-menu-logo">
-                        <li>
-                            <a href="index.html">
-                                <div class="logo">
-                                    <img src="/assets/images/logo/logo_black.png" alt="">
-                                </div>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <!-- End Mobile Left Side -->
-
-                <!-- Start Mobile Right Side -->
-                <div class="mobile-right-side">
-                    <ul class="header-action-link action-color--black action-hover-cohoverlor--golden">
-                        <li>
-                            <a href="#search">
-                                <i class="icon-magnifier"></i>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#offcanvas-wishlish" class="offcanvas-toggle">
-                                <i class="icon-heart"></i>
-                                <span class="item-count">3</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#offcanvas-add-cart" class="offcanvas-toggle">
-                                <i class="icon-bag"></i>
-                                <span class="item-count">3</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#mobile-menu-offcanvas" class="offcanvas-toggle offside-menu">
-                                <i class="icon-menu"></i>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <!-- End Mobile Right Side -->
-            </div>
-        </div>
-    </div>
-</div>
-<!-- End Mobile Header -->
-
-<!--  Start Offcanvas Mobile Menu Section -->
 <div id="mobile-menu-offcanvas" class="offcanvas offcanvas-rightside offcanvas-mobile-menu-section">
     <!-- Start Offcanvas Header -->
     <div class="offcanvas-header text-right">

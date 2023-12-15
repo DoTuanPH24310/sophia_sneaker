@@ -43,6 +43,8 @@ public class CheckoutController {
     @Autowired
     private ThanhToanService thanhToanService;
     @Autowired
+    private LichSuHoaDonWebRepository lichSuHoaDonWebRepository;
+    @Autowired
     private DiaChiCheckoutService diaChiService;
     @Autowired
     private GioHangService gioHangService;
@@ -152,7 +154,6 @@ public class CheckoutController {
     }
 
 
-
     @GetMapping("/checkout")
     public String showCheckout(Model model, HttpSession session) {
         double total = 0.0;
@@ -229,7 +230,6 @@ public class CheckoutController {
             return "redirect:/cart/hien-thi";
         }
     }
-
 
 
     @PostMapping("/thanh-toan")
@@ -360,26 +360,28 @@ public class CheckoutController {
                 }
             }
             boolean tonTai = this.loginRepository.existsByEmail(diaChi.getEmail());
-            if (tonTai) {
+            if (diaChi.getEmail() == null) {
+                if (tonTai) {
 
-                if (cart != null) {
-                    if (cartItems != null && !cartItems.isEmpty()) {
+                    if (cart != null) {
+                        if (cartItems != null && !cartItems.isEmpty()) {
 
-                        session.setAttribute("selectedProvince", diaChi.getTinh()); // Thêm dòng này
-                        session.setAttribute("tinh", diaChi.getTinh());
-                        session.setAttribute("quan", diaChi.getQuanHuyen());
-                        session.setAttribute("phuong", diaChi.getPhuongXa());
-                        result.rejectValue("email", "error.email", "Email đã tồn tại trong hệ thống. Bạn có muốn đăng nhập?");
-                        model.addAttribute("cartItems", cartItems);
-                        model.addAttribute("total", total);
+                            session.setAttribute("selectedProvince", diaChi.getTinh()); // Thêm dòng này
+                            session.setAttribute("tinh", diaChi.getTinh());
+                            session.setAttribute("quan", diaChi.getQuanHuyen());
+                            session.setAttribute("phuong", diaChi.getPhuongXa());
+                            result.rejectValue("email", "error.email", "Email đã tồn tại trong hệ thống. Bạn có muốn đăng nhập?");
+                            model.addAttribute("cartItems", cartItems);
+                            model.addAttribute("total", total);
 
-                        return "website/productwebsite/checkoutSession";
+                            return "website/productwebsite/checkoutSession";
+                        } else {
+                            return "redirect:/cart/hien-thi";
+                        }
+
                     } else {
                         return "redirect:/cart/hien-thi";
                     }
-
-                } else {
-                    return "redirect:/cart/hien-thi";
                 }
             }
 
@@ -395,11 +397,9 @@ public class CheckoutController {
             model.addAttribute("phiVanChuyen", phiVanChuyen);
 
             if (diaChi == null || StringUtils.isEmpty(diaChi.getEmail())) {
-                // If email is provided, create an order without creating an account
                 HoaDon hoaDonMoi = emailService.taoHoaDonMoi(null, hinhThucThanhToan, diaChiCuThe, tinh, huyen, xa, phiVanChuyen, ghiChu, ten, sdt);
                 emailService.themSanPhamVaoHoaDonChiTiet(cartItems, hoaDonMoi, phiVanChuyen);
             }
-            // If email is not provided, create an account and an order
             if (diaChi != null && !StringUtils.isEmpty(diaChi.getEmail())) {
 
                 TaiKhoan taiKhoanMoi = emailService.taoTaiKhoanMoi(diaChi);
@@ -443,6 +443,11 @@ public class CheckoutController {
             if (hoaDon != null) {
                 double amountPaid = getAmountPaidFromVnPayResponse(amountPaidString);
                 HinhThucThanhToan hinhThuc = hinhThucThanhToanWebRepository.findByHoaDon(hoaDon);
+                LichSuHoaDon lichSuHoaDon = this.lichSuHoaDonWebRepository.findByHoaDon(hoaDon);
+                if (lichSuHoaDon != null) {
+                    lichSuHoaDon.setPhuongThuc("3");
+                    this.lichSuHoaDonWebRepository.save(lichSuHoaDon);
+                }
                 if (hinhThuc != null) {
                     hinhThuc.setSoTien(hinhThuc.getSoTien() + amountPaid);
                     this.hinhThucThanhToanWebRepository.save(hinhThuc); // Update HinhThucThanhToan in the database
