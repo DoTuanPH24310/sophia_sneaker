@@ -93,6 +93,7 @@ public class account {
             model.addAttribute("listHDDG", hoaDonService.findByTrangThaiAndKhachHang(5, authentication.getName()));
             model.addAttribute("listHDHT", hoaDonService.findByTrangThaiAndKhachHang(1, authentication.getName()));
             model.addAttribute("listHDH", hoaDonService.findByTrangThaiAndKhachHang(6, authentication.getName()));
+            model.addAttribute("listHDHoan", hoaDonService.findByTrangThaiAndKhachHang(7, authentication.getName()));
 
             model.addAttribute("diaChii", diaChi);
             model.addAttribute("diaChiList", diaChiList);

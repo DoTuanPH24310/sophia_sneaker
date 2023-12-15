@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.1/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.5.1/dist/sweetalert2.all.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
 
 </head>
 <style>
@@ -192,7 +193,7 @@
 <div class="account-dashboard">
     <div class="container">
         <div class="row">
-            <div class="col-sm-12 col-md-3 col-lg-3">
+            <div class="col-sm-12 col-md-2 col-lg-2">
                 <!-- Nav tabs -->
                 <div class="dashboard_tab_button" data-aos="fade-up" data-aos-delay="0">
                     <ul role="tablist" class="nav flex-column dashboard-list">
@@ -207,7 +208,7 @@
                     </ul>
                 </div>
             </div>
-            <div class="col-sm-12 col-md-9 col-lg-9">
+            <div class="col-sm-12 col-md-10 col-lg-10">
                 <!-- Tab panes -->
                 <div class="tab-content dashboard_content" data-aos="fade-up" data-aos-delay="200">
                     <div class="tab-pane fade" id="orders">
@@ -229,6 +230,9 @@
                                 </li>
                                 <li><a href="#tabHuy" data-bs-toggle="tab"
                                        class="nav-link btn btn-block btn-md btn-black-default-hover">Hủy</a></li>
+
+                                <li><a href="#tabDonHoan" data-bs-toggle="tab"
+                                       class="nav-link btn btn-block btn-md btn-black-default-hover">Đơn Hoàn</a></li>
                             </ul>
                         </div>
 
@@ -253,8 +257,10 @@
                                                 <td th:text="${#numbers.formatCurrency(hd.tongTien + hd.phiShip)}"></td>
                                                 <td>Chờ thanh toán</td>
 
-                                                <td><a th:href="@{/my-account/detail/{idhd}(idhd=${hd.id})}"
-                                                       class="view btn btn-success">Xem</a></td>
+                                                <td>  <a class="btn  delete" style=" padding: 5px 10px; font-size: 12px; background-color: #b19361" th:href="@{/my-account/detail/{idhd}(idhd=${hd.id})}">
+                                                    <i class="material-icons text-white mt-1"
+                                                       title="Chi tiết">visibility</i>
+                                                </a></td>
                                             </div>
                                         </tr>
                                         </tbody>
@@ -283,8 +289,10 @@
                                                 <td th:text="${#numbers.formatCurrency(hd.tongTien +hd.phiShip)}"></td>
                                                 <td>Chờ xác nhận</td>
 
-                                                <td><a th:href="@{/my-account/detail/{idhd}(idhd=${hd.id})}"
-                                                       class="view btn btn-success">Xem</a></td>
+                                                <td>  <a class="btn  delete" style=" padding: 5px 10px; font-size: 12px; background-color: #b19361" th:href="@{/my-account/detail/{idhd}(idhd=${hd.id})}">
+                                                    <i class="material-icons text-white mt-1"
+                                                       title="Chi tiết">visibility</i>
+                                                </a></td>
                                             </div>
                                         </tr>
                                         </tbody>
@@ -312,8 +320,10 @@
                                                 <td th:text="${#temporals.format(hd.createdDate,'dd-MM-yyyy HH:mm:ss')}"></td>
                                                 <td th:text="${#numbers.formatCurrency(hd.tongTien +hd.phiShip)}"></td>
                                                 <td>Chờ giao</td>
-                                                <td><a th:href="@{/my-account/detail/{idhd}(idhd=${hd.id})}"
-                                                       class="view btn btn-success">Xem</a></td>
+                                                <td>  <a class="btn  delete" style=" padding: 5px 10px; font-size: 12px; background-color: #b19361" th:href="@{/my-account/detail/{idhd}(idhd=${hd.id})}">
+                                                    <i class="material-icons text-white mt-1"
+                                                       title="Chi tiết">visibility</i>
+                                                </a></td>
                                             </div>
                                         </tr>
                                         </tbody>
@@ -340,8 +350,10 @@
                                                 <td th:text="${#numbers.formatCurrency(hd.tongTien +hd.phiShip)}"></td>
                                                 <td>Đang giao</td>
 
-                                                <td><a th:href="@{/my-account/detail/{idhd}(idhd=${hd.id})}"
-                                                       class="view btn btn-success">Xem</a></td>
+                                                <td>  <a class="btn  delete" style=" padding: 5px 10px; font-size: 12px; background-color: #b19361" th:href="@{/my-account/detail/{idhd}(idhd=${hd.id})}">
+                                                    <i class="material-icons text-white mt-1"
+                                                       title="Chi tiết">visibility</i>
+                                                </a></td>
                                             </div>
                                         </tr>
                                         </tbody>
@@ -369,8 +381,10 @@
                                                 <td th:text="${#temporals.format(hd.createdDate,'dd-MM-yyyy HH:mm:ss')}"></td>
                                                 <td th:text="${#numbers.formatCurrency(hd.tongTien +hd.phiShip)}"></td>
                                                 <td>Hoàn thành</td>
-                                                <td><a th:href="@{/my-account/detail/{idhd}(idhd=${hd.id})}"
-                                                       class="view btn btn-success">Xem</a></td>
+                                                <td>  <a class="btn  delete" style=" padding: 5px 10px; font-size: 12px; background-color: #b19361" th:href="@{/my-account/detail/{idhd}(idhd=${hd.id})}">
+                                                    <i class="material-icons text-white mt-1"
+                                                       title="Chi tiết">visibility</i>
+                                                </a></td>
                                             </div>
                                         </tr>
                                         </tbody>
@@ -398,9 +412,43 @@
                                             <td th:text="${#temporals.format(hd.createdDate,'dd-MM-yyyy HH:mm:ss')}"></td>
                                             <td th:text="${#numbers.formatCurrency(hd.tongTien +hd.phiShip)}"></td>
                                             <td>Hủy</td>
-                                            <td><a th:href="@{/my-account/detail/{idhd}(idhd=${hd.id})}"
-                                                   class="view btn btn-success">Xem</a></td>
-                                            </div>
+                                                <td>  <a class="btn  delete" style=" padding: 5px 10px; font-size: 12px; background-color: #b19361" th:href="@{/my-account/detail/{idhd}(idhd=${hd.id})}">
+                                                    <i class="material-icons text-white mt-1"
+                                                       title="Chi tiết">visibility</i>
+                                                </a></td>
+                                                </div>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="tabDonHoan">
+                                <div class="table_page table-responsive" style=" overflow-y: auto; max-height: 400px; ">
+                                    <table>
+                                        <thead>
+                                        <tr>
+                                            <th>Đơn hàng</th>
+                                            <th>Ngày đặt</th>
+                                            <th>Tổng tiền</th>
+                                            <th>Trạng thái</th>
+                                            <th>Hành động</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="hd, start : ${listHDHoan}">
+                                            <div th:if="${hd.loaiHoaDon == 3}">
+
+
+                                            <td th:text="${start.index+1}"></td>
+                                            <td th:text="${#temporals.format(hd.createdDate,'dd-MM-yyyy HH:mm:ss')}"></td>
+                                            <td th:text="${#numbers.formatCurrency(hd.tongTien +hd.phiShip)}"></td>
+                                            <td>Hủy</td>
+                                                <td>  <a class="btn  delete" style=" padding: 5px 10px; font-size: 12px; background-color: #b19361" th:href="@{/my-account/detail/{idhd}(idhd=${hd.id})}">
+                                                    <i class="material-icons text-white mt-1"
+                                                       title="Chi tiết">visibility</i>
+                                                </a></td>
+                                                </div>
                                         </tr>
                                         </tbody>
                                     </table>
