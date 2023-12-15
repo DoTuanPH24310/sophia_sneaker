@@ -232,7 +232,7 @@ public class QLHDController {
 
                     HinhThucThanhToan hinhThucThanhToan = htttService.getHTTTByIdhd(idhd);
                     if (hoaDon.getLoaiHoaDon() == 2) {
-                        hinhThucThanhToan.setSoTien(hoaDon.getTongTien());
+                        hinhThucThanhToan.setSoTien(hoaDon.getTongTien() + hoaDon.getPhiShip());
                         hoaDon.setGhiChu(ghiChu);
                         htttService.savehttt(hinhThucThanhToan);
                     }

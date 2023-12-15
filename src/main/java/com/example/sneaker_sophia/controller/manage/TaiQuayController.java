@@ -563,7 +563,7 @@ public class TaiQuayController {
 
 
         if(!diaChiService.validateAddKH(dcCuThe, hoTen, sdt, email, tinh, quan, xa, model)){
-            alertInfo.alert("errTaiQuay","Thao tác không hợp lệ");
+            alertInfo.alert("errTaiQuay","Thêm mới khách hàng thất bại ");
             return "redirect:/staff/tai-quay/detail/" + tempIdHD;
         }else{
             taiKhoan.setTen(hoTen);

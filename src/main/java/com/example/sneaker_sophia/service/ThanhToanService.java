@@ -80,6 +80,7 @@ public class ThanhToanService {
         hoaDon.setTongTien(tongTienDonHang);
         hoaDon.setKhuyenMai(tongTienGiam);
         hoaDon.setGhiChu(ghiChu);
+        hoaDon.setCreatedBy(taiKhoan.getTen());
         HoaDon savedHoaDon = hoaDonWebRepository.save(hoaDon);
         for (GioHangChiTiet cartItem : cartItems) {
             HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();

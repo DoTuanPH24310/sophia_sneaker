@@ -194,7 +194,7 @@
                                             <td th:text="${status.index + 1}"></td>
                                             <td th:text="${hdc.maHoaDOn}"></td>
                                             <td th:text="${hdc.tenKhachHang}"></td>
-                                            <td th:text="${hdc.createdBy}"></td>
+                                            <td th:text="${hdc.createdBy == 'anonymousUser' ? ' ' : hdc.createdBy}"></td>
                                             <td th:text="${#temporals.format(hdc.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
                                             <td th:text="${#numbers.formatCurrency(hdc.khuyenMai)}"></td>
                                             <td th:text="${#numbers.formatCurrency(hdc.tongTien + hdc.phiShip)}"></td>
@@ -288,7 +288,7 @@
                                             <td th:text="${status.index + 1}"></td>
                                             <td th:text="${hd.maHoaDOn}"></td>
                                             <td th:text="${hd.tenKhachHang}"></td>
-                                            <td th:text="${hd.createdBy}"></td>
+                                            <td th:text="${hd.createdBy == 'anonymousUser' ? ' ' : hd.createdBy}"></td>
                                             <td th:text="${#temporals.format(hd.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
                                             <td th:text="${#numbers.formatCurrency(hd.khuyenMai)}"></td>
                                             <td th:text="${#numbers.formatCurrency(hd.tongTien + hd.phiShip)}"></td>
@@ -367,7 +367,7 @@
                                             <td th:text="${status.index + 1}"></td>
                                             <td th:text="${hd.maHoaDOn}"></td>
                                             <td th:text="${hd.tenKhachHang}"></td>
-                                            <td th:text="${hd.createdBy}"></td>
+                                            <td th:text="${hd.createdBy == 'anonymousUser' ? ' ' : hd.createdBy}"></td>
                                             <td th:text="${#temporals.format(hd.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
                                             <td th:text="${#numbers.formatCurrency(hd.khuyenMai)}"></td>
                                             <td th:text="${#numbers.formatCurrency(hd.tongTien + hd.phiShip)}"></td>
@@ -458,7 +458,7 @@
                                             <td th:text="${status.index + 1}"></td>
                                             <td th:text="${hd.maHoaDOn}"></td>
                                             <td th:text="${hd.tenKhachHang}"></td>
-                                            <td th:text="${hd.createdBy}"></td>
+                                            <td th:text="${hd.createdBy == 'anonymousUser' ? ' ' : hd.createdBy}"></td>
                                             <td th:text="${#temporals.format(hd.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
                                             <td th:text="${#numbers.formatCurrency(hd.khuyenMai)}"></td>
                                             <td th:text="${#numbers.formatCurrency(hd.tongTien + hd.phiShip)}"></td>
@@ -512,7 +512,7 @@
                                         <td th:text="${status.index + 1}"></td>
                                         <td th:text="${hdht.maHoaDOn}"></td>
                                         <td th:text="${hdht.tenKhachHang}"></td>
-                                        <td th:text="${hdht.createdBy}"></td>
+                                        <td th:text="${hdht.createdBy == 'anonymousUser' ? ' ' : hdht.createdBy}"></td>
                                         <td th:text="${#temporals.format(hdht.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
                                         <td th:text="${#numbers.formatCurrency(hdht.khuyenMai)}"></td>
                                         <td th:text="${#numbers.formatCurrency(hdht.tongTien + hdht.phiShip)}"></td>
@@ -570,7 +570,7 @@
                                         <td th:text="${status.index + 1}"></td>
                                         <td th:text="${hdh.maHoaDOn}"></td>
                                         <td th:text="${hdh.tenKhachHang}"></td>
-                                        <td th:text="${hdh.createdBy}"></td>
+                                        <td th:text="${hdh.createdBy == 'anonymousUser' ? ' ' : hdh.createdBy}"></td>
                                         <td th:text="${#temporals.format(hdh.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
                                         <td th:text="${#numbers.formatCurrency(hdh.khuyenMai)}"></td>
                                         <td th:text="${#numbers.formatCurrency(hdh.tongTien + hdh.phiShip)}"></td>
@@ -627,7 +627,7 @@
                                         <td th:text="${status.index + 1}"></td>
                                         <td th:text="${hdh.maHoaDOn}"></td>
                                         <td th:text="${hdh.tenKhachHang}"></td>
-                                        <td th:text="${hdh.createdBy}"></td>
+                                        <td th:text="${hdh.createdBy == 'anonymousUser' ? ' ' : hdh.createdBy}"></td>
                                         <td th:text="${#temporals.format(hdh.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
                                         <td th:text="${#numbers.formatCurrency(hdh.khuyenMai)}"></td>
                                         <td th:text="${#numbers.formatCurrency(hdh.tongTien + hdh.phiShip)}"></td>
@@ -832,7 +832,7 @@
                 errTable = 'errdangGiao';
             } else if (tab == '#huy') {
                 errTable = 'errhuy';
-            }else if (tab == '#donHoan'){
+            } else if (tab == '#donHoan') {
                 errTable = 'errdonHoan';
             }
         }
@@ -858,10 +858,12 @@
                 style: 'currency',
                 currency: 'VND'
             });
-            let formattetongTien = x.tongTien.toLocaleString('vi-VN', {
+            let formattetongTien = (x.tongTien + x.phiShip).toLocaleString('vi-VN', {
                 style: 'currency',
                 currency: 'VND'
             });
+
+
 
             if (tab == '#choGiao') {
                 row.insertCell().innerHTML = ` <input name="idhd"
@@ -880,7 +882,7 @@ type="checkbox">`;
             row.insertCell().innerHTML = index;
             row.insertCell().innerHTML = x.maHoaDOn;
             row.insertCell().innerHTML = x.tenKhachHang;
-            row.insertCell().innerHTML = x.createdBy;
+            row.insertCell().innerHTML = x.createdBy == 'anonymousUser'?'':x.createdBy;
             row.insertCell().innerHTML = formattedDateTime;
             row.insertCell().innerHTML = formatteKM;
             row.insertCell().innerHTML = formattetongTien;
@@ -966,7 +968,7 @@ type="checkbox">`;
                 temActiveTab = 5;
             } else if (temActiveTab == 'huy') {
                 temActiveTab = 6;
-            }else{
+            } else {
                 temActiveTab = 7;
             }
             let params = {
