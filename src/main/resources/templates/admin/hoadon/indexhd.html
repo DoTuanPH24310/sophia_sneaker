@@ -858,10 +858,12 @@
                 style: 'currency',
                 currency: 'VND'
             });
-            let formattetongTien = x.tongTien.toLocaleString('vi-VN', {
+            let formattetongTien = (x.tongTien + x.phiShip).toLocaleString('vi-VN', {
                 style: 'currency',
                 currency: 'VND'
             });
+
+
 
             if (tab == '#choGiao') {
                 row.insertCell().innerHTML = ` <input name="idhd"
@@ -880,7 +882,7 @@ type="checkbox">`;
             row.insertCell().innerHTML = index;
             row.insertCell().innerHTML = x.maHoaDOn;
             row.insertCell().innerHTML = x.tenKhachHang;
-            row.insertCell().innerHTML = x.createdBy;
+            row.insertCell().innerHTML = x.createdBy == 'anonymousUser'?'':x.createdBy;
             row.insertCell().innerHTML = formattedDateTime;
             row.insertCell().innerHTML = formatteKM;
             row.insertCell().innerHTML = formattetongTien;

@@ -188,6 +188,8 @@
                         <span th:if="${hoaDon.trangThai == 4}">Chờ giao</span>
                         <span th:if="${hoaDon.trangThai == 5}">Đang giao</span>
                         <span th:if="${hoaDon.trangThai == 6}">Hủy</span>
+                        <span th:if="${hoaDon.trangThai == 7}">Hoàn Hàng</span>
+                        <span th:if="${hoaDon.trangThai == 6}">Chờ thanh toán</span>
                     </div>
 
 
@@ -201,7 +203,7 @@
                             <span th:case="3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Loại giao dịch: &nbsp;&nbsp;&nbsp;Trả sau</span>
                         </div>
                     </div>
-                    <div class="col-5" th:if="${hoaDon.trangThai == 6}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Lí do hủy:&nbsp;&nbsp;&nbsp;
+                    <div class="col-5" th:if="${hoaDon.trangThai == 6 || hoaDon.trangThai == 7}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Lí do:&nbsp;&nbsp;&nbsp;
                         <span th:text="${hoaDon.ghiChu}"></span>
                     </div>
 
@@ -424,7 +426,12 @@
         }
         value = check('5');
         if (value != null && value.hoaDon.loaiHoaDon != 1) {
-            fillTimeLine('icon3', 'text3', value, 'Đang giao', 'uil-truck');
+            fillTimeLine('icon3', 'text3', value, 'Đang giao', 'uil-ambulance');
+        }
+        value = check('7');
+        if (value != null && value.hoaDon.loaiHoaDon != 1) {
+            fillTimeLine('icon4', 'text4', value, 'Hoàn hàng', 'uil-truck');
+            return;
         }
         value = check('1');
         if (value != null) {
