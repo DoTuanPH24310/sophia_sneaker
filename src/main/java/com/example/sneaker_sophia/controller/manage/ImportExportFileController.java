@@ -224,7 +224,7 @@ public class ImportExportFileController {
                 if(inportTrangThai != 0 && inportTrangThai != 1){
                     return ResponseEntity.badRequest().body("Lỗi: Trạng thái không hợp lệ cho sản phẩm có mã: " + ma);
                 }
-                if (importedGia <= 0 || importedSoLuong <= 0 || importedGia >= 1000000000 || importedSoLuong >= 10000) {
+                if (importedGia <= 0 || importedSoLuong < 0 || importedGia >= 1000000000 || importedSoLuong >= 10000) {
                     return ResponseEntity.badRequest().body("Lỗi: Giá hoặc số lượng không hợp lệ cho sản phẩm có mã: " + ma);
                 }
 

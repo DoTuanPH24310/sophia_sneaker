@@ -146,7 +146,7 @@ public interface ChiTietGiayRepository extends JpaRepository<ChiTietGiay, UUID> 
             "JOIN c.hang h " +
             "JOIN c.mauSac m " +
             "JOIN c.kichCo k " +
-            "WHERE c.soLuong < :soLuongInput " +
+            "WHERE c.soLuong < :soLuongInput AND (c.trangThai = 1 OR c.trangThai = 0) " +
             "ORDER BY c.soLuong ASC")
     List<Object[]> getConcatenatedInfoAndSoLuongBySoLuong(@Param("soLuongInput") int soLuongInput);
 
