@@ -1767,6 +1767,8 @@
                 }
             }
 
+            let reloadFlag = false; // Biến để kiểm tra xem đã làm mới trang chưa
+
             function stopScanning() {
                 if (stream) {
                     const tracks = stream.getTracks();
@@ -1775,7 +1777,20 @@
                     scanning = false;
                     startScanningButton.disabled = true;
                     stopScanningButton.disabled = true;
-                    window.location.href = "/staff/tai-quay/detail/" + idHoaDon;
+
+                    // Chờ 100 milliseconds và sau đó chuyển hướng trang
+                    setTimeout(() => {
+                        window.location.replace("/staff/tai-quay/detail/" + idHoaDon);
+                        console.log(idHoaDon);
+                    }, 1000);
+
+                    // Làm mới trang sau khi chờ
+                    setTimeout(() => {
+                        if (!reloadFlag) {
+                            location.reload();
+                            reloadFlag = true; // Đánh dấu là đã làm mới trang
+                        }
+                    }, 1000);
                 }
             }
 
@@ -1801,41 +1816,44 @@
                         resizedCanvas.width = 400;
                         resizedCanvas.height = (video.videoHeight / video.videoWidth) * 400;
                         resizedContext.drawImage(canvas, 0, 0, resizedCanvas.width, resizedCanvas.height);
-
-                        const imageData = resizedContext.getImageData(0, 0, resizedCanvas.width, resizedCanvas.height);
-                        try {
-                            const code = jsQR(imageData.data, imageData.width, imageData.height);
-                            if (code) {
-                                resultDiv.innerText = 'QR Code content: ' + code.data;
-                                $.ajax({
-                                    type: 'get',
-                                    url: 'http://localhost:8080/api/chi-tiet-giay/getSLTBYQR/' + code.data,
-                                    success: function (data) {
-                                        if (data - 1 < 0) {
-                                            let type = 'error';
-                                            let icon = 'fa-solid fa-circle-exclamation';
-                                            let title = 'Thất bại!';
-                                            let text = 'Không đủ số lượng tồn';
-                                            createToast(type, icon, title, text);
-                                        } else {
-                                            let type = 'success';
-                                            let icon = 'fa-solid fa-circle-check';
-                                            let title = 'Thành công!';
-                                            let text = "Đã thêm vào giỏ hàng";
-                                            createToast(type, icon, title, text);
+                        if (resizedCanvas.width > 0 && resizedCanvas.height > 0) {
+                            const imageData = resizedContext.getImageData(0, 0, resizedCanvas.width, resizedCanvas.height);
+                            try {
+                                const code = jsQR(imageData.data, imageData.width, imageData.height);
+                                if (code) {
+                                    resultDiv.innerText = 'Nội dung QR code: ' + code.data;
+                                    $.ajax({
+                                        type: 'get',
+                                        url: 'http://localhost:8080/api/chi-tiet-giay/getSLTBYQR/' + code.data,
+                                        success: function (data) {
+                                            if (data - 1 < 0) {
+                                                let type = 'error';
+                                                let icon = 'fa-solid fa-circle-exclamation';
+                                                let title = 'Thất bại!';
+                                                let text = 'Không đủ số lượng tồn';
+                                                createToast(type, icon, title, text);
+                                            } else {
+                                                let type = 'success';
+                                                let icon = 'fa-solid fa-circle-check';
+                                                let title = 'Thành công!';
+                                                let text = "Đã thêm vào giỏ hàng";
+                                                createToast(type, icon, title, text);
+                                                sendQRCodeToServer(code.data);
+                                                stopScanning();
+                                            }
                                         }
-                                    }
-                                })
-                                sendQRCodeToServer(code.data);
-                                // stopScanning();
-                            } else {
-                                resultDiv.innerText = 'No QR Code found';
-                                qrCodeFound = false;
+                                    })
+
+
+                                } else {
+                                    resultDiv.innerText = 'Không có QR code nào được tìm thấy ';
+                                    qrCodeFound = false;
+                                }
+                            } catch (error) {
+                                console.error('Lỗi xảy ra trong jsQR:', error);
+                                stopScanning();
+                                // setTimeout(startScanning(), 1000); // Thực hiện gọi lại sau 1 giây
                             }
-                        } catch (error) {
-                            console.error('Lỗi xảy ra trong jsQR:', error);
-                            // Gọi lại hàm startScanning()
-                            setTimeout(startScanning, 1000); // Thực hiện gọi lại sau 1 giây
                         }
                     }
                     if (scanning) {
