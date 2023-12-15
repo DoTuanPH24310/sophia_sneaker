@@ -119,8 +119,8 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
     );
 
     @Query("SELECT SUM(h.tongTien) FROM HoaDon h WHERE " +
-            "(:ngayBatDau IS NULL OR h.createdDate >= :ngayBatDau) AND " +
-            "(:ngayKetThuc IS NULL OR h.createdDate <= :ngayKetThuc)")
+            "(:ngayBatDau IS NULL OR h.updatedDate >= :ngayBatDau) AND " +
+            "(:ngayKetThuc IS NULL OR h.updatedDate <= :ngayKetThuc) AND h.trangThai = 1")
     Double calculateTongTienByDate(
             @Param("ngayBatDau") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime ngayBatDau,
             @Param("ngayKetThuc") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime ngayKetThuc

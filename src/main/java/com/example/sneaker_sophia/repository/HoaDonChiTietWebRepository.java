@@ -20,7 +20,7 @@ public interface HoaDonChiTietWebRepository extends JpaRepository<HoaDonChiTiet,
             "h.chiTietGiay.hang.ten || ' ' || h.chiTietGiay.giay.ten || ' ' || h.chiTietGiay.ten || ' ' || h.chiTietGiay.mauSac.ten|| ' ' || h.chiTietGiay.loaiGiay.ten AS tenGiay, " +
             "SUM(h.soLuong) AS tongSoLuong " +
             "FROM HoaDonChiTiet h " +
-            "WHERE h.createdDate BETWEEN :startDate AND :endDate " +
+            "WHERE h.createdDate BETWEEN :startDate AND :endDate AND (h.chiTietGiay.trangThai = 1 OR h.chiTietGiay.trangThai = 0) " +
             "GROUP BY datePart, h.chiTietGiay.hang.ten, h.chiTietGiay.ten, h.chiTietGiay.giay.ten, h.chiTietGiay.mauSac.ten,h.chiTietGiay.loaiGiay.ten,h.chiTietGiay.kichCo.ten,h.chiTietGiay.id " +
             "ORDER BY tongSoLuong DESC")
     List<Object[]> getTop10ChiTietSanPham(

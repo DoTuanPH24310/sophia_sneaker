@@ -114,6 +114,7 @@ public class ProductWebController {
         model.addAttribute("mauSacTen", mauSacTen);
         model.addAttribute("giayTen", giayTen);
         model.addAttribute("minPrice", minPrice);
+        model.addAttribute("sortField", sortField);
         //giữ giá trị combobox đã chọn
         model.addAttribute("selectedSortField", sortField);
 
