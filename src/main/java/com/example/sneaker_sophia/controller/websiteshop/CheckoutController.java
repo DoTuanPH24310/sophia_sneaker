@@ -11,6 +11,7 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -61,9 +62,16 @@ public class CheckoutController {
         int soLuongPhieuGiamDaSuDung = 0;
         int soLuongGiam = 0;
         int tongSoLuongGiam = 0;
+        boolean isValidCheckout = true; // Thêm biến kiểm tra
 
         DiaChi diaChi = accountService.getDiaChiMacDinhCuaTaiKhoanDangNhap();
-
+        DiaChiLoGin diaChiDTO;
+        if (diaChi != null) {
+            diaChiDTO = new DiaChiLoGin();
+            BeanUtils.copyProperties(diaChi, diaChiDTO);
+        } else {
+            diaChiDTO = new DiaChiLoGin();
+        }
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         GioHang gioHang = this.gioHangService.getCartByEmail(authentication.getName());
         TaiKhoan taiKhoan = this.loginRepository.findByEmail(authentication.getName());
@@ -82,6 +90,14 @@ public class CheckoutController {
                     for (GioHangChiTiet item : cartItems) {
                         ChiTietGiay chiTietGiay = item.getId().getChiTietGiay();
                         int soLuongMua = item.getSoLuong();
+                        int soLuongCoSan = chiTietGiay.getSoLuong(); // Số lượng có sẵn của sản phẩm
+
+                        if (soLuongMua > soLuongCoSan) {
+                            alertInfo.alert("errOnline", "Không thể tiếp tục khi giỏ hàng có sản phẩm đã hết!");
+                            isValidCheckout = false;
+                            break;
+                        }
+
                         List<CTG_KhuyenMai> listCTG_KM = chiTietGiay.getListCTG_KM();
                         total += item.getId().getChiTietGiay().getGia() * item.getSoLuong();
                         double tongTienDonHang = total;
@@ -108,22 +124,25 @@ public class CheckoutController {
 
                     }
 
+                    if (!isValidCheckout) {
+                        // Nếu có ít nhất một sản phẩm không phù hợp, chuyển hướng đến trang giỏ hàng
+                        return "redirect:/cart/hien-thi";
+                    }
 
                     if (diaChi != null) {
-
                         session.setAttribute("tinh", diaChi.getTinh());
                         session.setAttribute("quan", diaChi.getQuanHuyen());
                         session.setAttribute("phuong", diaChi.getPhuongXa());
-
                     } else {
                         diaChi = new DiaChi();
                     }
-                    session.setAttribute("selectedProvince", diaChi.getTinh()); // Thêm dòng này
-                    model.addAttribute("diaChi", diaChi);
+                    session.setAttribute("selectedProvince", diaChi.getTinh());
+                    model.addAttribute("diaChi", diaChiDTO);
                     model.addAttribute("cartItems", cartItems);
                     model.addAttribute("tongSoLuongGiam", tongSoLuongGiam);
                     model.addAttribute("listDC", diaChiServiceTQ.getAllDCByIdkh(taiKhoan.getId()));
                     session.setAttribute("idkhOL", taiKhoan.getId());
+                    model.addAttribute("isValidCheckout", isValidCheckout); // Thêm biến vào model
                     return "website/productwebsite/checkout";
                 }
             }
@@ -133,6 +152,7 @@ public class CheckoutController {
     }
 
 
+
     @GetMapping("/checkout")
     public String showCheckout(Model model, HttpSession session) {
         double total = 0.0;
@@ -140,6 +160,8 @@ public class CheckoutController {
         int soLuongPhieuGiamDaSuDung = 0;
         int soLuongGiam = 0;
         int tongSoLuongGiam = 0;
+        boolean isValidCheckout = true; // Thêm biến kiểm tra
+
         // Lấy giỏ hàng từ session
         Cart cart = (Cart) session.getAttribute("cart");
 
@@ -150,6 +172,15 @@ public class CheckoutController {
                 for (CartItem item : cartItems) {
                     ChiTietGiay chiTietGiay = this.chiTietGiayRepository.findById(item.getId()).orElse(null);
                     int soLuongMua = item.getSoLuong();
+                    int soLuongCoSan = chiTietGiay.getSoLuong(); // Số lượng có sẵn của sản phẩm
+
+                    // Kiểm tra số lượng sản phẩm có phù hợp để tiếp tục thanh toán không
+                    if (soLuongMua > soLuongCoSan) {
+                        alertInfo.alert("errOnline", "Không thể tiếp tục khi giỏ hàng có sản phẩm đã hết!");
+                        isValidCheckout = false;
+                        break; // Không cần kiểm tra các sản phẩm khác nữa nếu có ít nhất một sản phẩm không phù hợp
+                    }
+
                     List<CTG_KhuyenMai> listCTG_KM = chiTietGiay.getListCTG_KM();
                     total += chiTietGiay.getGia() * item.getSoLuong();
                     double tongTienDonHang = total;
@@ -173,27 +204,32 @@ public class CheckoutController {
                         }
                     }
                     model.addAttribute("total", tongTienDonHang);
-
                 }
+
+                if (!isValidCheckout) {
+                    // Nếu có ít nhất một sản phẩm không phù hợp, chuyển hướng đến trang giỏ hàng
+                    return "redirect:/cart/hien-thi";
+                }
+
                 model.addAttribute("diaChi", new DiaChiDTO());
                 session.setAttribute("tinh", "-1");
                 session.setAttribute("quan", "-1");
                 session.setAttribute("phuong", "-1");
-                // Thêm thông tin giỏ hàng vào Model để hiển thị trên trang thanh toán
+
                 model.addAttribute("cartItems", cartItems);
                 model.addAttribute("tongTienGiam", tongTienGiam);
                 model.addAttribute("tongSoLuongGiam", tongSoLuongGiam);
+                model.addAttribute("isValidCheckout", isValidCheckout); // Thêm biến vào model
 
                 return "website/productwebsite/checkoutSession";
             } else {
-                // Giỏ hàng không có sản phẩm, chuyển hướng về trang giỏ hàng
                 return "redirect:/cart/hien-thi";
             }
         } else {
-            // Trường hợp không tìm thấy giỏ hàng trong session, chuyển hướng về trang giỏ hàng
             return "redirect:/cart/hien-thi";
         }
     }
+
 
 
     @PostMapping("/thanh-toan")
@@ -228,7 +264,7 @@ public class CheckoutController {
                 }
             }
             if (result.hasErrors()) {
-                DiaChi diaChi = diaChiService.getDiaChiOfLoggedInUser();
+                DiaChi diaChi = accountService.getDiaChiMacDinhCuaTaiKhoanDangNhap();
 
                 GioHang gioHang = this.gioHangService.getCartByEmail(authentication.getName());
                 model.addAttribute("email", taiKhoan.getEmail());
@@ -236,10 +272,10 @@ public class CheckoutController {
                     if (cartItems == null || cartItems.isEmpty()) {
                         return "redirect:/cart/hien-thi";
                     } else {
-
-                        session.setAttribute("tinh", diaChi.getTinh());
-                        session.setAttribute("quan", diaChi.getQuanHuyen());
-                        session.setAttribute("phuong", diaChi.getPhuongXa());
+                        session.setAttribute("selectedProvince", diaChiDTO.getTinh()); // Thêm dòng này
+                        session.setAttribute("tinh", diaChiDTO.getTinh());
+                        session.setAttribute("quan", diaChiDTO.getQuanHuyen());
+                        session.setAttribute("phuong", diaChiDTO.getPhuongXa());
                         model.addAttribute("cartItems", cartItems);
                         model.addAttribute("total", total);
                         return "website/productwebsite/checkout";
@@ -283,6 +319,14 @@ public class CheckoutController {
             double total = 0.0;
             Cart cart = (Cart) session.getAttribute("cart");
             List<CartItem> cartItems = cart.getItems();
+            for (CartItem item : cartItems) {
+                if (item != null && item.getId() != null) {
+                    double subtotal = item.getGia() * item.getSoLuong();
+                    total += subtotal;
+                } else {
+                    return "redirect:/cart/hien-thi";
+                }
+            }
             session.removeAttribute("tinh");
             session.removeAttribute("quan");
             session.removeAttribute("phuong");
@@ -298,6 +342,7 @@ public class CheckoutController {
                                 return "redirect:/cart/hien-thi";
                             }
                         }
+                        session.setAttribute("selectedProvince", diaChi.getTinh()); // Thêm dòng này
 
                         session.setAttribute("tinh", diaChi.getTinh());
                         session.setAttribute("quan", diaChi.getQuanHuyen());
@@ -319,15 +364,8 @@ public class CheckoutController {
 
                 if (cart != null) {
                     if (cartItems != null && !cartItems.isEmpty()) {
-                        for (CartItem item : cartItems) {
-                            if (item != null && item.getId() != null) {
-                                double subtotal = item.getGia() * item.getSoLuong();
-                                total += subtotal;
-                            } else {
-                                return "redirect:/cart/hien-thi";
-                            }
-                        }
 
+                        session.setAttribute("selectedProvince", diaChi.getTinh()); // Thêm dòng này
                         session.setAttribute("tinh", diaChi.getTinh());
                         session.setAttribute("quan", diaChi.getQuanHuyen());
                         session.setAttribute("phuong", diaChi.getPhuongXa());
@@ -345,7 +383,16 @@ public class CheckoutController {
                 }
             }
 
-            phiVanChuyen = (total < 2000000) ? ((diaChi.getTinh() == 1) ? 20000.0 : 30000.0) : 0.0;
+            if (total > 2000000) {
+                phiVanChuyen = 0.0;
+            } else {
+                if (diaChi.getTinh() == 1) {
+                    phiVanChuyen = 20000.0;
+                } else {
+                    phiVanChuyen = 30000.0;
+                }
+            }
+            model.addAttribute("phiVanChuyen", phiVanChuyen);
 
             if (diaChi == null || StringUtils.isEmpty(diaChi.getEmail())) {
                 // If email is provided, create an order without creating an account
@@ -370,6 +417,7 @@ public class CheckoutController {
                     return "redirect:/shophia-store/home";
                 }
             }
+
             session.removeAttribute("cart");
             return "redirect:/check-out/success";
 
@@ -404,10 +452,10 @@ public class CheckoutController {
                 }
                 return "redirect:/check-out/success";
             } else {
-                return "redirect:/shophia-store/home";
+                return "redirect:/sophia-store/home";
             }
         } else {
-            return "redirect:/shophia-store/home";
+            return "redirect:/sophia-store/home";
         }
     }
 

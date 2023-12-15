@@ -462,7 +462,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="default-form-box">
-                                    <label>Họ tên người nhận hàng</label>
+                                    <label>Họ tên người nhận hàng<span>*</span></label>
                                     <input type="text" th:field="*{ten}" id="nameTen">
                                     <span th:errors="*{ten}" style="color: red"></span>
                                 </div>
@@ -920,7 +920,7 @@
 
     function updateTotalAmount(newTotal, shippingFee) {
         const selectedProvinceCode = $("#province").val();
-        if (!selectedProvinceCode) {
+        if (selectedProvinceCode === null) {
             // Chưa chọn tỉnh
             $("#shipping-cost").text("Vui lòng chọn địa chỉ");
             var totalAmount = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(initialTotalAmount);
@@ -930,10 +930,15 @@
         }
 
         const totalAmountWithShipping = newTotal + shippingFee;
+
+        // Correct the order of formatting
         var formattedAmount = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalAmountWithShipping);
+        var shippingFee3 = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(shippingFee);
+
+        console.log("Formatted Amount:", formattedAmount);
+        console.log("Formatted Shipping Fee:", shippingFee3);
 
         $("#totalAmount").text(`${formattedAmount}`);
-        var shippingFee3 = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(shippingFee);
         $("#shipping-cost").text(`${shippingFee3}`);
     }
 
@@ -988,12 +993,23 @@
 
     function calculateShippingFee() {
         var selectedProvince = '[[${session.selectedProvince}]]';
+        console.log("Selected Province:", selectedProvince);
         var shippingFee = 0;
         if(initialTotalAmount < 2000000){
             shippingFee = selectedProvince === "1" ? 20000 : 30000;
         }
+        console.log("Shipping Fee:", shippingFee);
+
         return shippingFee;
     }
+
+    // Initial update when the page loads
+    $(document).ready(function () {
+        const initialSelectedProvinceCode = $("#province").val();
+        updateShippingFee(initialSelectedProvinceCode);
+        updateTotalAmount(initialTotalAmount, calculateShippingFee());
+    });
+
 
     $("#ward").change(() => {
         printResult();
