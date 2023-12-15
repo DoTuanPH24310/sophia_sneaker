@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -805,7 +806,8 @@ public class TaiKhoanService {
         this.taiKhoanRepository.save(taiKhoan);
     }
 
-    public TaiKhoan getTaiKhoanByEmail(String email){
+    @Transactional
+    public TaiKhoan getTaiKhoanByEmail(String email) {
         return taiKhoanRepository.getTaiKhoanByEmail(email);
     }
 

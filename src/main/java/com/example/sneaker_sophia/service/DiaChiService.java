@@ -149,7 +149,7 @@ public class DiaChiService {
         return matcher.find();
     }
 
-    public boolean validateAddKH(String dcCuThe, String hoTen, String email, String sdt, Integer tinh, Integer quan, Integer xa, Model model) {
+    public boolean validateAddKH(String dcCuThe, String hoTen, String sdt, String email, Integer tinh, Integer quan, Integer xa, Model model) {
         int i = 0;
         String errTen = null, errSDT = null, errTinh = null, errQuanHuyen = null, errPhuongXa = null, errDCCuThe = null, errEmail = null;
 
