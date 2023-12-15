@@ -393,7 +393,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="default-form-box">
-                                    <label>Họ tên người nhận hàng</label>
+                                    <label>Họ tên người nhận hàng <span>*</span></label>
                                     <input type="text" th:field="*{ten}" id="nameTen">
                                     <span th:errors="*{ten}" style="color: red"></span>
                                 </div>
@@ -466,13 +466,13 @@
                             </div>
                             <div class="col-12">
                                 <div class="default-form-box">
-                                    <label for="nameGhiChu">Ghi chú</label>
-                                    <textarea id="nameGhiChu" name="ghiChu" style="height: 100px;"></textarea>
-                                    <span id="errorGhiChu" style="color: red"></span>
+                                    <label for="ghiChu">Ghi chú</label>
+                                    <textarea id="ghiChu" name="ghiChu" style="height: 100px" th:field="*{ghiChu}"></textarea>
+                                    <span th:if="${#fields.hasErrors('ghiChu')}" th:errors="*{ghiChu}" style="color: red"></span>
                                 </div>
                             </div>
                             <div class="col-12">
-                                <label class="checkbox-default" for="currencyCod" data-bs-toggle="collapse">
+                                <label class="checkbox-default">
                                     <input type="radio" name="giaoHang" checked>
                                     <span>Giao hàng tiêu chuẩn</span>
                                     <br>
@@ -1164,7 +1164,6 @@
     initialTotalAmount = parseFloat($("#totalAmount").data("id"));
 
     function updateTotalAmount(newTotal, shippingFee) {
-        // Check if a province is selected
         const selectedProvinceCode = $("#province").val();
         if (selectedProvinceCode === null) {
             // Chưa chọn tỉnh
@@ -1245,7 +1244,11 @@
         }
         return shippingFee;
     }
-
+    // $(document).ready(function () {
+    //     const initialSelectedProvinceCode = $("#province").val();
+    //     updateShippingFee(initialSelectedProvinceCode);
+    //     updateTotalAmount(initialTotalAmount, calculateShippingFee());
+    // });
 
     $("#ward").change(() => {
         printResult();
