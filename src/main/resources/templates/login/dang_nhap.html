@@ -41,51 +41,25 @@
             </div>
 
             <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-                <form id="loginForm" method="post" th:action="@{/login/login}">
-                    <!--                    <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">-->
-                    <!--                        <p class="lead fw-normal mb-0 me-3">Sign in with</p>-->
-                    <!--                        <button type="button" class="btn btn-primary btn-floating mx-1">-->
-                    <!--                            <i class="fab fa-facebook-f"></i>-->
-                    <!--                        </button>-->
-
-                    <!--                        <button type="button" class="btn btn-primary btn-floating mx-1">-->
-                    <!--                            <i class="fab fa-twitter"></i>-->
-                    <!--                        </button>-->
-
-                    <!--                        <button type="button" class="btn btn-primary btn-floating mx-1">-->
-                    <!--                            <i class="fab fa-linkedin-in"></i>-->
-                    <!--                        </button>-->
-                    <!--                    </div>-->
-
-                    <!--                    <div class="divider d-flex align-items-center my-4">-->
-                    <!--                        <p class="text-center fw-bold mx-3 mb-0">Or</p>-->
-                    <!--                    </div>-->
+                <form id="loginForm" method="post" th:action="@{/login/login}" onsubmit="return validateForm()">
                     <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Đăng nhập</p>
                     <!-- Email input -->
+                    <div th:if="${session.error}">
+                        <p class="text-danger">Tài khoản hoặc mật khẩu không hợp lệ!</p>
+                    </div>
+
                     <div class="form-outline mb-4">
                         <label for="username"><span style="color: #c82333">*</span> Email</label>
                         <input type="text" id="username" name="username" class="form-control form-control-lg"
                                placeholder="Nhập email"/>
-
+                        <span id="username-error" class="text-danger"></span>
                     </div>
                     <div class="form-outline mb-3">
                         <label for="password"><span style="color: #c82333">*</span> Mật khẩu</label>
                         <input type="password" id="password" name="password" class="form-control form-control-lg"
                                placeholder="Nhập mật khẩu"/>
-<!--                        <label class="form-label" for="password">Mật khẩu</label>-->
+                        <span id="password-error" class="text-danger"></span>
                     </div>
-
-                    <!--                    <div class="d-flex justify-content-between align-items-center">-->
-                    <!--                        &lt;!&ndash; Checkbox &ndash;&gt;-->
-                    <!--                        <div class="form-check mb-0">-->
-                    <!--                            <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3"/>-->
-                    <!--                            <label class="form-check-label" for="form2Example3">-->
-                    <!--                                Remember me-->
-                    <!--                            </label>-->
-                    <!--                        </div>-->
-                    <!--                        <a href="#!" class="text-body">Forgot password?</a>-->
-                    <!--                    </div>-->
-
                     <div class="text-center text-lg-start mt-4 pt-2">
                         <button type="submit" class="btn btn-primary btn-lg"
                                 style="padding-left: 2.5rem; padding-right: 2.5rem;">Đăng nhập
@@ -94,8 +68,6 @@
                                                                                        class="link-danger">Đăng ký</a>
                         </p>
                     </div>
-
-
                 </form>
             </div>
         </div>
@@ -111,5 +83,47 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
         integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
         crossorigin="anonymous"></script>
+
+<script>
+    function validateForm() {
+        var username = document.getElementById('username').value;
+        var password = document.getElementById('password').value;
+        var usernameError = document.getElementById('username-error');
+        var passwordError = document.getElementById('password-error');
+
+        // Reset error messages before validation
+        usernameError.innerText = '';
+        passwordError.innerText = '';
+
+        if (username.length > 50) {
+            usernameError.innerText = 'Độ dài email không được vượt quá 50 kí tự!';
+        } else if (username.trim() === '') {
+            usernameError.innerText = 'Vui lòng nhập email!';
+        } else if (!isValidEmail(username)) {
+            usernameError.innerText = 'Định dạng email không hợp lệ!';
+        } else if (username.includes(' ')) {
+            usernameError.innerText = 'Email không được chứa khoảng trắng!';
+        }
+
+        if (password.length > 50) {
+            passwordError.innerText = 'Độ dài mật khẩu không được vượt quá 50 kí tự!';
+        } else if (password.trim() === '') {
+            passwordError.innerText = 'Vui lòng nhập mật khẩu!';
+        } else if (password.includes(' ')) {
+            passwordError.innerText = 'Mật khẩu không được chứa khoảng trắng!';
+        }
+
+        if (usernameError.innerText !== '' || passwordError.innerText !== '') {
+            return false;
+        }
+
+        return true;
+    }
+
+    function isValidEmail(email) {
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+</script>
 </body>
 </html>

@@ -49,6 +49,10 @@ public class LoginConfiguration {
                         .loginPage("/login/home")
                         .loginProcessingUrl("/login/login")
                         .successHandler(new CustomSuccessHandler())
+                        .failureHandler((request, response, exception) -> {
+                            request.getSession().setAttribute("error", "true");
+                            response.sendRedirect("/login/home?error=true");
+                        })
                         .permitAll()
                 )
                 .logout(logout -> logout

@@ -388,7 +388,6 @@
                         </div>
 
                     </div>
-
                     <div class="row mt-4">
                         <div class="col-4">
                             <label for=""><h6>Giao hàng:</h6></label>
@@ -1043,7 +1042,13 @@
                     $('#modalInHoaDon').modal('hide');
                 });
             };
+        }
 
+        if(httt != null){
+            if (httt == 3){
+                document.getElementById('blockTienKhachDua').style.display = "none";
+                document.getElementById('blockTienThua').style.display = "none";
+            }
         }
 
         let myLinks = document.querySelectorAll('.myLinkHuy');
