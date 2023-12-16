@@ -893,14 +893,14 @@ public class TaiQuayController {
         table.addCell(cell);
         cell.setPhrase(new Phrase("Đơn giá"));
         table.addCell(cell);
-        cell.setPhrase(new Phrase("Khuyến mại"));
+        cell.setPhrase(new Phrase("Giảm giá"));
         table.addCell(cell);
         cell.setPhrase(new Phrase("Thành tiền"));
         table.addCell(cell);
         writeTableData(table, idHD);
         document.add(table);
         NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-        p = new Paragraph("\n\n" + "Khuyến mại: " + currencyFormat.format(hoaDonChiTietServive.tienGiam(idHD)), font4);
+        p = new Paragraph("\n\n" + "Giảm giá: " + currencyFormat.format(hoaDonChiTietServive.tienGiam(idHD)), font4);
         p.setAlignment(Paragraph.ALIGN_RIGHT);
         document.add(p);
 
