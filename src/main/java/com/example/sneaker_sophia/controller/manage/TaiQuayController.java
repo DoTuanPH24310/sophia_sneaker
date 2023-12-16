@@ -20,12 +20,14 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.awt.*;
 import java.io.IOException;
+import java.security.SecureRandom;
 import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -40,6 +42,8 @@ public class TaiQuayController {
     public static UUID tempIdCTSP;
     public static String tempIdKH = "";
     public static String tempIdDC = "";
+    private static final String CHARACTERSKH = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
     // trạnh thái = 2 (chờ)tai-quay
     @Resource(name = "hoaDonService")
     HoaDonService hoaDonService;
@@ -82,6 +86,9 @@ public class TaiQuayController {
 
     @Resource(name = "vaiTroRepository")
     VaiTroRepository vaiTroRepository;
+
+    @Autowired
+    EmailService emailService;
     //    alo ôla
     @GetMapping("/hien-thi")
     public String index(Model model) {
@@ -546,6 +553,19 @@ public class TaiQuayController {
 
     }
 
+    public static String generateRandomString(int length) {
+        SecureRandom random = new SecureRandom();
+        StringBuilder sb = new StringBuilder(length);
+
+        for (int i = 0; i < length; i++) {
+            int randomIndex = random.nextInt(CHARACTERSKH.length());
+            char randomChar = CHARACTERSKH.charAt(randomIndex);
+            sb.append(randomChar);
+        }
+
+        return sb.toString();
+    }
+
     @PostMapping("addKH")
     public String addKH(
             @RequestParam(value = "xa", required = false) Integer xa,
@@ -566,6 +586,10 @@ public class TaiQuayController {
             alertInfo.alert("errTaiQuay","Thêm mới khách hàng thất bại ");
             return "redirect:/staff/tai-quay/detail/" + tempIdHD;
         }else{
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            String randomString = generateRandomString(6);
+            String encodedPassword = passwordEncoder.encode(randomString);
+            taiKhoan.setMatKhau(encodedPassword);
             taiKhoan.setTen(hoTen);
             taiKhoan.setSdt(sdt);
             taiKhoan.setEmail(email);
@@ -585,6 +609,8 @@ public class TaiQuayController {
             HoaDon hoaDon = hoaDonService.getHoaDonById(tempIdHD);
             hoaDon.setTaiKhoan(taiKhoan);
             hoaDonService.savehd(hoaDon);
+            emailService.guiEmailDangKyTaiKhoan(taiKhoan.getEmail(), randomString);
+
             alertInfo.alert("successTaiQuay","Tài khoản mới đã được thêm");
             return "redirect:/staff/tai-quay/detail/" + tempIdHD;
         }

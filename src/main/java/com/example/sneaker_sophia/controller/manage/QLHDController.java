@@ -355,7 +355,7 @@ public class QLHDController {
             if (hoaDon.getTrangThai() == 5) {
                 hoaDon.setTrangThai(1);
                 if (hoaDon.getLoaiHoaDon() == 2 || hoaDon.getLoaiHoaDon() == 3) {
-                    hinhThucThanhToan.setSoTien(hoaDon.getTongTien());
+                    hinhThucThanhToan.setSoTien(hoaDon.getTongTien()  + hoaDon.getPhiShip());
                     hoaDon.setGhiChu(ghiChu);
                     htttService.savehttt(hinhThucThanhToan);
                 }
