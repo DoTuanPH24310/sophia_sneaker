@@ -40,6 +40,8 @@ public class ThanhToanService {
     @Autowired
     private VoucherRepository voucherRepository;
     @Autowired
+    private GioHangRepository gioHangRepository;
+    @Autowired
     private HttpSession session;
     @Autowired
     private LichSuHoaDonWebRepository lichSuHoaDonWebRepository;
@@ -51,6 +53,7 @@ public class ThanhToanService {
                                   String tinh, String huyen, String xa, Double phiVanChuyen, String ghiChu) {
         TaiKhoan taiKhoan = this.loginRepository.findByEmail(email);
         taiKhoan.setTrangThai(1);
+        GioHang gioHang = this.gioHangRepository.findByTaiKhoan(taiKhoan);
         double total = 0.0;
         for (GioHangChiTiet cartItem : cartItems) {
             total += cartItem.getId().getChiTietGiay().getGia() * cartItem.getSoLuong();
@@ -166,6 +169,8 @@ public class ThanhToanService {
         if (hinhThucThanhToan == 3) {
             this.emailService.guiEmailXacNhanThanhToan(email, savedHoaDon);
         }
+        gioHang.setTrangThai(0);
+        this.gioHangRepository.save(gioHang);
     }
 
 

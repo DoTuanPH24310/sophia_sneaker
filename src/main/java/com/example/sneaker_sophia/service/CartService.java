@@ -60,6 +60,7 @@ public class CartService {
         if (gioHang == null) {
             gioHang = new GioHang();
             gioHang.setTaiKhoan(taiKhoan);
+            gioHang.setTrangThai(0);
             gioHang.setNgayTao(LocalDate.now());
             gioHang = gioHangRepository.save(gioHang);
         }
