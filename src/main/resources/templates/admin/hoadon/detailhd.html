@@ -208,7 +208,7 @@
         </div>
         <div th:if="${hoaDon.trangThai == 5}" class="float-right mr-3">
             <a th:href="@{/staff/hoa-don/huyhdddg/{id}(id=${hoaDon.id})}"
-               class=" myLinkHuy btn btn-danger mr-3">Hoàn hàng</a>
+               class=" myLinkHuy btn btn-danger mr-3">Giao thất bại</a>
         </div>
         <div th:if="${hoaDon.trangThai == 5}" class="float-right">
             <a th:href="@{/staff/hoa-don/updatehddg/{id}(id=${hoaDon.id})}" id="myLinhXacNhanTC"
@@ -243,7 +243,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <td th:text="${httt.updatedBy == 'anonymousUser' ? ' ' : httt.updatedBy}"></td>
+                        <td th:text="${hoaDon.updatedBy == 'anonymousUser' || hoaDon.trangThai == 3 ? ' ' : hoaDon.updatedBy}"></td>
                         <td th:text="${#temporals.format(httt.updatedDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
                         <td th:text="${#numbers.formatCurrency(httt.soTien)}"></td>
                         <td>
