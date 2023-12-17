@@ -188,7 +188,7 @@
                         <span th:if="${hoaDon.trangThai == 4}">Chờ giao</span>
                         <span th:if="${hoaDon.trangThai == 5}">Đang giao</span>
                         <span th:if="${hoaDon.trangThai == 6}">Hủy</span>
-                        <span th:if="${hoaDon.trangThai == 7}">Hoàn Hàng</span>
+                        <span th:if="${hoaDon.trangThai == 7}">Giao thất bại</span>
                         <span th:if="${hoaDon.trangThai == 6}">Chờ thanh toán</span>
                     </div>
 
@@ -430,7 +430,7 @@
         }
         value = check('7');
         if (value != null && value.hoaDon.loaiHoaDon != 1) {
-            fillTimeLine('icon4', 'text4', value, 'Hoàn hàng', 'uil-truck');
+            fillTimeLine('icon4', 'text4', value, 'Giao thất bại', 'uil-truck');
             return;
         }
         value = check('1');

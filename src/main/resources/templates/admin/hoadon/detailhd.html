@@ -295,7 +295,7 @@
                         <span th:if="${hoaDon.trangThai == 4}">Chờ giao</span>
                         <span th:if="${hoaDon.trangThai == 5}">Đang giao</span>
                         <span th:if="${hoaDon.trangThai == 6}">Hủy</span>
-                        <span th:if="${hoaDon.trangThai == 7}">Hoàn hàng</span>
+                        <span th:if="${hoaDon.trangThai == 7}">Giao thất bại</span>
                     </button>
                 </span>
                     </div>
@@ -480,7 +480,7 @@
                                             <span th:if="${x.phuongThuc.equals('4')}">Chờ giao</span>
                                             <span th:if="${x.phuongThuc.equals('5')}">Đang giao</span>
                                             <span th:if="${x.phuongThuc.equals('6')}">Hủy</span>
-                                            <span th:if="${x.phuongThuc.equals('7')}">Hoàn hàng</span>
+                                            <span th:if="${x.phuongThuc.equals('7')}">Giao thất bại</span>
                                         </td>
                                         <td th:text=" ${#temporals.format(x.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
                                         <td th:text="${x.createdBy}"></td>
@@ -606,7 +606,7 @@
             }
             value = check('7');
             if (value != null && value.hoaDon.loaiHoaDon != 1) {
-                fillTimeLine('icon4', 'text4', value, 'Hoàn hàng', 'uil-truck');
+                fillTimeLine('icon4', 'text4', value, 'Giao thất bại', 'uil-truck');
                 return;
             }
             value = check('1');
