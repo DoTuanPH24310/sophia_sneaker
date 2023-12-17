@@ -799,6 +799,7 @@ public class TaiKhoanService {
     public void addkh(TaiKhoanRequest khachHang) {
         TaiKhoan taiKhoan = new TaiKhoan();
         taiKhoan.getTaiKhoanKH(khachHang);
+        taiKhoan.setGioiTinh(1);
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodedPassword = passwordEncoder.encode(khachHang.getMatKhau());
         taiKhoan.setMatKhau(encodedPassword);
