@@ -1,7 +1,10 @@
 function uploadExcel() {
     var fileInput = document.getElementById('fileInput');
     var file = fileInput.files[0];
-
+    var loadingOverlay = document.createElement("div");
+    loadingOverlay.className = "loading-overlay";
+    loadingOverlay.innerHTML = '<div class="loading-spinner"></div>';
+    document.body.appendChild(loadingOverlay);
     if (file) {
         var formData = new FormData();
         formData.append('file', file);
@@ -14,13 +17,23 @@ function uploadExcel() {
             .then(message => {
                 alert(message);
                 window.location.href = '/staff/chi-tiet-giay/page/1?sortField=ngaySua';
+                document.body.removeChild(loadingOverlay); // Di chuyển vào đây
             })
             .catch(error => {
-                alert('Tải danh sách thất bại, vui lòng kiểm tra lại');
-                console.error('Error during file upload:', error);
+                let type = 'error';
+                let icon = 'fa-solid fa-exclamation-triangle';
+                let title = 'Thất bại!';
+                let text = "Tải danh sách thất bại, vui lòng kiểm tra lại.";
+                createToast(type, icon, title, text);
+                document.body.removeChild(loadingOverlay); // Di chuyển vào đây
             });
     } else {
-        alert('Bạn chưa chọn tệp');
+        let type = 'error';
+        let icon = 'fa-solid fa-exclamation-triangle';
+        let title = 'Thất bại!';
+        let text = "Bạn chưa chọn tệp.";
+        createToast(type, icon, title, text);
+        document.body.removeChild(loadingOverlay); // Di chuyển vào đây
     }
 }
 

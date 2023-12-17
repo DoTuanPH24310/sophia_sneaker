@@ -156,19 +156,20 @@ public class account {
             } else if (hinhThucThanhToan == 2) {
                 lichSuHoaDon.setPhuongThuc("2");
             }
+            alertInfo.alert("successOnline", "Đơn hàng đã được thanh toán");
             this.lichSuHoaDonWebRepository.save(lichSuHoaDon);
             return "redirect:/my-account/home";
         }
 
-        return "/my-account/detail/" + don.getId();
+        return "redirect:/my-account/detail/" + don.getId();
     }
 
     @GetMapping("/cancel/{idhd}")
     private String cancel(@PathVariable("idhd") HoaDon hd,
                           @RequestParam(value = "value",required = false) String value){
-        if (value == null || value.length() > 150 || hd.getTrangThai() != 3){
-            alertInfo.alert("errTaiQuay", null);
-            return "/my-account/detail/"+hd.getId();
+        if (value == null || value.length() > 150 || (hd.getTrangThai() != 3 && hd.getTrangThai() != 2)){
+            alertInfo.alert("errOnline", null);
+            return "redirect:/my-account/detail/"+hd.getId();
         }
 
         LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();

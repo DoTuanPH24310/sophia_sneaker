@@ -32,6 +32,8 @@ public class GioHangChiTietController {
     private SoluongService soluongService;
 
     @Autowired
+    private GioHangRepository gioHangRepository;
+    @Autowired
     private GioHangChiTietRepository gioHangChiTietRepository;
     @Autowired
     private ChiTietGiayRepository chiTietGiayRepository;
@@ -125,18 +127,29 @@ public class GioHangChiTietController {
                     response.put("message", "Kiểm tra số lượng thành công.");
                 }
             } else {
-                // Kiểm tra số lượng trong giỏ hàng database nếu đã đăng nhập
-                List<GioHangChiTiet> gioHangChiTiets = gioHangChiTietRepository.findByChiTietGiayId(chiTietGiayId);
-                long databaseQuantity = gioHangChiTiets.stream().mapToLong(GioHangChiTiet::getSoLuong).sum();
+                // Kiểm tra số lượng trong giỏ hàng của người dùng đăng nhập
+                String username = authentication.getName();
+                TaiKhoan taiKhoan = this.loginRepository.getTaiKhoanByEmail(username);
+                if (taiKhoan != null) {
+                    GioHang gioHang = gioHangRepository.findByTaiKhoan(taiKhoan); // Thay thế bằng phương thức tương ứng trong repository của bạn
 
-                if (databaseQuantity >= chiTietGiay.getSoLuong()) {
-                    response.put("maxQuantityReachedInDatabase", true);
-                } else {
-                    response.put("maxQuantityReachedInDatabase", false);
-                    response.put("cartQuantity", databaseQuantity);
+                    if (gioHang != null) {
+                        List<GioHangChiTiet> gioHangChiTiets = gioHang.getGioHangChiTiets();
+                        long databaseQuantity = gioHangChiTiets.stream()
+                                .filter(gioHangChiTiet -> gioHangChiTiet.getId().getChiTietGiay().getId().equals(chiTietGiayId))
+                                .mapToLong(GioHangChiTiet::getSoLuong)
+                                .sum();
+
+                        if (databaseQuantity >= chiTietGiay.getSoLuong()) {
+                            response.put("maxQuantityReachedInDatabase", true);
+                        } else {
+                            response.put("maxQuantityReachedInDatabase", false);
+                            response.put("cartQuantity", databaseQuantity);
+                        }
+
+                        response.put("message", "Kiểm tra số lượng thành công.");
+                    }
                 }
-
-                response.put("message", "Kiểm tra số lượng thành công.");
             }
         } else {
             response.put("success", false);
@@ -145,6 +158,7 @@ public class GioHangChiTietController {
 
         return ResponseEntity.ok(response);
     }
+
 
 
     @DeleteMapping("/removeAll")

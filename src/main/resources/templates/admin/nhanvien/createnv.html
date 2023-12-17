@@ -9,13 +9,44 @@
 
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.0.0/dist/jsQR.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <style>
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
 
+        .loading-spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
 </head>
 
 <body>
 
 <div style="background-color: white; height: 846px" layout:fragment="content" class="col-md-12">
-    <form th:action="@{/admin/nhanvien/store}" method="post" th:object="${nhanVienRequest}"
+    <form th:action="@{/admin/nhanvien/store}" method="post" th:object="${nhanVienRequest}" id="formNhanVienCR"
           enctype="multipart/form-data">
         <div class="row mt-3">
             <div class="col-2">
@@ -514,6 +545,14 @@
 
         })
 
+
+        document.getElementById("formNhanVienCR").addEventListener('submit', function (event) {
+            var loadingOverlay = document.createElement("div");
+            loadingOverlay.className = "loading-overlay";
+            loadingOverlay.innerHTML = '<div class="loading-spinner"></div>';
+            document.body.appendChild(loadingOverlay);
+            // document.body.removeChild(loadingOverlay);
+        });
     </script>
 </div>
 </body>

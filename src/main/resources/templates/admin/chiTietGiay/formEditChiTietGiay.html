@@ -83,6 +83,36 @@
             height: 80px;
         }
 
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .loading-spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -91,7 +121,7 @@
 <body>
 <section layout:fragment="content" style="background-color: white">
     <form method="post" th:action="@{'/admin/chi-tiet-giay/edit/'+ ${chiTietGiay.id}}" th:object="${chiTietGiay}"
-    enctype="multipart/form-data" id="idForm">
+          enctype="multipart/form-data" id="formUpdate">
         <h3 class="text-center mt-2 mb-4" style="font-weight: bold">Cập nhật sản phẩm</h3>
         <div class="row">
 
@@ -103,7 +133,8 @@
                             <div th:with="anhList=${anh}" class="mb-4">
                                 <ul id="imageList">
                                     <li th:each="a : ${anhList}">
-                                        <img th:src="@{${a.duongDan}}" style="width: 100px; height: 100px" class="image-to-hide">
+                                        <img th:src="@{${a.duongDan}}" style="width: 100px; height: 100px"
+                                             class="image-to-hide">
                                         <a onclick="hideImage(this)" class="deleteAnh">
                                             <i class="fa fa-times-circle"></i>
                                         </a>
@@ -255,7 +286,8 @@
                                 <label for="soLuong"><span style="color: #c82333">*</span> Số lượng:</label>
                                 <input th:field="*{soLuong}" class="form-control custom-width" id="soluong"
                                        name="soluong">
-                                <p class="text-danger" th:if="${#fields.hasErrors('soLuong')}" th:errors="*{soLuong}"></p>
+                                <p class="text-danger" th:if="${#fields.hasErrors('soLuong')}"
+                                   th:errors="*{soLuong}"></p>
                             </div>
                             <div class="col">
                                 <label for="gia"><span style="color: #c82333">*</span> Giá:</label>
@@ -280,7 +312,7 @@
                                     }
 
                                     // Add an event listener to the form to submit the raw numeric value without commas
-                                    document.getElementById('idForm').addEventListener('submit', function () {
+                                    document.getElementById('formUpdate').addEventListener('submit', function () {
                                         var input = document.getElementById('gia');
                                         var rawValue = input.getAttribute('data-raw-value');
                                         input.value = rawValue;
@@ -304,12 +336,14 @@
                                 <label>Trạng thái:</label>
                                 <div class="row mt-3">
                                     <div class="col-6">
-                                        <input type="radio" id="active" name="trangThai" value="0" th:value="0" th:field="*{trangThai}"
+                                        <input type="radio" id="active" name="trangThai" value="0" th:value="0"
+                                               th:field="*{trangThai}"
                                                checked>
                                         <label for="active">Hoạt động</label>
                                     </div>
                                     <div class="col-6">
-                                        <input type="radio" id="inactive" name="trangThai" value="1" th:value="1" th:field="*{trangThai}">
+                                        <input type="radio" id="inactive" name="trangThai" value="1" th:value="1"
+                                               th:field="*{trangThai}">
 
                                         <label for="inactive">Ngưng hoạt động</label>
                                     </div>
@@ -327,7 +361,8 @@
                                 <input th:field="*{qrCode}" class="form-control custom-width" id="qrCode"
                                        name="qrCode">
                                 <p th:text="${errQr}" class="text-danger"></p>
-                                <p id="qrCodeValidationMessage" th:if="${#fields.hasErrors('qrCode')}" th:errors="*{qrCode}" class="text-danger"></p>
+                                <p id="qrCodeValidationMessage" th:if="${#fields.hasErrors('qrCode')}"
+                                   th:errors="*{qrCode}" class="text-danger"></p>
                             </div>
                             <div class="qr-code col">
                                 <div th:text="*{qrCode}"></div>
@@ -395,6 +430,15 @@
             imageToHide.style.display = 'none';
             deleteA.style.display = 'none';
         }
+
+        document.getElementById("formUpdate").addEventListener('submit', function (event) {
+            var loadingOverlay = document.createElement("div");
+            loadingOverlay.className = "loading-overlay";
+            loadingOverlay.innerHTML = '<div class="loading-spinner"></div>';
+            document.body.appendChild(loadingOverlay);
+            // document.body.removeChild(loadingOverlay);
+        });
+
     </script>
     <script src="/js/addThuocTinh.js"></script>
 </section>

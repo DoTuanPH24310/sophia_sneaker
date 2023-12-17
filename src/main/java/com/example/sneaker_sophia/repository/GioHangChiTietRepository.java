@@ -40,4 +40,5 @@ public interface GioHangChiTietRepository extends JpaRepository<GioHangChiTiet, 
     @Query("UPDATE GioHangChiTiet c SET c.soLuong = c.soLuong - 1 WHERE c.id.gioHang.id = :gioHangId AND c.id.chiTietGiay.id = :chiTietGiayId")
     @Transactional
     void decreaseQuantity(@Param("gioHangId") UUID gioHangId, @Param("chiTietGiayId") UUID chiTietGiayId);
+
 }
