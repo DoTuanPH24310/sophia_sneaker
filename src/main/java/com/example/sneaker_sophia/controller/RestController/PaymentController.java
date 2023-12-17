@@ -4,6 +4,7 @@ import com.example.sneaker_sophia.configuration.VnpayConfig;
 import com.example.sneaker_sophia.dto.PaymentResDTO;
 import com.example.sneaker_sophia.entity.HoaDon;
 import com.example.sneaker_sophia.repository.HoaDonWebRepository;
+import com.example.sneaker_sophia.validate.AlertInfo;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ import java.util.*;
 @RestController
 @RequestMapping("/api/payment")
 public class PaymentController {
+    @Autowired
+    private AlertInfo alertInfo;
+
     @GetMapping("/create_payment")
     public String createPayment(@RequestParam("totalAmount") String totalAmount) throws UnsupportedEncodingException {
         String vnp_Version = "2.1.0";
@@ -27,9 +31,16 @@ public class PaymentController {
         String orderType = "other";
         String cleanedTotalAmount = totalAmount.replaceAll("[^\\d.]", "");
         cleanedTotalAmount = cleanedTotalAmount.replaceFirst("\\.(?=.*\\.)", "");
+        double totalAmountDouble = 0.0;
+        long amount = 0;
+        try {
+            totalAmountDouble = Double.parseDouble(cleanedTotalAmount);
+            amount = (long) (totalAmountDouble * 100000);
+        } catch (Exception e) {
+            alertInfo.alert("errOnline", "Giá tiền quá lớn!");
+            e.printStackTrace();
+        }
 
-        double totalAmountDouble = Double.parseDouble(cleanedTotalAmount);
-        long amount = (long) (totalAmountDouble * 100000);
 
         String bankCode = "NCB";
 
@@ -89,10 +100,6 @@ public class PaymentController {
         String paymentUrl = VnpayConfig.vnp_PayUrl + "?" + queryUrl;
         return paymentUrl;
     }
-
-
-
-
 
 
 }
