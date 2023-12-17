@@ -149,7 +149,8 @@ public class ImportExportFileController {
             cell8.setCellValue(chiTietGiay.getMoTa());
 
             Cell cell9 = row.createCell(9);
-            cell9.setCellValue(chiTietGiay.getGia());
+            CreationHelper createHelper = workbook.getCreationHelper();
+            cell9.setCellValue(createHelper.createRichTextString(String.format("%.0f",chiTietGiay.getGia())));
 
             Cell cell10 = row.createCell(10);
             cell10.setCellValue(chiTietGiay.getSoLuong());

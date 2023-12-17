@@ -293,7 +293,31 @@
                                 <label for="gia"><span style="color: #c82333">*</span> Giá:</label>
                                 <!-- Sử dụng th:value và #numbers.formatDecimal để hiển thị giá mà không có phần thập phân và số 0 cuối cùng nếu là số nguyên -->
                                 <input th:field="*{gia}" class="form-control custom-width" id="gia" name="gia"
-                                       th:value="${#numbers.formatDecimal(chiTietGiay.gia, 0, 'COMMA', 2, 'POINT')}"/>
+                                       th:value="${#numbers.formatDecimal(chiTietGiay.gia, 0, 'COMMA', 0, 'POINT')}"
+                                       oninput="formatCurrency(this)" />
+
+                                <script type="text/javascript">
+                                    function formatCurrency(input) {
+                                        // Remove non-numeric characters, including commas
+                                        var inputValue = input.value.replace(/[^0-9]/g, '');
+
+                                        // Format the number with commas for display
+                                        var formattedValue = Number(inputValue).toLocaleString('en-US');
+
+                                        // Update the input value with the formatted number for display
+                                        input.value = formattedValue;
+
+                                        // Set the raw numeric value without commas as a data attribute
+                                        input.setAttribute('data-raw-value', inputValue);
+                                    }
+
+                                    // Add an event listener to the form to submit the raw numeric value without commas
+                                    document.getElementById('formUpdate').addEventListener('submit', function () {
+                                        var input = document.getElementById('gia');
+                                        var rawValue = input.getAttribute('data-raw-value');
+                                        input.value = rawValue;
+                                    });
+                                </script>
                                 <p id="giaValidationMessage" class="text-danger"></p>
                                 <p class="text-danger" th:if="${#fields.hasErrors('gia')}" th:errors="*{gia}"></p>
                             </div>
