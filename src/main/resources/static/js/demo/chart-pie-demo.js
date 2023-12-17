@@ -16,6 +16,8 @@ function mapStatusToLabel(status) {
             return 'Đang giao';
         case 6:
             return 'Hủy';
+        case 7:
+            return 'Đơn hoàn';
         default:
             return 'Unknown';
     }
