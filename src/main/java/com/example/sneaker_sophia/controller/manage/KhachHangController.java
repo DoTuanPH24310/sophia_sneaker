@@ -126,8 +126,8 @@ public class KhachHangController {
     @PostMapping("/update/{id}")
     public String update(
             Model model,
-            @PathVariable("id") String idTaiKhoan,
-            @RequestParam("image") MultipartFile multipartFile,
+            @PathVariable(value = "id", required = false) String idTaiKhoan,
+            @RequestParam(value = "image", required = false) MultipartFile multipartFile,
             @ModelAttribute("khachHang") TaiKhoanRequest kh_rq, HttpSession session
     ) throws IOException {
         TaiKhoanRequest taiKhoan = taiKhoanService.getTaiKhoanById(idTaiKhoan);
@@ -153,21 +153,28 @@ public class KhachHangController {
 
     @GetMapping("adddc")
     private String adddc(
-            @RequestParam("xa") Integer xa,
-            @RequestParam("quan") Integer quan,
-            @RequestParam("tinh") Integer tinh,
-            @RequestParam("dcCuThe") String dcCuThe,
-            @RequestParam("hoTen") String hoTen,
-            @RequestParam("sdt") String sdt,
-            HttpSession session
+            @RequestParam(value = "xa", required = false) Integer xa,
+            @RequestParam(value = "quan", required = false) Integer quan,
+            @RequestParam(value = "tinh", required = false) Integer tinh,
+            @RequestParam(value = "dcCuThe", required = false) String dcCuThe,
+            @RequestParam(value = "hoTen", required = false) String hoTen,
+            @RequestParam(value = "sdt", required = false) String sdt,
+            HttpSession session,
+            Model model
     ) {
-        diaChiService.adddc(xa, quan, tinh, dcCuThe, hoTen, sdt, session);
-        return "redirect:/staff/khachhang/edit/" + session.getAttribute("idkh");
+        if(!diaChiService.validateAddDc(dcCuThe, hoTen, sdt, model)){
+            alertInfo.alert("error", "Thêm địa chỉ thất bại");
+            return "redirect:/staff/khachhang/edit/" + session.getAttribute("idkh");
+        }else{
+            diaChiService.adddc(xa, quan, tinh, dcCuThe, hoTen, sdt, session);
+            return "redirect:/staff/khachhang/edit/" + session.getAttribute("idkh");
+        }
+
     }
 
     @GetMapping("updateDCMD/{id}")
     public String updateDCMD(
-            @PathVariable("id") String iddc, HttpSession session
+            @PathVariable(value = "id", required = false) String iddc, HttpSession session
     ) {
         diaChiService.updateDCMD(iddc, session);
         return "forward:/staff/khachhang/edit/" + session.getAttribute("idkh");

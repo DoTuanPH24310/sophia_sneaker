@@ -22,6 +22,7 @@
         h5.modal-title p {
             display: inline; /* hoặc display: inline-block; */
         }
+
         .loading-overlay {
             position: absolute;
             top: 0;
@@ -615,6 +616,45 @@
             loadingOverlay.innerHTML = '<div class="loading-spinner"></div>';
             document.body.appendChild(loadingOverlay);
             // document.body.removeChild(loadingOverlay);
+        });
+
+        document.getElementById('formThemDiaChi').addEventListener('submit', function (event) {
+            let ten = document.getElementById('inputTenTDC').value;
+            let sdt = document.getElementById('inputSDTTDC').value;
+            let tinh = document.getElementById('provincetdc').value;
+            let quan = document.getElementById('districttdc').value;
+            let xa = document.getElementById('wardtdc').value;
+            let chiTiet = document.getElementById('inputDCCTTDC').value;
+            var bieuThucChu = /[a-zA-Z]/;
+            var bieuThucDacBiet = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/;
+            var bieuThucDacBietDC = /[!@#$%^&*()_+\-=\[\]{};':"\\|.<>\?]/;
+            if (ten.trim().length == 0 || sdt.trim().length == 0 || chiTiet.trim().length == 0 || tinh == -1 || quan == -1 || xa == -1) {
+                let type = 'error';
+                let icon = 'fa-solid fa-circle-exclamation';
+                let title = 'Thất bại!';
+                let text = 'Nhập đầy đủ trường (*)';
+                createToast(type, icon, title, text);
+                event.preventDefault();
+            } else if (bieuThucChu.test(sdt) || bieuThucDacBiet.test(sdt) || (sdt.trim().length != 11 && sdt.trim().length != 10) || !sdt.startsWith('0')) {
+                let type = 'error';
+                let icon = 'fa-solid fa-circle-exclamation';
+                let title = 'Thất bại!';
+                let text = 'Số điện thoại từ 10 - 11 số,bắt đầu bằng 0';
+                createToast(type, icon, title, text);
+                event.preventDefault();
+            } else if (bieuThucDacBietDC.test(chiTiet) || (chiTiet.trim().length < 5 || chiTiet.trim().length > 150)) {
+                let type = 'error';
+                let icon = 'fa-solid fa-circle-exclamation';
+                let title = 'Thất bại!';
+                let text = 'Địa chỉ chi tiết từ 5 - 150 kí tự và không chứa kí tự đặc biệt';
+                createToast(type, icon, title, text);
+            } else {
+                let type = 'success';
+                let icon = 'fa-solid fa-circle-check';
+                let title = 'Thành công!';
+                let text = "Thêm thành công";
+                createToast(type, icon, title, text);
+            }
         });
     </script>
 </div>

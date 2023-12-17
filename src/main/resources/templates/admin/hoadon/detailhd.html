@@ -243,7 +243,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <td th:text="${httt.updatedBy}"></td>
+                        <td th:text="${httt.updatedBy == 'anonymousUser' ? ' ' : httt.updatedBy}"></td>
                         <td th:text="${#temporals.format(httt.updatedDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
                         <td th:text="${#numbers.formatCurrency(httt.soTien)}"></td>
                         <td>
