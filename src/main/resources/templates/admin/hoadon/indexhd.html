@@ -63,7 +63,7 @@
 
                 <div class="col-2">
                     <div class="form-floating">
-                        <input type="datetime-local" class="form-control" name="maGiamGia" id="NBDHoaDon"
+                        <input onchange="fillter();" type="datetime-local" class="form-control" name="maGiamGia" id="NBDHoaDon"
                                placeholder="Nhập mã giày"/>
                         <label for="NBDHoaDon" class="form-label">Từ ngày</label>
                     </div>
@@ -955,6 +955,7 @@ type="checkbox">`;
 
         function fillter() {
             let temActiveTab = activeTab;
+
             temActiveTab = temActiveTab == '' ? "choThanhToan" : temActiveTab.substring(1, temActiveTab.length);
             if (temActiveTab == 'choThanhToan') {
                 temActiveTab = 2;

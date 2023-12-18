@@ -7,6 +7,8 @@ import com.example.sneaker_sophia.validate.AlertInfo;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -49,6 +51,18 @@ public class QLHDController {
 
     @Resource(name = "chiTietGiayService")
     ChiTietGiayService chiTietGiayService;
+
+    @Async
+    @Scheduled(cron = "0 48 23 * * *")
+    public void myScheduledMethod() {
+       List<HoaDon> listHDC = hoaDonService.getAllHDC();
+        for (HoaDon hd: listHDC) {
+            hd.setTrangThai(6);
+            hd.setGhiChu("Hệ thống hủy hóa đơn quá hạn");
+            hoaDonService.savehd(hd);
+        }
+    }
+
 
     @GetMapping("/hien-thi")
     public String hienthi(
