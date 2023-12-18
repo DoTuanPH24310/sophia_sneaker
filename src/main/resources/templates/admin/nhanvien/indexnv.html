@@ -170,7 +170,7 @@
             </table>
 
 
-            <div class="row">
+            <div class="row" th:if="${#lists.size(listNV.content) >0 }">
                 <div class="col-3">
                     <div class="hint-text">Tổng Nhân Viên: <b th:text="${tongNV}"></b> &ensp; Xem trang <b
                             th:text="${pageNo+1}+'/'+${listNV.totalPages}"></b>
@@ -181,7 +181,7 @@
                     <ul class="pagination">
                         <li class="page-item">
                             <a class="page-link" th:if="${pageNo > 0}"
-                               th:href="@{/staff/nhanvien/hienthi#table(pageNo=${i},trangThai=${trangThai},textSearch=${textSearch})}">Prev</a>
+                               th:href="@{/staff/nhanvien/hienthi#table(pageNo=${pageNo-1},trangThai=${trangThai},textSearch=${textSearch})}">Prev</a>
                             <span class="page-link" th:unless="${pageNo > 0}">Prev</span>
                         </li>
                         <li th:each="i: ${#numbers.sequence(0, listNV.totalPages-1)}" class="page-item">
@@ -192,7 +192,7 @@
 
                         <li class="page-item">
                             <a class="page-link" th:if="${pageNo < listNV.totalPages -1}"
-                               th:href="@{/staff/nhanvien/hienthi#table(pageNo=${i},trangThai=${trangThai},textSearch=${textSearch})}">Next</a>
+                               th:href="@{/staff/nhanvien/hienthi#table(pageNo=${pageNo + 1},trangThai=${trangThai},textSearch=${textSearch})}">Next</a>
                             <span class="page-link" th:unless="${pageNo < listNV.totalPages -1}">Next</span>
                         </li>
                     </ul>

@@ -67,7 +67,7 @@ public class VoucherController {
 
     @GetMapping("/hien-thi")
     public String hienThi(Model model, @RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo, HttpSession session) {
-        Pageable pageable = PageRequest.of(pageNo, 10);
+        Pageable pageable = PageRequest.of(pageNo, 5);
         Page page = voucherService.locVaTimKiem(pageable, model);
         model.addAttribute("listVC", page);
         model.addAttribute("tongVC", page.getTotalElements());

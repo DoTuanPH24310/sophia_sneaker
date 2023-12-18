@@ -229,11 +229,6 @@ public class TaiKhoanService {
                 i++;
             }
         }
-
-        if (taiKhoanRepository.getTaiKhoanBySDT(nhanVienRequest.getSdt()) != null) {
-            errSDT = "Số điện thoại đã được sử dụng";
-            i++;
-        }
         if (nhanVienRequest.getTen().trim().equals("")) {
             errTen = "Không để trống tên";
             i++;
@@ -651,7 +646,7 @@ public class TaiKhoanService {
             errGT = "Không để trống giới tính";
             i++;
         }
-        if (!nhanVienRequest.getGioiTinh().equals("1") && !nhanVienRequest.getGioiTinh().equals("0")) {
+        if (nhanVienRequest.getGioiTinh() != null && ( !nhanVienRequest.getGioiTinh().equals("1") && !nhanVienRequest.getGioiTinh().equals("0"))) {
             errGT = "Thao tác không chính xác";
             i++;
         }
