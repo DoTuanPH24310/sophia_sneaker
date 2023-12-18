@@ -53,7 +53,7 @@ public class QLHDController {
     ChiTietGiayService chiTietGiayService;
 
     @Async
-    @Scheduled(cron = "0 48 23 * * *")
+    @Scheduled(cron = "0 0 0 * * *")
     public void myScheduledMethod() {
        List<HoaDon> listHDC = hoaDonService.getAllHDC();
         for (HoaDon hd: listHDC) {
