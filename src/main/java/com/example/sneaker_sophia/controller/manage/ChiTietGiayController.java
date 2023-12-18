@@ -22,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.SecureRandom;
+import java.text.NumberFormat;
 import java.util.*;
 import java.util.List;
 
@@ -152,8 +153,11 @@ public class ChiTietGiayController {
 
     @GetMapping("/admin/chi-tiet-giay/edit/{id}")
     public String edit(Model model, @PathVariable("id") UUID id) {
+        Locale vietnameseLocale = new Locale("vi", "VN");
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(vietnameseLocale);
         ChiTietGiay chiTietGiay = chiTietGiayService.getOne(id);
         model.addAttribute("chiTietGiay", chiTietGiay);
+
         model.addAttribute("giay", giayService.getAll());
         model.addAttribute("hang", hangService.getAll());
         model.addAttribute("deGiay", deGiayService.getAll());

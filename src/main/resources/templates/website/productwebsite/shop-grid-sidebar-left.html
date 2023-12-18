@@ -120,7 +120,7 @@
                         <div class="sort-select-list d-flex align-items-center" style="z-index: 1">
                             <label class="mr-2">Sắp xếp theo:</label>
                             <fieldset>
-                                <select name="sortField" >
+                                <select name="sortField" id="sortField">
                                     <option th:value="newest" th:selected="${selectedSortField == 'newest'}">Sản phẩm
                                         mới nhất
                                     </option>
@@ -500,7 +500,7 @@
                             <input type="hidden" name="loaiGiayIds" id="loaiGiayIds" th:value="${loaiGiayTen}">
                             <input type="hidden" name="mauSacIds" id="mauSacIds" th:value="${mauSacTen}">
                             <input type="hidden" name="minPrice" id="minPrice" th:value="${minPrice}">
-                            <input type="hidden" name="sortField" id="sortField" th:value="${sortField}">
+                            <input type="hidden" name="sortField" id="sortFieldChoose" th:value="${sortField}">
                         </form>
                     </div>
 
@@ -509,6 +509,7 @@
                             // Lấy giá trị của các tham số từ URL
                             var params = new URLSearchParams(window.location.search);
                             var sortField = params.get('sortField');
+                            var sortFieldChoose = params.get('sortFieldChoose');
                             var giayIds = params.getAll('giayIds');
                             var kichCoIds = params.getAll('kichCoIds');
                             var hangIds = params.getAll('hangIds');
@@ -522,6 +523,7 @@
 
                             // Cập nhật giá trị của các tham số ẩn
                             document.getElementById("sortField").value = sortField;
+                            document.getElementById("sortFieldChoose").value = sortFieldChoose;
                             document.getElementById("hangIds").value = hangIds;
                             document.getElementById("kichCoIds").value = kichCoIds;
                             document.getElementById("deGiayIds").value = deGiayIds;
