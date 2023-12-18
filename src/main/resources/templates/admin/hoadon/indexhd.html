@@ -3,7 +3,6 @@
       layout:decorate="~{/layouts/layout}" th:lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
     <style>
         .my-custom-scrollbar {
             position: relative;
@@ -63,7 +62,7 @@
 
                 <div class="col-2">
                     <div class="form-floating">
-                        <input type="datetime-local" class="form-control" name="maGiamGia" id="NBDHoaDon"
+                        <input onchange="fillter();" type="datetime-local" class="form-control" name="maGiamGia" id="NBDHoaDon"
                                placeholder="Nhập mã giày"/>
                         <label for="NBDHoaDon" class="form-label">Từ ngày</label>
                     </div>
@@ -882,7 +881,7 @@ type="checkbox">`;
             row.insertCell().innerHTML = index;
             row.insertCell().innerHTML = x.maHoaDOn;
             row.insertCell().innerHTML = x.tenKhachHang;
-            row.insertCell().innerHTML = x.createdBy == 'anonymousUser'?'':x.createdBy;
+            row.insertCell().innerHTML = x.createdBy == 'anonymousUser' || x.trangThai == 3 || (x.trangThai == 2 && x.loaiHoaDon == 3)?'':x.createdBy;
             row.insertCell().innerHTML = formattedDateTime;
             row.insertCell().innerHTML = formatteKM;
             row.insertCell().innerHTML = formattetongTien;
@@ -955,6 +954,7 @@ type="checkbox">`;
 
         function fillter() {
             let temActiveTab = activeTab;
+
             temActiveTab = temActiveTab == '' ? "choThanhToan" : temActiveTab.substring(1, temActiveTab.length);
             if (temActiveTab == 'choThanhToan') {
                 temActiveTab = 2;

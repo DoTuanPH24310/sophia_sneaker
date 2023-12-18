@@ -293,6 +293,10 @@ public class TaiQuayController {
             HttpSession session
     ) {
         tempIdHD = id;
+        HoaDon hoaDon = hoaDonService.getHoaDonById(id);
+        if(hoaDon.getTrangThai() == 6){
+            return "redirect:/staff/tai-quay/hien-thi";
+        }
         session.setAttribute("idHoaDon", id);
         session.setAttribute("checkBill", true);
         List<HoaDon> list = hoaDonService.getHoaDonByTrangThai();
@@ -331,7 +335,8 @@ public class TaiQuayController {
         Double tienGiam = hoaDonChiTietServive.tienGiam(id) == null ? 0 : hoaDonChiTietServive.tienGiam(id);
         // 20/11
         HinhThucThanhToan hinhThucThanhToan = htttService.getHTTTByIdhd(id);
-        HoaDon hoaDon = hoaDonService.getHoaDonById(id);
+
+
         if (hinhThucThanhToan != null) {
             model.addAttribute("tienKhachDua", hinhThucThanhToan.getSoTien());
             model.addAttribute("phiVanChuyen", hoaDon.getPhiShip());

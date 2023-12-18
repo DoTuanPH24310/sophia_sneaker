@@ -58,7 +58,6 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
             "(:loaiHoaDon IS NULL OR c.loaiHoaDon = :loaiHoaDon) AND " +
             "((:textSearch IS NULL OR c.maHoaDOn like :textSearch) or" +
             "(:textSearch IS NULL OR c.soDienThoai like :textSearch) or" +
-            "(:textSearch IS NULL OR c.taiKhoan.ten like :textSearch) or " +
             "(:textSearch IS NULL OR c.tenKhachHang like :textSearch)) AND" +
             "(c.trangThai = :trangThai)" +
             "order by c.createdDate desc ")
@@ -75,7 +74,6 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
             "(:loaiHoaDon IS NULL OR c.loaiHoaDon = :loaiHoaDon) AND " +
             "((:textSearch IS NULL OR c.maHoaDOn like :textSearch) or" +
             "(:textSearch IS NULL OR c.soDienThoai like :textSearch) or" +
-            "(:textSearch IS NULL OR c.taiKhoan.ten like :textSearch) or " +
             "(:textSearch IS NULL OR c.tenKhachHang like :textSearch)) AND" +
             "(c.trangThai = :trangThai)" +
             "order by c.tongTien desc ")
@@ -93,7 +91,6 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, String> {
             "(:loaiHoaDon IS NULL OR c.loaiHoaDon = :loaiHoaDon) AND " +
             "((:textSearch IS NULL OR c.maHoaDOn like :textSearch) or" +
             "(:textSearch IS NULL OR c.soDienThoai like :textSearch) or" +
-            "(:textSearch IS NULL OR c.taiKhoan.ten like :textSearch) or " +
             "(:textSearch IS NULL OR c.tenKhachHang like :textSearch)) AND" +
             "(c.trangThai = :trangThai)" +
             "order by c.maHoaDOn desc ")
