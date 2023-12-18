@@ -49,7 +49,7 @@ public class ThanhToanService {
     @Resource(name = "hoaDonRepository")
     HoaDonRepository hoaDonRepository;
 
-    public void thucHienThanhToan(String email, List<GioHangChiTiet> cartItems, Integer hinhThucThanhToan, String diaChi,
+    public void thucHienThanhToan(String email, DiaChiLoGin diaChiLoGin, List<GioHangChiTiet> cartItems, Integer hinhThucThanhToan, String diaChi,
                                   String tinh, String huyen, String xa, Double phiVanChuyen, String ghiChu) {
         TaiKhoan taiKhoan = this.loginRepository.findByEmail(email);
         taiKhoan.setTrangThai(1);
@@ -141,11 +141,12 @@ public class ThanhToanService {
             savedHoaDon.getListHoaDonChiTiet().add(hoaDonChiTiet);
 
         }
-        savedHoaDon.setTongTien((total - tongTienGiam) + phiVanChuyen);
+        savedHoaDon.setTongTien(total - tongTienGiam);
         savedHoaDon.setKhuyenMai(tongTienGiam);
+        savedHoaDon = capNhatDiaChi(diaChiLoGin, taiKhoan, diaChi, tinh, huyen, xa, savedHoaDon);
+
         hoaDonWebRepository.save(savedHoaDon);
         session.setAttribute("maHD", savedHoaDon.getMaHoaDOn());
-
 
         HinhThucThanhToan hinhThuc = new HinhThucThanhToan();
         hinhThuc.setTrangThai(hinhThucThanhToan);
@@ -174,24 +175,29 @@ public class ThanhToanService {
     }
 
 
-    public void capNhatDiaChi(DiaChiLoGin diaChiDTO, TaiKhoan taiKhoan) {
+    public HoaDon capNhatDiaChi(DiaChiLoGin diaChiDTO, TaiKhoan taiKhoan, String diaChic,
+                                String tinh, String huyen, String xa, HoaDon hoaDon) {
         Optional<DiaChi> defaultDiaChi = taiKhoan.getDiaChiList().stream()
-                .filter(diaChi -> diaChi.getDiaChiMacDinh() == 1)
+                .filter(diaChiItem -> diaChiItem.getDiaChiMacDinh() == 1)
                 .findFirst();
         if (!defaultDiaChi.isPresent()) {
             DiaChi newDiaChi = new DiaChi();
             diaChiDTO.loadDiaChiDTO(newDiaChi);
             newDiaChi.setTaiKhoan(taiKhoan);
             diaChiTamChu.save(newDiaChi);
+            hoaDon.setDiaChi(diaChic + ", " + xa + ", " + huyen + ", " + tinh);
         } else {
             // Cập nhật thông tin địa chỉ mặc định nếu có
             defaultDiaChi.ifPresent(existingDefaultDiaChi -> {
                 diaChiDTO.loadDiaChiDTO(existingDefaultDiaChi);
                 diaChiTamChu.save(existingDefaultDiaChi);
+                hoaDon.setDiaChi(diaChic + ", " + xa + ", " + huyen + ", " + tinh);
             });
         }
 
+        return hoaDonWebRepository.save(hoaDon);
     }
+
 
     public List<GioHangChiTiet> getCartItemsByEmail(String email) {
         TaiKhoan taiKhoan = this.loginRepository.findByEmail(email);

@@ -18,6 +18,8 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+
+import java.text.NumberFormat;
 import java.util.*;
 
 @Service
@@ -74,7 +76,7 @@ public class EmailService {
             taiKhoanMoi.setVaiTro(vaiTro);
             taiKhoanMoi.setSdt(diaChiDTO.getSdt());
             taiKhoanMoi = this.taiKhoanRepository.save(taiKhoanMoi);
-            guiEmailDangKyTaiKhoan(diaChiDTO.getEmail(),matKhauNgauNhien);
+            guiEmailDangKyTaiKhoan(diaChiDTO.getEmail(), matKhauNgauNhien);
         } else {
             System.err.println("DiaChiDTO or TaiKhoan is null, or email is empty.");
         }
@@ -133,7 +135,6 @@ public class EmailService {
     }
 
 
-
     public void guiEmailXacNhanThanhToan(String email, HoaDon hoaDon) {
         if (email == null) {
             System.err.println("Email address is null");
@@ -154,6 +155,8 @@ public class EmailService {
             } else if (hoaDon.getTrangThai() == 2) {
                 trangThai = "Chờ thanh toán";
             }
+            Locale vietnameseLocale = new Locale("vi", "VN");
+            NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(vietnameseLocale);
             StringBuilder productList = new StringBuilder();
             productList.append("<table style='width: 100%; border-collapse: collapse; border: 1px solid #ddd;'>");
             productList.append("<thead><tr><th>Ảnh</th><th>Tên sản phẩm</th><th>Giá</th><th>Số lượng</th><th>Thành tiền</th></tr></thead>");
@@ -169,10 +172,14 @@ public class EmailService {
                         productList.append("<tr>");  // Start a new row for each product
                         productList.append("<td style='text-align: center;'><img src='").append(imageSource).append("' alt='Product Image' style='max-width: 100px;'></td>");
                     }
+                    double donGia = chiTiet.getDonGia();
+                    String giaSanPham = currencyFormat.format(donGia);
                     productList.append("<td style='text-align: center;'>").append(chiTietGiay.getHang().getTen() + " " + chiTietGiay.getGiay().getTen() + " " + chiTietGiay.getLoaiGiay().getTen() + " " + chiTietGiay.getMauSac().getTen() + " [" + chiTietGiay.getKichCo().getTen() + "]").append("</td>");
-                    productList.append("<td style='text-align: center;'>").append(chiTiet.getDonGia()).append("</td>");
+                    productList.append("<td style='text-align: center;'>").append(giaSanPham).append("</td>");
                     productList.append("<td style='text-align: center;'>").append(chiTiet.getSoLuong()).append("</td>");
-                    productList.append("<td style='text-align: center;'>").append(chiTiet.getDonGia() * chiTiet.getSoLuong()).append("</td>");
+                    double totalPrice = chiTiet.getDonGia() * chiTiet.getSoLuong();
+                    String formattedTotalPrice = currencyFormat.format(totalPrice);
+                    productList.append("<td style='text-align: center;'>").append(formattedTotalPrice).append("</td>");
                     productList.append("</tr>");
                 } else {
                     System.out.println("ChiTietGiay is null for product: " + chiTiet.getId());
@@ -182,7 +189,10 @@ public class EmailService {
             productList.append("</tbody>");
             productList.append("</table>");
 
-            String totalAmount = "<p style='margin-top: 20px;'><strong>Tổng tiền đơn hàng:</strong> " + hoaDon.getTongTien() + " (bao gồm phí ship: " + hoaDon.getPhiShip() + ")</p>";
+            String formattedTotalAmount = currencyFormat.format(hoaDon.getTongTien());
+            String formattedShippingFee = currencyFormat.format(hoaDon.getPhiShip());
+
+            String totalAmount = "<p style='margin-top: 20px;'><strong>Tổng tiền đơn hàng:</strong> " + formattedTotalAmount + " (bao gồm phí ship: " + formattedShippingFee + ")</p>";
 
             String content = "<html><body style='font-family: Arial, sans-serif;'>" +
                     "<div style='background-color: #f4f4f4; padding: 20px;'>" +
@@ -201,14 +211,10 @@ public class EmailService {
             helper.setText(content, true);
         } catch (MessagingException e) {
             e.printStackTrace();
-            // Handle the exception
         }
 
         javaMailSender.send(message);
     }
-
-
-
 
 
     private void guiEmail(SimpleMailMessage message) {
@@ -296,7 +302,7 @@ public class EmailService {
             this.hoaDonChiTietWebRepository.save(hoaDonChiTiet);
         }
         hoaDon.setPhiShip(phiVanChuyen);
-        hoaDon.setTongTien((total - tongTienGiam) );
+        hoaDon.setTongTien(total - tongTienGiam);
         hoaDon.setKhuyenMai(tongTienGiam);
         this.hoaDonRepository.save(hoaDon);
 

@@ -705,7 +705,7 @@
     const host = "https://provinces.open-api.vn/api/";
 
     const renderOptions = (array, selectId, placeholder) => {
-        let options = '<option  value="-1">--Chọn--</option>';
+        let options = '';
         // Add placeholder regardless of whether the array is empty
         options += `<option disable value="">${placeholder}</option>`;
         array.forEach(element => {
