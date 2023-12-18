@@ -288,7 +288,7 @@
                                             <td th:text="${status.index + 1}"></td>
                                             <td th:text="${hd.maHoaDOn}"></td>
                                             <td th:text="${hd.tenKhachHang}"></td>
-                                            <td th:text="${hd.createdBy == 'anonymousUser' ? ' ' : hd.createdBy}"></td>
+                                            <td th:text="${hd.updatedBy == 'anonymousUser' || hd.trangThai == 3 ? ' ' : hd.updatedBy}"></td>
                                             <td th:text="${#temporals.format(hd.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
                                             <td th:text="${#numbers.formatCurrency(hd.khuyenMai)}"></td>
                                             <td th:text="${#numbers.formatCurrency(hd.tongTien + hd.phiShip)}"></td>
