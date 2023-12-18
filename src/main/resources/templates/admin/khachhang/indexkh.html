@@ -180,9 +180,9 @@
             </table>
 
 
-            <div class="row">
+            <div class="row" th:if="${#lists.size(listKH.content) >0 }">
                 <div class="col-3">
-                    <div class="hint-text">Tổng Nhân Viên: <b th:text="${tongKH}"></b> &ensp; Xem trang <b
+                    <div class="hint-text">Tổng Khách hàng: <b th:text="${tongKH}"></b> &ensp; Xem trang <b
                             th:text="${pageNo+1}+'/'+${listKH.totalPages}"></b>
                     </div>
                 </div>
@@ -191,19 +191,16 @@
                     <ul class="pagination">
                         <li class="page-item">
                             <a class="page-link" th:if="${pageNo > 0}"
-                               th:href="@{/staff/khachhang/hienthi#table(pageNo=${i},trangThai=${trangThai},textSearch=${textSearch})}">Prev</a>
+                               th:href="@{/staff/khachhang/hienthi(pageNo=${pageNo-1}, trangThai=${trangThai}, textSearch=${textSearch})}">Prev</a>
                             <span class="page-link" th:unless="${pageNo > 0}">Prev</span>
                         </li>
                         <li th:each="i: ${#numbers.sequence(0, listKH.totalPages-1)}" class="page-item">
-                            <a th:href="@{/staff/khachhang/hienthi#table(pageNo=${i},trangThai=${trangThai},textSearch=${textSearch})}"
-                               class="page-link"
-                               th:text="${i +1}"></a>
+                            <a th:href="@{/staff/khachhang/hienthi(pageNo=${i}, trangThai=${trangThai}, textSearch=${textSearch})}" class="page-link" th:text="${i + 1}"></a>
                         </li>
-
                         <li class="page-item">
-                            <a class="page-link" th:if="${pageNo < listKH.totalPages -1}"
-                               th:href="@{/staff/khachhang/hienthi#table(pageNo=${i},trangThai=${trangThai},textSearch=${textSearch})}">Next</a>
-                            <span class="page-link" th:unless="${pageNo < listKH.totalPages -1}">Next</span>
+                            <a class="page-link" th:if="${pageNo < listKH.totalPages - 1}"
+                               th:href="@{/staff/khachhang/hienthi(pageNo=${pageNo + 1}, trangThai=${trangThai}, textSearch=${textSearch})}">Next</a>
+                            <span class="page-link" th:unless="${pageNo < listKH.totalPages - 1}">Next</span>
                         </li>
                     </ul>
                 </div>

@@ -64,9 +64,8 @@ public interface TaiKhoanRepository extends JpaRepository<TaiKhoan, String> {
     @Query(value = "SELECT tk FROM TaiKhoan tk WHERE tk.email = ?1 AND tk.email IS NOT NULL AND tk.email <> ''")
     TaiKhoan getTaiKhoanByEmail(String text);
 
-
-    @Query(value = "select tk from TaiKhoan tk where tk.sdt = ?1 ")
-    TaiKhoan getTaiKhoanBySDT(String text);
+//    @Query(value = "select tk from TaiKhoan tk where tk.sdt = ?1 ")
+//    TaiKhoan getTaiKhoanBySDT(String text);
 
     @Query(value = "select tk from TaiKhoan tk where tk.canCuoc = ?1")
     TaiKhoan getTaiKhoanByCCCD(String text);

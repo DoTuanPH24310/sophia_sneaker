@@ -46,16 +46,14 @@ public class KhachHangController {
     @GetMapping("/hienthi")
     public String index(
             Model model,
-            @Parameter(hidden = true) Pageable pageable,
             @RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
             @RequestParam(value = "textSearch", required = false) String search,
             @RequestParam(value = "trangThai", required = false, defaultValue = "1") Integer trangThai,
             HttpSession session
     ) {
+        Pageable pageable = PageRequest.of(pageNo, 10);
         Page<NhanVienDTO> list = taiKhoanService.getAllKhachHang(search, trangThai, pageable);
         model.addAttribute("listKH", list);
-
-        pageable = PageRequest.of(pageNo, 5);
         model.addAttribute("textSearch", search);
         model.addAttribute("trangThai", trangThai);
         model.addAttribute("listKH", list);

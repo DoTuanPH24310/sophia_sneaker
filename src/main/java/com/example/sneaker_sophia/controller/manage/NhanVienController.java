@@ -43,17 +43,14 @@ public class NhanVienController {
     @GetMapping("/staff/nhanvien/hienthi")
     public String index(
             Model model,
-            @Parameter(hidden = true) Pageable pageable,
             @RequestParam(value = "pageNo", defaultValue = "0") int pageNo,
             @RequestParam(value = "textSearch", required = false) String search,
             @RequestParam(value = "trangThai", required = false) Integer trangThai,
             HttpSession session
     ) {
+        Pageable pageable = PageRequest.of(pageNo, 5);
         Page<NhanVienDTO> list = taiKhoanService.getAllNhanVien(search, trangThai, pageable);
         model.addAttribute("listNV", list);
-
-
-        pageable = PageRequest.of(pageNo, 5);
         model.addAttribute("textSearch", search);
         model.addAttribute("trangThai", trangThai);
         model.addAttribute("listNV", list);
