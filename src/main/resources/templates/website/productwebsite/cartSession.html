@@ -259,7 +259,7 @@
 
                                     <td class="product_total">
                                         <span class="productTotalAmount" style="font-size: 15px"
-                                              th:text="${#numbers.formatCurrency(item.gia * item.soLuong)}"></span>
+                                              th:text="${#numbers.formatCurrency(cartItemTotalPrices[item.id])}"></span>
                                     </td>
                                 </tr>
                                 <!-- End Cart Single Item-->
@@ -580,7 +580,7 @@
                 }
                 newQuantity = Math.max(newQuantity, 1);
                 $(`#quantity[data-id='${productId}']`).val(newQuantity);
-                updatePrice(productId, newQuantity);
+                reloadPage();
             })
             .catch(error => {
                 console.error('There was a problem with the fetch operation:', error);
@@ -697,7 +697,9 @@
                 createToast(type, icon, title, text);
             });
     }
-
+    function reloadPage() {
+        location.reload(true); // Đối số true sẽ làm reload trang và bỏ qua bộ nhớ cache
+    }
 
     $(document).ready(function () {
         $("#deleteAllButton").click(async function (event) {

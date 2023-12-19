@@ -17,9 +17,11 @@
             margin: 0; /* Loại bỏ margin mặc định */
             padding: 0; /* Loại bỏ padding mặc định */
         }
+
         .cart_submit {
             text-align: left;
         }
+
         .quantity-exceeded-message {
             color: red;
             font-size: 12px;
@@ -129,8 +131,9 @@
                                                  alt="">
                                         </a>
                                     </td>
-                                    <td class="product_name"><a th:href="@{'/sophia-store/detail/' + ${cart.id.chiTietGiay.id}}"
-                                                                th:text="${cart.id.chiTietGiay.hang.ten + ' ' + cart.id.chiTietGiay.giay.ten + ' ' + cart.id.chiTietGiay.loaiGiay.ten + ' ' + cart.id.chiTietGiay.mauSac.ten}"></a>
+                                    <td class="product_name"><a
+                                            th:href="@{'/sophia-store/detail/' + ${cart.id.chiTietGiay.id}}"
+                                            th:text="${cart.id.chiTietGiay.hang.ten + ' ' + cart.id.chiTietGiay.giay.ten + ' ' + cart.id.chiTietGiay.loaiGiay.ten + ' ' + cart.id.chiTietGiay.mauSac.ten}"></a>
                                     </td>
                                     <td>
                                         <span th:text="${cart.id.chiTietGiay.kichCo.ten}"></span>
@@ -162,13 +165,13 @@
                                                 th:data-id="${cart.id.gioHang.id} + '/' +${cart.id.chiTietGiay.id}">+
                                         </button>
                                         <br>
-                                        <span th:if="${quantityExceededMap[cart.id.chiTietGiay.id]}" class="quantity-exceeded-message">Số lượng sản phẩm không hợp lệ hoặc hết hàng!</span>
+                                        <span th:if="${quantityExceededMap[cart.id.chiTietGiay.id]}"
+                                              class="quantity-exceeded-message">Số lượng sản phẩm không hợp lệ hoặc hết hàng!</span>
                                     </td>
-
 
                                     <td class="product_total">
                                         <span class="productTotalAmount" style="font-size: 15px"
-                                              th:text="${#numbers.formatCurrency(session['giaMoi_' + cart.id.chiTietGiay.id] * cart.soLuong)}"> </span>
+                                        th:text="${#numbers.formatCurrency(cartItemTotalPrices[cart.id.chiTietGiay.id])}"></span>
                                     </td>
                                 </tr> <!-- End Cart Single Item-->
                                 </tbody>
@@ -185,14 +188,14 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-6 col-md-6">
-<!--                    <div class="coupon_code left" data-aos="fade-up" data-aos-delay="200">-->
-<!--                        <h3>Mã giảm giá</h3>-->
-<!--                        <div class="coupon_inner">-->
-<!--                            <p>Nhập mã phiếu giảm giá của bạn nếu bạn có.</p>-->
-<!--                            <input class="mb-2" placeholder="Mã giảm giá" type="text">-->
-<!--                            <button type="submit" class="btn btn-md btn-golden">Áp dụng</button>-->
-<!--                        </div>-->
-<!--                    </div>-->
+                    <!--                    <div class="coupon_code left" data-aos="fade-up" data-aos-delay="200">-->
+                    <!--                        <h3>Mã giảm giá</h3>-->
+                    <!--                        <div class="coupon_inner">-->
+                    <!--                            <p>Nhập mã phiếu giảm giá của bạn nếu bạn có.</p>-->
+                    <!--                            <input class="mb-2" placeholder="Mã giảm giá" type="text">-->
+                    <!--                            <button type="submit" class="btn btn-md btn-golden">Áp dụng</button>-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
                 </div>
                 <div class="col-lg-6 col-md-6">
                     <div class="coupon_code right" data-aos="fade-up" data-aos-delay="400">
@@ -459,7 +462,7 @@
                 $.get("/giohangchitiet/" + id + "/increase", function (data) {
                     if (data === "success") {
                         quantityInput.val(currentQuantity + 1);
-                        updatePrice(button, giaMoi);
+                        reloadPage();
                     } else {
                         let type = 'error';
                         let icon = 'fa-solid fa-circle-exclamation';
@@ -492,7 +495,7 @@
                         serverMessage = data;
                         if (serverMessage === "Số lượng giảm thành công") {
                             quantityInput.val(currentQuantity - 1);
-                            updatePrice(button, giaMoi);
+                            reloadPage();
                         } else {
                             let type = 'error';
                             let icon = 'fa-solid fa-circle-exclamation';
@@ -518,7 +521,7 @@
         var productId = input.getAttribute('data-id');
 
         if (!isNaN(newQuantity) && newQuantity >= 1) {
-            $.get("/giohangchitiet/" + productId + "/updatequantity", { newQuantity: newQuantity })
+            $.get("/giohangchitiet/" + productId + "/updatequantity", {newQuantity: newQuantity})
                 .done(function (data) {
                     console.log(data);
 
@@ -526,7 +529,7 @@
                         var giaSanPhamString = $(input).parents("tr").find(".product-price").data("gia");
                         var giaSanPham = parseFloat(giaSanPhamString);
                         var giaMoi = giaSanPham * newQuantity;
-                        updatePrice($(input), giaMoi);
+                        reloadPage();
                     } else {
                         let type = 'error';
                         let icon = 'fa-solid fa-circle-exclamation';
@@ -565,8 +568,6 @@
     }
 
 
-
-
     function updatePrice(input, giaMoi) {
         // Định dạng giá mới thành chuỗi tiền tệ
         const formatter = new Intl.NumberFormat('vi-VN', {
@@ -580,9 +581,11 @@
         productTotal.text(giaMoiFormatted);
 
         // Tính tổng tiền sản phẩm sau cập nhật giá
-        updateTotalPrice();
+        reloadPage();
     }
-
+    function reloadPage() {
+        location.reload(true); // Đối số true sẽ làm reload trang và bỏ qua bộ nhớ cache
+    }
     function updateTotalPrice() {
         var totalCartPrice = 0;
         $(".productTotalAmount").each(function () {

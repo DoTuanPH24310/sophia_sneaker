@@ -18,6 +18,8 @@ public class SoLuongSessionService {
     @Autowired
     private AlertInfo alertInfo;
     @Autowired
+    private KhuyenMaiWebService khuyenMaiWebService;
+    @Autowired
     private ChiTietGiayRepository chiTietGiayRepository;
 
     public Integer getProductQuantity(UUID chiTietGiayId) {

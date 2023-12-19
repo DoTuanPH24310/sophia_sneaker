@@ -395,7 +395,7 @@
                                                   th:text="${#numbers.formatCurrency(session['giaCu_' + item.id.chiTietGiay.id])}"></span>
                                         </td>
                                         <td>
-                                            <p th:text="${#numbers.formatCurrency(session['giaMoi_' + item.id.chiTietGiay.id] * item.soLuong)}"></p>
+                                            <p th:text="${#numbers.formatCurrency(discountedProductPrices[item.id.chiTietGiay.id])}"></p>
                                         </td>
                                     </tr>
                                     </tbody>

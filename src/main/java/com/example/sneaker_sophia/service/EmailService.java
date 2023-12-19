@@ -292,7 +292,7 @@ public class EmailService {
                 }
                 chiTietGiayRepository.save(chiTietGiay);
             } else {
-                return; // Xử lý khi số lượng không đủ
+                return;
             }
 
             chiTietGiay.setSoLuong(soLuongHienTai - soLuongMua);

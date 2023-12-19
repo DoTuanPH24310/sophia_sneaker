@@ -25,7 +25,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("check-out")
@@ -93,6 +96,15 @@ public class CheckoutController {
                 if (cartItems == null || cartItems.isEmpty()) {
                     return "redirect:/cart/hien-thi";
                 } else {
+                    Map<UUID, Double> cartItemTotalPrices = new HashMap<>();
+                    Map<UUID, Integer> voucherUsageCount = new HashMap<>();
+
+                    for (GioHangChiTiet cartItem : cartItems) {
+                        double totalCartItemPrice = calculateTotalCartItemPrice(cartItem, voucherUsageCount);
+                        cartItemTotalPrices.put(cartItem.getId().getChiTietGiay().getId(), totalCartItemPrice);
+                    }
+                    model.addAttribute("discountedProductPrices", cartItemTotalPrices);
+
                     for (GioHangChiTiet item : cartItems) {
                         ChiTietGiay chiTietGiay = item.getId().getChiTietGiay();
                         int soLuongMua = item.getSoLuong();
@@ -157,6 +169,37 @@ public class CheckoutController {
         return "redirect:/cart/hien-thi";
     }
 
+    private double calculateTotalCartItemPrice(GioHangChiTiet cartItem, Map<UUID, Integer> voucherUsageCount) {
+        ChiTietGiay chiTietGiay = cartItem.getId().getChiTietGiay();
+        int soLuongMua = cartItem.getSoLuong();
+        double total = chiTietGiay.getGia() * soLuongMua;
+
+        List<CTG_KhuyenMai> listCTG_KM = chiTietGiay.getListCTG_KM();
+
+        for (CTG_KhuyenMai ctg : listCTG_KM) {
+            if (ctg.getId().getVoucher().getTrangThai() == 1 && ctg.getId().getVoucher().getSoLuong() > 0) {
+                UUID voucherId = ctg.getId().getVoucher().getId();
+
+                // Kiểm tra xem đã sử dụng hết giảm giá từ voucher chưa
+                int soLuongGiamConLai = ctg.getId().getVoucher().getSoLuong() - voucherUsageCount.getOrDefault(voucherId, 0);
+                int soLuongGiamApDung = Math.min(soLuongGiamConLai, soLuongMua);
+
+                if (soLuongGiamApDung > 0) {
+                    double donGia = chiTietGiay.getGia();
+                    int phanTramGiam = ctg.getId().getVoucher().getPhanTramGiam();
+                    double tienGiam = donGia * phanTramGiam / 100 * soLuongGiamApDung;
+
+                    // Áp dụng giảm giá cho sản phẩm
+                    total -= tienGiam;
+
+                    // Tăng số lượng giảm giá đã sử dụng cho voucher
+                    voucherUsageCount.put(voucherId, voucherUsageCount.getOrDefault(voucherId, 0) + soLuongGiamApDung);
+                }
+            }
+        }
+
+        return total;
+    }
 
     @GetMapping("/checkout")
     public String showCheckout(Model model, HttpSession session) {
@@ -172,7 +215,14 @@ public class CheckoutController {
 
         if (cart != null) {
             List<CartItem> cartItems = cart.getItems();
-
+            Map<UUID, Double> cartItemTotalPrices = new HashMap<>();
+            Map<UUID, Integer> voucherUsageCount = new HashMap<>();
+            for (CartItem item : cartItems) {
+                UUID chiTietGiayId = item.getId();
+                double totalCartItemPrice = calculateTotalCartItemPricec(item, voucherUsageCount);
+                cartItemTotalPrices.put(chiTietGiayId, totalCartItemPrice);
+            }
+            model.addAttribute("discountedProductPrices", cartItemTotalPrices);
             if (cartItems != null && !cartItems.isEmpty()) {
                 for (CartItem item : cartItems) {
                     ChiTietGiay chiTietGiay = this.chiTietGiayRepository.findById(item.getId()).orElse(null);
@@ -232,7 +282,38 @@ public class CheckoutController {
             return "redirect:/cart/hien-thi";
         }
     }
+    private double calculateTotalCartItemPricec(CartItem cartItem, Map<UUID, Integer> voucherUsageCount) {
+        UUID chiTietGiayId = cartItem.getId();
+        ChiTietGiay chiTietGiay = this.chiTietGiayRepository.findById(chiTietGiayId).orElse(null);
+        int soLuongMua = cartItem.getSoLuong();
+        double total = chiTietGiay.getGia() * soLuongMua;
 
+        List<CTG_KhuyenMai> listCTG_KM = chiTietGiay.getListCTG_KM();
+
+        for (CTG_KhuyenMai ctg : listCTG_KM) {
+            if (ctg.getId().getVoucher().getTrangThai() == 1 && ctg.getId().getVoucher().getSoLuong() > 0) {
+                UUID voucherId = ctg.getId().getVoucher().getId();
+
+                // Kiểm tra xem đã sử dụng hết giảm giá từ voucher chưa
+                int soLuongGiamConLai = ctg.getId().getVoucher().getSoLuong() - voucherUsageCount.getOrDefault(voucherId, 0);
+                int soLuongGiamApDung = Math.min(soLuongGiamConLai, soLuongMua);
+
+                if (soLuongGiamApDung > 0) {
+                    double donGia = chiTietGiay.getGia();
+                    int phanTramGiam = ctg.getId().getVoucher().getPhanTramGiam();
+                    double tienGiam = donGia * phanTramGiam / 100 * soLuongGiamApDung;
+
+                    // Áp dụng giảm giá cho sản phẩm
+                    total -= tienGiam;
+
+                    // Tăng số lượng giảm giá đã sử dụng cho voucher
+                    voucherUsageCount.put(voucherId, voucherUsageCount.getOrDefault(voucherId, 0) + soLuongGiamApDung);
+                }
+            }
+        }
+
+        return total;
+    }
 
     @PostMapping("/thanh-toan")
     public String thanhToan(Model model, @Valid @ModelAttribute("diaChi") DiaChiLoGin diaChiDTO, BindingResult result,

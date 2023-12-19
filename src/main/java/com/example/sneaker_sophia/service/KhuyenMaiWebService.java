@@ -16,6 +16,7 @@ public class KhuyenMaiWebService {
         List<CTG_KhuyenMai> listCTG_KM = chiTietGiay.getListCTG_KM();
         Double giaBan = chiTietGiay.getGia();
         Double giaKhuyenMai = giaBan;
+        int soLuongGiamGia = 0;
         Double giamGia = 0.0;
         if (listCTG_KM != null && !listCTG_KM.isEmpty()) {
             for (CTG_KhuyenMai ctg : listCTG_KM) {
@@ -25,6 +26,8 @@ public class KhuyenMaiWebService {
                     if (phanTramGiam != null) {
                         giamGia = (phanTramGiam * giaBan) / 100.0;
                         giaKhuyenMai -= giamGia;
+                        soLuongGiamGia++;  // Increment discount quantity
+
                     }
                 }
             }
@@ -32,7 +35,7 @@ public class KhuyenMaiWebService {
         session.setAttribute("giamGia", giamGia);
         session.setAttribute("giaCu_" + chiTietGiay.getId(), giaBan);
         session.setAttribute("giaMoi_" + chiTietGiay.getId(), giaKhuyenMai);
-
+        session.setAttribute("soLuongGiamGia_" + chiTietGiay.getId(), soLuongGiamGia);
     }
 
 
