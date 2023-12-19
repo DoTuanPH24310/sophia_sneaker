@@ -392,16 +392,7 @@ public class CheckoutController {
 
                     if (cart != null) {
                         if (cartItems != null && !cartItems.isEmpty()) {
-                            for (CartItem item : cartItems) {
-                                if (item != null && item.getId() != null) {
-                                    double subtotal = item.getGia() * item.getSoLuong();
-                                    total += subtotal;
-                                } else {
-                                    return "redirect:/cart/hien-thi";
-                                }
-                            }
-                            session.setAttribute("selectedProvince", diaChi.getTinh()); // Thêm dòng này
-
+                            session.setAttribute("selectedProvince", diaChi.getTinh());
                             session.setAttribute("tinh", diaChi.getTinh());
                             session.setAttribute("quan", diaChi.getQuanHuyen());
                             session.setAttribute("phuong", diaChi.getPhuongXa());

@@ -67,6 +67,7 @@ public class EmailService {
             taiKhoanMoi.setTen(diaChiDTO.getTen());
             taiKhoanMoi.setEmail(diaChiDTO.getEmail());
             taiKhoanMoi.setTrangThai(1);
+            taiKhoanMoi.setGioiTinh(1);
             String matKhauNgauNhien = taoMatKhauNgauNhien();
             String hashedMatKhau = passwordEncoder.encode(matKhauNgauNhien);
             taiKhoanMoi.setMatKhau(hashedMatKhau);

@@ -16,12 +16,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/giohangchitiet")
 public class GioHangChiTietController {
     @Autowired
     private LoginRepository loginRepository;
+    @Autowired
+    private AccountRepository accountRepository;
     @Autowired
     private SoluongService soluongService;
 
@@ -237,6 +241,26 @@ public class GioHangChiTietController {
                 return "Giỏ hàng không tồn tại.";
             }
         }
+    }
+
+    @GetMapping("/kiemtraemail")
+    public Integer kiemTraEmail(@RequestParam(value = "email", required = false) String email) {
+        String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.com";
+        Pattern emailPattern = Pattern.compile(emailRegex);
+        Matcher emailMatcher = emailPattern.matcher(email);
+        if (email != null && email.trim().length() > 0) {
+            Boolean checktrung = loginRepository.existsByEmail(email);
+            if (emailMatcher.matches()) {
+                if (checktrung) {
+                    return 0;
+                }
+            }else{
+                return 3;
+//                Sai ddijnh dajng
+            }
+        }
+
+        return 1;
     }
 }
 

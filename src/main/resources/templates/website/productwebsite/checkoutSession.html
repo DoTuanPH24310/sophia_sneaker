@@ -7,34 +7,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-<style>
-    .loading-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 200%;
-        background: rgba(255, 255, 255, 0.8);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-    }
+    <style>
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
 
-    .loading-spinner {
-        border: 8px solid #f3f3f3;
-        border-top: 8px solid #3498db;
-        border-radius: 50%;
-        width: 50px;
-        height: 50px;
-        animation: spin 1s linear infinite;
-    }
+        .loading-spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
 
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-</style>
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
 </head>
 
 <body layout:fragment="content2">
@@ -342,7 +346,8 @@
                                 <div class="default-form-box">
                                     <label for="ghiChu">Ghi chú</label>
                                     <textarea id="ghiChu" name="ghiChu" style="height: 100px;"></textarea>
-                                    <span th:if="${#fields.hasErrors('ghiChu')}" th:errors="*{ghiChu}" style="color: red"></span>
+                                    <span th:if="${#fields.hasErrors('ghiChu')}" th:errors="*{ghiChu}"
+                                          style="color: red"></span>
                                 </div>
                             </div>
                             <div class="col-12">
@@ -443,7 +448,8 @@
                                     </label>
                                     <div id="methodPaypal" class="collapse " data-parent="#methodPaypal">
                                         <div class="card-body1">
-                                            <p>Thanh toán qua VNPay - tiện lợi và an toàn với thẻ tín dụng hoặc thẻ ghi nợ từ ngân hàng.</p>
+                                            <p>Thanh toán qua VNPay - tiện lợi và an toàn với thẻ tín dụng hoặc thẻ ghi
+                                                nợ từ ngân hàng.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -733,15 +739,21 @@
         const selectedProvinceCode = $("#province").val();
         if (selectedProvinceCode === null) {
             $("#shipping-cost").text("Vui lòng chọn địa chỉ");
-            var totalAmount = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(initialTotalAmount);
+            var totalAmount = new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            }).format(initialTotalAmount);
 
             $("#totalAmount").text(totalAmount);
             return;
         }
         const totalAmountWithShipping = newTotal + shippingFee;
 
-        var formattedAmount = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(totalAmountWithShipping);
-        var shippingFee3 = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(shippingFee);
+        var formattedAmount = new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        }).format(totalAmountWithShipping);
+        var shippingFee3 = new Intl.NumberFormat('vi-VN', {style: 'currency', currency: 'VND'}).format(shippingFee);
 
         $("#totalAmount").text(`${formattedAmount}`);
         $("#shipping-cost").text(`${shippingFee3}`);
@@ -753,10 +765,13 @@
             return 0;
         } else {
             var shippingFee = 0;
-            if(initialTotalAmount < 2000000){
+            if (initialTotalAmount < 2000000) {
                 shippingFee = selectedProvinceCode === "1" ? 20000 : 30000;
             }
-            var formattedAmount = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(shippingFee);
+            var formattedAmount = new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            }).format(shippingFee);
 
             $("#shipping-cost").text(formattedAmount);
 
@@ -800,7 +815,7 @@
         var selectedProvince = '[[${session.selectedProvince}]]';
         console.log("Selected Province:", selectedProvince);
         var shippingFee = 0;
-        if(initialTotalAmount < 2000000){
+        if (initialTotalAmount < 2000000) {
             shippingFee = selectedProvince === "1" ? 20000 : 30000;
         }
         console.log("Shipping Fee:", shippingFee);
@@ -870,7 +885,6 @@
         loadingOverlay.innerHTML = '<div class="loading-spinner"></div>';
         document.body.appendChild(loadingOverlay);
 
-        // Thực hiện kiểm tra số lượng sản phẩm trước khi chuyển tới trang thanh toán
         fetch("/giohangchitiet/validate-cart")
             .then(response => response.text())
             .then(result => {
@@ -900,33 +914,45 @@
                         let xa = selectXa.options[selectXa.selectedIndex].textContent;
 
                         let action = formThanhToan.getAttribute('action') + '?thanhPho=' + tinh + '&' + 'huyen=' + huyen + '&' + 'xa=' + xa;
-                        console.log(action);
                         formThanhToan.setAttribute('action', action);
-                        formThanhToan.submit();
                         let tenn = document.getElementById('nameTen').value;
                         let sdtn = document.getElementById('nameSoDienThoai').value;
                         let tinhh = document.getElementById('province').value;
                         let quanHuyenn = document.getElementById('district').value;
                         let phuongXan = document.getElementById('ward').value;
                         let diaChiCuThen = document.getElementById('nameDiaChiCuThe').value;
-                        if (
-                            tenn != null && tenn.trim() !== '' &&
-                            sdtn != null && sdtn.trim() !== '' &&
-                            tinhh != null && tinhh.trim() !== '' &&
-                            quanHuyenn != null && quanHuyenn.trim() !== '' &&
-                            phuongXan != null && phuongXan.trim() !== '' &&
-                            diaChiCuThen != null && diaChiCuThen.trim() !== ''
+                        if (tenn.trim().length == 0 && sdtn.trim().length == 0 &&
+                            tinhh.trim().length == 0 && quanHuyenn.trim().length == 0 &&
+                          phuongXan.trim().length == 0 && diaChiCuThen.trim().length == 0
                         ) {
-                            fetch("/api/payment/create_payment?totalAmount=" + encodeURIComponent(document.getElementById("totalAmount").innerText))
+                            formThanhToan.submit();
+                        }else{
+                            let actionCheck = "/giohangchitiet/kiemtraemail?email="+ document.getElementById("nameEmail").value;
+                            fetch(actionCheck)
                                 .then(response => response.text())
-                                .then(paymentUrl => {
-                                    console.log("Received Payment URL:", paymentUrl);
-                                    document.getElementById("formThanhToan").action = paymentUrl;
-                                    formThanhToan.submit();
-                                }).catch(error => {
-                                console.error("Error fetching payment URL:", error);
-                            });
-                            document.body.removeChild(loadingOverlay);
+                                .then(traVe => {
+                                    if (traVe == 1) {
+                                        formThanhToan.submit();
+                                        fetch("/api/payment/create_payment?totalAmount=" + encodeURIComponent(document.getElementById("totalAmount").innerText))
+                                            .then(response => response.text())
+                                            .then(paymentUrl => {
+                                                console.log("Received Payment URL:", paymentUrl);
+                                                document.getElementById("formThanhToan").action = paymentUrl;
+                                                formThanhToan.submit();
+                                            })
+                                            .catch(paymentError => {
+                                                console.error("Error creating payment:", paymentError);
+                                                // Handle payment creation error here
+                                            })
+                                        document.body.removeChild(loadingOverlay);
+                                    }else if(traVe == 3 || traVe == 0){
+                                        formThanhToan.submit();
+                                    }
+                                })
+                                .catch(emailError => {
+                                    console.error("Error checking email:", emailError);
+                                    document.body.removeChild(loadingOverlay);
+                                });
                         }
                     }
                 } else {
