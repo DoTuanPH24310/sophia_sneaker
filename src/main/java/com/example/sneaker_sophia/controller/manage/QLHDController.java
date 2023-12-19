@@ -55,29 +55,29 @@ public class QLHDController {
     ChiTietGiayService chiTietGiayService;
 
 
-    @Scheduled(cron = "0 11 12 * * *")
-    public void myScheduledMethod() {
-        List<HoaDon> listHDC = hoaDonService.getAllHDC();
-        for (HoaDon hd : listHDC) {
-            LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
-            if (hd.getLoaiHoaDon() != 3) {
-                List<HoaDonChiTiet> listhdct = hoaDonChiTietServive.getHDCTByIdHD(hd.getId());
-                for (HoaDonChiTiet hdct : listhdct) {
-                    ChiTietGiay chiTietGiay = hdct.getChiTietGiay();
-                    chiTietGiay.setSoLuong(chiTietGiay.getSoLuong() + hdct.getSoLuong());
-                    chiTietGiayService.save(chiTietGiay);
-                }
-                lichSuHoaDon.setHoaDon(hd);
-                lichSuHoaDon.setPhuongThuc("6");
-                lichSuHoaDon.setCreatedBy("Hệ thống");
-                lshdService.savelshd(lichSuHoaDon);
-                hd.setTrangThai(6);
-                hd.setGhiChu("Hệ thống hủy hóa đơn quá hạn");
-                hoaDonService.savehd(hd);
-            }
-    }
-
-}
+//    @Scheduled(cron = "0 11 12 * * *")
+//    public void myScheduledMethod() {
+//        List<HoaDon> listHDC = hoaDonService.getAllHDC();
+//        for (HoaDon hd : listHDC) {
+//            LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+//            if (hd.getLoaiHoaDon() != 3) {
+//                List<HoaDonChiTiet> listhdct = hoaDonChiTietServive.getHDCTByIdHD(hd.getId());
+//                for (HoaDonChiTiet hdct : listhdct) {
+//                    ChiTietGiay chiTietGiay = hdct.getChiTietGiay();
+//                    chiTietGiay.setSoLuong(chiTietGiay.getSoLuong() + hdct.getSoLuong());
+//                    chiTietGiayService.save(chiTietGiay);
+//                }
+//                lichSuHoaDon.setHoaDon(hd);
+//                lichSuHoaDon.setPhuongThuc("6");
+//                lichSuHoaDon.setCreatedBy("Hệ thống");
+//                lshdService.savelshd(lichSuHoaDon);
+//                hd.setTrangThai(6);
+//                hd.setGhiChu("Hệ thống hủy hóa đơn quá hạn");
+//                hoaDonService.savehd(hd);
+//            }
+//    }
+//
+//}
 
 
     @GetMapping("/hien-thi")
