@@ -192,8 +192,10 @@ public class EmailService {
 
             String formattedTotalAmount = currencyFormat.format(hoaDon.getTongTien());
             String formattedShippingFee = currencyFormat.format(hoaDon.getPhiShip());
+            String tienGiam = currencyFormat.format(hoaDon.getKhuyenMai());
 
             String totalAmount = "<p style='margin-top: 20px;'><strong>Tổng tiền đơn hàng:</strong> " + formattedTotalAmount + " (bao gồm phí ship: " + formattedShippingFee + ")</p>";
+            String tongTienGiam = "<p style='margin-top: 20px;'><strong>Số tiền giảm giá:</strong> " + tienGiam + "</p>";
 
             String content = "<html><body style='font-family: Arial, sans-serif;'>" +
                     "<div style='background-color: #f4f4f4; padding: 20px;'>" +
@@ -204,6 +206,7 @@ public class EmailService {
                     "<p><strong>Địa chỉ nhận hàng:</strong> " + hoaDon.getDiaChi() + "</p>" +
                     productList.toString() +
                     totalAmount +
+                    tongTienGiam +
                     "<p><strong>Trạng thái:</strong> " + trangThai + "</p>" +
                     "</div>" +
                     "</body></html>";
