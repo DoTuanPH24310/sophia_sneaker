@@ -2008,30 +2008,26 @@
             var emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
 
             event.preventDefault();
+
             if (ten.trim().length == 0 || sdt.trim().length == 0 || chiTiet.trim().length == 0 || tinh == -1 || quan == -1 || xa == -1) {
                 let type = 'error';
                 let icon = 'fa-solid fa-circle-exclamation';
                 let title = 'Thất bại!';
                 let text = 'Nhập đầy đủ trường (*)';
                 createToast(type, icon, title, text);
-
             } else if (bieuThucChu.test(sdt) || bieuThucDacBiet.test(sdt) || (sdt.trim().length != 11 && sdt.trim().length != 10) || !sdt.startsWith('0')) {
                 let type = 'error';
                 let icon = 'fa-solid fa-circle-exclamation';
                 let title = 'Thất bại!';
-                let text = 'Số điện thoại từ 10 - 11 số,bắt đầu bằng 0';
+                let text = 'Số điện thoại từ 10 - 11 số, bắt đầu bằng 0';
                 createToast(type, icon, title, text);
-
-            }
-            else if (bieuThucDacBietDC.test(chiTiet) || (chiTiet.trim().length <5  || chiTiet.trim().length > 150) ) {
+            } else if (bieuThucDacBietDC.test(chiTiet) || (chiTiet.trim().length < 5 || chiTiet.trim().length > 150)) {
                 let type = 'error';
                 let icon = 'fa-solid fa-circle-exclamation';
                 let title = 'Thất bại!';
-                let text = 'Địa chỉ chi tiết từ 5 - 150 kí tự và không chứa kí tự đặc biệt';
+                let text = 'Địa chỉ chi tiết từ 5 - 150 kí tự và không chứa kí tự đặc biệt';
                 createToast(type, icon, title, text);
-
-            }
-            else if (email.trim().length > 0) {
+            } else if (email.trim().length > 0) {
                 if (!emailRegex.test(email) || email.trim().length < 5 || email.trim().length > 50) {
                     let type = 'error';
                     let icon = 'fa-solid fa-circle-exclamation';
@@ -2045,12 +2041,9 @@
                     type: 'get',
                     url: 'http://localhost:8080/api/khachHang/getEmail?email=' + email,
                     success: function (data) {
-                        console.log("Dữ liệu nhận được từ máy chủ:", data);
                         handleEmailCheckResponse(data);
                     },
                     error: function (xhr, status, error) {
-                        console.log("Lỗi AJAX:", status, error);
-                        // Xử lý lỗi 404 tại đây
                         if (xhr.status === 404) {
                             // Email không tồn tại, thực hiện thêm mới khách hàng
                             console.log("Email không tồn tại, thêm mới khách hàng");
@@ -2064,6 +2057,15 @@
                         }
                     }
                 });
+            } else {
+                // Nếu không nhập email, thực hiện các bước thêm mới khách hàng ở đây (nếu cần)
+                console.log("Thêm mới khách hàng thành công (không có email)");
+                let type = 'success';
+                let icon = 'fa-solid fa-circle-check';
+                let title = 'Thành công!';
+                let text = 'Thêm mới khách hàng thành công';
+                createToast(type, icon, title, text);
+                document.getElementById('formThemKH').submit();
             }
         });
 
@@ -2085,6 +2087,7 @@
                 document.getElementById('formThemKH').submit();
             }
         }
+
     </script>
 
 </div>
