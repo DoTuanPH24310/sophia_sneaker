@@ -54,6 +54,8 @@ public class QLHDController {
     @Resource(name = "chiTietGiayService")
     ChiTietGiayService chiTietGiayService;
 
+    @Resource(name = "kmService")
+    KMService kmService;
 
 //    @Scheduled(cron = "0 11 12 * * *")
 //    public void myScheduledMethod() {
@@ -428,6 +430,26 @@ public class QLHDController {
                     ChiTietGiay chiTietGiay = hdct.getChiTietGiay();
                     chiTietGiay.setSoLuong(chiTietGiay.getSoLuong() + hdct.getSoLuong());
                     chiTietGiayService.save(chiTietGiay);
+                    List<Voucher> voucherListHH = kmService.getAllKMByIdctgHH(chiTietGiay.getId());
+                    Voucher voucherHD = kmService.getKMByIdctg(chiTietGiay.getId());
+                    if(voucherHD != null) {
+                        if (voucherHD.getSoLuong() < voucherHD.getSoLuongGiam()) {
+//                            if (hdct.getSoLuong() <= hdct.getSoLuongGiam()) {
+                                voucherHD.setSoLuong(voucherHD.getSoLuong() + hdct.getSoLuongGiam());
+                                kmService.saveVC(voucherHD);
+//                            }
+                        } else {
+                            for (Voucher voucherhh : voucherListHH) {
+                                if (hdct.getCreatedDate().compareTo(voucherhh.getNgayBatDau()) > 0 || hdct.getCreatedDate().compareTo(voucherhh.getNgayKetThuc()) < 0) {
+                                    voucherhh.setSoLuong(voucherhh.getSoLuong() + 1);
+                                    hdct.setPhanTramGiam(hdct.getPhanTramGiam() - voucherhh.getPhanTramGiam());
+                                    hdct.setSoLuongGiam(hdct.getSoLuongGiam() - 1);
+                                    kmService.saveVC(voucherhh);
+                                }
+
+                            }
+                        }
+                    }
                 }
                 hoaDon.setTrangThai(6);
                 LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
@@ -501,6 +523,26 @@ public class QLHDController {
                     ChiTietGiay chiTietGiay = hdct.getChiTietGiay();
                     chiTietGiay.setSoLuong(chiTietGiay.getSoLuong() + hdct.getSoLuong());
                     chiTietGiayService.save(chiTietGiay);
+                    List<Voucher> voucherListHH = kmService.getAllKMByIdctgHH(chiTietGiay.getId());
+                    Voucher voucherHD = kmService.getKMByIdctg(chiTietGiay.getId());
+                    if(voucherHD != null) {
+                        if (voucherHD.getSoLuong() < voucherHD.getSoLuongGiam()) {
+//                            if (hdct.getSoLuong() >= hdct.getSoLuongGiam()) {
+                                voucherHD.setSoLuong(voucherHD.getSoLuong() + hdct.getSoLuongGiam());
+                                kmService.saveVC(voucherHD);
+//                            }
+                        } else {
+                            for (Voucher voucherhh : voucherListHH) {
+                                if (hdct.getCreatedDate().compareTo(voucherhh.getNgayBatDau()) > 0 || hdct.getCreatedDate().compareTo(voucherhh.getNgayKetThuc()) < 0) {
+                                    voucherhh.setSoLuong(voucherhh.getSoLuong() + 1);
+                                    hdct.setPhanTramGiam(hdct.getPhanTramGiam() - voucherhh.getPhanTramGiam());
+                                    hdct.setSoLuongGiam(hdct.getSoLuongGiam() - 1);
+                                    kmService.saveVC(voucherhh);
+                                }
+
+                            }
+                        }
+                    }
                 }
                 hoaDon.setTrangThai(6);
                 LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
@@ -557,6 +599,26 @@ public class QLHDController {
                     ChiTietGiay chiTietGiay = hdct.getChiTietGiay();
                     chiTietGiay.setSoLuong(chiTietGiay.getSoLuong() + hdct.getSoLuong());
                     chiTietGiayService.save(chiTietGiay);
+                    List<Voucher> voucherListHH = kmService.getAllKMByIdctgHH(chiTietGiay.getId());
+                    Voucher voucherHD = kmService.getKMByIdctg(chiTietGiay.getId());
+                    if(voucherHD != null) {
+                        if (voucherHD.getSoLuong() < voucherHD.getSoLuongGiam()) {
+                            if (hdct.getSoLuong() <= hdct.getSoLuongGiam()) {
+                                voucherHD.setSoLuong(voucherHD.getSoLuong() + hdct.getSoLuongGiam());
+                                kmService.saveVC(voucherHD);
+                            }
+                        } else {
+                            for (Voucher voucherhh : voucherListHH) {
+                                if (hdct.getCreatedDate().compareTo(voucherhh.getNgayBatDau()) > 0 || hdct.getCreatedDate().compareTo(voucherhh.getNgayKetThuc()) < 0) {
+                                    voucherhh.setSoLuong(voucherhh.getSoLuong() + 1);
+                                    hdct.setPhanTramGiam(hdct.getPhanTramGiam() - voucherhh.getPhanTramGiam());
+                                    hdct.setSoLuongGiam(hdct.getSoLuongGiam() - 1);
+                                    kmService.saveVC(voucherhh);
+                                }
+
+                            }
+                        }
+                    }
                 }
                 hoaDon.setTrangThai(7);
                 LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();

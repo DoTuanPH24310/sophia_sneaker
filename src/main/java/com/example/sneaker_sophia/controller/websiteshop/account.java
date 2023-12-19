@@ -63,6 +63,9 @@ public class account {
     @Resource(name = "htttService")
     HTTTService htttService;
 
+    @Resource(name = "kmService")
+    KMService kmService;
+
 
     @Resource(name = "chiTietGiayService")
     ChiTietGiayService chiTietGiayService;
@@ -136,28 +139,32 @@ public class account {
         HoaDon don = this.hoaDonWebRepository.findByMaHoaDOn(mahd);
         if (hinhThucThanhToan == null) {
             alertInfo.alert("errOnline", "Bạn chưa chọn hình thức thanh toán!");
-            return "redirect:/my-account/detail/"+don.getId();
+            return "redirect:/my-account/detail/" + don.getId();
         }
 
-        if (!(hinhThucThanhToan == 1) && !(hinhThucThanhToan == 2)) {
+        if (hinhThucThanhToan == 3 || hinhThucThanhToan == 2) {
             if (hinhThucThanhToan == 3) {
                 don.setTrangThai(3);
             } else if (hinhThucThanhToan == 2) {
                 don.setTrangThai(2);
             }
             don.setGhiChu(ghiChu);
-            for (HoaDonChiTiet hoaDon: don.getListHoaDonChiTiet()) {
+            for (HoaDonChiTiet hoaDon : don.getListHoaDonChiTiet()) {
                 ChiTietGiay chiTietGiay = hoaDon.getChiTietGiay();
                 int soLuongHienTai = chiTietGiay.getSoLuong();
 
+                if (hinhThucThanhToan == 3) {
+                    chiTietGiay.setSoLuong(soLuongHienTai - hoaDon.getSoLuong());
+                    chiTietGiayRepository.save(chiTietGiay);
+                }
                 if (soLuongHienTai < 1) {
                     alertInfo.alert("errOnline", "Sản phẩm đã hết hàng.");
-                    return "redirect:/my-account/detail/"+don.getId();
+                    return "redirect:/my-account/detail/" + don.getId();
                 }
 
                 if (soLuongHienTai < hoaDon.getSoLuong()) {
                     alertInfo.alert("errOnline", "Số lượng sản phẩm không đủ.");
-                    return "redirect:/my-account/detail/"+don.getId();
+                    return "redirect:/my-account/detail/" + don.getId();
                 }
             }
             this.hoaDonWebRepository.save(don);
@@ -175,7 +182,7 @@ public class account {
             }
             alertInfo.alert("successOnline", "Đơn hàng đã được thanh toán");
             this.lichSuHoaDonWebRepository.save(lichSuHoaDon);
-            return "redirect:/my-account/detail/"+don.getId();
+            return "redirect:/my-account/detail/" + don.getId();
         }
 
         return "redirect:/my-account/detail/" + don.getId();
@@ -183,21 +190,42 @@ public class account {
 
     @GetMapping("/cancel/{idhd}")
     private String cancel(@PathVariable("idhd") HoaDon hd,
-                          @RequestParam(value = "value",required = false) String value){
-        if (value == null || value.length() > 150 || (hd.getTrangThai() != 3 && hd.getTrangThai() != 2)){
+                          @RequestParam(value = "value", required = false) String value) {
+        if (value == null || value.length() > 150 || (hd.getTrangThai() != 3 && hd.getTrangThai() != 2)) {
             alertInfo.alert("errOnline", null);
-            return "redirect:/my-account/detail/"+hd.getId();
+            return "redirect:/my-account/detail/" + hd.getId();
         }
 
         LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
-        if (hd.getTrangThai() != 2){
-            List<HoaDonChiTiet> listhdct = hoaDonChiTietServive.getHDCTByIdHD(hd.getId());
+        List<HoaDonChiTiet> listhdct = hoaDonChiTietServive.getHDCTByIdHD(hd.getId());
+        if (hd.getTrangThai() != 2) {
             for (HoaDonChiTiet hdct : listhdct) {
                 ChiTietGiay chiTietGiay = hdct.getChiTietGiay();
                 chiTietGiay.setSoLuong(chiTietGiay.getSoLuong() + hdct.getSoLuong());
                 chiTietGiayService.save(chiTietGiay);
+//                Trừ giảm giá
+                List<Voucher> voucherListHH = kmService.getAllKMByIdctgHH(hdct.getChiTietGiay().getId());
+                Voucher voucherHD = kmService.getKMByIdctg(hdct.getChiTietGiay().getId());
+                if (voucherHD != null) {
+                    if (voucherHD.getSoLuong() < voucherHD.getSoLuongGiam()) {
+                        voucherHD.setSoLuong(voucherHD.getSoLuong() + hdct.getSoLuongGiam());
+                        kmService.saveVC(voucherHD);
+                    } else {
+                        for (Voucher voucherhh : voucherListHH) {
+                            if (hdct.getCreatedDate().compareTo(voucherhh.getNgayBatDau()) > 0 || hdct.getCreatedDate().compareTo(voucherhh.getNgayKetThuc()) < 0) {
+                                voucherhh.setSoLuong(voucherhh.getSoLuong() + 1);
+                                hdct.setPhanTramGiam(hdct.getPhanTramGiam() - voucherhh.getPhanTramGiam());
+                                hdct.setSoLuongGiam(hdct.getSoLuongGiam() - 1);
+                                kmService.saveVC(voucherhh);
+                            }
+
+                        }
+                    }
+                }
             }
         }
+
+
         hd.setGhiChu(value);
         hd.setTrangThai(6);
         lichSuHoaDon.setHoaDon(hd);

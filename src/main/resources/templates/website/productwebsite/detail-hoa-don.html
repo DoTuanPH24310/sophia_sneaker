@@ -584,6 +584,8 @@
                             }).catch(error => {
                             console.error("Error fetching payment URL:", error);
                         });
+                    }else{
+                        formThanhToan.submit();
                     }
                 } else {
                     let type = 'error';

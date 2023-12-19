@@ -85,12 +85,12 @@ public class HoaDonChiTietServive {
             Voucher voucherHD = kmService.getKMByIdctg(chiTietGiay.getId());
            if(voucherHD != null) {
                 if (voucherHD.getSoLuong() < voucherHD.getSoLuongGiam()) {
-                    if (hdct.getSoLuong() <= hdct.getSoLuongGiam()) {
+//                    if (hdct.getSoLuong() <= hdct.getSoLuongGiam()) {
                         voucherHD.setSoLuong(voucherHD.getSoLuong() + 1);
                         hdct.setPhanTramGiam(hdct.getPhanTramGiam() - voucherHD.getPhanTramGiam());
                         hdct.setSoLuongGiam(hdct.getSoLuongGiam() - 1);
                         kmService.saveVC(voucherHD);
-                    }
+//                    }
                 } else {
                     for (Voucher voucherhh : voucherListHH) {
                         if (hdct.getCreatedDate().compareTo(voucherhh.getNgayBatDau()) > 0 || hdct.getCreatedDate().compareTo(voucherhh.getNgayKetThuc()) < 0) {

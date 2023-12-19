@@ -185,10 +185,7 @@ public class GioHangChiTietController {
                     int soLuongMua = chiTiet.getSoLuong();
                     int soLuongHienTai = chiTietGiay.getSoLuong();
 
-                    if (soLuongHienTai >= soLuongMua) {
-                        chiTietGiay.setSoLuong(soLuongHienTai - soLuongMua);
-                        chiTietGiayRepository.save(chiTietGiay);
-                    } else {
+                    if (soLuongHienTai < soLuongMua) {
                         return "Sản phẩm không đủ số lượng, vui lòng kiểm tra lại!";
                     }
                 }
