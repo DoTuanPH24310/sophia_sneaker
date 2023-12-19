@@ -20,6 +20,7 @@ public class LSHDService {
 
     public void savelshd(LichSuHoaDon lichSuHoaDon){
         lshdRepository.save(lichSuHoaDon);
+        System.out.println("thanh cong");
     }
 
     public void deletelshd(LichSuHoaDon lichSuHoaDon){

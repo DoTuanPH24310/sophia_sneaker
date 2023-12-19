@@ -173,11 +173,13 @@ public class account {
         }
 
         LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
-        List<HoaDonChiTiet> listhdct = hoaDonChiTietServive.getHDCTByIdHD(hd.getId());
-        for (HoaDonChiTiet hdct : listhdct) {
-            ChiTietGiay chiTietGiay = hdct.getChiTietGiay();
-            chiTietGiay.setSoLuong(chiTietGiay.getSoLuong() + hdct.getSoLuong());
-            chiTietGiayService.save(chiTietGiay);
+        if (hd.getTrangThai() != 2){
+            List<HoaDonChiTiet> listhdct = hoaDonChiTietServive.getHDCTByIdHD(hd.getId());
+            for (HoaDonChiTiet hdct : listhdct) {
+                ChiTietGiay chiTietGiay = hdct.getChiTietGiay();
+                chiTietGiay.setSoLuong(chiTietGiay.getSoLuong() + hdct.getSoLuong());
+                chiTietGiayService.save(chiTietGiay);
+            }
         }
         hd.setGhiChu(value);
         hd.setTrangThai(6);
