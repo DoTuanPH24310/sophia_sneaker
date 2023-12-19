@@ -428,7 +428,7 @@
 
                         <div class="col-8 ">
                             <span id="spanTongTien" class="float-right"
-                                  th:text="${#numbers.formatCurrency(tongTienHD)}"></span>
+                                  th:text="${#numbers.formatCurrency(tongTienHD + phiShip)}"></span>
                         </div>
                     </div>
                     <div class="row mt-4" id="blockTienKhachDua">
@@ -2005,7 +2005,7 @@
             var bieuThucChu = /[a-zA-Z]/;
             var bieuThucDacBiet = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/;
             var bieuThucDacBietDC = /[!@#$%^&*()_+\-=\[\]{};':"\\|.<>\?]/;
-            var emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.com/;
+            var emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
 
             event.preventDefault();
             if (ten.trim().length == 0 || sdt.trim().length == 0 || chiTiet.trim().length == 0 || tinh == -1 || quan == -1 || xa == -1) {
@@ -2031,40 +2031,60 @@
                 createToast(type, icon, title, text);
 
             }
-            else if (email.trim().length > 0 ) {
-                if ((emailRegex.test(email) || (email.trim().length <5 || email.trim().length >50 ))){
+            else if (email.trim().length > 0) {
+                if (!emailRegex.test(email) || email.trim().length < 5 || email.trim().length > 50) {
                     let type = 'error';
                     let icon = 'fa-solid fa-circle-exclamation';
                     let title = 'Thất bại!';
                     let text = 'Email sai định dạng';
                     createToast(type, icon, title, text);
-
                     return;
                 }
+
                 $.ajax({
                     type: 'get',
                     url: 'http://localhost:8080/api/khachHang/getEmail?email=' + email,
                     success: function (data) {
-                        if (data != null){
-                            let type = 'error';
-                            let icon = 'fa-solid fa-circle-exclamation';
-                            let title = 'Thất bại!';
-                            let text = 'Email đã tồn tại';
+                        console.log("Dữ liệu nhận được từ máy chủ:", data);
+                        handleEmailCheckResponse(data);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Lỗi AJAX:", status, error);
+                        // Xử lý lỗi 404 tại đây
+                        if (xhr.status === 404) {
+                            // Email không tồn tại, thực hiện thêm mới khách hàng
+                            console.log("Email không tồn tại, thêm mới khách hàng");
+                            let type = 'success';
+                            let icon = 'fa-solid fa-circle-check';
+                            let title = 'Thành công!';
+                            let text = 'Thêm mới khách hàng thành công';
                             createToast(type, icon, title, text);
+                            // Thực hiện các bước thêm mới khách hàng ở đây (nếu cần)
+                            document.getElementById('formThemKH').submit();
                         }
                     }
-                })
+                });
             }
+        });
 
-            else {
+        function handleEmailCheckResponse(data) {
+            if (data != null && data !== "") {
+                // Email đã tồn tại
+                let type = 'error';
+                let icon = 'fa-solid fa-circle-exclamation';
+                let title = 'Thất bại!';
+                let text = 'Email đã tồn tại';
+                createToast(type, icon, title, text);
+            } else {
+                // Email không tồn tại
                 let type = 'success';
                 let icon = 'fa-solid fa-circle-check';
                 let title = 'Thành công!';
-                let text = "Thêm thành công";
+                let text = 'Thêm thành công';
                 createToast(type, icon, title, text);
                 document.getElementById('formThemKH').submit();
             }
-        });
+        }
     </script>
 
 </div>

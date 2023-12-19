@@ -99,28 +99,31 @@ public class VoucherService {
         } else if (ptg == 0) {
             try {
                 ptg = Integer.parseInt(vc.getPhanTramGiam());
+                if (ptg <= 0 || ptg > 100) {
+                    errGiaTri = "Từ 1 - 100";
+                    check++;
+                }
             } catch (Exception e) {
                 errGiaTri = "Vui lòng nhập số";
                 check++;
             }
-        } else if (ptg <= 0 || ptg > 100) {
-            errGiaTri = "Từ 1 - 100";
-            check++;
-
         }
+
+
         if (vc.getSoLuong() == null || vc.getSoLuong().trim().length() == 0) {
             errSoLuong = "Vui lòng nhập số lượng";
             check++;
         } else if (sl == 0) {
             try {
                 sl = Integer.parseInt(vc.getPhanTramGiam());
+                if (sl <= 0) {
+                    errSoLuong = "Tối thiểu là 1!";
+                    check++;
+                }
             } catch (Exception e) {
                 errSoLuong = "Vui lòng nhập số";
                 check++;
             }
-        } else if (sl <= 0) {
-            errSoLuong = "Tối thiểu là 1!";
-            check++;
         }
 
         System.out.println("test ngay bat dau: " + vc.getNgayBatDau());
@@ -219,7 +222,7 @@ public class VoucherService {
         voucher.setNgayKetThuc(LocalDateTime.parse(String.valueOf(voucherDTO.getNgayKetThuc()), formatter));
         voucher.setSoLuong(Integer.parseInt(voucherDTO.getSoLuong()));
         voucher.setSoLuongGiam(voucher.getSoLuong());
-        if (voucherDTO.getId() == null){
+        if (voucherDTO.getId() == null) {
             voucher.setCreatedDate(LocalDateTime.now());
         }
         List<Voucher> list = voucherRepository.findAll();
