@@ -117,7 +117,7 @@
                     <td th:text="${vc.phanTramGiam} +'%'"></td>
                     <td th:text="${#temporals.format(vc.ngayBatDau, 'dd-MM-yyyy HH:mm')}"></td>
                     <td th:text="${#temporals.format(vc.ngayKetThuc, 'dd-MM-yyyy HH:mm')}"></td>
-                    <td th:text="${#temporals.format(vc.createdDate, 'dd-MM-yyyy HH:mm')}"></td>
+                    <td th:text="${#temporals.format(vc.updatedDate, 'dd-MM-yyyy HH:mm')}"></td>
                     <td th:if="${vc.trangThai ==0}">
                         <button class="btn btn-primary"
                                 style="border-radius: 30px; font-size: 12px; height: 40px; width: 130px">
