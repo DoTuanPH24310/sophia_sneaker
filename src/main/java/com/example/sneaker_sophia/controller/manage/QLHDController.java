@@ -434,10 +434,10 @@ public class QLHDController {
                     Voucher voucherHD = kmService.getKMByIdctg(chiTietGiay.getId());
                     if(voucherHD != null) {
                         if (voucherHD.getSoLuong() < voucherHD.getSoLuongGiam()) {
-                            if (hdct.getSoLuong() <= hdct.getSoLuongGiam()) {
+//                            if (hdct.getSoLuong() <= hdct.getSoLuongGiam()) {
                                 voucherHD.setSoLuong(voucherHD.getSoLuong() + hdct.getSoLuongGiam());
                                 kmService.saveVC(voucherHD);
-                            }
+//                            }
                         } else {
                             for (Voucher voucherhh : voucherListHH) {
                                 if (hdct.getCreatedDate().compareTo(voucherhh.getNgayBatDau()) > 0 || hdct.getCreatedDate().compareTo(voucherhh.getNgayKetThuc()) < 0) {
@@ -527,10 +527,10 @@ public class QLHDController {
                     Voucher voucherHD = kmService.getKMByIdctg(chiTietGiay.getId());
                     if(voucherHD != null) {
                         if (voucherHD.getSoLuong() < voucherHD.getSoLuongGiam()) {
-                            if (hdct.getSoLuong() <= hdct.getSoLuongGiam()) {
+//                            if (hdct.getSoLuong() >= hdct.getSoLuongGiam()) {
                                 voucherHD.setSoLuong(voucherHD.getSoLuong() + hdct.getSoLuongGiam());
                                 kmService.saveVC(voucherHD);
-                            }
+//                            }
                         } else {
                             for (Voucher voucherhh : voucherListHH) {
                                 if (hdct.getCreatedDate().compareTo(voucherhh.getNgayBatDau()) > 0 || hdct.getCreatedDate().compareTo(voucherhh.getNgayKetThuc()) < 0) {
