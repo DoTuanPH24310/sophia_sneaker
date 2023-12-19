@@ -598,6 +598,7 @@ public class TaiQuayController {
             taiKhoan.setMatKhau(encodedPassword);
             taiKhoan.setTen(hoTen);
             taiKhoan.setSdt(sdt);
+            taiKhoan.setGioiTinh(1);
             taiKhoan.setEmail(email);
             taiKhoan.setGioiTinh(Integer.parseInt(gender));
             taiKhoan.setVaiTro(VaiTro.builder().id(vaiTroRepository.getIdByTenKH()).build());
