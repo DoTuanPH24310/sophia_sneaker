@@ -3,7 +3,11 @@
       layout:decorate="~{/layouts/layout}" th:lang="vi">
 <head>
     <meta charset="UTF-8">
+    <title>Title</title>
+
+
     <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+
     <style>
         .my-custom-scrollbar {
             position: relative;
@@ -479,7 +483,8 @@
                                             <span th:if="${x.phuongThuc.equals('7')}">Giao thất bại</span>
                                         </td>
                                         <td th:text=" ${#temporals.format(x.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
-                                        <td th:text="${x.createdBy}"></td>
+<!--                                        <td th:text="${x.createdBy}"></td>-->
+                                        <td th:text="${x.createdBy == 'anonymousUser' ? ' ' : x.createdBy}"></td>
                                         <td th:text="${x.ghiChu}"></td>
                                     </tr>
                                     </tbody>
