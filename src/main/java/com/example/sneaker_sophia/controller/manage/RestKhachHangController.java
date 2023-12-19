@@ -5,6 +5,7 @@ import com.example.sneaker_sophia.service.DiaChiService;
 import com.example.sneaker_sophia.service.TaiKhoanService;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,13 +36,15 @@ public class RestKhachHangController {
     }
 
     @GetMapping("/getEmail")
-    public ResponseEntity<?> getEmail(
-            @RequestParam("email") String email
-    ){
-
+    public ResponseEntity<String> getEmail(@RequestParam("email") String email) {
         TaiKhoan taiKhoan = taiKhoanService.getTaiKhoanByEmail(email);
-        System.out.println(taiKhoan);
-        return ResponseEntity.ok(taiKhoanService.getTaiKhoanByEmail(email));
-    }
 
+        if (taiKhoan != null) {
+            System.out.println("Found account: " + taiKhoan);
+            return ResponseEntity.ok("Email đã tồn tại");
+        } else {
+            System.out.println("Account not found for email: " + email);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Email không tồn tại");
+        }
+    }
 }

@@ -68,6 +68,8 @@ public class account {
     ChiTietGiayService chiTietGiayService;
 
     @Autowired
+    private ChiTietGiayRepository chiTietGiayRepository;
+    @Autowired
     private AlertInfo alertInfo;
 
     @GetMapping("home")
@@ -107,6 +109,7 @@ public class account {
         List<HoaDonChiTiet> listhdct = hoaDonChiTietServive.getHDCTByIdHD(hd.getId());
         HoaDon hoaDon = this.hoaDonWebRepository.findById(hd.getId()).orElse(null);
         session.setAttribute("maHD", hoaDon.getMaHoaDOn());
+        session.setAttribute("idHoaDon", hoaDon.getId());
         Map<UUID, String> avtctgMap = new HashMap<>();
         for (HoaDonChiTiet hdct : listhdct) {
             UUID idctg = hdct.getChiTietGiay().getId();
@@ -143,6 +146,20 @@ public class account {
                 don.setTrangThai(2);
             }
             don.setGhiChu(ghiChu);
+            for (HoaDonChiTiet hoaDon: don.getListHoaDonChiTiet()) {
+                ChiTietGiay chiTietGiay = hoaDon.getChiTietGiay();
+                int soLuongHienTai = chiTietGiay.getSoLuong();
+
+                if (soLuongHienTai < 1) {
+                    alertInfo.alert("errOnline", "Sản phẩm đã hết hàng.");
+                    return "redirect:/my-account/detail/"+don.getId();
+                }
+
+                if (soLuongHienTai < hoaDon.getSoLuong()) {
+                    alertInfo.alert("errOnline", "Số lượng sản phẩm không đủ.");
+                    return "redirect:/my-account/detail/"+don.getId();
+                }
+            }
             this.hoaDonWebRepository.save(don);
             HinhThucThanhToan hinhThuc = this.hinhThucThanhToanWebRepository.findByHoaDon(don);
             hinhThuc.setTrangThai(hinhThucThanhToan);
@@ -158,7 +175,7 @@ public class account {
             }
             alertInfo.alert("successOnline", "Đơn hàng đã được thanh toán");
             this.lichSuHoaDonWebRepository.save(lichSuHoaDon);
-            return "redirect:/my-account/home";
+            return "redirect:/my-account/detail/"+don.getId();
         }
 
         return "redirect:/my-account/detail/" + don.getId();
@@ -173,11 +190,13 @@ public class account {
         }
 
         LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
-        List<HoaDonChiTiet> listhdct = hoaDonChiTietServive.getHDCTByIdHD(hd.getId());
-        for (HoaDonChiTiet hdct : listhdct) {
-            ChiTietGiay chiTietGiay = hdct.getChiTietGiay();
-            chiTietGiay.setSoLuong(chiTietGiay.getSoLuong() + hdct.getSoLuong());
-            chiTietGiayService.save(chiTietGiay);
+        if (hd.getTrangThai() != 2){
+            List<HoaDonChiTiet> listhdct = hoaDonChiTietServive.getHDCTByIdHD(hd.getId());
+            for (HoaDonChiTiet hdct : listhdct) {
+                ChiTietGiay chiTietGiay = hdct.getChiTietGiay();
+                chiTietGiay.setSoLuong(chiTietGiay.getSoLuong() + hdct.getSoLuong());
+                chiTietGiayService.save(chiTietGiay);
+            }
         }
         hd.setGhiChu(value);
         hd.setTrangThai(6);

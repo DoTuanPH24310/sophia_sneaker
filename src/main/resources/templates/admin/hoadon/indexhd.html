@@ -174,7 +174,7 @@
                                         <th>STT</th>
                                         <th>Mã HĐ</th>
                                         <th>Tên khách hàng</th>
-                                        <th>Tên nhân viên</th>
+                                        <th>Nhân viên</th>
                                         <th>Ngày tạo</th>
                                         <th>Khuyến mại</th>
                                         <th>Tổng tiền</th>
@@ -193,7 +193,7 @@
                                             <td th:text="${status.index + 1}"></td>
                                             <td th:text="${hdc.maHoaDOn}"></td>
                                             <td th:text="${hdc.tenKhachHang}"></td>
-                                            <td th:text="${hdc.createdBy == 'anonymousUser' ? ' ' : hdc.createdBy}"></td>
+                                            <td th:text="${hdc.updatedBy == 'anonymousUser' || hdc.trangThai == 2 ? ' ' : hdc.updatedBy}"></td>
                                             <td th:text="${#temporals.format(hdc.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
                                             <td th:text="${#numbers.formatCurrency(hdc.khuyenMai)}"></td>
                                             <td th:text="${#numbers.formatCurrency(hdc.tongTien + hdc.phiShip)}"></td>
@@ -269,7 +269,7 @@
                                             <th>STT</th>
                                             <th>Mã HĐ</th>
                                             <th>Tên khách hàng</th>
-                                            <th>Tên nhân viên</th>
+                                            <th>Nhân viên</th>
                                             <th>Ngày tạo</th>
                                             <th>Khuyến mại</th>
                                             <th>Tổng tiền</th>
@@ -347,7 +347,7 @@
                                             <th>STT</th>
                                             <th>Mã HĐ</th>
                                             <th>Tên khách hàng</th>
-                                            <th>Tên nhân viên</th>
+                                            <th>Nhân viên</th>
                                             <th>Ngày tạo</th>
                                             <th>Khuyến mại</th>
                                             <th>Tổng tiền</th>
@@ -366,7 +366,7 @@
                                             <td th:text="${status.index + 1}"></td>
                                             <td th:text="${hd.maHoaDOn}"></td>
                                             <td th:text="${hd.tenKhachHang}"></td>
-                                            <td th:text="${hd.createdBy == 'anonymousUser' ? ' ' : hd.createdBy}"></td>
+                                            <td th:text="${hd.updatedBy == 'anonymousUser' ? ' ' : hd.updatedBy}"></td>
                                             <td th:text="${#temporals.format(hd.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
                                             <td th:text="${#numbers.formatCurrency(hd.khuyenMai)}"></td>
                                             <td th:text="${#numbers.formatCurrency(hd.tongTien + hd.phiShip)}"></td>
@@ -439,7 +439,7 @@
                                             <th>STT</th>
                                             <th>Mã HĐ</th>
                                             <th>Tên khách hàng</th>
-                                            <th>Tên nhân viên</th>
+                                            <th>Nhân viên</th>
                                             <th>Ngày tạo</th>
                                             <th>Khuyến mại</th>
                                             <th>Tổng tiền</th>
@@ -457,7 +457,7 @@
                                             <td th:text="${status.index + 1}"></td>
                                             <td th:text="${hd.maHoaDOn}"></td>
                                             <td th:text="${hd.tenKhachHang}"></td>
-                                            <td th:text="${hd.createdBy == 'anonymousUser' ? ' ' : hd.createdBy}"></td>
+                                            <td th:text="${hd.updatedBy == 'anonymousUser' ? ' ' : hd.updatedBy}"></td>
                                             <td th:text="${#temporals.format(hd.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
                                             <td th:text="${#numbers.formatCurrency(hd.khuyenMai)}"></td>
                                             <td th:text="${#numbers.formatCurrency(hd.tongTien + hd.phiShip)}"></td>
@@ -497,7 +497,7 @@
                                         <th>STT</th>
                                         <th>Mã HĐ</th>
                                         <th>Tên khách hàng</th>
-                                        <th>Tên nhân viên</th>
+                                        <th>Nhân viên</th>
                                         <th>Ngày tạo</th>
                                         <th>Khuyến mại</th>
                                         <th>Tổng tiền</th>
@@ -511,7 +511,7 @@
                                         <td th:text="${status.index + 1}"></td>
                                         <td th:text="${hdht.maHoaDOn}"></td>
                                         <td th:text="${hdht.tenKhachHang}"></td>
-                                        <td th:text="${hdht.createdBy == 'anonymousUser' ? ' ' : hdht.createdBy}"></td>
+                                        <td th:text="${hdht.updatedBy == 'anonymousUser' ? ' ' : hdht.updatedBy}"></td>
                                         <td th:text="${#temporals.format(hdht.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
                                         <td th:text="${#numbers.formatCurrency(hdht.khuyenMai)}"></td>
                                         <td th:text="${#numbers.formatCurrency(hdht.tongTien + hdht.phiShip)}"></td>
@@ -556,7 +556,7 @@
                                         <th>STT</th>
                                         <th>Mã HĐ</th>
                                         <th>Tên khách hàng</th>
-                                        <th>Tên nhân viên</th>
+                                        <th>Nhân viên</th>
                                         <th>Ngày tạo</th>
                                         <th>Khuyến mại</th>
                                         <th>Tổng tiền</th>
@@ -569,7 +569,7 @@
                                         <td th:text="${status.index + 1}"></td>
                                         <td th:text="${hdh.maHoaDOn}"></td>
                                         <td th:text="${hdh.tenKhachHang}"></td>
-                                        <td th:text="${hdh.createdBy == 'anonymousUser' ? ' ' : hdh.createdBy}"></td>
+                                        <td th:text="${hdh.updatedBy == 'anonymousUser' ? ' ' : hdh.updatedBy}"></td>
                                         <td th:text="${#temporals.format(hdh.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
                                         <td th:text="${#numbers.formatCurrency(hdh.khuyenMai)}"></td>
                                         <td th:text="${#numbers.formatCurrency(hdh.tongTien + hdh.phiShip)}"></td>
@@ -613,7 +613,7 @@
                                         <th>STT</th>
                                         <th>Mã HĐ</th>
                                         <th>Tên khách hàng</th>
-                                        <th>Tên nhân viên</th>
+                                        <th>Nhân viên</th>
                                         <th>Ngày tạo</th>
                                         <th>Khuyến mại</th>
                                         <th>Tổng tiền</th>
@@ -626,7 +626,7 @@
                                         <td th:text="${status.index + 1}"></td>
                                         <td th:text="${hdh.maHoaDOn}"></td>
                                         <td th:text="${hdh.tenKhachHang}"></td>
-                                        <td th:text="${hdh.createdBy == 'anonymousUser' ? ' ' : hdh.createdBy}"></td>
+                                        <td th:text="${hdh.updatedBy == 'anonymousUser' ? ' ' : hdh.updatedBy}"></td>
                                         <td th:text="${#temporals.format(hdh.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
                                         <td th:text="${#numbers.formatCurrency(hdh.khuyenMai)}"></td>
                                         <td th:text="${#numbers.formatCurrency(hdh.tongTien + hdh.phiShip)}"></td>
@@ -881,7 +881,7 @@ type="checkbox">`;
             row.insertCell().innerHTML = index;
             row.insertCell().innerHTML = x.maHoaDOn;
             row.insertCell().innerHTML = x.tenKhachHang;
-            row.insertCell().innerHTML = x.createdBy == 'anonymousUser' || x.trangThai == 3 || (x.trangThai == 2 && x.loaiHoaDon == 3)?'':x.createdBy;
+            row.insertCell().innerHTML = x.updatedBy == 'anonymousUser' || x.trangThai == 3 || (x.trangThai == 2 && x.loaiHoaDon == 3)?'':x.updatedBy;
             row.insertCell().innerHTML = formattedDateTime;
             row.insertCell().innerHTML = formatteKM;
             row.insertCell().innerHTML = formattetongTien;

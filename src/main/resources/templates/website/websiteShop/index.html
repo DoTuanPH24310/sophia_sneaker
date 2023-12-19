@@ -85,6 +85,40 @@
 <body layout:fragment="content2">
 
 <!-- End Offcanvas Search Bar Section -->
+<div id="mobile-menu-offcanvas" class="offcanvas offcanvas-rightside offcanvas-mobile-menu-section">
+    <!-- Start Offcanvas Header -->
+    <div class="offcanvas-header text-right">
+        <button class="offcanvas-close"><i class="ion-android-close"></i></button>
+    </div> <!-- End Offcanvas Header -->
+    <!-- Start Offcanvas Mobile Menu Wrapper -->
+    <div class="offcanvas-mobile-menu-wrapper">
+        <!-- Start Mobile Menu  -->
+        <div class="mobile-menu-bottom">
+            <!-- Start Mobile Menu Nav -->
+            <div class="offcanvas-menu">
+                <ul>
+                    <li>
+                        <a class="main-menu-link" th:href="@{/sophia-store/home}">Trang chủ </a>
+                    </li>
+                    <li class="has-megaitem">
+                        <a th:href="@{/sophia-store/product}">Sản phẩm </a>
+                    </li>
+                    <li>
+                        <a th:href="@{/sophia-store/chung-toi}">Về chúng tôi</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/sophia-store/lien-he}">Liên hệ</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/sophia-store/FAQS}">FAQS</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+
+    </div>
+</div>
 
 <!-- Offcanvas Overlay -->
 <div class="offcanvas-overlay"></div>

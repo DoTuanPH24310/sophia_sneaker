@@ -19,9 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Controller
 @RequestMapping("cart")
@@ -49,10 +47,21 @@ public class CartController {
             if (cartItems.isEmpty()) {
                 return "website/productwebsite/empty-cart";
             }
-
+            Map<UUID, Boolean> quantityExceededMap = (Map<UUID, Boolean>) model.getAttribute("quantityExceededMap");
+            if (quantityExceededMap == null) {
+                quantityExceededMap = new HashMap<>();
+                model.addAttribute("quantityExceededMap", quantityExceededMap);
+            }
             for (GioHangChiTiet cartItem : cartItems) {
                 ChiTietGiay chiTietGiay = cartItem.getId().getChiTietGiay();
                 khuyenMaiWebService.tinhGiaSauKhuyenMai(chiTietGiay, httpSession);
+                if (chiTietGiay != null) {
+                    khuyenMaiWebService.tinhGiaSauKhuyenMai(chiTietGiay, httpSession);
+                    model.addAttribute("maxQuantity_" + chiTietGiay.getId(), chiTietGiay.getSoLuong());
+                    if (cartItem.getSoLuong() > chiTietGiay.getSoLuong()) {
+                        quantityExceededMap.put(chiTietGiay.getId(), true);
+                    }
+                }
             }
 
             double totalCartPrice = cartItems.stream()
@@ -77,6 +86,11 @@ public class CartController {
                 long numberOfItems = cart.getItems().stream()
                         .mapToLong(CartItem::getSoLuong)
                         .count();
+                Map<UUID, Boolean> quantityExceededMap = (Map<UUID, Boolean>) model.getAttribute("quantityExceededMap");
+                if (quantityExceededMap == null) {
+                    quantityExceededMap = new HashMap<>();
+                    model.addAttribute("quantityExceededMap", quantityExceededMap);
+                }
 
                 for (CartItem cartItem : cart.getItems()) {
                     UUID chiTietGiayId = cartItem.getId();
@@ -85,6 +99,11 @@ public class CartController {
                     if (chiTietGiay != null) {
                         khuyenMaiWebService.tinhGiaSauKhuyenMai(chiTietGiay, httpSession);
                         model.addAttribute("maxQuantity_" + chiTietGiay.getId(), chiTietGiay.getSoLuong());
+
+                        // Kiểm tra số lượng không hợp lệ cho từng sản phẩm
+                        if (cartItem.getSoLuong() > chiTietGiay.getSoLuong()) {
+                            quantityExceededMap.put(chiTietGiay.getId(), true);
+                        }
                     }
                 }
 
