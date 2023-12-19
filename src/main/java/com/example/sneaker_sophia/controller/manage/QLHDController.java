@@ -8,6 +8,7 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+
 
 @Controller
 @RequestMapping("/staff/hoa-don")
@@ -52,16 +54,30 @@ public class QLHDController {
     @Resource(name = "chiTietGiayService")
     ChiTietGiayService chiTietGiayService;
 
-    @Async
-    @Scheduled(cron = "0 0 0 * * *")
+
+    @Scheduled(cron = "0 11 12 * * *")
     public void myScheduledMethod() {
-       List<HoaDon> listHDC = hoaDonService.getAllHDC();
-        for (HoaDon hd: listHDC) {
-            hd.setTrangThai(6);
-            hd.setGhiChu("Hệ thống hủy hóa đơn quá hạn");
-            hoaDonService.savehd(hd);
-        }
+        List<HoaDon> listHDC = hoaDonService.getAllHDC();
+        for (HoaDon hd : listHDC) {
+            LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
+            if (hd.getLoaiHoaDon() != 3) {
+                List<HoaDonChiTiet> listhdct = hoaDonChiTietServive.getHDCTByIdHD(hd.getId());
+                for (HoaDonChiTiet hdct : listhdct) {
+                    ChiTietGiay chiTietGiay = hdct.getChiTietGiay();
+                    chiTietGiay.setSoLuong(chiTietGiay.getSoLuong() + hdct.getSoLuong());
+                    chiTietGiayService.save(chiTietGiay);
+                }
+                lichSuHoaDon.setHoaDon(hd);
+                lichSuHoaDon.setPhuongThuc("6");
+                lichSuHoaDon.setCreatedBy("Hệ thống");
+                lshdService.savelshd(lichSuHoaDon);
+                hd.setTrangThai(6);
+                hd.setGhiChu("Hệ thống hủy hóa đơn quá hạn");
+                hoaDonService.savehd(hd);
+            }
     }
+
+}
 
 
     @GetMapping("/hien-thi")
@@ -369,7 +385,7 @@ public class QLHDController {
             if (hoaDon.getTrangThai() == 5) {
                 hoaDon.setTrangThai(1);
                 if (hoaDon.getLoaiHoaDon() == 2 || hoaDon.getLoaiHoaDon() == 3) {
-                    hinhThucThanhToan.setSoTien(hoaDon.getTongTien()  + hoaDon.getPhiShip());
+                    hinhThucThanhToan.setSoTien(hoaDon.getTongTien() + hoaDon.getPhiShip());
                     hoaDon.setGhiChu(ghiChu);
                     htttService.savehttt(hinhThucThanhToan);
                 }

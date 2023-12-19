@@ -881,7 +881,7 @@ type="checkbox">`;
             row.insertCell().innerHTML = index;
             row.insertCell().innerHTML = x.maHoaDOn;
             row.insertCell().innerHTML = x.tenKhachHang;
-            row.insertCell().innerHTML = x.createdBy == 'anonymousUser' || x.trangThai == 3 || (x.trangThai == 2 && x.loaiHoaDon == 3)?'':x.createdBy;
+            row.insertCell().innerHTML = x.updatedBy == 'anonymousUser' || x.trangThai == 3 || (x.trangThai == 2 && x.loaiHoaDon == 3)?'':x.updatedBy;
             row.insertCell().innerHTML = formattedDateTime;
             row.insertCell().innerHTML = formatteKM;
             row.insertCell().innerHTML = formattetongTien;

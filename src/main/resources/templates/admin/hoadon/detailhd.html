@@ -479,7 +479,7 @@
                                             <span th:if="${x.phuongThuc.equals('7')}">Giao thất bại</span>
                                         </td>
                                         <td th:text=" ${#temporals.format(x.createdDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
-                                        <td th:text="${x.createdBy}"></td>
+                                        <td th:text="${x.createdBy == ''?'Hệ thống': x.createdBy}"></td>
                                         <td th:text="${x.ghiChu}"></td>
                                     </tr>
                                     </tbody>
