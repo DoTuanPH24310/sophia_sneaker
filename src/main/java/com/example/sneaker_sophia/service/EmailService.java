@@ -283,7 +283,9 @@ public class EmailService {
                     }
                 }
 
-                chiTietGiay.setSoLuong(soLuongHienTai - soLuongMua);
+                if(hoaDon.getTrangThai() != 2) {
+                    chiTietGiay.setSoLuong(soLuongHienTai - soLuongMua);
+                }
                 chiTietGiayRepository.save(chiTietGiay);
             } else {
                 return; // Xử lý khi số lượng không đủ
