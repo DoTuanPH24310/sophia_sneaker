@@ -361,7 +361,7 @@
                 <div class="col-6">
 
                     <h5 class="text-center">Thông tin thanh toán</h5> <br>
-                    <div class="row">
+                    <div class="row" id="checkHTTT">
                         <div class="col-4">
                             <label for=""><h6>Hình thức thanh toán:</h6></label>
                             <!--                            <button type="button" class="btn btn-primary" data-toggle="modal"-->
@@ -1032,6 +1032,14 @@
         const phiPhip = [[${phiVanChuyen}]];
         const httt = [[${httt}]];
         const tthd = [[${trangThaiDon}]];
+        const checkHoaDonNew = [[${checkHoaDon}]];
+        let blockHTTT = document.getElementById("checkHTTT");
+
+
+        if (checkHoaDonNew != null && blockHTTT != null){
+            if (checkHoaDonNew.trangThai != 2)
+            blockHTTT.style.display = "none";
+        }
         if (checkIHD != null && checkIHD == 1) {
             removeSeesion('checkTTHT');
             window.onload = function () {

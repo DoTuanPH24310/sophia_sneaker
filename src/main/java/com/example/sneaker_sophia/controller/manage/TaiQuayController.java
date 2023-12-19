@@ -327,6 +327,7 @@ public class TaiQuayController {
 //        Double tongTien = hoaDonChiTietServive.tongTienHD(tempIdHD);
         model.addAttribute("tongTienHD", tongTien);
         model.addAttribute("phiShip", hoaDon.getPhiShip());
+        model.addAttribute("checkHoaDon", hoaDon);
         // 13-11
         session.setAttribute("tongTienHD", tongTien);
         // 30/10
