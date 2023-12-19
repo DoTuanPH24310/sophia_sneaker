@@ -862,71 +862,86 @@
 
     document.getElementById("btnThanhToan").addEventListener("click", function (event) {
         event.preventDefault();
-        let formThanhToan = document.getElementById('formThanhToan');
+
+        const formThanhToan = document.getElementById("formThanhToan");
 
         var loadingOverlay = document.createElement("div");
         loadingOverlay.className = "loading-overlay";
         loadingOverlay.innerHTML = '<div class="loading-spinner"></div>';
         document.body.appendChild(loadingOverlay);
-        var paymentMethod = document.querySelector('input[name="hinhThucThanhToan"]:checked').id;
-        if (paymentMethod === "currencyCod") {
-            let selectTinh = document.getElementById('province');
-            let selectHuyen = document.getElementById('district');
-            let selectXa = document.getElementById('ward');
-            let tinh = selectTinh.options[selectTinh.selectedIndex].textContent;
-            let huyen = selectHuyen.options[selectHuyen.selectedIndex].textContent;
-            let xa = selectXa.options[selectXa.selectedIndex].textContent;
 
-            let action = formThanhToan.getAttribute('action') + '?thanhPho=' + tinh + '&' + 'huyen=' + huyen + '&' + 'xa=' + xa;
-            console.log(action);
-            formThanhToan.setAttribute('action', action);
-            formThanhToan.submit();
-        } else {
-            event.preventDefault();
+        // Thực hiện kiểm tra số lượng sản phẩm trước khi chuyển tới trang thanh toán
+        fetch("/giohangchitiet/validate-cart")
+            .then(response => response.text())
+            .then(result => {
+                if (result === "success") {
+                    var paymentMethod = document.querySelector('input[name="hinhThucThanhToan"]:checked').id;
 
-            let selectTinh = document.getElementById('province');
-            let selectHuyen = document.getElementById('district');
-            let selectXa = document.getElementById('ward');
-            let tinh = selectTinh.options[selectTinh.selectedIndex].textContent;
-            let huyen = selectHuyen.options[selectHuyen.selectedIndex].textContent;
-            let xa = selectXa.options[selectXa.selectedIndex].textContent;
+                    if (paymentMethod === "currencyCod") {
+                        let selectTinh = document.getElementById('province');
+                        let selectHuyen = document.getElementById('district');
+                        let selectXa = document.getElementById('ward');
+                        let tinh = selectTinh.options[selectTinh.selectedIndex].textContent;
+                        let huyen = selectHuyen.options[selectHuyen.selectedIndex].textContent;
+                        let xa = selectXa.options[selectXa.selectedIndex].textContent;
 
-            let action = formThanhToan.getAttribute('action') + '?thanhPho=' + tinh + '&' + 'huyen=' + huyen + '&' + 'xa=' + xa;
-            console.log(action);
-            formThanhToan.setAttribute('action', action);
-            formThanhToan.submit();
-            let tenn = document.getElementById('nameTen').value;
-            let sdtn = document.getElementById('nameSoDienThoai').value;
-            let emailn = document.getElementById('nameEmail').value;
-            let tinhh = document.getElementById('province').value;
-            let quanHuyenn = document.getElementById('district').value;
-            let phuongXan = document.getElementById('ward').value;
-            let diaChiCuThen = document.getElementById('nameDiaChiCuThe').value;
-
-            if (
-                tenn != null && tenn.trim() !== '' &&
-                sdtn != null && sdtn.trim() !== '' &&
-                // emailn != null && emailn.trim() !== '' &&
-                tinhh != null && tinhh.trim() !== '' &&
-                quanHuyenn != null && quanHuyenn.trim() !== '' &&
-                phuongXan != null && phuongXan.trim() !== '' &&
-                diaChiCuThen != null && diaChiCuThen.trim() !== ''
-
-            ) {
-                fetch("/api/payment/create_payment?totalAmount=" + encodeURIComponent(document.getElementById("totalAmount").innerText))
-                    .then(response => response.text())
-                    .then(paymentUrl => {
-                        console.log("Received Payment URL:", paymentUrl);
-                        document.getElementById("formThanhToan").action = paymentUrl;
+                        let action = formThanhToan.getAttribute('action') + '?thanhPho=' + tinh + '&' + 'huyen=' + huyen + '&' + 'xa=' + xa;
+                        console.log(action);
+                        formThanhToan.setAttribute('action', action);
                         formThanhToan.submit();
+                    } else {
+                        event.preventDefault();
 
-                    }).catch(error => {
-                    console.error("Error fetching payment URL:", error);
-                });
+                        let selectTinh = document.getElementById('province');
+                        let selectHuyen = document.getElementById('district');
+                        let selectXa = document.getElementById('ward');
+                        let tinh = selectTinh.options[selectTinh.selectedIndex].textContent;
+                        let huyen = selectHuyen.options[selectHuyen.selectedIndex].textContent;
+                        let xa = selectXa.options[selectXa.selectedIndex].textContent;
+
+                        let action = formThanhToan.getAttribute('action') + '?thanhPho=' + tinh + '&' + 'huyen=' + huyen + '&' + 'xa=' + xa;
+                        console.log(action);
+                        formThanhToan.setAttribute('action', action);
+                        formThanhToan.submit();
+                        let tenn = document.getElementById('nameTen').value;
+                        let sdtn = document.getElementById('nameSoDienThoai').value;
+                        let tinhh = document.getElementById('province').value;
+                        let quanHuyenn = document.getElementById('district').value;
+                        let phuongXan = document.getElementById('ward').value;
+                        let diaChiCuThen = document.getElementById('nameDiaChiCuThe').value;
+                        if (
+                            tenn != null && tenn.trim() !== '' &&
+                            sdtn != null && sdtn.trim() !== '' &&
+                            tinhh != null && tinhh.trim() !== '' &&
+                            quanHuyenn != null && quanHuyenn.trim() !== '' &&
+                            phuongXan != null && phuongXan.trim() !== '' &&
+                            diaChiCuThen != null && diaChiCuThen.trim() !== ''
+                        ) {
+                            fetch("/api/payment/create_payment?totalAmount=" + encodeURIComponent(document.getElementById("totalAmount").innerText))
+                                .then(response => response.text())
+                                .then(paymentUrl => {
+                                    console.log("Received Payment URL:", paymentUrl);
+                                    document.getElementById("formThanhToan").action = paymentUrl;
+                                    formThanhToan.submit();
+                                }).catch(error => {
+                                console.error("Error fetching payment URL:", error);
+                            });
+                            document.body.removeChild(loadingOverlay);
+                        }
+                    }
+                } else {
+                    let type = 'error';
+                    let icon = 'fa-solid fa-circle-exclamation';
+                    let title = 'Thất bại!';
+                    let text = result;
+                    createToast(type, icon, title, text);
+                    document.body.removeChild(loadingOverlay);
+                }
+            })
+            .catch(error => {
+                console.error("Error validating cart:", error);
                 document.body.removeChild(loadingOverlay);
-
-            }
-        }
+            });
     });
 
 

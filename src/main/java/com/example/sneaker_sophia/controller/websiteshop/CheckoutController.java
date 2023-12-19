@@ -177,13 +177,12 @@ public class CheckoutController {
                 for (CartItem item : cartItems) {
                     ChiTietGiay chiTietGiay = this.chiTietGiayRepository.findById(item.getId()).orElse(null);
                     int soLuongMua = item.getSoLuong();
-                    int soLuongCoSan = chiTietGiay.getSoLuong(); // Số lượng có sẵn của sản phẩm
+                    int soLuongCoSan = chiTietGiay.getSoLuong();
 
-                    // Kiểm tra số lượng sản phẩm có phù hợp để tiếp tục thanh toán không
                     if (soLuongMua > soLuongCoSan) {
                         alertInfo.alert("errOnline", "Không thể tiếp tục khi giỏ hàng có sản phẩm đã hết!");
                         isValidCheckout = false;
-                        break; // Không cần kiểm tra các sản phẩm khác nữa nếu có ít nhất một sản phẩm không phù hợp
+                        break;
                     }
 
                     List<CTG_KhuyenMai> listCTG_KM = chiTietGiay.getListCTG_KM();
@@ -212,7 +211,6 @@ public class CheckoutController {
                 }
 
                 if (!isValidCheckout) {
-                    // Nếu có ít nhất một sản phẩm không phù hợp, chuyển hướng đến trang giỏ hàng
                     return "redirect:/cart/hien-thi";
                 }
 
@@ -365,26 +363,28 @@ public class CheckoutController {
                 session.removeAttribute("quan");
                 session.removeAttribute("phuong");
                 if (diaChi.getEmail() != null) {
-                    boolean tonTai = this.loginRepository.existsByEmail(diaChi.getEmail());
-                    if (tonTai) {
-                        if (cart != null) {
-                            if (cartItems != null && !cartItems.isEmpty()) {
+                    if(diaChi.getEmail().trim().length() != 0) {
+                        boolean tonTai = this.loginRepository.existsByEmail(diaChi.getEmail());
+                        if (tonTai) {
+                            if (cart != null) {
+                                if (cartItems != null && !cartItems.isEmpty()) {
 
-                                session.setAttribute("selectedProvince", diaChi.getTinh());
-                                session.setAttribute("tinh", diaChi.getTinh());
-                                session.setAttribute("quan", diaChi.getQuanHuyen());
-                                session.setAttribute("phuong", diaChi.getPhuongXa());
-                                result.rejectValue("email", "error.email", "Email đã tồn tại trong hệ thống.");
-                                model.addAttribute("cartItems", cartItems);
-                                model.addAttribute("total", total);
+                                    session.setAttribute("selectedProvince", diaChi.getTinh());
+                                    session.setAttribute("tinh", diaChi.getTinh());
+                                    session.setAttribute("quan", diaChi.getQuanHuyen());
+                                    session.setAttribute("phuong", diaChi.getPhuongXa());
+                                    result.rejectValue("email", "error.email", "Email đã tồn tại trong hệ thống.");
+                                    model.addAttribute("cartItems", cartItems);
+                                    model.addAttribute("total", total);
 
-                                return "website/productwebsite/checkoutSession";
+                                    return "website/productwebsite/checkoutSession";
+                                } else {
+                                    return "redirect:/cart/hien-thi";
+                                }
+
                             } else {
                                 return "redirect:/cart/hien-thi";
                             }
-
-                        } else {
-                            return "redirect:/cart/hien-thi";
                         }
                     }
                 }
@@ -529,7 +529,20 @@ public class CheckoutController {
                 }
                 if (hinhThuc != null) {
                     hinhThuc.setSoTien(hinhThuc.getSoTien() + amountPaid);
-                    this.hinhThucThanhToanWebRepository.save(hinhThuc); // Update HinhThucThanhToan in the database
+                    this.hinhThucThanhToanWebRepository.save(hinhThuc);
+                    if (hoaDon.getTrangThai() == 2) {
+                        for (HoaDonChiTiet chiTiet : hoaDon.getListHoaDonChiTiet()) {
+                            ChiTietGiay chiTietGiay = chiTiet.getChiTietGiay();
+                            int soLuongMua = chiTiet.getSoLuong();
+                            int soLuongHienTai = chiTietGiay.getSoLuong();
+                            if (soLuongHienTai >= soLuongMua) {
+                                chiTietGiay.setSoLuong(soLuongHienTai - soLuongMua);
+                                chiTietGiayRepository.save(chiTietGiay);
+                            } else {
+                                return "redirect:/sophia-store/home";
+                            }
+                        }
+                    }
                     hoaDon.setTrangThai(3);
                     this.hoaDonWebRepository.save(hoaDon);
                     emailService.guiEmailXacNhanThanhToan(mailTaiKhoan, hoaDon);

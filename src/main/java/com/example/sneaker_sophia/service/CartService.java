@@ -240,7 +240,9 @@ public class CartService {
         return gioHangChiTietRepository.countProduct(userEmail);
     }
 
-
+    public GioHang getCartByTaiKhoan(TaiKhoan taiKhoan) {
+        return gioHangRepository.findByTaiKhoan(taiKhoan);
+    }
 
 
 }

@@ -22,6 +22,11 @@
         .cart_submit {
             text-align: left;
         }
+        .quantity-exceeded-message {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+        }
     </style>
 </head>
 
@@ -247,6 +252,8 @@
                                         <input min="1" id="quantity" th:data-id="${item.id}" type="text"
                                                th:value="${item.soLuong}" onchange="updateQuantity(this)">
                                         <button class="buttonCT increaseQuantity" th:data-id="${item.id}">+</button>
+                                        <br>
+                                        <span th:if="${quantityExceededMap[item.id]}" class="quantity-exceeded-message">Số lượng sản phẩm không hợp lệ hoặc hết hàng!</span>
                                     </td>
 
 

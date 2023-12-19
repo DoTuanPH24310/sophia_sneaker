@@ -1,10 +1,7 @@
 package com.example.sneaker_sophia.controller.websiteshop;
 
 import com.example.sneaker_sophia.entity.*;
-import com.example.sneaker_sophia.repository.ChiTietGiayRepository;
-import com.example.sneaker_sophia.repository.GioHangChiTietRepository;
-import com.example.sneaker_sophia.repository.GioHangRepository;
-import com.example.sneaker_sophia.repository.LoginRepository;
+import com.example.sneaker_sophia.repository.*;
 import com.example.sneaker_sophia.service.CartService;
 import com.example.sneaker_sophia.service.SoluongService;
 import jakarta.persistence.EntityNotFoundException;
@@ -18,10 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/giohangchitiet")
@@ -35,6 +29,10 @@ public class GioHangChiTietController {
     private GioHangRepository gioHangRepository;
     @Autowired
     private GioHangChiTietRepository gioHangChiTietRepository;
+    @Autowired
+    private CartService cartService;
+    @Autowired
+    private HoaDonWebRepository hoaDonWebRepository;
     @Autowired
     private ChiTietGiayRepository chiTietGiayRepository;
 
@@ -160,7 +158,6 @@ public class GioHangChiTietController {
     }
 
 
-
     @DeleteMapping("/removeAll")
     public ResponseEntity<String> xoaTatCaSanPhamTrongGioHang() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -170,8 +167,76 @@ public class GioHangChiTietController {
     }
 
 
+    @GetMapping("/validate/{hoaDonId}")
+    @ResponseBody
+    public String validateProductQuantities(@PathVariable String hoaDonId) {
+        Optional<HoaDon> optionalHoaDon = this.hoaDonWebRepository.findById(hoaDonId);
 
+        if (optionalHoaDon.isPresent()) {
+            HoaDon hoaDon = optionalHoaDon.get();
 
+            if (hoaDon.getTrangThai() == 2) {
+                for (HoaDonChiTiet chiTiet : hoaDon.getListHoaDonChiTiet()) {
+                    ChiTietGiay chiTietGiay = chiTiet.getChiTietGiay();
+                    int soLuongMua = chiTiet.getSoLuong();
+                    int soLuongHienTai = chiTietGiay.getSoLuong();
 
+                    if (soLuongHienTai >= soLuongMua) {
+                        chiTietGiay.setSoLuong(soLuongHienTai - soLuongMua);
+                        chiTietGiayRepository.save(chiTietGiay);
+                    } else {
+                        return "Sản phẩm không đủ số lượng, vui lòng kiểm tra lại!";
+                    }
+                }
+
+                return "Số lượng sản phẩm đủ, có thể thanh toán.";
+            } else {
+                return "Hóa đơn không hợp lệ.";
+            }
+        } else {
+            return "Hóa đơn không tồn tại.";
+        }
+    }
+
+    @GetMapping("/validate-cart")
+    @ResponseBody
+    public String validateCartQuantity(HttpSession session) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        TaiKhoan taiKhoan = this.loginRepository.findByEmail(authentication.getName());
+        if (taiKhoan != null) {
+            GioHang gioHang = this.cartService.getCartByTaiKhoan(taiKhoan);
+
+            if (gioHang != null) {
+                for (GioHangChiTiet chiTiet : gioHang.getGioHangChiTiets()) {
+                    ChiTietGiay chiTietGiay = chiTiet.getId().getChiTietGiay();
+                    int soLuongMua = chiTiet.getSoLuong();
+                    int soLuongHienTai = chiTietGiay.getSoLuong();
+
+                    if (soLuongHienTai < soLuongMua) {
+                        return "Đơn hàng không đủ số lượng. Vui lòng kiểm tra giỏ hàng.";
+                    }
+                }
+
+                return "success";
+            } else {
+                return "Giỏ hàng không tồn tại.";
+            }
+        } else {
+            Cart cartSession = (Cart) session.getAttribute("cart");
+            if (cartSession != null) {
+                for (CartItem cart : cartSession.getItems()) {
+                    Optional<ChiTietGiay> chiTietGiay = this.chiTietGiayRepository.findById(cart.getId());
+                    int soLuongMua = cart.getSoLuong();
+                    int soLuongHienTai = chiTietGiay.get().getSoLuong();
+                    if (soLuongHienTai < soLuongMua) {
+                        return "Đơn hàng không đủ số lượng. Vui lòng kiểm tra giỏ hàng.";
+                    }
+                }
+                return "success";
+            } else {
+                return "Giỏ hàng không tồn tại.";
+            }
+        }
+    }
 }
 
