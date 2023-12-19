@@ -327,6 +327,7 @@ public class TaiQuayController {
 //        Double tongTien = hoaDonChiTietServive.tongTienHD(tempIdHD);
         model.addAttribute("tongTienHD", tongTien);
         model.addAttribute("phiShip", hoaDon.getPhiShip());
+        model.addAttribute("checkHoaDon", hoaDon);
         // 13-11
         session.setAttribute("tongTienHD", tongTien);
         // 30/10
@@ -598,6 +599,7 @@ public class TaiQuayController {
             taiKhoan.setMatKhau(encodedPassword);
             taiKhoan.setTen(hoTen);
             taiKhoan.setSdt(sdt);
+            taiKhoan.setGioiTinh(1);
             taiKhoan.setEmail(email);
             taiKhoan.setGioiTinh(Integer.parseInt(gender));
             taiKhoan.setVaiTro(VaiTro.builder().id(vaiTroRepository.getIdByTenKH()).build());
