@@ -51,8 +51,8 @@ public interface TaiKhoanRepository extends JpaRepository<TaiKhoan, String> {
 
 
     @Query(value = "select tk.* from TaiKhoan tk join VaiTro on tk.IdVaiTro = VaiTro.Id where " +
-            "(?1 is null or  tk.ten like ?1) or" +
-            "(?1 is null or tk.sdt like ?1)"
+            "((?1 is null or  tk.ten like ?1) or" +
+            "(?1 is null or tk.sdt like ?1)) and VaiTro.ten = 'KhachHang'"
             , nativeQuery = true)
     List<TaiKhoan> findByText(String text);
 
