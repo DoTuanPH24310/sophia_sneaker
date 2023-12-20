@@ -85,7 +85,7 @@ public class CheckoutController {
         GioHang gioHang = this.gioHangService.getCartByEmail(authentication.getName());
         TaiKhoan taiKhoan = this.loginRepository.findByEmail(authentication.getName());
         model.addAttribute("email", taiKhoan.getEmail());
-
+        double totalCartItemsPrice = 0.0;
         session.setAttribute("tinh", "-1");
         session.setAttribute("quan", "-1");
         session.setAttribute("phuong", "-1");
@@ -102,6 +102,8 @@ public class CheckoutController {
                     for (GioHangChiTiet cartItem : cartItems) {
                         double totalCartItemPrice = calculateTotalCartItemPrice(cartItem, voucherUsageCount);
                         cartItemTotalPrices.put(cartItem.getId().getChiTietGiay().getId(), totalCartItemPrice);
+                        totalCartItemsPrice += totalCartItemPrice;
+
                     }
                     model.addAttribute("discountedProductPrices", cartItemTotalPrices);
 
@@ -138,7 +140,7 @@ public class CheckoutController {
                                 }
                             }
                         }
-                        model.addAttribute("total", tongTienDonHang);
+                        model.addAttribute("total", totalCartItemsPrice);
 
                     }
 
@@ -209,6 +211,7 @@ public class CheckoutController {
         int soLuongGiam = 0;
         int tongSoLuongGiam = 0;
         boolean isValidCheckout = true; // Thêm biến kiểm tra
+        double totalCartItemsPrice = 0.0;
 
         // Lấy giỏ hàng từ session
         Cart cart = (Cart) session.getAttribute("cart");
@@ -221,6 +224,7 @@ public class CheckoutController {
                 UUID chiTietGiayId = item.getId();
                 double totalCartItemPrice = calculateTotalCartItemPricec(item, voucherUsageCount);
                 cartItemTotalPrices.put(chiTietGiayId, totalCartItemPrice);
+                totalCartItemsPrice += totalCartItemPrice;
             }
             model.addAttribute("discountedProductPrices", cartItemTotalPrices);
             if (cartItems != null && !cartItems.isEmpty()) {
@@ -257,8 +261,8 @@ public class CheckoutController {
                             }
                         }
                     }
-                    model.addAttribute("total", tongTienDonHang);
-                }
+                    model.addAttribute("total", totalCartItemsPrice);
+                 }
 
                 if (!isValidCheckout) {
                     return "redirect:/cart/hien-thi";

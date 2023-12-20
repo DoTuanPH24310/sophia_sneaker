@@ -85,12 +85,6 @@ public class VoucherService {
             check++;
 
         }
-        try {
-            ptg = Integer.parseInt(vc.getPhanTramGiam());
-        } catch (Exception e) {
-            errGiaTri = "Vui lòng nhập số";
-            check++;
-        }
 
         if (vc.getPhanTramGiam() == null || vc.getPhanTramGiam().trim().length() == 0) {
             errGiaTri = "Vui lòng nhập giá trị";

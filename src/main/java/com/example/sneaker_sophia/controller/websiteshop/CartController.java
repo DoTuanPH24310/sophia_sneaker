@@ -97,16 +97,19 @@ public class CartController {
                 }
                 Map<UUID, Double> cartItemTotalPrices = new HashMap<>();
                 Map<UUID, Integer> voucherUsageCount = new HashMap<>();
+                double totalCartItemsPrice = 0.0;
 
                 for (GioHangChiTiet cartItem : cartItems) {
                     double totalCartItemPrice = calculateTotalCartItemPrice(cartItem, voucherUsageCount);
                     cartItemTotalPrices.put(cartItem.getId().getChiTietGiay().getId(), totalCartItemPrice);
+                    totalCartItemsPrice += totalCartItemPrice;
+
                 }
 
                 model.addAttribute("cartItemTotalPrices", cartItemTotalPrices);
 
 
-                model.addAttribute("totalCartPrice", tongTienDonHang);
+                model.addAttribute("totalCartPrice", totalCartItemsPrice);
                 model.addAttribute("soLuongSessionGioHang", cartItems.size());
                 model.addAttribute("cartItems", cartItems);
                 model.addAttribute("isLoggedIn", true);
@@ -129,6 +132,7 @@ public class CartController {
 
                 double totalCartPrice = 0.0;
                 double totalDiscount = 0.0;
+                double totalCartItemsPrice = 0.0;
 
                 Map<UUID, Double> cartItemTotalPrices = new HashMap<>();
                 Map<UUID, Integer> voucherUsageCount = new HashMap<>();
@@ -143,16 +147,20 @@ public class CartController {
                         if (cartItem.getSoLuong() > chiTietGiay.getSoLuong()) {
                             quantityExceededMap.put(chiTietGiay.getId(), true);
                         }
+
                         double totalCartItemPrice = calculateTotalCartItemPricec(cartItem, voucherUsageCount);
                         totalCartPrice += totalCartItemPrice;
                         totalDiscount += (cartItem.getGia() * cartItem.getSoLuong()) - totalCartItemPrice;
                         cartItemTotalPrices.put(chiTietGiay.getId(), totalCartItemPrice);
+                        totalCartItemsPrice += totalCartItemPrice;
+
                     }
+
                 }
+                model.addAttribute("totalCartPrice", totalCartItemsPrice);
 
                 model.addAttribute("cartItemTotalPrices", cartItemTotalPrices);
                 model.addAttribute("soLuongSessionGioHang", cart.getItems().size());
-                model.addAttribute("totalCartPrice", totalCartPrice);
                 model.addAttribute("totalDiscount", totalDiscount);
                 model.addAttribute("cartItem", cart.getItems());
             }
