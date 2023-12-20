@@ -351,7 +351,14 @@ public class CheckoutController {
                 }
                 if (result.hasErrors()) {
                     DiaChi diaChi = accountService.getDiaChiMacDinhCuaTaiKhoanDangNhap();
+                    Map<UUID, Double> cartItemTotalPrices = new HashMap<>();
+                    Map<UUID, Integer> voucherUsageCount = new HashMap<>();
 
+                    for (GioHangChiTiet cartItem : cartItems) {
+                        double totalCartItemPrice = calculateTotalCartItemPrice(cartItem, voucherUsageCount);
+                        cartItemTotalPrices.put(cartItem.getId().getChiTietGiay().getId(), totalCartItemPrice);
+                    }
+                    model.addAttribute("discountedProductPrices", cartItemTotalPrices);
                     model.addAttribute("email", taiKhoan.getEmail());
                     if (gioHang != null) {
                         if (cartItems == null || cartItems.isEmpty()) {
@@ -470,7 +477,14 @@ public class CheckoutController {
                     }
                 }
                 if (result.hasErrors()) {
-
+                    Map<UUID, Double> cartItemTotalPrices = new HashMap<>();
+                    Map<UUID, Integer> voucherUsageCount = new HashMap<>();
+                    for (CartItem item : cartItems) {
+                        UUID chiTietGiayId = item.getId();
+                        double totalCartItemPrice = calculateTotalCartItemPricec(item, voucherUsageCount);
+                        cartItemTotalPrices.put(chiTietGiayId, totalCartItemPrice);
+                    }
+                    model.addAttribute("discountedProductPrices", cartItemTotalPrices);
                     if (cart != null) {
                         if (cartItems != null && !cartItems.isEmpty()) {
                             session.setAttribute("selectedProvince", diaChi.getTinh());
