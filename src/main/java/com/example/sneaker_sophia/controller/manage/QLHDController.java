@@ -215,7 +215,7 @@ public class QLHDController {
                         alertInfo.alert("errTaiQuay", "Hóa đơn không có sản phẩm");
                         return "redirect:/staff/hoa-don/hien-thi";
                     }
-                    if (hinhThucThanhToan.getSoTien() < (hoaDon.getTongTien() + hoaDon.getPhiShip())){
+                    if (hinhThucThanhToan.getTrangThai() != 3 && hinhThucThanhToan.getSoTien() < (hoaDon.getTongTien() + hoaDon.getPhiShip())){
                         alertInfo.alert("errTaiQuay", "Hóa đơn " + hoaDon.getMaHoaDOn() + "chưa xác nhận đủ tiền");
                         return "redirect:/staff/hoa-don/hien-thi";
                     }
@@ -349,7 +349,7 @@ public class QLHDController {
                     alertInfo.alert("errTaiQuay", "Hóa đơn không có sản phẩm");
                     return "redirect:/staff/hoa-don/detail/" + tempIdHD;
                 }
-                if (hinhThucThanhToan.getSoTien() < (hoaDon.getTongTien() + hoaDon.getPhiShip())){
+                if (hinhThucThanhToan.getTrangThai() != 3 && hinhThucThanhToan.getSoTien() < (hoaDon.getTongTien() + hoaDon.getPhiShip())){
                     alertInfo.alert("errTaiQuay", "Hóa đơn " + hoaDon.getMaHoaDOn() + "chưa xác nhận đủ tiền");
                     return "redirect:/staff/hoa-don/hien-thi";
                 }
