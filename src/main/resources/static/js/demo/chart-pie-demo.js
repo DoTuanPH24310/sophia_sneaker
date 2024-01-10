@@ -17,7 +17,7 @@ function mapStatusToLabel(status) {
         case 6:
             return 'Hủy';
         case 7:
-            return 'Đơn hoàn';
+            return 'Giao thất bại';
         default:
             return 'Unknown';
     }

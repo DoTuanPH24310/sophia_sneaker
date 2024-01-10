@@ -207,11 +207,16 @@ public class QLHDController {
                 return "redirect:/staff/hoa-don/hien-thi";
             }
             HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
+            HinhThucThanhToan hinhThucThanhToan = htttService.getHTTTByIdhd(hoaDon.getId());
             if (hoaDon != null) {
                 if (hoaDon.getTrangThai() == 4) {
                     List<HoaDonChiTiet> listhdct = hoaDonChiTietServive.getHDCTByIdHD(hoaDon.getId());
                     if (listhdct.size() == 0) {
                         alertInfo.alert("errTaiQuay", "Hóa đơn không có sản phẩm");
+                        return "redirect:/staff/hoa-don/hien-thi";
+                    }
+                    if (hinhThucThanhToan.getSoTien() < (hoaDon.getTongTien() + hoaDon.getPhiShip())){
+                        alertInfo.alert("errTaiQuay", "Hóa đơn " + hoaDon.getMaHoaDOn() + "chưa xác nhận đủ tiền");
                         return "redirect:/staff/hoa-don/hien-thi";
                     }
                     hoaDon.setTrangThai(5);
@@ -336,12 +341,17 @@ public class QLHDController {
             return "redirect:/staff/hoa-don/detail/" + tempIdHD;
         }
         HoaDon hoaDon = hoaDonService.getHoaDonById(idhd);
+        HinhThucThanhToan hinhThucThanhToan = htttService.getHTTTByIdhd(hoaDon.getId());
         if (hoaDon != null) {
             if (hoaDon.getTrangThai() == 4) {
                 List<HoaDonChiTiet> listhdct = hoaDonChiTietServive.getHDCTByIdHD(hoaDon.getId());
                 if (listhdct.size() == 0) {
                     alertInfo.alert("errTaiQuay", "Hóa đơn không có sản phẩm");
                     return "redirect:/staff/hoa-don/detail/" + tempIdHD;
+                }
+                if (hinhThucThanhToan.getSoTien() < (hoaDon.getTongTien() + hoaDon.getPhiShip())){
+                    alertInfo.alert("errTaiQuay", "Hóa đơn " + hoaDon.getMaHoaDOn() + "chưa xác nhận đủ tiền");
+                    return "redirect:/staff/hoa-don/hien-thi";
                 }
                 hoaDon.setTrangThai(5);
                 LichSuHoaDon lichSuHoaDon = new LichSuHoaDon();
@@ -435,8 +445,8 @@ public class QLHDController {
                     if(voucherHD != null) {
                         if (voucherHD.getSoLuong() < voucherHD.getSoLuongGiam()) {
 //                            if (hdct.getSoLuong() <= hdct.getSoLuongGiam()) {
-                                voucherHD.setSoLuong(voucherHD.getSoLuong() + hdct.getSoLuongGiam());
-                                kmService.saveVC(voucherHD);
+                            voucherHD.setSoLuong(voucherHD.getSoLuong() + hdct.getSoLuongGiam());
+                            kmService.saveVC(voucherHD);
 //                            }
                         } else {
                             for (Voucher voucherhh : voucherListHH) {
@@ -528,8 +538,8 @@ public class QLHDController {
                     if(voucherHD != null) {
                         if (voucherHD.getSoLuong() < voucherHD.getSoLuongGiam()) {
 //                            if (hdct.getSoLuong() >= hdct.getSoLuongGiam()) {
-                                voucherHD.setSoLuong(voucherHD.getSoLuong() + hdct.getSoLuongGiam());
-                                kmService.saveVC(voucherHD);
+                            voucherHD.setSoLuong(voucherHD.getSoLuong() + hdct.getSoLuongGiam());
+                            kmService.saveVC(voucherHD);
 //                            }
                         } else {
                             for (Voucher voucherhh : voucherListHH) {

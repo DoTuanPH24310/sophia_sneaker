@@ -262,7 +262,7 @@ public class CheckoutController {
                         }
                     }
                     model.addAttribute("total", totalCartItemsPrice);
-                 }
+                }
 
                 if (!isValidCheckout) {
                     return "redirect:/cart/hien-thi";
@@ -286,6 +286,7 @@ public class CheckoutController {
             return "redirect:/cart/hien-thi";
         }
     }
+
     private double calculateTotalCartItemPricec(CartItem cartItem, Map<UUID, Integer> voucherUsageCount) {
         UUID chiTietGiayId = cartItem.getId();
         ChiTietGiay chiTietGiay = this.chiTietGiayRepository.findById(chiTietGiayId).orElse(null);
@@ -407,7 +408,7 @@ public class CheckoutController {
                         alertInfo.alert("errOnline", "Chưa chọn hình thức thanh toán!");
                     } else {
 //                        this.thanhToanService.capNhatDiaChi(diaChiDTO, taiKhoan);
-                        thanhToanService.thucHienThanhToan(email,diaChiDTO, cartItems, hinhThucThanhToan, diaChiCuThe, tinh, huyen, xa, phiVanChuyen, ghiChu);
+                        thanhToanService.thucHienThanhToan(email, diaChiDTO, cartItems, hinhThucThanhToan, diaChiCuThe, tinh, huyen, xa, phiVanChuyen, ghiChu);
                         return "redirect:/check-out/success";
                     }
                 }
@@ -450,14 +451,23 @@ public class CheckoutController {
 
                     total += item.getGia() * item.getSoLuong();
                 }
-
+                double totalCartItemsPrice = 0.0;
                 session.removeAttribute("tinh");
                 session.removeAttribute("quan");
                 session.removeAttribute("phuong");
                 if (diaChi.getEmail() != null) {
-                    if(diaChi.getEmail().trim().length() != 0) {
+                    if (diaChi.getEmail().trim().length() != 0) {
                         boolean tonTai = this.loginRepository.existsByEmail(diaChi.getEmail());
                         if (tonTai) {
+                            Map<UUID, Double> cartItemTotalPrices = new HashMap<>();
+                            Map<UUID, Integer> voucherUsageCount = new HashMap<>();
+                            for (CartItem item : cartItems) {
+                                UUID chiTietGiayId = item.getId();
+                                double totalCartItemPrice = calculateTotalCartItemPricec(item, voucherUsageCount);
+                                cartItemTotalPrices.put(chiTietGiayId, totalCartItemPrice);
+                                totalCartItemsPrice += totalCartItemPrice;
+                            }
+                            model.addAttribute("discountedProductPrices", cartItemTotalPrices);
                             if (cart != null) {
                                 if (cartItems != null && !cartItems.isEmpty()) {
 
@@ -467,7 +477,7 @@ public class CheckoutController {
                                     session.setAttribute("phuong", diaChi.getPhuongXa());
                                     result.rejectValue("email", "error.email", "Email đã tồn tại trong hệ thống.");
                                     model.addAttribute("cartItems", cartItems);
-                                    model.addAttribute("total", total);
+                                    model.addAttribute("total", totalCartItemsPrice);
 
                                     return "website/productwebsite/checkoutSession";
                                 } else {
